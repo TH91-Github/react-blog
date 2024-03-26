@@ -33,7 +33,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   /* 스크롤 막대 외부 */
   body::-webkit-scrollbar-track {
-    background: ${colors.bgWhite};
+    background: ${colors.baseWhite};
   }
 `;
 

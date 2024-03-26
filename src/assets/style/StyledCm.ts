@@ -1,5 +1,5 @@
-import styled, {css, keyframes} from 'styled-components';
-import { breakpoints, colors, media} from './Variable';
+import styled, {css} from 'styled-components';
+import { StyleProps } from 'types/baseType';
 
 // css
 export const notice = css`
@@ -16,7 +16,7 @@ export const notice = css`
 
 export const Button = styled.button.attrs({
   type:'button',
-})`
+})<StyleProps>`
   display:inline-block;
   ${props => `
     ${props.$width && `width:${props.$width}`};
@@ -27,11 +27,11 @@ export const Button = styled.button.attrs({
 
 
 // ♣ ICON
-export const Icon = styled.i`
+export const Icon = styled.i<StyleProps>`
   display:inline-block;
   position:relative;
-  width: ${props => props.width || "20px"};
-  height: ${props => props.width || "20px"};
+  width: ${props => props.$width || "20px"};
+  height: ${props => props.$height || "20px"};
   border-radius: ${props => props.$borderRadius || 0};
   ${props => props.$bg 
     && 

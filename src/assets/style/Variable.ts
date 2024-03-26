@@ -1,10 +1,12 @@
+import { NumberOnly } from "types/baseType"
+
 // styled-components전용 공통 
-export const fonts = {
+export const fonts : NumberOnly = {
   size: 16,
   bold: 700,
 }
 
-export const breakpoints = {
+export const breakpoints : NumberOnly = {
   maxPc: 1920,
   pc : 1440,
   tab : 1140,
@@ -35,7 +37,6 @@ export const colors = {
   gradientDark: "linear-gradient(75deg, #434343 0%, black 100%)",
   gradientWhite: "linear-gradient(75deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%)",
   gradientCloudyApple: "linear-gradient(75deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);",
-
   // Text Color
   textColor: "#191f28",
   subTextColor: "#868686",
@@ -54,6 +55,4 @@ export const animaion = {
 export const keyFrames = {
   fadeIn : `@keyframes fadeIn { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
 }
-
-
 

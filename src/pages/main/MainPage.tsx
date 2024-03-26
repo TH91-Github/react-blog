@@ -1,11 +1,18 @@
-import { colors } from "style/Variable"
+import { colors } from "assets/style/Variable"
 import styled from "styled-components"
 
 
 export default function MainPage() : JSX.Element{ 
   return (
-    <StyleMain>
-      MainPage
+    <StyleMain className="main">
+      <div className="visual">
+        <div className="visual-bord">
+
+        </div>
+      </div>
+      <div className="content">
+
+      </div>
     </StyleMain>
   )
 }
@@ -14,6 +21,18 @@ export default function MainPage() : JSX.Element{
 const StyleMain = styled.div`
 position:relative;
 width:100%;
-min-height:100svh;
 background: ${colors.gradientCloudyApple};
+  .visual {
+    display:flex;
+    height:100svh;
+    &-bord {
+      position:relative;
+      border-radius: 30px;
+      width:80%;
+      height:clamp(31.25rem, 80%, );
+      min-width
+      background-color: rgba(255,255,192,0.1);
+      backdrop-filter: blur(10px);
+    }
+  }
 `

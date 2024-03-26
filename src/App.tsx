@@ -1,21 +1,29 @@
 import { Outlet } from 'react-router';
-import { GlobalStyles } from 'style/GlobalStyles';
-import './App.css';
 import styled from 'styled-components';
-import { colors } from 'style/Variable';
+import Header from 'components/layout/Header';
+import { GlobalStyles } from 'assets/style/GlobalStyles';
+import { colors } from 'assets/style/Variable';
+import './App.css';
 
 function App() : JSX.Element {
   return (
     <StyleApp className="App">
       <GlobalStyles />
-      <Outlet />
+      <div className="container">
+        <Header />
+        <main>
+          <Outlet />
+        </main>
+      </div>
     </StyleApp>
   );
 }
 export default App;
 
 const StyleApp = styled.div`
-  overflow-x:hidden;
   position:relative;
   background: ${colors.gradientWhite};
+  .container {
+    position:relative;
+  }
 `;
