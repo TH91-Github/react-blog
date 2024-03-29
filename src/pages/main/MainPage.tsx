@@ -1,5 +1,6 @@
-import { colors } from "assets/style/Variable"
+import { breakpoints, colors, media, shadowOpt } from "assets/style/Variable"
 import styled from "styled-components"
+import { rem } from "utils/common"
 
 
 export default function MainPage() : JSX.Element{ 
@@ -7,8 +8,12 @@ export default function MainPage() : JSX.Element{
     <StyleMain className="main">
       <div className="visual">
         <div className="visual-bord">
-
+          <div className="visual-text">
+            <h1 className="title">Title</h1>
+            <p className="desc">sub text</p>
+          </div>
         </div>
+        <div className="testbox"></div>
       </div>
       <div className="content">
 
@@ -17,22 +22,59 @@ export default function MainPage() : JSX.Element{
   )
 }
 
-
 const StyleMain = styled.div`
 position:relative;
 width:100%;
 background: ${colors.gradientCloudyApple};
   .visual {
     display:flex;
+    justify-content:center;
+    align-items:center;
     height:100svh;
     &-bord {
       position:relative;
-      border-radius: 30px;
-      width:80%;
-      height:clamp(31.25rem, 80%, );
-      min-width
-      background-color: rgba(255,255,192,0.1);
-      backdrop-filter: blur(10px);
+      z-index:5;
+      width:clamp(${rem(800)}, 80% , ${breakpoints.pc}px);
+      height:clamp(${rem(500)}, 80%, ${rem(600)});
+      border-top: 2px solid rgba(148,148,148, .3);
+      border-radius:2px;
+      // background-color: rgba(227,225,229,0.2);
+      background-color: rgba(227,227,227,0.3);
+      backdrop-filter: blur(4px);
+      box-shadow: ${shadowOpt.whiteLine}; 
+    }
+    .visual-text {
+      position:absolute;
+      right:50px;
+      bottom:50px;
+      text-align:right;
+      .title {
+        font-size:${rem(48)};
+        color:#fff;
+        text-shadow: ${shadowOpt.textBase};
+      }
+      .desc {
+        font-size:${rem(18)};
+        color:#fff;
+        text-shadow: ${shadowOpt.textBase};
+      }
+    }
+    .testbox { 
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:100px;
+      height:100px;
+      background:#000;
     }
   }
-`
+  ${media.mo}{
+    .visual {
+      &-bord {
+        width: 80%;
+        height:80%;
+        min-height:400px;
+      }
+    }
+  }
+`;

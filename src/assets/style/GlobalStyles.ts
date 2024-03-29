@@ -35,5 +35,8 @@ export const GlobalStyles = createGlobalStyle`
   body::-webkit-scrollbar-track {
     background: ${colors.baseWhite};
   }
+  :root {
+    
+  }
 `;
 

@@ -5,10 +5,11 @@ import PortfolioPage from "pages/portfolio/PortfolioPage";
 export const routerList = [
   { // Main
     index: true,
+    id:"Main",
     element: <MainPage />
   },
   {
-    title:"portfolio",
+    id:"Portfolio",
     path:"portfolio",
     element: <PortfolioPage/>,
   },

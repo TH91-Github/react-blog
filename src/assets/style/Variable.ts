@@ -43,6 +43,11 @@ export const colors = {
   // Line Color
   lineColor: "#dbdbdb",
 }
+// shadow
+export const shadowOpt = {
+  textBase : 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
+  whiteLine : 'rgba(255, 255, 255, .85) 0px 1px 2px 0px',
+}
 
 // transition
 export const transitions = {
@@ -56,3 +61,15 @@ export const keyFrames = {
   fadeIn : `@keyframes fadeIn { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
 }
 
+
+export const lightTheme = {
+  color:'#000',
+}
+export const darkTheme = {
+  color:'#fff',
+}
+
+export const theme = {
+  lightTheme,
+  darkTheme
+}
