@@ -48,7 +48,7 @@ const StyleLogo = styled.div`
         &:hover { 
           background:${colors.yellow};  
         }
-        &:nth-child(1){ 
+        &:nth-child(1){  
           animation-name: cube1;
           @keyframes cube1 {
             1.19%{background: ${colors.blue};}
