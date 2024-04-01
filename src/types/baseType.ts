@@ -13,7 +13,7 @@ export interface  StringNumber{
 }
 
 // 🚩 styled component
-export interface StyleProps { // default
+export type StyleProps = { // default
   $position?: string | boolean,
   $width?: number,
   $height?: number,

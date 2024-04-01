@@ -1,8 +1,10 @@
-import { breakpoints } from "assets/style/Variable";
+import { breakpoints, colors, shadow } from "assets/style/Variable";
+import Navigation from "components/article/Navigation";
+import UtilNav from "components/article/UtilNav";
 import Logo from "components/element/Logo";
 import { useEffect, useMemo, useRef } from "react";
 import styled from "styled-components"
-import { LocationType, StyleProps } from "types/baseType";
+import { LocationType } from "types/baseType";
 import { rem } from "utils/common";
 
 type PropsLocation= {
@@ -12,9 +14,7 @@ export default function Header({location}:PropsLocation){
   const sticky = useMemo(() : boolean => {
     return location.pathname === '/' ?  false : true
   },[location.pathname])
-  let scrollY = useRef(0); 
-
-  console.log(location.pathname)
+  let scrollY = useRef(0);
 
   const eventScroll = () => {
     // const headerH = document.querySelector('.header').clientHeight;
@@ -32,16 +32,15 @@ export default function Header({location}:PropsLocation){
     <StyleHeader className={!sticky ? 'main-header': ''}>
       <div className="header" >
         <div className="header-inner">
-          <div className="logo">
-            <button className="home-btn">
+          <div className="header-logo">
+            <button className="logo-btn">
               <Logo />
             </button>
           </div>
-          <div className="gnb">
-          </div>          
-          <div className="mo-menu">
-            <button type="button" className="btn">MO</button>
-          </div>
+          {/* gnb */}
+          <Navigation />
+          {/* dark/light, login/join, search, more btn */}
+          <UtilNav />
         </div>
       </div>
     </StyleHeader>
@@ -57,11 +56,15 @@ const StyleHeader = styled.header`
   .header {
     position:relative;
     padding:0 30px;
-  }
-  .mo-menu {
-    position:absolute;
-    top:30px; 
-    right:30px;
+    &-inner {
+      display:flex;
+    }
+    &-logo{
+      padding-right:50px;
+      .logo-btn {
+        vertical-align: top;
+      }
+    }
   }
   &.main-header{
     overflow:hidden;

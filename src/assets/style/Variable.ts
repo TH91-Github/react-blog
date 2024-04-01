@@ -40,6 +40,7 @@ export const colors = {
   gradientEverlastingSyk: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
   gradientSnowAgain:"linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)",
   gradientViciousStance:"linear-gradient(60deg, #29323c 0%, #485563 100%)",
+  gradientTransparont:"radial-gradient(87% 50% at 50% -38%, hsla(0, 0%, 100%, .052) 77.5%, hsla(0, 0%, 100%, .014) 88.13%, hsla(0, 0%, 100%, 0) 100%), radial-gradient(97% 109% at 48% 0, rgba(0, 0, 0, .07) 0, rgba(0, 0, 0, .4) 100%)",
   // Text Color
   textColor: "#191f28",
   subTextColor: "#868686",
@@ -49,6 +50,7 @@ export const colors = {
 // shadow
 export const shadow = {
   textBase : 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
+  textBaseW : 'rgba(255, 255, 255, 1) 0.7px 1px 1px',
   whiteLine : 'rgba(255, 255, 255, .85) 0px 1px 2px 0px',
 }
 
@@ -63,7 +65,6 @@ export const animaion = {
 export const keyFrames = {
   fadeIn : `@keyframes fadeIn { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
 }
-
 
 export const lightTheme = {
   color:'#000',
