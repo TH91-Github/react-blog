@@ -30,13 +30,16 @@ export const colors = {
   // point
   green: "#0174BE",
   yellow: "#FFB000",
-  blue: "#0174BE",
+  blue: "#419ef5",
   red: "#e8392c",
   navy: "#333A73",
   // bg Color
   gradientDark: "linear-gradient(75deg, #434343 0%, black 100%)",
   gradientWhite: "linear-gradient(75deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%)",
-  gradientCloudyApple: "linear-gradient(75deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);",
+  gradientCloudyApple: "linear-gradient(75deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
+  gradientEverlastingSyk: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+  gradientSnowAgain:"linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)",
+  gradientViciousStance:"linear-gradient(60deg, #29323c 0%, #485563 100%)",
   // Text Color
   textColor: "#191f28",
   subTextColor: "#868686",
@@ -44,7 +47,7 @@ export const colors = {
   lineColor: "#dbdbdb",
 }
 // shadow
-export const shadowOpt = {
+export const shadow = {
   textBase : 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
   whiteLine : 'rgba(255, 255, 255, .85) 0px 1px 2px 0px',
 }

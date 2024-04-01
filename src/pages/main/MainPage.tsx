@@ -1,4 +1,4 @@
-import { breakpoints, colors, media, shadowOpt } from "assets/style/Variable"
+import { breakpoints, colors, media, shadow } from "assets/style/Variable"
 import styled from "styled-components"
 import { rem } from "utils/common"
 
@@ -26,6 +26,7 @@ const StyleMain = styled.div`
 position:relative;
 width:100%;
 background: ${colors.gradientCloudyApple};
+
   .visual {
     display:flex;
     justify-content:center;
@@ -38,10 +39,9 @@ background: ${colors.gradientCloudyApple};
       height:clamp(${rem(500)}, 80%, ${rem(600)});
       border-top: 2px solid rgba(148,148,148, .3);
       border-radius:2px;
-      // background-color: rgba(227,225,229,0.2);
       background-color: rgba(227,227,227,0.3);
       backdrop-filter: blur(4px);
-      box-shadow: ${shadowOpt.whiteLine}; 
+      box-shadow: ${shadow.whiteLine}; 
     }
     .visual-text {
       position:absolute;
@@ -51,12 +51,12 @@ background: ${colors.gradientCloudyApple};
       .title {
         font-size:${rem(48)};
         color:#fff;
-        text-shadow: ${shadowOpt.textBase};
+        text-shadow: ${shadow.textBase};
       }
       .desc {
         font-size:${rem(18)};
         color:#fff;
-        text-shadow: ${shadowOpt.textBase};
+        text-shadow: ${shadow.textBase};
       }
     }
     .testbox { 
