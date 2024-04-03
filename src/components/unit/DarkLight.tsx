@@ -1,7 +1,16 @@
+import React from "react";
 import Moon from "./Moon";
+import Sun from "./Sun";
 
-export default function DarkLight(){
+
+export default function DarkLight(props:{mode:boolean}){
   return (
-    <Moon />
+    <>
+      {
+        props.mode 
+        ? <Moon />
+        : <Sun />
+      }
+    </>
   )
 }

@@ -7,15 +7,24 @@ import styled from "styled-components"
 import DarkLight from "components/unit/DarkLight";
 
 export default function UtilNav () {
+  const [mode, setMode] = useState(false);
   const [login, setLogIn] = useState(false);
   const [more, setMore] = useState(false);
   const isMobile = useSelector((state : RootState) => state.mobileChk);
-  function menuClick(){
-    setMore(prev => !prev)
+  
+  // dark light mode
+  function darkLightMode(){
+    setMode(prev => !prev)
   }
+  // user Member
   function loginChk(){
     console.log('logoin 체크')
   }
+  // mo : more-menu
+  function menuClick(){
+    setMore(prev => !prev)
+  }
+
   return (
     <STyleUtilNav className="util">
       {/* 
@@ -26,7 +35,13 @@ export default function UtilNav () {
       */}
       <div className="util-inner">
         <div className="util-item">
-          <DarkLight />
+          <button type="button" onClick={()=> darkLightMode()}>
+            <span className="icon">
+              {
+                <DarkLight mode={mode}/>
+              }
+            </span>
+          </button>
         </div>
         <div className="util-item">
           <button type="button" onClick={()=> loginChk()}>
@@ -34,7 +49,7 @@ export default function UtilNav () {
               {
                 login ? <SvgLogOut /> : <SvgLogin />
               }
-          </span>
+            </span>
           </button>
         </div>
         <div className="util-item">

@@ -31,7 +31,7 @@ const StyleSun = styled.span<StyleProps>`
     left:50%;
     width: 100%;
     height: 100%;
-    background: url('${require('assets/images/weather/moon.png')}') no-repeat;
+    background: url('${require('assets/images/weather/sun.png')}') no-repeat;
     background-size: cover;
     transform: translate(-50%, -50%);
   }

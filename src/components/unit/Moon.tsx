@@ -4,7 +4,7 @@ import { StyleProps } from "types/baseType";
 export default function Moon (){
   const dark = true;
   return (
-    <StyleMoon className="moon">
+    <StyleMoon className={`moon ${dark ? 'moon-dark': ''}`}>
       <span className="moon-circle"></span>
       {
         dark && <span className="dark-mode">
@@ -25,6 +25,20 @@ const StyleMoon = styled.span<StyleProps>`
     display:block;
     position:absolute;
   }
+  &.moon-dark {
+    &::after {
+      display:block;
+      position:absolute;
+      z-index:-1;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: radial-gradient(ellipse at center,  rgba(0,0,0,1) 0%,rgba(0,0,0,.8) 45%,rgba(0,0,0,0.2) 65%,rgba(0,0,0,0) 75%,rgba(0,0,0,0) 100%);
+      content:'';
+    }
+  }
+  
   .moon-circle {
     z-index:5;
     top:50%;
@@ -56,7 +70,7 @@ const StyleMoon = styled.span<StyleProps>`
       height:22.66666666667%;
       background: url('${require('assets/images/weather/star-2.png')}') no-repeat;
       background-size: cover;
-      animation: aniMoonStar1 2.5s 1s infinite;
+      animation: aniMoonStar 2.5s 1s infinite;
     }
   }
   @keyframes aniMoonStar {
