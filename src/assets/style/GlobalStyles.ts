@@ -22,6 +22,13 @@ export const GlobalStyles = createGlobalStyle`
     color: inherit;
     cursor: pointer;
   }
+  .blind{
+    position:absolute;
+    top:-9999px;
+    left:-9999px;
+    font-size:1;
+    opacity:0;
+  }
   /* 스크롤바 전체 */
   body::-webkit-scrollbar {
     width:8px;

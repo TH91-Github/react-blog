@@ -1,12 +1,16 @@
 import { colors, shadow } from "assets/style/Variable";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { routerList } from "routes/RouterList";
+import { RootState } from "store/store";
 import styled from "styled-components"
 import { rem } from "utils/common";
 
 export default function Navigation(){
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
+
   return (
-    <StyleNav className="gnb">
+    <StyleNav className={`gnb ${isMobile? 'gnb-mo': ''}`}>
       <ul className="gnb-lists">
         {
           routerList.map((routerItem,idx) => (
@@ -23,7 +27,8 @@ export default function Navigation(){
 }
 
 const StyleNav = styled.div`
-  display:flex;
+
+  flex-grow:1;
   .gnb{
     &-lists{
       display:flex;

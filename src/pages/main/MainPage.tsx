@@ -1,4 +1,5 @@
 import { breakpoints, colors, media, shadow } from "assets/style/Variable"
+import Sun from "components/unit/Sun";
 import styled from "styled-components"
 import { rem } from "utils/common"
 
@@ -14,6 +15,7 @@ export default function MainPage() : JSX.Element{
           </div>
         </div>
         <div className="testbox"></div>
+        <Sun  />
       </div>
       <div className="content">
 
@@ -27,6 +29,12 @@ position:relative;
 width:100%;
 background: ${colors.gradientCloudyApple};
 
+.sun {
+  position:fixed;
+  z-index:999;
+  top:50%;
+  left:50%;
+}
   .visual {
     display:flex;
     justify-content:center;

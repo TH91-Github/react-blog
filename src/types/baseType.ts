@@ -14,6 +14,7 @@ export interface  StringNumber{
 
 // 🚩 styled component
 export type StyleProps = { // default
+  $gap?: number,
   $position?: string | boolean,
   $width?: number,
   $height?: number,

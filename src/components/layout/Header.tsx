@@ -58,6 +58,7 @@ const StyleHeader = styled.header`
     padding:0 30px;
     &-inner {
       display:flex;
+      align-items:center;
     }
     &-logo{
       padding-right:50px;
