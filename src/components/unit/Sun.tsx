@@ -3,25 +3,25 @@ import { StyleProps } from "types/baseType";
 
 export default function Sun(){
   return (
-    <SunIcon className="sun">
+    <StyleSun className="sun">
       <span className="sun-circle"></span>
       {
         new Array(8).fill('').map((item,idx)=> 
-          <SunItem 
+          <StyleSunItem 
             key={item+idx} 
             className={`sun-${idx+1}`}
             $bg={`${idx+1}`}
             />
         )
       }
-    </SunIcon>
+    </StyleSun>
   )
 }
-const SunIcon = styled.span<StyleProps>`
+const StyleSun = styled.span<StyleProps>`
   display:block;
   position:relative;
-  width:${props => props.$width || '100px'};
-  height:${props => props.$height || '100px'};
+  width:${props => props.$width || '25px'};
+  height:${props => props.$height || '25px'};
   & span {
     display:block;
     position:absolute;
@@ -31,7 +31,7 @@ const SunIcon = styled.span<StyleProps>`
     left:50%;
     width: 100%;
     height: 100%;
-    background: url('${require('assets/images/weather/sun.png')}') no-repeat;
+    background: url('${require('assets/images/weather/moon.png')}') no-repeat;
     background-size: cover;
     transform: translate(-50%, -50%);
   }
@@ -54,7 +54,7 @@ export const SunAni = (x:number, y:number, percentage?:number) => keyframes`
   }
 `;
 
-const SunItem = styled.span<StyleProps>`
+const StyleSunItem = styled.span<StyleProps>`
   ${props => props.$bg 
     ? `
       background:url('${require('assets/images/weather/sun_'+props.$bg+'.png')}') no-repeat;

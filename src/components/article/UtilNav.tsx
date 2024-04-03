@@ -3,8 +3,8 @@ import { colors } from "assets/style/Variable";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import Sun from "components/unit/Sun";
 import styled from "styled-components"
+import DarkLight from "components/unit/DarkLight";
 
 export default function UtilNav () {
   const [login, setLogIn] = useState(false);
@@ -26,7 +26,7 @@ export default function UtilNav () {
       */}
       <div className="util-inner">
         <div className="util-item">
-          {/* <Sun /> */}
+          <DarkLight />
         </div>
         <div className="util-item">
           <button type="button" onClick={()=> loginChk()}>
