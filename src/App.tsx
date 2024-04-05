@@ -18,7 +18,7 @@ function App() : JSX.Element {
   const reSizesEvent = useCallback(()=> {
     let moState = isMobileChk();
     dispatch(sSetMobileChk(moState))
-  },[dispatch])
+  },[dispatch]) 
 
   useEffect(() => {
     reSizesEvent();
