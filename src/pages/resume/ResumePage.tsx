@@ -1,6 +1,6 @@
 
 
-export default function Resume(){
+export default function ResumePage(){
   return(
     <div>
       Resume

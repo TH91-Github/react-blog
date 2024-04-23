@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components"
 import DarkLight from "components/unit/DarkLight";
+import { NavLink } from "react-router-dom";
 
 export default function UtilNav () {
   const [mode, setMode] = useState(false);
@@ -19,6 +20,8 @@ export default function UtilNav () {
   // user Member
   function loginChk(){
     console.log('logoin 체크')
+    // 로그인이 아닌 경우 로그인 페이지로 이동 
+    // 로그인인 경우 로그아웃 표시 및 누구누구님
   }
   // mo : more-menu
   function menuClick(){
@@ -26,28 +29,48 @@ export default function UtilNav () {
   }
 
   return (
-    <STyleUtilNav className="util">
+    <StyleUtilNav className="util">
       {/* 
-        1. 다크모드
-        2. 회원 아이콘 - 로그인 / 로그아웃
+        1. 회원 아이콘 - 로그인 / 로그아웃
+        2. 다크모드
         3. 검색 
         4. 더보기 메뉴
       */}
       <div className="util-inner">
         <div className="util-item">
+          {
+            login 
+              ?
+              <div className="user">
+                <button className="user-btn">
+                  <span className='nickname'>ㅇㅇㅇ</span>님
+                </button>
+                <button className="user-logout-btn">
+                  <span className="icon"><SvgLogOut /></span>
+                </button>
+              </div>
+              :
+              <div className="logIn">
+                <NavLink to="/member" className="logout-btn">
+                  <span className="icon"><SvgLogin /></span>
+                </NavLink>
+              </div>
+          }
+          {/* <button type="button" onClick={()=> loginChk()}>
+            <span className="icon">
+              {
+                login ? <SvgLogOut /> 
+                
+                : <SvgLogin />
+              }
+            </span>
+          </button> */}
+        </div>
+        <div className="util-item">
           <button type="button" onClick={()=> darkLightMode()}>
             <span className="icon">
               {
                 <DarkLight mode={mode}/>
-              }
-            </span>
-          </button>
-        </div>
-        <div className="util-item">
-          <button type="button" onClick={()=> loginChk()}>
-            <span className="icon">
-              {
-                login ? <SvgLogOut /> : <SvgLogin />
               }
             </span>
           </button>
@@ -79,11 +102,11 @@ export default function UtilNav () {
           </div>
         }
       </div>
-    </STyleUtilNav>
+    </StyleUtilNav>
   )
 }
 
-const STyleUtilNav = styled.div`
+const StyleUtilNav = styled.div`
   .util {
     &-inner{ 
       display:flex;

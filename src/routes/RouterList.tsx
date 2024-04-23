@@ -1,44 +1,59 @@
-
 import MainPage from "pages/main/MainPage";
+import ResumePage from "pages/resume/ResumePage";
+import MapPage from "pages/map/MapPage";
 import PortfolioPage from "pages/portfolio/PortfolioPage";
+import WeatherPage from "pages/weather/WeatherPage";
+import MemberPage from "pages/member/MemberPage";
+import SignIn from "pages/member/SignIn";
+import SignUp from "pages/member/SignUp";
 
-interface RouterType {
-  index?: boolean,
-  id: string,
-  path?: string,
-  title?: string
-  desc? : string,
-  element : JSX.Element,
-}
-
-export const routerList : RouterType[]= [
+export const routerList = [
   { // Main
     index: true,
-    id:"Main",
+    id: "Main",
     element: <MainPage />
   },
-  // {
-  //   id:"Resume",
-  //   path:"resume",
-  //   title:"dd",
-  //   element: <PortfolioPage/>,
-  // },
   {
-    id:"Weather",
-    path:"weather",
-    title : '날씨',
-    element: <PortfolioPage/>,
+    id: "Resume",
+    path: "resume",
+    title: "준비",
+    element: <ResumePage />,
   },
   {
-    id:"Map favorites",
-    path:"map",
-    title : '나의 지도',
-    element: <PortfolioPage/>,
+    id: "Weather",
+    path: "weather",
+    title: '날씨',
+    element: <WeatherPage />,
   },
-  // {
-  //   id:"Portfolio",
-  //   path:"portfolio",
-  //   title : '포트폴리오',
-  //   element: <PortfolioPage/>,
-  // },
-]
+  {
+    id: "Map favorites",
+    path: "map",
+    title: '나의 지도',
+    element: <MapPage />,
+  },
+  {
+    id: "Portfolio",
+    path: "portfolio",
+    title: '포트폴리오',
+    element: <PortfolioPage />,
+  },
+  {
+    id: "Member",
+    path: "member",
+    element: <MemberPage />,
+    children: [
+      {
+        index: true,
+        id: "SignIn",
+        title: "로그인",
+        element: <SignIn />
+      },
+      {
+        id: "SignUp",
+        path: "sign-up",
+        title: "회원가입",
+        element: <SignUp />,
+      }
+    ]
+  }
+];

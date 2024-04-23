@@ -1,6 +1,6 @@
 import { colors, shadow } from "assets/style/Variable";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { routerList } from "routes/RouterList";
 import { RootState } from "store/store";
 import styled from "styled-components"
@@ -15,9 +15,9 @@ export default function Navigation(){
         {
           routerList.map((routerItem,idx) => (
             idx > 0 && <li key={routerItem.id}>
-              <Link to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
+              <NavLink to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
                 {routerItem.id}
-              </Link>
+              </NavLink>
             </li>
           ))
         }
@@ -37,6 +37,8 @@ const StyleNav = styled.div`
       position:relative;
     }
     &-link {
+      display:inline-block;
+      padding:20px 0;
       font-weight:900;
       font-size:${rem(21)};
       color:${colors.baseWhite};

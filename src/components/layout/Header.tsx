@@ -1,25 +1,26 @@
-import { breakpoints, colors, shadow } from "assets/style/Variable";
+import { useMemo, useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components"
+import { rem } from "utils/common";
+import { breakpoints } from "assets/style/Variable";
 import Navigation from "components/article/Navigation";
 import UtilNav from "components/article/UtilNav";
 import Logo from "components/element/Logo";
-import { useEffect, useMemo, useRef } from "react";
-import styled from "styled-components"
 import { LocationType } from "types/baseType";
-import { rem } from "utils/common";
 
 type PropsLocation= {
   location : LocationType
 }
 export default function Header({location}:PropsLocation){
+  const [isFixed, setIsFixed] = useState<boolean>(false);
   const sticky = useMemo(() : boolean => {
     return location.pathname === '/' ?  false : true
   },[location.pathname])
   let scrollY = useRef(0);
 
   const eventScroll = () => {
-    // const headerH = document.querySelector('.header').clientHeight;
-    // scrollY = window.pageYOffset
-    // scrollY > 0 ? setScrollZero(true) : setScrollZero(false)
+    scrollY.current = window.pageYOffset;
+
   };
   useEffect(()=>{
     window.addEventListener("scroll", eventScroll);
@@ -29,13 +30,13 @@ export default function Header({location}:PropsLocation){
   },[])
 
   return (
-    <StyleHeader className={!sticky ? 'main-header': ''}>
+    <StyleHeader className={`${!sticky ? 'main-header': ''} ${isFixed ? 'fixed': ''}`}>
       <div className="header" >
         <div className="header-inner">
           <div className="header-logo">
-            <button className="logo-btn">
+            <NavLink to="/" className="logo-btn">
               <Logo />
-            </button>
+            </NavLink>
           </div>
           {/* gnb */}
           <Navigation />

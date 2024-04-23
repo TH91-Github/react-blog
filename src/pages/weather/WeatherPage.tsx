@@ -1,5 +1,5 @@
 
-export default function Weather() {
+export default function WeatherPage() {
   return (
     <>
       Weather
