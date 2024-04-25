@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components"
-import { StyleProps } from "types/baseType";
+import { NumberOnly, StyleProps } from "types/baseType";
 
-export default function Sun(){
+export default function Sun({iconSize} : NumberOnly){
   return (
-    <StyleSun className="sun">
+    <StyleSun $width={iconSize} className="sun">
       <span className="sun-circle"></span>
       {
         new Array(8).fill('').map((item,idx)=> 
@@ -20,8 +20,8 @@ export default function Sun(){
 const StyleSun = styled.span<StyleProps>`
   display:block;
   position:relative;
-  width:${props => props.$width || '25px'};
-  height:${props => props.$height || '25px'};
+  width:${props => props.$width || 25}px;
+  height:${props => props.$width || 25}px;
   & span {
     display:block;
     position:absolute;

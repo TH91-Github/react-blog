@@ -9,6 +9,7 @@ interface AppLayoutProps {
 }
 export default function AppLayout({ children }: AppLayoutProps) {
   const  theme = useSelector((state : RootState) => state.useTheme);
+  // 이용자에 따라 다크/라이트 모드 체크 확인 후 변경
   return (
     <ThemeProvider theme={theme.color}>
       <StyleWrap className="App">
@@ -22,7 +23,7 @@ const StyleWrap = styled.div`
   position:relative;
   min-width:320px;
   min-height:100svh;
-  background: ${colors.gradientWhite};
+  background: ${props => props.theme.gradientBg || colors.gradientWhite}; 
   color:${props => props.theme.color || '#000'};
   .container {
     position:relative;

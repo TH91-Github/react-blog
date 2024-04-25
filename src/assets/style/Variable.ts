@@ -47,6 +47,18 @@ export const colors = {
   // Line Color
   lineColor: "#dbdbdb",
 }
+
+// 다크/라이트 모드
+export const lightTheme = {
+  gradientBg:colors.gradientWhite,
+  lineColor:colors.baseBlack,
+  color:colors.baseBlack,
+}
+export const darkTheme = {
+  gradientBg:colors.gradientDark,
+  lineColor:colors.baseWhite,
+  color:colors.baseWhite,
+}
 // shadow
 export const shadow = {
   textBase : 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
@@ -64,11 +76,4 @@ export const animaion = {
 }
 export const keyFrames = {
   fadeIn : `@keyframes fadeIn { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
-}
-
-export const lightTheme = {
-  color:'#000',
-}
-export const darkTheme = {
-  color:'#fff',
 }

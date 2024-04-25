@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { StyleProps } from "types/baseType";
+import { NumberOnly, StyleProps } from "types/baseType";
 
-export default function Moon (){
+export default function Moon ({iconSize} : NumberOnly){
   const dark = true;
   return (
-    <StyleMoon className={`moon ${dark ? 'moon-dark': ''}`}>
+    <StyleMoon $width={iconSize} className={`moon ${dark ? 'moon-dark': ''}`}>
       <span className="moon-circle"></span>
       {
         dark && <span className="dark-mode">
@@ -19,8 +19,8 @@ export default function Moon (){
 const StyleMoon = styled.span<StyleProps>`
   display:block;
   position:relative;
-  width:${props => props.$width || '25px'};
-  height:${props => props.$height || '25px'};
+  width:${props => props.$width || 25}px;
+  height:${props => props.$width || 25}px;
   & span {
     display:block;
     position:absolute;

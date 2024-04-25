@@ -1,10 +1,9 @@
 import { breakpoints, colors, media, shadow } from "assets/style/Variable"
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
-import styled, { ThemeProvider } from "styled-components"
+import styled from "styled-components"
 import { rem } from "utils/common"
 
 export default function MainPage() : JSX.Element{ 
+  
   console.log('main')
   return (
       <StyleMain className="main">
@@ -27,8 +26,7 @@ export default function MainPage() : JSX.Element{
 const StyleMain = styled.div`
 position:relative;
 width:100%;
-
-background: ${colors.gradientCloudyApple};
+background: ${props => props.theme.gradientBg || colors.gradientCloudyApple}; 
 color:${(props)=> props.theme.color};
 .moon {
   position:fixed;

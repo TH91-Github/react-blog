@@ -1,7 +1,7 @@
 import { darkTheme, lightTheme } from "assets/style/Variable";
-import DarkLight from "components/unit/DarkLight";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, actionTheme } from "store/store";
+import DarkLight from "components/unit/DarkLight";
 
 export default function ThemeBtn(){
   const  theme = useSelector((state : RootState) => state.useTheme);
@@ -23,8 +23,9 @@ export default function ThemeBtn(){
   return(
     <button type="button" onClick={()=> darkLightMode()}>
       {
-        <DarkLight mode={true}/>
+        <DarkLight mode={theme.mode === 'light'? true : false}/>
       }
+      <span className="blind">{theme.mode === 'light' ? '라이트': '다크'}모드 선택 됨.</span>
     </button>
   )
 }
