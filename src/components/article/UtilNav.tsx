@@ -1,22 +1,17 @@
+import { useSelector } from "react-redux";
 import { SvgLogOut, SvgLogin, SvgSearch } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import styled from "styled-components"
-import DarkLight from "components/unit/DarkLight";
 import { NavLink } from "react-router-dom";
+import { RootState } from "store/store";
+import ThemeBtn from "./ThemeBtn";
 
 export default function UtilNav () {
-  const [mode, setMode] = useState(false);
   const [login, setLogIn] = useState(false);
   const [more, setMore] = useState(false);
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   
-  // dark light mode
-  function darkLightMode(){
-    setMode(prev => !prev)
-  }
   // user Member
   function loginChk(){
     console.log('logoin 체크')
@@ -27,7 +22,7 @@ export default function UtilNav () {
   function menuClick(){
     setMore(prev => !prev)
   }
-
+  console.log('utilNav')
   return (
     <StyleUtilNav className="util">
       {/* 
@@ -67,13 +62,7 @@ export default function UtilNav () {
           </button> */}
         </div>
         <div className="util-item">
-          <button type="button" onClick={()=> darkLightMode()}>
-            <span className="icon">
-              {
-                <DarkLight mode={mode}/>
-              }
-            </span>
-          </button>
+          <ThemeBtn />
         </div>
         <div className="util-item">
           <button type="button">
@@ -107,11 +96,15 @@ export default function UtilNav () {
 }
 
 const StyleUtilNav = styled.div`
+  color:${({theme}) => theme.color};
   .util {
     &-inner{ 
       display:flex;
       gap:10px;
       align-items:center;
+    }
+    &-item{
+      font-size:0;
     }
   }
   .icon {

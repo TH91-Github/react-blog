@@ -72,8 +72,3 @@ export const lightTheme = {
 export const darkTheme = {
   color:'#fff',
 }
-
-export const theme = {
-  lightTheme,
-  darkTheme
-}

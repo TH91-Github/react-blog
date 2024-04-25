@@ -1,32 +1,35 @@
 import { breakpoints, colors, media, shadow } from "assets/style/Variable"
-import styled from "styled-components"
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import styled, { ThemeProvider } from "styled-components"
 import { rem } from "utils/common"
 
-
 export default function MainPage() : JSX.Element{ 
+  console.log('main')
   return (
-    <StyleMain className="main">
-      <div className="visual">
-        <div className="visual-bord">
-          <div className="visual-text">
-            <h1 className="title">Title</h1>
-            <p className="desc">sub text</p>
+      <StyleMain className="main">
+        <div className="visual">
+          <div className="visual-bord">
+            <div className="visual-text">
+              <h1 className="title">Title</h1>
+              <p className="desc">sub text</p>
+            </div>
           </div>
+          <div className="testbox"></div>
         </div>
-        <div className="testbox"></div>
-      </div>
-      <div className="content">
+        <div className="content">
 
-      </div>
-    </StyleMain>
+        </div>
+      </StyleMain>
   )
 }
 
 const StyleMain = styled.div`
 position:relative;
 width:100%;
-background: ${colors.gradientCloudyApple};
 
+background: ${colors.gradientCloudyApple};
+color:${(props)=> props.theme.color};
 .moon {
   position:fixed;
   z-index:999;

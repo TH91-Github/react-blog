@@ -1,23 +1,20 @@
 import { useCallback, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Dispatch } from "@reduxjs/toolkit";
-import { sSetMobileChk } from "store/store";
+import { actionMobileChk } from "store/store";
 import { isMobileChk } from "utils/common";
 import { GlobalStyles } from 'assets/style/GlobalStyles';
-import { colors } from 'assets/style/Variable';
 import Header from 'components/layout/Header';
-import styled from 'styled-components';
 import './App.css';
+import AppLayout from "components/layout/AppLayout";
 
 function App() : JSX.Element {
   const location = useLocation();
-  const dispatch : Dispatch = useDispatch();
-
+  const dispatch = useDispatch();
   // Resize
   const reSizesEvent = useCallback(()=> {
     let moState = isMobileChk();
-    dispatch(sSetMobileChk(moState))
+    dispatch(actionMobileChk(moState))
   },[dispatch]) 
 
   useEffect(() => {
@@ -28,28 +25,17 @@ function App() : JSX.Element {
     };
   }, [reSizesEvent]);
 
-
+  console.log("App")
   return (
-    <StyleApp className="App">
+    <AppLayout>
       <GlobalStyles />
       <div className="container">
         <Header 
-         location={location}
+          location={location}
         />
-        <main>
-          <Outlet />
-        </main>
+        <Outlet />
       </div>
-    </StyleApp>
+    </AppLayout>
   );
 }
 export default App;
-
-const StyleApp = styled.div`
-  position:relative;
-  min-width:320px;
-  background: ${colors.gradientWhite};
-  .container {
-    position:relative;
-  }
-`;

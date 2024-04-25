@@ -28,7 +28,7 @@ export default function Header({location}:PropsLocation){
       window.removeEventListener("scroll", eventScroll);
     };
   },[])
-
+  console.log("header")
   return (
     <StyleHeader className={`${!sticky ? 'main-header': ''} ${isFixed ? 'fixed': ''}`}>
       <div className="header" >

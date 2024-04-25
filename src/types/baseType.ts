@@ -8,6 +8,9 @@ export interface LocationType {
 export interface NumberOnly {
   [key:string] : number
 }
+export interface StringOnly {
+  [key:string] : string
+}
 export interface  StringNumber{
   [key:string] : string | number
 }
