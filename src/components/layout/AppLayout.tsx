@@ -27,5 +27,6 @@ const StyleWrap = styled.div`
   color:${props => props.theme.color || '#000'};
   .container {
     position:relative;
+    width:100%;
   }
 `;
