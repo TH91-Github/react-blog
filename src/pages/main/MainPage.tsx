@@ -3,10 +3,9 @@ import styled from "styled-components"
 import { rem } from "utils/common"
 
 export default function MainPage() : JSX.Element{ 
-  
   console.log('main')
   return (
-      <StyleMain className="main">
+      <StyleWrap className="main">
         <div className="visual">
           <div className="visual-bord">
             <div className="visual-text">
@@ -19,11 +18,11 @@ export default function MainPage() : JSX.Element{
         <div className="content">
 
         </div>
-      </StyleMain>
+      </StyleWrap>
   )
 }
 
-const StyleMain = styled.div`
+const StyleWrap = styled.div`
 position:relative;
 width:100%;
 background: ${props => props.theme.gradientBg || colors.gradientCloudyApple}; 

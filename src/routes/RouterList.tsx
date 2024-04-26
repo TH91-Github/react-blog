@@ -40,6 +40,7 @@ export const routerList = [
   {
     id: "Member",
     path: "member",
+    view: false,
     element: <MemberPage />,
     children: [
       {

@@ -3,8 +3,7 @@ import styled from "styled-components"
 
 export default function MemberPage(){
   return (
-    <StyleWrap>
-      Member
+    <StyleWrap className="member">
       <Outlet />
     </StyleWrap>
   )

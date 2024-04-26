@@ -1,8 +1,13 @@
+import styled from "styled-components";
 
 export default function PortfolioPage(){ 
   return (
-    <div className="portfolio">
+    <StyleWrap className="portfolio">
       portfolio
-    </div>
+    </StyleWrap>
   )
 }
+
+const StyleWrap = styled.div`
+
+`;

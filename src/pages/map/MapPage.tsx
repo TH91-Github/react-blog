@@ -1,8 +1,12 @@
+import styled from "styled-components";
 
 export default function MapPage() {
   return (
-    <>
-      Weather
-    </>
+    <StyleWrap className="map">
+      Map
+    </StyleWrap>
   )
 }
+const StyleWrap = styled.div`
+
+`;

@@ -1,9 +1,13 @@
+import styled from "styled-components";
 
 
 export default function ResumePage(){
   return(
-    <div>
+    <StyleWrap className="resume">
       Resume
-    </div>
+    </StyleWrap>
   )
 }
+const StyleWrap = styled.div`
+
+`;

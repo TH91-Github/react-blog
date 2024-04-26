@@ -13,13 +13,14 @@ export default function Navigation(){
     <StyleNav className={`gnb ${isMobile? 'gnb-mo': ''}`}>
       <ul className="gnb-lists">
         {
-          routerList.map((routerItem,idx) => (
-            idx > 0 && <li key={routerItem.id}>
+          routerList.map((routerItem,idx) => {
+            return idx > 0 && (routerItem.view === undefined || routerItem.view) && 
+            <li key={routerItem.id}>
               <NavLink to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
                 {routerItem.id}
               </NavLink>
             </li>
-          ))
+          })
         }
       </ul>
     </StyleNav>   
