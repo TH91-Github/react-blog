@@ -3,8 +3,8 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components"
 import { rem } from "utils/common";
 import { breakpoints } from "assets/style/Variable";
-import Navigation from "components/article/Navigation";
-import UtilNav from "components/article/UtilNav";
+import Navigation from "components/article/header/Navigation";
+import UtilNav from "components/article/header/UtilNav";
 import Logo from "components/element/Logo";
 import { LocationType } from "types/baseType";
 
