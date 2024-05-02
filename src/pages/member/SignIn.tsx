@@ -1,25 +1,25 @@
 
-import { fireDB } from "firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+// import { fireDB } from "firebase";
+// import { doc, getDoc } from "firebase/firestore";
+// import { useEffect, useState } from "react";
 
-import styled from "styled-components"
+// import styled from "styled-components"
 
 export default function SignIn () {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // 여기에 실제 로그인 처리 로직을 넣으세요
-    // 예를 들어, 서버로 사용자명과 비밀번호를 보내고, 올바른 경우 setIsLoggedIn(true)를 호출할 수 있습니다.
-    setIsLoggedIn(true);
-  };
+  // const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   // 여기에 실제 로그인 처리 로직을 넣으세요
+  //   // 예를 들어, 서버로 사용자명과 비밀번호를 보내고, 올바른 경우 setIsLoggedIn(true)를 호출할 수 있습니다.
+  //   setIsLoggedIn(true);
+  // };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  // };
 
   // const fetchData = async () => {
   //   try {
@@ -32,9 +32,9 @@ export default function SignIn () {
   //   }
   // };
 
-  useEffect(() => {
-    // fetchData();
-  }, []);
+  // useEffect(() => {
+  //   // fetchData();
+  // }, []);
   /*
     타이틀
     로그인 정보 입력 email or id
@@ -44,8 +44,8 @@ export default function SignIn () {
     회원가입 | 아이디 찾기 | 비밀번호 찾기
   */
   return (
-    <StyleWrap>
-       <div>
+    <>
+       {/* <div>
         {isLoggedIn ? (
           <div>
             <p>로그인되었습니다!</p>
@@ -68,11 +68,11 @@ export default function SignIn () {
             <button type="submit">로그인</button>
           </form>
         )}
-      </div>
-    </StyleWrap>
+      </div> */}
+    </>
   )
 }
 
-const StyleWrap = styled.div`
+// const StyleWrap = styled.div`
 
-`;
+// `;

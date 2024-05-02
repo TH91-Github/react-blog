@@ -11,19 +11,20 @@ import AppLayout from "components/layout/AppLayout";
 function App() : JSX.Element {
   const location = useLocation();
   const dispatch = useDispatch();
+
   // Resize
-  const reSizesEvent = useCallback(()=> {
-    let moState = isMobileChk();
-    dispatch(actionMobileChk(moState))
-  },[dispatch]) 
+  const handleResize = useCallback(() => {
+    const isMobile = isMobileChk();
+    dispatch(actionMobileChk(isMobile));
+  }, [dispatch]);
 
   useEffect(() => {
-    reSizesEvent();
-    window.addEventListener("resize", reSizesEvent);
+    handleResize();
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener("resize", reSizesEvent);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [reSizesEvent]);
+  }, [handleResize]);
 
   console.log("App")
   return (
