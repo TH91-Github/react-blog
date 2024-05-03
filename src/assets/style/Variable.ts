@@ -48,13 +48,17 @@ export const colors = {
   lineColor: "#dbdbdb",
 }
 
+
+
 // 다크/라이트 모드
 export const lightTheme = {
+  type:'light',
   gradientBg:colors.gradientWhite,
   lineColor:colors.baseBlack,
   color:colors.baseBlack,
 }
 export const darkTheme = {
+  type:'dark',
   gradientBg:colors.gradientDark,
   lineColor:colors.baseWhite,
   color:colors.baseWhite,

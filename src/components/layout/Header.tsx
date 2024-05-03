@@ -30,8 +30,8 @@ export default function Header({location}:PropsLocation){
   },[])
   console.log("header")
   return (
-    <StyleHeader className={`${!sticky ? 'main-header': ''} ${isFixed ? 'fixed': ''}`}>
-      <div className="header" >
+    <StyleHeader className={`header ${!sticky ? 'main-header': ''} ${isFixed ? 'fixed': ''}`}>
+      <div className="header-wrap" >
         <div className="header-inner">
           <div className="header-logo">
             <NavLink to="/" className="logo-btn">
@@ -49,17 +49,20 @@ export default function Header({location}:PropsLocation){
 }
 
 const StyleHeader = styled.header`
-  position: sticky;
+  position: fixed;
+  z-index:999;
   top:0;
   left:0;
-  z-index:9999;
   width:100%;
   .header {
-    position:relative;
-    padding:0 30px;
+    &-wrap{
+      position:relative;
+      padding:0 30px;  
+    }
     &-inner {
       display:flex;
       align-items:center;
+      height:100%;
     }
     &-logo{
       padding-right:50px;
@@ -72,7 +75,7 @@ const StyleHeader = styled.header`
     overflow:hidden;
     position:absolute;
     top: calc((100% - clamp(${rem(500)}, 80%, ${rem(600)})) / 2);
-    .header {
+    .header-wrap {
       width:clamp(${rem(800)}, 80% , ${breakpoints.pc}px);
       margin:0 auto;
       padding:20px 15px;

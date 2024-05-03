@@ -12,6 +12,8 @@ export default function MemberPage(){
 
 const StyleWrap = styled.div`
   position:relative;
+  height:100svh;
+  min-height:500px;
   .bg-line {
     position:absolute;
     z-index:-1;

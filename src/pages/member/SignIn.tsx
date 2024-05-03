@@ -1,78 +1,62 @@
+import { colors } from "assets/style/Variable";
+import InputText from "components/element/InputText";
+import { useRef } from "react";
+import styled from "styled-components";
 
-// import { fireDB } from "firebase";
-// import { doc, getDoc } from "firebase/firestore";
-// import { useEffect, useState } from "react";
+export default function SignIn() {
+  const refList = useRef<HTMLInputElement[]>([]);
 
-// import styled from "styled-components"
+  // 
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(refList.current)
+  };
 
-export default function SignIn () {
-  // const [username, setUsername] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   // 여기에 실제 로그인 처리 로직을 넣으세요
-  //   // 예를 들어, 서버로 사용자명과 비밀번호를 보내고, 올바른 경우 setIsLoggedIn(true)를 호출할 수 있습니다.
-  //   setIsLoggedIn(true);
-  // };
-
-  // const handleLogout = () => {
-  //   setIsLoggedIn(false);
-  // };
-
-  // const fetchData = async () => {
-  //   try {
-  //     const docRef = doc(fireDB, "thData", "resume");
-  //     const docSnap = await getDoc(docRef);
-  //     console.log(docSnap);
-     
-  //   } catch (error) {
-  //     console.error("Error getting document:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // fetchData();
-  // }, []);
-  /*
-    타이틀
-    로그인 정보 입력 email or id
-    or
-    sns 로그인
-    -------------
-    회원가입 | 아이디 찾기 | 비밀번호 찾기
-  */
+  const refListChk = (e : HTMLInputElement) => {
+    // refList e(input)이 없는 경우 추가
+    if(!refList.current.includes(e)){
+      e && refList.current.push(e)
+    }
+  }
+  console.log('LOGIN')
   return (
-    <>
-       {/* <div>
-        {isLoggedIn ? (
-          <div>
-            <p>로그인되었습니다!</p>
-            <button onClick={handleLogout}>로그아웃</button>
-          </div>
-        ) : (
-          <form onSubmit={handleLogin}>
-            <input
-              type="text"
-              placeholder="사용자명"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+    <StyleWrap className="login">
+      <div className="login-wrap">
+        <h1 className="title">로그인 화면</h1>
+        <div className="login-cont">
+          <form className="form" onSubmit={handleLogin}>
+            <InputText
+              ref={refListChk}
+              className={'login-id'}
+              placeholder={'아이디를 입력하세요.'}
             />
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+            <InputText
+              ref={refListChk}
+              className={'login-pw'}
+              placeholder={'비밀번호를 입력하세요.'}
             />
             <button type="submit">로그인</button>
+            <div className="login-sns">
+              <h2>sns 로그인</h2>
+            </div>
           </form>
-        )}
-      </div> */}
-    </>
-  )
+        </div>
+      </div>
+    </StyleWrap>
+  );
 }
 
-// const StyleWrap = styled.div`
-
-// `;
+const StyleWrap = styled.div`
+  .login {
+    &-wrap{ 
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width:100%;
+      max-width:500px;
+      padding:30px;
+      background:#fff;
+      transform: translate(-50%, -50%); 
+    }
+  }
+`;

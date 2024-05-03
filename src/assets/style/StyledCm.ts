@@ -1,5 +1,6 @@
 import styled, {css} from 'styled-components';
 import { StyleProps } from 'types/baseType';
+import { breakpoints, media } from './Variable';
 
 // css
 export const notice = css`
@@ -25,6 +26,15 @@ export const Button = styled.button.attrs({
   cursor:pointer;
 `;
 
+export const InnerStyle = styled.div`
+  width:100%;
+  max-width:${breakpoints.pc}px;
+  margin:0 auto;
+  padding:0 30px;
+  ${media.mo} {
+    padding: 0 20px;
+  }
+`;
 
 // ♣ ICON
 export const Icon = styled.i<StyleProps>`

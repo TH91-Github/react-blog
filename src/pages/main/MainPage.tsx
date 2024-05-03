@@ -25,7 +25,7 @@ export default function MainPage() : JSX.Element{
 const StyleWrap = styled.div`
 position:relative;
 width:100%;
-background: ${props => props.theme.gradientBg || colors.gradientCloudyApple}; 
+background: ${props => props.theme.type === 'dark' ? props.theme.gradientBg : colors.gradientCloudyApple}; 
 color:${(props)=> props.theme.color};
 .moon {
   position:fixed;

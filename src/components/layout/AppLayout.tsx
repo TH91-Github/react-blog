@@ -28,5 +28,8 @@ const StyleWrap = styled.div`
   .container {
     position:relative;
     width:100%;
+    .header:not(.main-header) + div {
+      padding-top:70px;
+    }
   }
 `;
