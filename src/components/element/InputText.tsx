@@ -3,6 +3,7 @@ import React, { forwardRef, useCallback, useState } from "react";
 import styled from "styled-components";
 
 interface InputType {
+  name: string,
   type?: string,
   id?: string;
   className?: string;
@@ -16,6 +17,7 @@ interface InputType {
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   {
+    name,
     type,
     id,
     className,
@@ -48,14 +50,10 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setVal(value);
-    // change props 있을 경우 .5초 후에 실행
-    if(changeEvent){
       clearTimeout(propsTime)
       propsTime = setTimeout(() =>{
-        changeEvent(value);
         console.log('야호')
       },1000)
-    }
   },[]);
 
   return (
@@ -66,12 +64,14 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
         ref={ref}
         type={passwordType}
         id={id}
+        name={name}
         className={`input ${className ? className : ''}`}
         // value={val}
         onFocus={focusIn}
         onBlur={focusOut}
         onKeyUp={keyUp}
         onChange={onChange}
+        autoComplete={name}
         title={placeholder ? placeholder : "입력해주세요"}
       />
       {
@@ -90,7 +90,7 @@ type StyleProps = {
 };
 
 const StyleWrap = styled.div<StyleProps>`
-  display:inline-block;
+  display:block;
   overflow:hidden;
   position:relative;
   ${props => props.$maxWidth && `max-width: ${props.$maxWidth};`}
@@ -110,7 +110,9 @@ const StyleWrap = styled.div<StyleProps>`
     }
   }
   .input {
-    padding:3px 10px;
+    display:block;
+    width:100%;
+    padding:5px 10px;
     border:1px solid transparent;
     font-size:14px;
     background:none;

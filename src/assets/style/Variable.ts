@@ -35,8 +35,8 @@ export const colors = {
   red: "#e8392c",
   navy: "#333A73",
   // point gradient
+  yellowG:"linear-gradient(90deg, rgba(255, 176, 0,1) 20.469152475672583%,rgba(255, 204, 0,1) 80.47022574413279%)",
   blueG:"linear-gradient(90deg, rgba(65, 158, 245,1) 20.42373356246264%,rgba(117, 188, 255,1) 80.42448072325163%)",
-
   // bg Color
   gradientDark: "linear-gradient(75deg, #434343 0%, black 100%)",
   gradientWhite: "linear-gradient(75deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%)",
@@ -67,6 +67,7 @@ export const lightTheme = {
   gradientBg:colors.gradientWhite,
   lineColor:colors.baseBlack,
   color:colors.baseBlack,
+  bgColor:colors.baseWhite,
   subTextColor:colors.subTextColor,
   shadowText:shadow.textBase,
   shadowBg: shadow.bgBase,
@@ -76,6 +77,7 @@ export const darkTheme = {
   gradientBg:colors.gradientDark,
   lineColor:colors.baseWhite,
   color:colors.baseWhite,
+  bgColor:colors.baseBlack,
   subTextColor:'#d5d5d5',
   shadowText:shadow.textBaseW,
   shadowBg: shadow.bgBaseW,

@@ -29,7 +29,7 @@ const StyleWrap = styled.div`
     position:relative;
     width:100%;
     .header:not(.main-header) + div {
-      padding-top:70px;
+      padding:70px 0;
     }
   }
 `;

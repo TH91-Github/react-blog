@@ -7,10 +7,15 @@ import styled from "styled-components";
 export default function SignIn() {
   const refList = useRef<HTMLInputElement[]>([]);
 
-  // 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(refList.current)
+    // id 확인 id or email 확인
+    // id일 경우 회원 목록을 불러와서 체크
+
+    // pw 
+
+
   };
 
   const refListChk = (e : HTMLInputElement) => {
@@ -22,22 +27,24 @@ export default function SignIn() {
   console.log('LOGIN')
   return (
     <StyleWrap className="login">
-      <div className="login-wrap">
+      <div className="member-wrap">
         <h1 className="title">Login</h1>
-        <div className="login-cont">
+        <div className="member-cont">
           <form className="form" onSubmit={handleLogin}>
             <div className="form-item">
-              <p className="s-tit">User ID</p>
+              <p className="s-tit">아이디 or 이메일</p>
               <InputText
                 ref={refListChk}
+                name={'login-id'}
                 className={'login-id'}
                 placeholder={'아이디를 입력하세요.'}
               />
             </div>
             <div className="form-item">
-              <p className="s-tit">User Password</p>
+              <p className="s-tit">비밀번호</p>
               <InputText
                 ref={refListChk}
+                name={'password'}
                 type={'password'}
                 className={'login-pw'}
                 placeholder={'비밀번호를 입력하세요.'}
@@ -47,12 +54,20 @@ export default function SignIn() {
               {/* <div className="remember">
 
               </div> */}
-              <button type="submit" className="login-btn">
-                <span>Login</span>
+              <button type="submit" className="login-btn btnG" title="로그인 확인">
+                <span>확인</span>
               </button>
             </div>
             <div className="login-sns">
-              <h2 className="tit">SNS Login</h2>
+              <h2 className="tit">SNS</h2>
+              <ul className="login-sns-lsits">
+                <li>
+                  <button className="btn" title="Google login">Google</button>
+                </li>
+                <li>
+                  <button className="btn" title="Github login">Github</button>
+                </li>
+              </ul>
             </div>
             <div className="sign-up">
               <span className="txt">아이디가 없으신가요? </span>
@@ -70,61 +85,55 @@ export default function SignIn() {
 
 const StyleWrap = styled.div`
   .login {
-    &-wrap{ 
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width:100%;
-      max-width:500px;
-      padding:30px;
-      border-radius:10px;
-      background:${(props)=> props.theme.type === 'light' ? 'rgba(255,255,255,0.3)': 'rgba(127,127,127,0.3)'};
-      backdrop-filter:blur(4px);
-      box-shadow:${(props)=> props.theme.type === 'light' ? props.theme.shadowBg : shadow.textBaseW};
-      transform: translate(-50%, -50%); 
-      .title{ 
-        font-size:36px;
-        text-shadow:${(props)=> props.theme.shadowText};
-        text-align:center;
-      }
-    }
-    &-cont{
-      position:relative;
-      margin-top:30px;
-      padding-top:30px;
-      &::after{
-        position:absolute;
-        top:0;
-        left:50%;
-        width:100%;
-        height:2px;
-        border-radius:2px;
-        background:${colors.blue};
-        transform:translate(-50%);
-        animation: lineAni 1s ease both;
-        content:'';
-      }
-      @keyframes lineAni {
-        0%{width:0;}
-        100%{width:100%;}
-      }
-    }
     &-sns {
       position:relative;
       margin-top:20px;
-      padding-top:20px;
-      &::after{
-        position:absolute;
-        top:0;
-        left:50%;
-        width:100%;
-        height:1px;
-        background:${colors.lineColor};
-        content:'';
-        transform: translateX(-50%);
-      }
+      padding:20px;
+      border-radius:10px;
+      background:${colors.baseWhite};
+      background:${(props)=> props.theme.bgColor};
+      text-align:center;
       .tit {
         font-size:18px;
+      }
+      &-lsits{
+        display:flex;
+        gap:10px;
+        position:relative;
+        margin-top:15px;
+        padding-top:15px;
+        justify-content:center;
+        &::before{
+          position:absolute;
+          top:0;
+          left:50%;
+          width:70%;
+          height:1px;
+          background:${colors.yellow};
+          content:'';
+          transform: translateX(-50%);
+        }
+        &::after{
+          position:absolute;
+          top:0;
+          left:50%;
+          width:8px;
+          height:8px;
+          border-radius:50%;
+          background:${colors.blue};
+          content:'';
+          transform: translate(-50%, -50%);
+        }
+      }
+      .btn{
+        padding:5px 10px;
+        border-radius:5px;
+        border:1px solid ${colors.blue};
+        transition:${transitions.base};
+        &:hover, &:focus {
+          background:${colors.blue};
+          color:#fff;
+        }
       }
     }
     &-btn {
@@ -133,50 +142,37 @@ const StyleWrap = styled.div`
       margin-top:10px;
       padding:10px;
       border-radius:10px;
-      background:${colors.blueG};
       & > span{
         font-size:18px;
-        color:${colors.baseWhite};
+        font-weight:600;
       }
     }
   }
-  .form {
+  .sign-up{
     display:flex;
-    flex-direction: column;
-    gap:30px;
-    &-item{
-      .input-wrap{
-        margin-top:10px;
-      }
-    }
-    .s-tit {
+    gap:5px;
+    align-items:center;
+    margin-top:20px;
+    .txt {
       font-size:14px;
+      color:${(props)=> props.theme.subTextColor};
     }
-    .sign-up{
-      display:flex;
-      gap:5px;
-      align-items:center;
-      .txt {
-        font-size:14px;
-        color:${(props)=> props.theme.subTextColor};
+    &-btn {
+      position:relative;
+      padding-bottom:3px;
+      &::after{
+        position:absolute;
+        left:0;
+        bottom:0;
+        width:0;
+        height:2px;
+        background: ${colors.yellow};
+        transition: ${transitions.base};
+        content:'';
       }
-      &-btn {
-        position:relative;
-        padding-bottom:3px;
+      &:hover, &:focus {
         &::after{
-          position:absolute;
-          left:0;
-          bottom:0;
-          width:0;
-          height:2px;
-          background: ${colors.yellow};
-          transition: ${transitions.base};
-          content:'';
-        }
-        &:hover, &:focus {
-          &::after{
-            width:100%;
-          }
+          width:100%;
         }
       }
     }

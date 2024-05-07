@@ -29,6 +29,10 @@ export const GlobalStyles = createGlobalStyle`
     font-size:1;
     opacity:0;
   }
+  .btnG {
+    background:${colors.blueG};
+    color:${colors.baseWhite};
+  }
   /* 스크롤바 전체 */
   body::-webkit-scrollbar {
     width:8px;
