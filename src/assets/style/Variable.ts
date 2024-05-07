@@ -25,7 +25,8 @@ export const media = {
 export const colors = {
   // Color 
   baseWhite: "#ffffff",
-  baseBlack: "#000000",
+  baseBlack: "#242424",
+  originBlack: "#000000",
   subBlack: "#222222",
   // point
   green: "#0174BE",
@@ -33,6 +34,9 @@ export const colors = {
   blue: "#419ef5",
   red: "#e8392c",
   navy: "#333A73",
+  // point gradient
+  blueG:"linear-gradient(90deg, rgba(65, 158, 245,1) 20.42373356246264%,rgba(117, 188, 255,1) 80.42448072325163%)",
+
   // bg Color
   gradientDark: "linear-gradient(75deg, #434343 0%, black 100%)",
   gradientWhite: "linear-gradient(75deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%)",
@@ -48,7 +52,14 @@ export const colors = {
   lineColor: "#dbdbdb",
 }
 
-
+// shadow
+export const shadow = {
+  textBase: 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
+  textBaseW: 'rgba(255, 255, 255, 1) 0.7px 1px 1px',
+  whiteLine: 'rgba(255, 255, 255, .85) 0px 1px 2px 0px',
+  bgBase: 'rgba(127,127,127, 0.3) 0.7px 5px 5px',
+  bgBaseW: 'rgba(255,255,255, 0.3) 0.7px 5px 5px',
+}
 
 // 다크/라이트 모드
 export const lightTheme = {
@@ -56,19 +67,20 @@ export const lightTheme = {
   gradientBg:colors.gradientWhite,
   lineColor:colors.baseBlack,
   color:colors.baseBlack,
+  subTextColor:colors.subTextColor,
+  shadowText:shadow.textBase,
+  shadowBg: shadow.bgBase,
 }
 export const darkTheme = {
   type:'dark',
   gradientBg:colors.gradientDark,
   lineColor:colors.baseWhite,
   color:colors.baseWhite,
+  subTextColor:'#d5d5d5',
+  shadowText:shadow.textBaseW,
+  shadowBg: shadow.bgBaseW,
 }
-// shadow
-export const shadow = {
-  textBase : 'rgba(127, 127, 127, 1) 0.7px 1px 1px',
-  textBaseW : 'rgba(255, 255, 255, 1) 0.7px 1px 1px',
-  whiteLine : 'rgba(255, 255, 255, .85) 0px 1px 2px 0px',
-}
+
 
 // transition
 export const transitions = {

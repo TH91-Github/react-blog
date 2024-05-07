@@ -1,7 +1,9 @@
+import { colors, transitions } from "assets/style/Variable";
 import React, { forwardRef, useCallback, useState } from "react";
 import styled from "styled-components";
 
 interface InputType {
+  type?: string,
   id?: string;
   className?: string;
   placeholder?: string;
@@ -14,6 +16,7 @@ interface InputType {
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   {
+    type,
     id,
     className,
     placeholder,
@@ -23,6 +26,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     keyEvent,
     changeEvent,
   }: InputType, ref ) {
+  const [passwordType, setPasswordType] = useState<string>(type ==='password' ? 'password' : 'text');
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
   let propsTime:ReturnType<typeof setTimeout>;
@@ -32,9 +36,9 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   }, []);
 
   const focusOut = useCallback(() => {
-    if (typeof val === "string" && val.length > 0) {
+    // if (typeof val === "string" && !(val.length > 0)) {
       setIsFocus(false);
-    }
+    // }
   }, [val]);
 
   const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -60,18 +64,23 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
       $maxWidth={maxWidth ? maxWidth : undefined} >
       <input
         ref={ref}
+        type={passwordType}
         id={id}
         className={`input ${className ? className : ''}`}
-        value={val}
+        // value={val}
         onFocus={focusIn}
         onBlur={focusOut}
         onKeyUp={keyUp}
         onChange={onChange}
         title={placeholder ? placeholder : "입력해주세요"}
       />
-      <span className="placeholder">
-        <span>{placeholder}</span>
-      </span>
+      {
+        val.length === 0 && (
+          <span className="placeholder">
+            <span>{placeholder}</span>
+          </span>
+        )
+      }
     </StyleWrap>
   );
 }));
@@ -81,20 +90,44 @@ type StyleProps = {
 };
 
 const StyleWrap = styled.div<StyleProps>`
+  display:inline-block;
+  overflow:hidden;
   position:relative;
   ${props => props.$maxWidth && `max-width: ${props.$maxWidth};`}
+  border-radius:2px;
+  &::after{
+    position:absolute;
+    top:0;
+    left:0;
+    width:4px;
+    height:100%;
+    background:${colors.blue};
+    content:'';
+  }
+  &.isFocus {
+    .input {
+      border:1px solid ${colors.blue};
+    }
+  }
   .input {
-    padding:3px 5px;
-    border:none;
-    font-size:16px;
+    padding:3px 10px;
+    border:1px solid transparent;
+    font-size:14px;
+    background:none;
+    transition:${transitions.base};
+    outline:none;
   }
   .placeholder {
     position:absolute;
     top:50%;
     left:10px;
     transform:translateY(-50%);
+    pointer-events : none;
+    line-height:1;
     span {
-      font-size:16px;
+      font-size:14px;
+      font-weight:300;
+      color:${colors.subTextColor};
     }
   }
 `;

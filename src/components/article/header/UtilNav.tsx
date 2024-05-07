@@ -14,7 +14,7 @@ export default function UtilNav () {
   
   // user Member
   function loginChk(){
-    console.log('logoin 체크')
+    console.log('login 체크')
     // 로그인이 아닌 경우 로그인 페이지로 이동 
     // 로그인인 경우 로그아웃 표시 및 누구누구님
   }

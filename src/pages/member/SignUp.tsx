@@ -26,7 +26,7 @@ export default function SignUp() {
 
   return (
     <StyleWrap className="login">
-      <h1 className="title">로그인 화면</h1>
+      <h1 className="title">회원가입 화면</h1>
       <div className="form-wrap">
         <form className="form" onSubmit={handleLogin}>
           <InputText
@@ -36,11 +36,13 @@ export default function SignUp() {
           />
           <InputText
             ref={refListChk}
+            type={'password'}
             className={'password1'}
             placeholder={'비밀번호를 입력하세요.'}
           />
           <InputText
             ref={refListChk}
+            type={'password'}
             className={'password2'}
             placeholder={'비밀번호를 다시 입력해주세요.'}
             changeEvent={handlePasswordCheck}
