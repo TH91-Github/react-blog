@@ -14,16 +14,17 @@ export default function StudyPage(){
     const studyListData = studyDataBase;
     // 현재 임시 데이터 : 수정 -> fetch data 가져온다.
     setStudyData(studyListData)
-    navUpdate(studyListData);
-    studyListUpdate(studyListData);
+    navListAdd(studyListData);
+    setStudyList(studyListData)
   },[])
   useEffect(()=>{
     dataLoad();
   },[dataLoad])
 
   // 전달 받은 데이터로 nav 리스트 업데이트
-  function navUpdate(navData) { 
+  function navListAdd(navData) { 
     const listMap = new Map();
+   
     for(let item in navData){
       // keyword 추출 -> nav list 생성.
       for(let keyVal of navData[item].keyword){
@@ -33,15 +34,21 @@ export default function StudyPage(){
     // map -> [object] 변환 list update
     setNavList(mapObjectChange(listMap));
   }
-  // studyList 
-  function studyListUpdate(listData){
-    console.log(listData)
+  // studyList update
+  function studyListUpdate(selectKey){
+    let newList = '';
+    if(selectKey ==='All'){
+      newList = studyData;
+    }else{
+      newList = studyData.filter((item)=> item.keyword.includes(selectKey) && item);
+    }
+    setStudyList(newList)
+    // keyword에 전달받은 값이 포함되어 있으면 목록에 포함.
   }
-
 
   function navBtn(navTit){
     console.log(navTit)
-    
+    studyListUpdate(navTit)
   }
   return(
     <StyleWrap className="study">
@@ -71,7 +78,18 @@ export default function StudyPage(){
           </div>
           <div className="study-lists">
             <ul>
-              <li>목록 불러오기</li>
+              {
+                studyList?.map((studyItem, idx) => (
+                  <li key={idx}>
+                    <button 
+                      type="button"
+                      className="list-btn"> 
+                      <span className="tit">{studyItem.title}</span>
+                      <span className="tit">{studyItem.desc}</span>
+                    </button>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>

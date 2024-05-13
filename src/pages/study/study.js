@@ -9,6 +9,15 @@ export const studyDataBase = [
   {
     "id": "study-1",
     "title": "Component",
+    'desc':'간단한 설명',
+    'url':'component',
     "keyword":['React','Component','컴포넌트']
+  },
+  {
+    "id": "study-2",
+    "title": "Props",
+    'desc':'간단한 설명',
+    'url':'component',
+    "keyword":['React','props']
   }
 ]

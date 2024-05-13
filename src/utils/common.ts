@@ -21,6 +21,8 @@ type TitleSize = {
 }
 export function mapObjectChange(mapList: Map<string, number>): TitleSize[] {
   const newObjects: { title: string; size: number }[] = [];
+  const all ={ title:'All', size:mapList.size}
+  newObjects.push(all)
   mapList.forEach((length, key) => {
     const res = {
       title: key, 
