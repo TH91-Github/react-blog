@@ -6,6 +6,7 @@ import WeatherPage from "pages/weather/WeatherPage";
 import MemberPage from "pages/member/MemberPage";
 import SignIn from "pages/member/SignIn";
 import SignUp from "pages/member/SignUp";
+import StudyPage from "pages/study/StudyPage";
 
 export const routerList = [
   { // Main
@@ -36,6 +37,17 @@ export const routerList = [
     path: "portfolio",
     title: '포트폴리오',
     element: <PortfolioPage />,
+  },
+  {
+    id: "Study",
+    path: "study",
+    title: '스터디',
+    element: <StudyPage />,
+    children:[
+      {
+        
+      }
+    ]
   },
   {
     id: "Member",

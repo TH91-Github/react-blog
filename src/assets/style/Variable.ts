@@ -24,10 +24,12 @@ export const media = {
 
 export const colors = {
   // Color 
-  baseWhite: "#ffffff",
+  baseWhite: "#f6f6f6",
+  originWhite: "#ffffff",
   baseBlack: "#242424",
   originBlack: "#000000",
-  subBlack: "#222222",
+  bgSubBlack: "#111320",
+  bgContBlack: "#1a1e31",
   // point
   green: "#0174BE",
   yellow: "#FFB000",

@@ -7,6 +7,7 @@ import Navigation from "components/article/header/Navigation";
 import UtilNav from "components/article/header/UtilNav";
 import Logo from "components/element/Logo";
 import { LocationType } from "types/baseType";
+import { InnerStyle } from "assets/style/StyledCm";
 
 type PropsLocation= {
   location : LocationType
@@ -32,7 +33,7 @@ export default function Header({location}:PropsLocation){
   return (
     <StyleHeader className={`header ${!sticky ? 'main-header': ''} ${isFixed ? 'fixed': ''}`}>
       <div className="header-wrap" >
-        <div className="header-inner">
+        <StyleHeaderInner>
           <div className="header-logo">
             <NavLink to="/" className="logo-btn">
               <Logo />
@@ -42,7 +43,7 @@ export default function Header({location}:PropsLocation){
           <Navigation />
           {/* dark/light, login/join, search, more btn */}
           <UtilNav />
-        </div>
+        </StyleHeaderInner>
       </div>
     </StyleHeader>
   )
@@ -57,12 +58,6 @@ const StyleHeader = styled.header`
   .header {
     &-wrap{
       position:relative;
-      padding:0 30px;  
-    }
-    &-inner {
-      display:flex;
-      align-items:center;
-      height:100%;
     }
     &-logo{
       padding-right:50px;
@@ -81,4 +76,10 @@ const StyleHeader = styled.header`
       padding:20px 15px;
     }
   }
+`;
+
+const StyleHeaderInner = styled(InnerStyle)`
+  display:flex;
+  align-items:center;
+  height:100%;
 `;
