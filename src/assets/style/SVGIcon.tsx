@@ -17,6 +17,7 @@ const Svg = styled.svg<SvgProps>`
 
 // SvgSearch styled props 
 export const SvgSearch = ({...props} ) => {
+  console.log(props)
   return <Svg {...props} viewBox="0 0 32 32">
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-256.000000, -1139.000000)" fill={props.$fillColor ?? "#000"}>

@@ -6,7 +6,7 @@ import { studyDataBase } from "./study";
 import { mapObjectChange } from "utils/common";
 import { useNavigate, useParams } from "react-router-dom";
 import StudyDetail from "./StudyDetail";
-import StudyListPage from "./StudyListPage";
+import StudyListPage from "components/article/study/StudyListPage";
 
 export default function StudyPage(){
   const params = useParams();

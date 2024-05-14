@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import StudySearch from "./StudySearch";
 
 export default function StudyListPage({studyList, clickEvent}){
 
@@ -7,9 +8,7 @@ export default function StudyListPage({studyList, clickEvent}){
   }
   return (
     <StyleWrap className="study-article">
-      <div className="study-search">
-        검색 영역
-      </div>
+      <StudySearch />
       <div className="study-lists">
         <ul>
           {
