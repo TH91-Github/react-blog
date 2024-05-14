@@ -45,7 +45,10 @@ export const routerList = [
     element: <StudyPage />,
     children:[
       {
-        
+        id:"Study Detail",
+        path:"detail/:id",
+        title:"스터디 상세페이지",
+        element: <StudyPage />
       }
     ]
   },

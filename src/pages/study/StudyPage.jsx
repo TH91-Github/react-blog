@@ -4,12 +4,18 @@ import { colors } from "assets/style/Variable";
 import styled from "styled-components";
 import { studyDataBase } from "./study";
 import { mapObjectChange } from "utils/common";
+import { useNavigate, useParams } from "react-router-dom";
+import StudyDetail from "./StudyDetail";
+import StudyListPage from "./StudyListPage";
 
 export default function StudyPage(){
+  const params = useParams();
+  const navi = useNavigate();
   const [studyData, setStudyData] = useState(null);
   const [navList, setNavList] = useState([]);
   const [studyList, setStudyList] = useState([]);
 
+  // ✅ data load - 현재 임시 구조 테스트 진행중
   const dataLoad = useCallback(()=>{
     const studyListData = studyDataBase;
     // 현재 임시 데이터 : 수정 -> fetch data 가져온다.
@@ -21,7 +27,7 @@ export default function StudyPage(){
     dataLoad();
   },[dataLoad])
 
-  // 전달 받은 데이터로 nav 리스트 업데이트
+  // ✅ 전달 받은 데이터로 nav 리스트 업데이트
   function navListAdd(navData) { 
     const listMap = new Map();
    
@@ -34,7 +40,7 @@ export default function StudyPage(){
     // map -> [object] 변환 list update
     setNavList(mapObjectChange(listMap));
   }
-  // studyList update
+  // ✅ studyList update
   function studyListUpdate(selectKey){
     let newList = '';
     if(selectKey ==='All'){
@@ -46,10 +52,21 @@ export default function StudyPage(){
     // keyword에 전달받은 값이 포함되어 있으면 목록에 포함.
   }
 
+  // ✅ 선택 Tab 리스트 노출
   function navBtn(navTit){
-    console.log(navTit)
     studyListUpdate(navTit)
+
+    // 좌 - nav 탭 버튼 클릭 시 study page 이동
+    if(params.id) navi(`/study`);
   }
+  function detailPageLink(detailItem){
+    navi(`/study/detail/${detailItem.id}`);
+    detailData();
+  }
+  
+  const detailData = useCallback(()=>{
+    if(params.id) console.log("오케이")
+  },[params.id])
   return(
     <StyleWrap className="study">
       <StyleStudyInner>
@@ -73,25 +90,16 @@ export default function StudyPage(){
           </div>
         </div>
         <div className="study-cont">
-          <div className="study-search">
-            검색 영역
-          </div>
-          <div className="study-lists">
-            <ul>
-              {
-                studyList?.map((studyItem, idx) => (
-                  <li key={idx}>
-                    <button 
-                      type="button"
-                      className="list-btn"> 
-                      <span className="tit">{studyItem.title}</span>
-                      <span className="tit">{studyItem.desc}</span>
-                    </button>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
+          {
+            !params.id
+            ?
+              <StudyListPage studyList={studyList} clickEvent={detailPageLink}/>
+            :
+              <div className="study-detail">
+                <StudyDetail />
+                <button onClick={()=>console.log("back")}> 뒤로가기</button>
+              </div>
+          }
         </div>
       </StyleStudyInner>
     </StyleWrap>
