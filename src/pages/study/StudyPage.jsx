@@ -7,6 +7,7 @@ import { mapObjectChange } from "utils/common";
 import { useNavigate, useParams } from "react-router-dom";
 import StudyDetail from "./StudyDetail";
 import StudyListPage from "components/article/study/StudyListPage";
+import BackBtn from "components/element/BackBtn";
 
 export default function StudyPage(){
   const params = useParams();
@@ -97,7 +98,7 @@ export default function StudyPage(){
             :
               <div className="study-detail">
                 <StudyDetail />
-                <button onClick={()=>console.log("back")}> 뒤로가기</button>
+                <BackBtn />
               </div>
           }
         </div>
@@ -130,6 +131,14 @@ const StyleWrap = styled.div`
       border-radius:10px;
       border:1px solid ${colors.lineColor};
       background:${props => props.theme.type === 'dark' ? colors.bgContBlack : colors.originWhite}; 
+      
+      .btn {
+        &.back{
+          position:absolute;
+          top:20px;
+          right:20px;
+        }
+      }
     }
   }
 `;
