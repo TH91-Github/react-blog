@@ -17,7 +17,6 @@ const Svg = styled.svg<SvgProps>`
 
 // SvgSearch styled props 
 export const SvgSearch = ({...props} ) => {
-  console.log(props)
   return <Svg {...props} viewBox="0 0 32 32">
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-256.000000, -1139.000000)" fill={props.$fillColor ?? "#000"}>
@@ -27,18 +26,18 @@ export const SvgSearch = ({...props} ) => {
   </Svg>
 }
 
-// login styled props {color} 
+// login styled props {$fillColor} 
 export const SvgLogin = ({...props}) => {
   return <Svg {...props} viewBox="0 0 32 32">
     <g>
-      <circle cx="16" cy="16" fill="none" r="15" stroke={props.color || "#000000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
-      <path d="M26,27L26,27   c0-5.523-4.477-10-10-10h0c-5.523,0-10,4.477-10,10v0" fill="none" stroke={props.color || "#000000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
-      <circle cx="16" cy="11" fill="none" r="6" stroke={props.color || "#000000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
+      <circle cx="16" cy="16" fill="none" r="15" stroke={props.$fillColor || "#000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
+      <path d="M26,27L26,27   c0-5.523-4.477-10-10-10h0c-5.523,0-10,4.477-10,10v0" fill="none" stroke={props.$fillColor || "#000000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
+      <circle cx="16" cy="11" fill="none" r="6" stroke={props.$fillColor || "#000"} strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2"/>
     </g>
   </Svg>
 }
 
-// logOut styled props {color} 
+// logOut styled props {$fillColor} 
 export const SvgLogOut = ({...props}) => {
   return <Svg {...props} viewBox="0 0 64 64" enableBackground="new 0 0 64 64">
     <g id="Exit_1_">

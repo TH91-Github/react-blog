@@ -1,23 +1,16 @@
 import { useSelector } from "react-redux";
-import { SvgLogOut, SvgLogin, SvgSearch } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
 import { useState } from "react";
 import styled from "styled-components"
-import { NavLink } from "react-router-dom";
 import { RootState } from "store/store";
 import ThemeBtn from "./ThemeBtn";
+import HeaderSearch from "./HeaderSearch";
+import UserLogin from "./UserLogin";
 
 export default function UtilNav () {
-  const [login, setLogIn] = useState(false);
   const [more, setMore] = useState(false);
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   
-  // user Member
-  function loginChk(){
-    console.log('login 체크')
-    // 로그인이 아닌 경우 로그인 페이지로 이동 
-    // 로그인인 경우 로그아웃 표시 및 누구누구님
-  }
   // mo : more-menu
   function menuClick(){
     setMore(prev => !prev)
@@ -33,43 +26,13 @@ export default function UtilNav () {
       */}
       <div className="util-inner">
         <div className="util-item">
-          {
-            login 
-              ?
-              <div className="user">
-                <button className="user-btn">
-                  <span className='nickname'>ㅇㅇㅇ</span>님
-                </button>
-                <button className="user-logout-btn">
-                  <span className="icon"><SvgLogOut /></span>
-                </button>
-              </div>
-              :
-              <div className="logIn">
-                <NavLink to="/member" className="logout-btn">
-                  <span className="icon"><SvgLogin /></span>
-                </NavLink>
-              </div>
-          }
-          {/* <button type="button" onClick={()=> loginChk()}>
-            <span className="icon">
-              {
-                login ? <SvgLogOut /> 
-                
-                : <SvgLogin />
-              }
-            </span>
-          </button> */}
+          <UserLogin />
         </div>
         <div className="util-item">
           <ThemeBtn />
         </div>
         <div className="util-item">
-          <button type="button">
-            <span className="icon">
-              <SvgSearch />
-            </span>
-          </button>
+          <HeaderSearch />
         </div>
         {
           isMobile && <div className="util-item">
