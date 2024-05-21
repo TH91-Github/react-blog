@@ -1,25 +1,32 @@
-import { DocumentType, CompanyType, firebaseGetDoc } from "api/firebaseDB/firebaseStore";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchResumeData } from 'reducers/sliceActions';
+import { CompanyType } from 'reducers/types';
+import { RootState, AppDispatch } from 'store/store';
+import styled from 'styled-components';
 
-export default function ResumePage(){
-  const [resumeData, setResumeData] = useState<DocumentType | null>(null); // unknown | {받아온 데이터 type}
+export default function ResumePage() {
+  const dispatch: AppDispatch = useDispatch();
+  const { data: resumeData, loading, error } = useSelector((state: RootState) => state.resume);
 
   useEffect(() => {
-    const fetchResumeData = async () => {
-      try {
-        const data = await firebaseGetDoc('thData','profile'); // 비동기 함수 호출 및 결과 대기
-        setResumeData(data); // 결과를 상태에 설정
-      } catch (error) {
-        console.log(error)
-      }
-    };
+    console.log(resumeData)
+    if (!resumeData) { // 데이터가 없을 때만 fetch
+      dispatch(fetchResumeData());
+    }
+  }, [dispatch, resumeData]);
 
-    fetchResumeData(); // 비동기 함수 호출
-  }, []);
+  if (loading) {
+    return <LoadingMessage>데이터를 불러오는 중입니다...</LoadingMessage>;
+  }
 
-  console.log(resumeData);
-  if(!resumeData) return null
+  if (error) {
+    return <ErrorMessage>{error}</ErrorMessage>;
+  }
+
+  if (!resumeData) {
+    return null;
+  }
 
   return (
     <StyleWrap className="resume">
@@ -39,3 +46,17 @@ export default function ResumePage(){
 }
 
 const StyleWrap = styled.div``;
+
+const LoadingMessage = styled.div`
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #888;
+`;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: red;
+`;
