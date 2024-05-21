@@ -131,7 +131,6 @@ const StyleWrap = styled.div`
       border-radius:10px;
       border:1px solid ${colors.lineColor};
       background:${props => props.theme.type === 'dark' ? colors.bgContBlack : colors.originWhite}; 
-      
       .btn {
         &.back{
           position:absolute;
