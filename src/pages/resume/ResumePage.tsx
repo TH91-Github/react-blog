@@ -114,7 +114,7 @@ const StyleWrap = styled.div`
       border-radius:5px;
       border-left:1px solid rgba(255,255,255,0.3);
       background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
-      box-shadow: ${props => props.theme.type === 'dark' ? 'rgba(36, 36, 36, .5) -10px 13px 13px;' : 'rgba(127, 127, 127, .5) -10px 13px 13px;'}; 
+      box-shadow: ${props => props.theme.type === 'dark' ? 'rgba(36, 36, 36, .5) -10px 13px 13px;' : 'rgba(127, 127, 127, .5) -5px 8px 10px;'}; 
       .resume-icon{
         left:0;
         width:400px;
