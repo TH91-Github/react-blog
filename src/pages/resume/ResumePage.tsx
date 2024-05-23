@@ -32,7 +32,6 @@ export default function ResumePage() {
   return (
     <StyleWrap className="resume">
       <div className="resume-wrap">
-
         {/* scale 작아질 본문 내용 */}
         <StyleStudyInner>
           <div className="resume-side">
@@ -105,8 +104,7 @@ const StyleWrap = styled.div`
       overflow:hidden;
       position:relative;
       z-index:2;
-      height:2000px;
-      padding:30px;
+      padding:30px 30px 70px;
       border-radius:5px;
       border-left:1px solid rgba(255,255,255,0.3);
       background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 

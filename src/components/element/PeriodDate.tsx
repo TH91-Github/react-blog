@@ -1,16 +1,17 @@
 import { colors } from "assets/style/Variable";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { StringOnly, StyleProps } from "types/baseType";
+import { StringOnly } from "types/baseType";
 
 interface BadgeDateType {
-  period?: boolean;
-  startDate: string;
-  endDate: string;
-  bg?: string;
+  period?: boolean
+  startDate: string
+  endDate: string
+  direction?:string
+  bg?: string
 }
 // props - start: 2024.01.01, endDate: current or 2024.01.01
-export default function PeriodDate({ period, startDate, endDate, bg }: BadgeDateType) {
+export default function PeriodDate({ period, startDate, endDate, direction, bg }: BadgeDateType) {
   const [totalDate, setTotalDate] = useState<StringOnly>({ year: '', month: '' });
   
   useEffect(() => {
@@ -37,8 +38,11 @@ export default function PeriodDate({ period, startDate, endDate, bg }: BadgeDate
     TotalDateResult();
   }, [startDate, endDate]);
 
+  function NumberTwo(mNumber:number):string{
+    return  mNumber >= 10 ? `${mNumber}` : `0${mNumber}`;
+  }
   return (
-    <StyleBadge $bg={bg || colors.blue}>
+    <StyleBadge $direction={direction || 'row'} $bg={bg || colors.blue}>
       {(period ?? true) && (
         <div className="period-date">
           <span className="start">
@@ -47,22 +51,45 @@ export default function PeriodDate({ period, startDate, endDate, bg }: BadgeDate
           <span className="end">
             {
               endDate === 'current' 
-                ? `${new Date().getFullYear()}.${new Date().getMonth() +1}` 
-                : `${endDate.split('.')[0]}.${endDate.split('.')[1]}` 
+                ? `${new Date().getFullYear()}.${NumberTwo(new Date().getMonth() +1)}` 
+                : `${endDate.split('.')[0]}.${NumberTwo(parseInt(endDate.split('.')[1]))}`
             }
           </span>
         </div>
       )}
-      <span className="period-total">
-        <span className="year">{totalDate.year}</span>년
-        <span className="month">{totalDate.month}</span>개월
-      </span>
+      <div className="period-total">
+        <span className="total-badge">
+          {
+            parseInt(totalDate.year) > 0 && <span className="year">{totalDate.year}년</span>
+          }
+          {
+            parseInt(totalDate.month) > 0 && <span className="month">{totalDate.month}개월</span>
+          }
+        </span>
+      </div>
     </StyleBadge>
   );
 }
-
-const StyleBadge = styled.div<StyleProps>`
-  display:inline-block;
+type StyledBadgeType = {
+  $direction:string
+  $bg:string
+} 
+const StyleBadge = styled.div<StyledBadgeType>`
+  display:flex;
+  ${props => `
+    ${props.$direction === 'row' 
+      ? `
+        align-items:center;
+        gap:5px;
+      `
+      :`
+        flex-direction:column;
+        .period-total{
+          margin-top:5px;
+        }
+      `
+    };
+  `}
   .period-date {
     display: flex;
     .end {
@@ -72,13 +99,14 @@ const StyleBadge = styled.div<StyleProps>`
       }
     }
   }
-
-  .period-total {
+  .total-badge{
     display: inline-block;
-    margin-top: 5px;
     padding: 4px 8px;
     border-radius: 10px;
     background: ${props => props.$bg};
     color: ${colors.baseWhite};
+    .month {
+      margin-left:3px;
+    }
   }
 `;
