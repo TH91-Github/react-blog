@@ -40,16 +40,6 @@ export default function ResumePage() {
             </span>
             <OtherInfo />
           </div>
-          {/* 
-            📗 회사 및 작업물 
-            이름 & 사진
-            간단한 소개
-            -------
-            경력 - 회사명 입사 마지막(재직중) (캐러셀 버튼 클릭 시 하단 포트폴리오 변경)
-            ------
-            포트 폴리오 선택된 회사 포트폴리오
-            -----------
-          */}
           <div className="resume-info">
             <span className="resume-icon">
               <SvgCode $fillColor={theme.color.color} />

@@ -1,4 +1,5 @@
 import { colors } from "assets/style/Variable";
+import DotLists from "components/element/DotLists";
 import PeriodDate from "components/element/PeriodDate";
 import styled from "styled-components";
 
@@ -20,9 +21,7 @@ export default function ProjectList(){
             {/*  포트 폴리오 선택된 회사 포트폴리오 */}
             <div className="project-cont">
               <p className="sub-tit">xxxdf</p>
-              <ul>
-                <li className="desc">해당 기능을 통해 일 평균 약 n회의 추가 인입 발생</li>
-              </ul>
+              <DotLists dotColor={colors.blue} />
             </div>
           </div>
         ))
@@ -74,19 +73,13 @@ const StyleWrap = styled.div`
       & > ul {
         margin-top:15px;
         li {
-          position:relative;
           padding-left:12px;
           font-weight:400;
           color:${props => props.theme.subTextColor};
           &::before{
-            position:absolute;
-            top:6px;
-            left:0;
+            top:7px;
             width:5px;
             height:5px;
-            border-radius:50%;
-            background:${colors.blue};
-            content:'';
           }
         }
       }
