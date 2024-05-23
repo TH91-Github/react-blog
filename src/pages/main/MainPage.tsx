@@ -23,16 +23,16 @@ export default function MainPage() : JSX.Element{
 }
 
 const StyleWrap = styled.div`
-position:relative;
-width:100%;
-background: ${props => props.theme.type === 'dark' ? props.theme.gradientBg : colors.gradientCloudyApple}; 
-color:${(props)=> props.theme.color};
-.moon {
-  position:fixed;
-  z-index:999;
-  top:50%;
-  left:50%;
-}
+  position:relative;
+  width:100%;
+  background: ${props => props.theme.type === 'dark' ? props.theme.gradientBg : colors.gradientCloudyApple}; 
+  color:${(props)=> props.theme.color};
+  .moon {
+    position:fixed;
+    z-index:999;
+    top:50%;
+    left:50%;
+  }
   .visual {
     display:flex;
     justify-content:center;
@@ -74,13 +74,13 @@ color:${(props)=> props.theme.color};
       background:#000;
     }
   }
-  ${media.mo}{
-    .visual {
-      &-bord {
-        width: 80%;
-        height:80%;
-        min-height:400px;
-      }
+${media.mo}{
+  .visual {
+    &-bord {
+      width: 80%;
+      height:80%;
+      min-height:400px;
     }
   }
+}
 `;

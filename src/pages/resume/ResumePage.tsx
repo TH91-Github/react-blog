@@ -16,9 +16,7 @@ export default function ResumePage() {
   const { data: resumeData, loading, error } = useSelector((state: RootState) => state.resume);
   const theme = useSelector((state : RootState) => state.useTheme);
 
-  console.log(theme)
   useEffect(() => {
-    console.log(resumeData)
     if (!resumeData) { // 데이터가 없을 때만 fetch
       dispatch(fetchResumeData());
     }
@@ -62,8 +60,6 @@ export default function ResumePage() {
           </div>
         </StyleStudyInner>
       </div>
-
-
       {/* 임시 정보 박스 */}
       <div className="fixed-box">
         <p>{resumeData.name}</p>
