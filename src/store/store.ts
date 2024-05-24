@@ -1,4 +1,4 @@
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { configureStore} from '@reduxjs/toolkit'
 import { mobileChk, resumeSlice, useTheme } from 'reducers/sliceActions';
 
 export const store = configureStore({

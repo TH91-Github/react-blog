@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
 import { StringOnly } from 'types/baseType';
-import { DocumentType, ResumeState } from './types';
+import { ResumeDocumentType, ResumeState } from './types';
 
 // mobile 체크
 export const mobileChk = createSlice({ 
@@ -34,7 +34,7 @@ export const useTheme = createSlice({ //
 })
 // resume - firebase
 // createAsyncThunk: redux Toolkit 비동기 작업을 정의 하는데 사용. - pending / fulfilled / rejected
-export const fetchResumeData = createAsyncThunk<DocumentType>(
+export const fetchResumeData = createAsyncThunk<ResumeDocumentType>(
   'resume/fetchResumeData',
   async () => {
     const data = await firebaseGetDoc('thData', 'profile');
@@ -61,7 +61,7 @@ export const resumeSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchResumeData.fulfilled, (state, action: PayloadAction<DocumentType>) => {
+      .addCase(fetchResumeData.fulfilled, (state, action: PayloadAction<ResumeDocumentType>) => {
         state.data = action.payload;
         state.loading = false;
       })

@@ -7,6 +7,7 @@ import CompanyList from "./CompanyList";
 export default function Career(){
   let DateOfEntry = '2016.08';
   
+  console.log('Career')
   return (
     <StyleWrap className="career">
       {/* 경력 시작 과 오늘 년도 */}

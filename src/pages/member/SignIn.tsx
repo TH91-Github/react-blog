@@ -84,6 +84,7 @@ export default function SignIn() {
 }
 
 const StyleWrap = styled.div`
+  padding:50px 0;
   .login {
     &-sns {
       position:relative;

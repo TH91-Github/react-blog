@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 export default function ProjectList(){
   let test = new Array(3).fill(0);
-  console.log(test)
   return (
     <StyleWrap className="project">
       {
@@ -21,7 +20,7 @@ export default function ProjectList(){
             {/*  포트 폴리오 선택된 회사 포트폴리오 */}
             <div className="project-cont">
               <p className="sub-tit">xxxdf</p>
-              <DotLists dotColor={colors.blue} />
+              <DotLists listData={test} dotColor={colors.blue} />
             </div>
           </div>
         ))

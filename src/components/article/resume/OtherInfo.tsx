@@ -1,10 +1,16 @@
 import { SvgCall, SvgEmail, SvgGithub, SvgSkills } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
+import CubeRating from "components/element/CubeRating";
 import DotLists from "components/element/DotLists";
-import styled from "styled-components"
+import { ResumeDocumentType } from "reducers/types";
+import styled from "styled-components";
+import SkillsList from "./SkillsList";
 
-
-export default function OtherInfo(){
+interface OtherInfoType {
+  useData : ResumeDocumentType
+}
+export default function OtherInfo({useData}:OtherInfoType){
+  console.log(useData)
   return (
     <StyleWrap>
       <div className="other-info sticky">
@@ -17,15 +23,17 @@ export default function OtherInfo(){
           <ul className="icon-list">
             <li>
               <span className="icon"><SvgCall $fillColor={colors.yellow}/></span>
-              <span className="txt"><a href="tel:000" title="전화번호">010</a></span>
+              <span className="txt"><a href="tel:000" title="전화번호">{useData.phone}</a></span>
             </li>
             <li>
               <span className="icon"><SvgEmail /></span>
-              <span className="txt"><a href="mailto:ddd" title="email">메일</a></span>
+              <span className="txt"><a href="mailto:ddd" title="email">{useData.email}</a></span>
             </li>
             <li>
               <span className="icon"><SvgGithub /></span>
-              <span className="txt"><a href="http://localhost:3000/" target="_blank" title="Github 새창 열림" rel="noreferrer">Github</a></span>
+              <span className="txt">
+                <a href="http://localhost:3000/" target="_blank" title="Github 새창 열림" rel="noreferrer">{useData.github}</a>
+              </span>
             </li>
           </ul>
         </div>
@@ -35,13 +43,7 @@ export default function OtherInfo(){
             <span className="icon"><SvgSkills $strokeColor={colors.yellow} /></span>
             <span className="tit">SKILLS</span>
           </p>
-          <DotLists dotColor={colors.yellow} />
-          {/* 
-            skils
-            큐브 네모박스로 컴포넌트 만든 후 
-            1~3 또는 1~5까지 하여 색칠
-            색칠만 있는 경우 or 빈박스 있는 버전 
-          */}
+          <SkillsList skillsData={useData.skills}/>
         </div>
       </div>
     </StyleWrap>
@@ -72,19 +74,27 @@ const StyleWrap = styled.div`
       display: flex;
       align-items:center;
       gap:15px;
+      position:relative; 
+      width:100%;
       margin-top:10px;
       &:first-child{
         margin-top:0;
       }
+    }
+    .txt{
+      display:block;
+      overflow:hidden;
+      position:relative;
+      width: calc(100% - 35px);
+      font-size:14px;
+      white-space:nowrap;
+      text-overflow:ellipsis;
     }
   }
   .icon{
     display:inline-block;
     width:20px;
     height:20px;
-  }
-  .txt{
-    font-size:14px;
   }
   .item-head{
     display:flex;
@@ -95,7 +105,7 @@ const StyleWrap = styled.div`
       font-weight:700;
     }
   }
-  .dot-lists{
+  .skills-lists{
     margin-top:20px;
   }
 `; 

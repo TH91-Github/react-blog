@@ -1,13 +1,28 @@
+import { ResumeSkillsType } from "reducers/types"
 import styled from "styled-components"
 
+
 interface DotListsType {
+  listData: ResumeSkillsType[] | string[]
   type?:string
   dotColor?:string
 }
-export default function DotLists({type, dotColor}:DotListsType){
+export default function DotLists({listData, type, dotColor}:DotListsType){
+  // console.log(listData)
   return (
     <StyleLists className={`dot-lists ${type ? type : ''}`} $dotColor={dotColor || '#000'}>
-      <li>한글</li>
+      {
+        listData.map((item,idx) => (
+          typeof item === 'object'
+          ? <li key={idx}>
+              <span className="txt">{item.title}</span> 
+            </li>
+          : <li key={idx}>
+              <span className="txt">{item}</span>
+            </li>
+          
+        ))
+      }
     </StyleLists>
   )
 }
@@ -18,6 +33,10 @@ const StyleLists = styled.ul<dotType>`
   & > li{
     position:relative;
     padding-left:12px;
+    margin-top:8px;
+    &:first-child{
+      margin-top:0;
+    }
     &::before{
       position:absolute;
       top:7px;

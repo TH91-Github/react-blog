@@ -103,6 +103,7 @@ export default function SignUp() {
 }
 
 const StyleWrap = styled.div`
+  padding:50px 0;
   .member-cont {
     &::after, .input-wrap::after {
       background: ${colors.yellow};

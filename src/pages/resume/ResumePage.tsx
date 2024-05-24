@@ -4,7 +4,6 @@ import { colors } from 'assets/style/Variable';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchResumeData } from 'reducers/sliceActions';
-import { CompanyType } from 'reducers/types';
 import { RootState, AppDispatch } from 'store/store';
 import OtherInfo from 'components/article/resume/OtherInfo';
 import styled from 'styled-components';
@@ -21,7 +20,6 @@ export default function ResumePage() {
       dispatch(fetchResumeData());
     }
   }, [dispatch, resumeData]);
-
   if (loading) {
     return <LoadingMessage>데이터를 불러오는 중입니다...</LoadingMessage>;
   }
@@ -29,6 +27,7 @@ export default function ResumePage() {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
   if (!resumeData) return null;
+
   return (
     <StyleWrap className="resume">
       <div className="resume-wrap">
@@ -38,7 +37,7 @@ export default function ResumePage() {
             <span className="resume-icon">
               <SvgCode $fillColor={theme.color.color} />
             </span>
-            <OtherInfo />
+            <OtherInfo useData={resumeData}/>
           </div>
           <div className="resume-info">
             <span className="resume-icon">
@@ -49,19 +48,6 @@ export default function ResumePage() {
           </div>
         </StyleStudyInner>
       </div>
-      {/* 임시 정보 박스 */}
-      <div className="fixed-box">
-        <p>{resumeData.name}</p>
-        <p>Company:</p>
-        {resumeData.company.map((company: CompanyType, index: number) => (
-          <div key={index}>
-            <p>Name: {company.name}</p>
-            <p>Entry: {company.entry}</p>
-            <p>Resignation: {company.resignation}</p>
-          </div>
-        ))}
-      </div>
-      
     </StyleWrap>
   );
 }
@@ -81,18 +67,19 @@ const StyleWrap = styled.div`
     }
     &-side {
       position:relative;
+      width:30%;
       padding:350px 30px 30px;
       .resume-icon{
         width:330px;
         height:330px;
         right:0;
-        // clamp
         transform: translate(165px, 0);
       }
     }
     &-info {
       overflow:hidden;
       position:relative;
+      width:70%;
       z-index:2;
       padding:30px 30px 70px;
       border-radius:5px;
@@ -110,8 +97,7 @@ const StyleWrap = styled.div`
 
 `;
 const StyleStudyInner = styled(InnerStyle)`
-  display:grid;
-  grid-template-columns: 3fr 7fr;
+  display:flex;
   margin-top:30px;
   padding:0;
 `;

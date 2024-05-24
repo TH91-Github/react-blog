@@ -26,7 +26,7 @@ const StyleWrap = styled.div`
     &-wrap{
       width:100%;
       max-width:500px;
-      margin:50px auto;
+      margin:0 auto;
       padding:30px;
       border-radius:10px;
       background:${(props)=> props.theme.type === 'light' ? 'rgba(255,255,255,0.3)': 'rgba(127,127,127,0.3)'};
