@@ -11,11 +11,7 @@ export default function CubeFigure({rating, max, ani, bg}:CubeFigureType){
   let ratingNum = typeof rating === 'string' ? Number(rating): rating
   let cubeSize = new Array(max ? max : Math.ceil(ratingNum)).fill('-');
   let onCube = Math.ceil(ratingNum); 
-  // console.log(rating)
-  // ratingNum number 인지 string인지 에 확인하기
-  console.log(onCube)
-  console.log(ratingNum)
-  // [1.5, 1.5, 1.5] 배열이 있고 map을 돌리면서 <span>-</span> 만들고 0.5에 해당하는 태그에게 클래스를 추가하고 싶어 
+
   return (
     <StyleCubeRating >
       {

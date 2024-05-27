@@ -1,8 +1,8 @@
-import styled from "styled-components"
-import ProjectList from "./ProjectList";
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import PeriodDate from "components/element/PeriodDate";
+import styled from "styled-components";
 import CompanyList from "./CompanyList";
+import ProjectList from "./ProjectList";
 
 export default function Career(){
   let DateOfEntry = '2016.08';
@@ -34,6 +34,7 @@ const StyleWrap = styled.div`
     &-date {
       display:flex;
       justify-content:flex-end;
+      margin-top:30px;
       text-align:right;
       .period-date{
         font-size:14px;
@@ -67,5 +68,22 @@ const StyleWrap = styled.div`
   }
   .lists {
     margin-top:20px;
+  }
+  ${media.mo}{
+    .career {
+      &-date {
+       margin-top:15px;
+      }
+      &-item{
+        margin-top:30px;
+        &:first-child {
+          margin-top:0;
+        }
+      }
+    }
+    .title{
+      font-size:24px;
+      padding:15px 0;
+    }
   }
 `; 

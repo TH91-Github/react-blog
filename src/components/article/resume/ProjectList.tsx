@@ -1,4 +1,4 @@
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import DotLists from "components/element/DotLists";
 import PeriodDate from "components/element/PeriodDate";
 import styled from "styled-components";
@@ -8,7 +8,7 @@ export default function ProjectList(){
   return (
     <StyleWrap className="project">
       {
-        test.map((item,idx)=>(
+        test.map((item, idx)=>(
           <div className="project-item" key={idx}>
             <div className="project-head">
               <span className="project-head-title">
@@ -35,6 +35,11 @@ const StyleWrap = styled.div`
       margin-top:20px;
       padding-top:20px;
       border-top:1px solid ${colors.lineColor};
+      &:first-child{
+        margin-top:0;
+        padding-top:0;
+        border-top:none;
+      }
     }
     &-head{
       display:flex;
@@ -80,6 +85,17 @@ const StyleWrap = styled.div`
             width:5px;
             height:5px;
           }
+        }
+      }
+    }
+  }
+  ${media.mo}{
+    .project{
+      &-head{
+        .company{
+          margin-top:5px;
+          font-size:14px;
+          color:${colors.blue};
         }
       }
     }

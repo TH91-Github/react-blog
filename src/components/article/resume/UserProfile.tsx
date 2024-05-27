@@ -1,7 +1,8 @@
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import styled from "styled-components"
 
 export default function UserProfile(){
+  console.log('UserProfile')
   return (
     <StyleWrap className="profile">
       <h2 className="tit">INTRODUCE</h2>
@@ -16,8 +17,8 @@ export default function UserProfile(){
 }
 
 const StyleWrap = styled.div`
-  min-height:300px;
-  padding-left:200px;
+  min-height:250px;
+  padding-left:150px;
   text-align:right;
   .tit {
     font-size:18px;
@@ -33,5 +34,19 @@ const StyleWrap = styled.div`
     border-bottom:1px solid ${colors.lineColor};
     line-height:21px;
     color:${colors.subTextColor};
+  }
+  ${media.mo}{
+    min-height:auto;
+    padding-left:20px;
+    .name{
+      margin-top:15px;
+      font-size:18px;
+    }
+    .desc{
+      margin-top:15px;
+      padding-bottom:15px;
+      font-size:14px;
+      line-height:18px;
+    }
   }
 `; 

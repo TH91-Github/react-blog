@@ -1,4 +1,4 @@
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { StringOnly } from "types/baseType";
@@ -92,6 +92,7 @@ const StyleBadge = styled.div<StyledBadgeType>`
   `}
   .period-date {
     display: flex;
+    font-size:14px;
     .end {
       &::before {
         margin:0 3px;
@@ -107,6 +108,13 @@ const StyleBadge = styled.div<StyledBadgeType>`
     color: ${colors.baseWhite};
     .month {
       margin-left:3px;
+    }
+  }
+  ${media.mo}{
+    .total-badge{
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size:14px;
     }
   }
 `;

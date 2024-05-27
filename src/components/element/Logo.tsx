@@ -1,5 +1,5 @@
 import { colors, shadow } from "assets/style/Variable";
-import styled from "styled-components"
+import styled from "styled-components";
 
 export default function Logo () {
   const cube = new Array(9).fill(0);

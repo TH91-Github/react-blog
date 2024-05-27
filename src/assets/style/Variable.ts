@@ -1,4 +1,4 @@
-import { NumberOnly } from "types/baseType"
+import { NumberOnly, StringOnly } from "types/baseType"
 
 // styled-components전용 공통 
 export const fonts : NumberOnly = {
@@ -13,10 +13,16 @@ export const breakpoints : NumberOnly = {
   mo : 768,
   onlyMo: 450,
 }
-
-export const media = {
+/*
+onlyPc: 1140 ~
+pc: 768 ~ 
+tab: 768 ~ 1139
+mo: ~ 767
+onlyMo: ~ 449
+*/ 
+export const media : StringOnly = {
   onlyPc : `@media screen and (min-width:${breakpoints.tab + 'px'})`,
-  pc: `@media screen and (min-width:${breakpoints.mo-1 + 'px'})`,
+  pc: `@media screen and (min-width:${breakpoints.mo + 'px'})`,
   tab: `@media screen and (min-width:${breakpoints.mo + 'px'}) and (max-width: ${breakpoints.tab-1 + 'px'})`,
   mo: `@media screen and (max-width:${breakpoints.mo-1 + 'px'})`,
   onlyMo: `@media screen and (max-width:${breakpoints.onlyMo-1 + 'px'})`,

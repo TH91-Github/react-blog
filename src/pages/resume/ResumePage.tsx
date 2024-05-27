@@ -1,25 +1,30 @@
 import { SvgCode } from 'assets/style/SVGIcon';
 import { InnerStyle } from 'assets/style/StyledCm';
-import { colors } from 'assets/style/Variable';
-import { useEffect } from 'react';
+import { colors, media, transitions } from 'assets/style/Variable';
+import OtherInfo from 'components/article/resume/OtherInfo';
+import ResumeMain from 'components/article/resume/ResumeMain';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchResumeData } from 'reducers/sliceActions';
-import { RootState, AppDispatch } from 'store/store';
-import OtherInfo from 'components/article/resume/OtherInfo';
+import { AppDispatch, RootState } from 'store/store';
 import styled from 'styled-components';
-import UserProfile from 'components/article/resume/UserProfile';
-import Career from 'components/article/resume/Career';
 
 export default function ResumePage() {
-  const dispatch: AppDispatch = useDispatch();
   const { data: resumeData, loading, error } = useSelector((state: RootState) => state.resume);
-  const theme = useSelector((state : RootState) => state.useTheme);
+  const dispatch: AppDispatch = useDispatch();
+  const theme = useSelector((state: RootState) => state.useTheme);
+  const [sideView, setSideView] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!resumeData) { // 데이터가 없을 때만 fetch
+    if (!resumeData) {
       dispatch(fetchResumeData());
     }
   }, [dispatch, resumeData]);
+
+  function toggleSideView(){
+    setSideView(prev => !prev);
+  }
+  
   if (loading) {
     return <LoadingMessage>데이터를 불러오는 중입니다...</LoadingMessage>;
   }
@@ -29,7 +34,7 @@ export default function ResumePage() {
   if (!resumeData) return null;
 
   return (
-    <StyleWrap className="resume">
+    <StyleWrap className={`resume ${sideView ? 'side-view':''}`}>
       <div className="resume-wrap">
         {/* scale 작아질 본문 내용 */}
         <StyleStudyInner>
@@ -37,14 +42,17 @@ export default function ResumePage() {
             <span className="resume-icon">
               <SvgCode $fillColor={theme.color.color} />
             </span>
-            <OtherInfo useData={resumeData}/>
+            <OtherInfo 
+              moView={sideView} 
+              moSideInfoMore={toggleSideView} 
+              useData={resumeData} 
+            />
           </div>
           <div className="resume-info">
             <span className="resume-icon">
               <SvgCode $fillColor={theme.color.color} />
             </span>
-            <UserProfile />
-            <Career />
+            <ResumeMain moView={sideView} />
           </div>
         </StyleStudyInner>
       </div>
@@ -54,11 +62,6 @@ export default function ResumePage() {
 
 const StyleWrap = styled.div`
   background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
-  .fixed-box{
-    position:fixed;
-    left:0;
-    bottom:0;
-  }
   .resume {
     &-icon{
       display:block;
@@ -68,7 +71,6 @@ const StyleWrap = styled.div`
     &-side {
       position:relative;
       width:30%;
-      padding:350px 30px 30px;
       .resume-icon{
         width:330px;
         height:330px;
@@ -81,7 +83,6 @@ const StyleWrap = styled.div`
       position:relative;
       width:70%;
       z-index:2;
-      padding:30px 30px 70px;
       border-radius:5px;
       border-left:1px solid rgba(255,255,255,0.3);
       background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
@@ -94,7 +95,38 @@ const StyleWrap = styled.div`
       }
     }
   }
-
+  ${media.mo}{
+    .resume {
+      &-side {
+        width:50px;
+        transition:${transitions.base};
+        .resume-icon{
+          width:54px;
+          height:54px;
+          transform: translate(27px, 3px);
+        }
+      }
+      &-info {
+        width:calc(100% - 50px);
+        transition:${transitions.base};
+        .resume-icon{
+          width:60px;
+          height:60px;
+          transform: translate(-30px, -2px);
+        }
+      }
+    }
+    &.side-view {
+      .resume {
+        &-side {
+          width:calc(100% - 50px);
+        }
+        &-info{
+          width:50px;
+        }
+      }
+    }
+  }
 `;
 const StyleStudyInner = styled(InnerStyle)`
   display:flex;
