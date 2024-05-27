@@ -4,7 +4,7 @@ import styled from "styled-components"
 export default function UserProfile(){
   return (
     <StyleWrap className="profile">
-      <p className="tit">INTRODUCE</p>
+      <h2 className="tit">INTRODUCE</h2>
       {/* 이름 & 사진 간단한 소개 */}
       <p className="name">텍스트 소개글입니다</p>
       <p className="desc">
@@ -20,7 +20,8 @@ const StyleWrap = styled.div`
   padding-left:200px;
   text-align:right;
   .tit {
-    
+    font-size:18px;
+    color:${colors.blue};
   }
   .name{
     margin-top:20px;

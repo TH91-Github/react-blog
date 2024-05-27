@@ -33,6 +33,23 @@ export const GlobalStyles = createGlobalStyle`
     background:${colors.blueG};
     color:${colors.baseWhite};
   }
+
+  .dot-list-style {
+    & > li {
+      position:relative;
+      padding-left:12px;
+      &::before{
+        position: absolute;
+        top: 7px;
+        left: 0;
+        width: 4px;
+        height: 4px;
+        background:${colors.baseBlack};
+        content:'';
+      }
+    }
+  }
+
   /* 스크롤바 전체 */
   body::-webkit-scrollbar {
     width:8px;

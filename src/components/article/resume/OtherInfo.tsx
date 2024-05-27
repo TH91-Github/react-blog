@@ -1,6 +1,6 @@
 import { SvgCall, SvgEmail, SvgGithub, SvgSkills } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import CubeRating from "components/element/CubeRating";
+import CubeRating from "components/element/CubeFigure";
 import DotLists from "components/element/DotLists";
 import { ResumeDocumentType } from "reducers/types";
 import styled from "styled-components";
@@ -10,7 +10,6 @@ interface OtherInfoType {
   useData : ResumeDocumentType
 }
 export default function OtherInfo({useData}:OtherInfoType){
-  console.log(useData)
   return (
     <StyleWrap>
       <div className="other-info sticky">
@@ -32,7 +31,7 @@ export default function OtherInfo({useData}:OtherInfoType){
             <li>
               <span className="icon"><SvgGithub /></span>
               <span className="txt">
-                <a href="http://localhost:3000/" target="_blank" title="Github 새창 열림" rel="noreferrer">{useData.github}</a>
+                <a href={useData.github} target="_blank" title="Github 새창 열림" rel="noreferrer">{useData.github}</a>
               </span>
             </li>
           </ul>
@@ -105,7 +104,7 @@ const StyleWrap = styled.div`
       font-weight:700;
     }
   }
-  .skills-lists{
+  .skill{
     margin-top:20px;
   }
 `; 
