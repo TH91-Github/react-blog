@@ -13,7 +13,7 @@ export default function CubeFigure({rating, max, ani, bg}:CubeFigureType){
   let onCube = Math.ceil(ratingNum); 
 
   return (
-    <StyleCubeRating >
+    <StyleCubeRating aria-hidden="true">
       {
         cubeSize.map((item,idx)=>{
           return <StyleCube 

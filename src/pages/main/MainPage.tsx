@@ -37,6 +37,7 @@ const StyleWrap = styled.div`
     display:flex;
     justify-content:center;
     align-items:center;
+    position:relative;
     height:100svh;
     &-bord {
       position:relative;
@@ -74,13 +75,16 @@ const StyleWrap = styled.div`
       background:#000;
     }
   }
-${media.mo}{
-  .visual {
-    &-bord {
-      width: 80%;
-      height:80%;
-      min-height:400px;
+  .content {
+    height:500px;
+  }
+  ${media.mo}{
+    .visual {
+      &-bord {
+        width: 80%;
+        height:80%;
+        min-height:400px;
+      }
     }
   }
-}
 `;

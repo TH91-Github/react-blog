@@ -12,7 +12,7 @@ function App() : JSX.Element {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  // Resize
+  // Resize - ✏️ 컴포넌트 분리
   const handleResize = useCallback(() => {
     const isMobile = isMobileChk();
     dispatch(actionMobileChk(isMobile));

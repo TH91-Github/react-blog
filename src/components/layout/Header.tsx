@@ -68,7 +68,6 @@ const StyleHeader = styled.header`
   }
   &.main-header{
     overflow:hidden;
-    position:absolute;
     top: calc((100% - clamp(${rem(500)}, 80%, ${rem(600)})) / 2);
     .header-wrap {
       width:clamp(${rem(800)}, 80% , ${breakpoints.pc}px);
@@ -86,6 +85,7 @@ const StyleHeader = styled.header`
     backdrop-filter:blur(4px);
     .header-wrap{
       width:100%;
+      padding:0;
     }
   }
 `;

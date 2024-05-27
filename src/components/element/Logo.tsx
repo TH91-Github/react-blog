@@ -5,20 +5,21 @@ export default function Logo () {
   const cube = new Array(9).fill(0);
   return (
     <StyleLogo className="logo">
-      <div className="logo-cube">
+      <span className="logo-cube" aria-hidden="true">
         {
           cube.map((item,idx) => <span key={idx} className={'cube-'+idx}></span>)
         }
-      </div>
-      <div className="logo-text">
+      </span>
+      <span className="logo-text">
         {/* Technically Human Technically Human */}
-        <p className="name">
+        <span className="name">
           <em>T</em>ae
-        </p>
-        <p className="name">
+        </span>
+        <span className="name">
           <em>H</em>oon
-        </p>
-      </div>
+        </span>
+      </span>
+      <span className="blind">blog</span>
     </StyleLogo>
   )
 }
@@ -128,7 +129,8 @@ const StyleLogo = styled.div`
     }
     .logo-text{
       text-align:left;
-      .name { 
+      .name {
+        display:block;
         font-size:12px;
         color:${colors.originWhite};
         text-shadow:${shadow.textBase};
@@ -138,19 +140,5 @@ const StyleLogo = styled.div`
         }
       }
     }
-  // > i {
-  //   display:inline-block;
-  //   width:20px;
-  //   height:25px;
-  //   text-indent:-9999px;
-  // }
-  // .t {
-  //   background: url('${require('assets/images/common/name_t.png')}') no-repeat;
-  //   background-size:cover;
-  // }
-  // .h {
-  //   height:24px;
-  //   background: url('${require('assets/images/common/name_h.png')}') no-repeat;
-  //   background-size:cover;
-  // }
+
 `;
