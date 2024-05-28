@@ -1,3 +1,4 @@
+import React from 'react';
 import { SvgCode } from 'assets/style/SVGIcon';
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media, transitions } from 'assets/style/Variable';

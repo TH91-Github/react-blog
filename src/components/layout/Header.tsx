@@ -1,3 +1,4 @@
+import React from 'react';
 import { InnerStyle } from "assets/style/StyledCm";
 import { breakpoints, colors, media, transitions } from "assets/style/Variable";
 import Navigation from "components/article/header/Navigation";

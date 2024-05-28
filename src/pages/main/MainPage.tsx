@@ -1,3 +1,4 @@
+import React from 'react';
 import { breakpoints, colors, media, shadow } from "assets/style/Variable"
 import styled from "styled-components"
 import { rem } from "utils/common"

@@ -1,6 +1,6 @@
-import { colors, media, shadow, transitions } from "assets/style/Variable";
+import { colors, transitions } from "assets/style/Variable";
 import InputText from "components/element/InputText";
-import { useRef } from "react";
+import React, { useRef } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 

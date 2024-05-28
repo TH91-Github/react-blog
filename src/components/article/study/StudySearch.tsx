@@ -1,3 +1,4 @@
+import React from 'react';
 import { SvgSearch } from "assets/style/SVGIcon";
 import { Button } from "assets/style/StyledCm";
 import { colors, transitions } from "assets/style/Variable";

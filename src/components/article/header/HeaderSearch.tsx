@@ -1,3 +1,4 @@
+import React from 'react';
 import { SvgSearch } from "assets/style/SVGIcon";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";

@@ -1,9 +1,15 @@
+import React from 'react';
 import styled from "styled-components";
 import StudySearch from "./StudySearch";
+import { StudyDataType } from 'pages/study/study';
 
-export default function StudyListPage({studyList, clickEvent}){
+interface StudyListPage {
+  studyList:any
+  clickEvent: (item: StudyDataType) => void;
+}
+export default function StudyListPage({studyList, clickEvent}:StudyListPage){
 
-  function handlerClick(item){
+  function handlerClick(item:StudyDataType){
     clickEvent(item)
   }
   return (
@@ -12,7 +18,7 @@ export default function StudyListPage({studyList, clickEvent}){
       <div className="study-lists">
         <ul>
           {
-            studyList?.map((studyItem, idx) => (
+            studyList?.map((studyItem:any, idx:any) => (
               <li key={idx}>
                 <button 
                   type="button"

@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors, media } from "assets/style/Variable";
 import PeriodDate from "components/element/PeriodDate";
 import styled from "styled-components"

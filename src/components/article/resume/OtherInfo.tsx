@@ -1,3 +1,4 @@
+import React from 'react';
 import { SvgCall, SvgEmail, SvgGithub, SvgSkills } from "assets/style/SVGIcon";
 import { StyleArrowLeft } from "assets/style/StyledCm";
 import { colors, media, transitions } from "assets/style/Variable";

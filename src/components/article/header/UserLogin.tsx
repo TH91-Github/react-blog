@@ -1,3 +1,4 @@
+import React from 'react';
 import { SvgLogOut, SvgLogin, SvgSearch } from "assets/style/SVGIcon";
 import { useState } from "react";
 import { useSelector } from "react-redux";

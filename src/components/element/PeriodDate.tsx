@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors, media } from "assets/style/Variable";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

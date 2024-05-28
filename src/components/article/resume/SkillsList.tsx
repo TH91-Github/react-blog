@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors } from "assets/style/Variable";
 import CubeFigure from "components/element/CubeFigure";
 import { ResumeSkillsType } from "reducers/types";

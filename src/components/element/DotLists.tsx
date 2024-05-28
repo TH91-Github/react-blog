@@ -1,5 +1,6 @@
-import { ResumeSkillsType } from "reducers/types"
-import styled from "styled-components"
+import React from 'react';
+import { ResumeSkillsType } from "reducers/types";
+import styled from "styled-components";
 
 
 interface DotListsType {

@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors, shadow } from "assets/style/Variable";
 import styled from "styled-components";
 

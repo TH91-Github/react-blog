@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors, media } from "assets/style/Variable";
 import DotLists from "components/element/DotLists";
 import PeriodDate from "components/element/PeriodDate";

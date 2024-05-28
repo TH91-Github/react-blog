@@ -1,6 +1,7 @@
-import { colors, media, shadow, transitions } from "assets/style/Variable";
+import { colors, media, shadow } from "assets/style/Variable";
+import React from 'react';
 import { Outlet } from "react-router-dom";
-import styled from "styled-components"
+import styled from "styled-components";
 
 export default function MemberPage(){
   return (

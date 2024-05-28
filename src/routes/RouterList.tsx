@@ -1,3 +1,4 @@
+import React from 'react';
 import MainPage from "pages/main/MainPage";
 import ResumePage from "pages/resume/ResumePage";
 import MapPage from "pages/map/MapPage";

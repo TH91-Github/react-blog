@@ -1,3 +1,4 @@
+import React from 'react';
 // Svg styled component
 import styled from 'styled-components';
 

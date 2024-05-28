@@ -1,13 +1,8 @@
-import styled, { keyframes } from "styled-components";
+import React from 'react';
 import sunImage from 'assets/images/weather/sun.png';
-import sun1Image from 'assets/images/weather/sun_1.png';
-import sun2Image from 'assets/images/weather/sun_2.png';
-import sun3Image from 'assets/images/weather/sun_1.png';
-import sun4Image from 'assets/images/weather/sun_2.png';
-import sun5Image from 'assets/images/weather/sun_1.png';
-import sun6Image from 'assets/images/weather/sun_2.png';
-import sun7Image from 'assets/images/weather/sun_1.png';
-import sun8Image from 'assets/images/weather/sun_2.png';
+import { default as sun1Image, default as sun3Image, default as sun5Image, default as sun7Image } from 'assets/images/weather/sun_1.png';
+import { default as sun2Image, default as sun4Image, default as sun6Image, default as sun8Image } from 'assets/images/weather/sun_2.png';
+import styled, { keyframes } from "styled-components";
 // 나머지 이미지도 동일하게 import
 
 import { NumberOnly, StyleProps } from "types/baseType";
