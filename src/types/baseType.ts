@@ -22,7 +22,7 @@ export type StyleProps = { // default
   $width?: number,
   $height?: number,
   $borderRadius?: number,
-  $bg?: string,
+  $bg?: string | number,
   $unit?:string,
 }
 

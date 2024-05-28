@@ -14,6 +14,7 @@ export default function HeaderSearch(){
       <button 
         type="button" 
         className="search-btn"
+        title="빠른 검색"
         onClick={()=>handlerClick()}>
         <span className="icon">
           <SvgSearch $fillColor={ theme.mode === 'light' ? '#000':'#fff'}/>

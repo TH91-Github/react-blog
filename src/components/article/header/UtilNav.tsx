@@ -1,4 +1,3 @@
-import { colors } from "assets/style/Variable";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";

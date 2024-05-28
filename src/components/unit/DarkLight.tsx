@@ -1,4 +1,3 @@
-import React from "react";
 import Moon from "./Moon";
 import Sun from "./Sun";
 

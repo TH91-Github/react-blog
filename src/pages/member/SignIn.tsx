@@ -1,4 +1,4 @@
-import { colors, shadow, transitions } from "assets/style/Variable";
+import { colors, media, shadow, transitions } from "assets/style/Variable";
 import InputText from "components/element/InputText";
 import { useRef } from "react";
 import { NavLink } from "react-router-dom";
@@ -84,7 +84,6 @@ export default function SignIn() {
 }
 
 const StyleWrap = styled.div`
-  padding:50px 0;
   .login {
     &-sns {
       position:relative;

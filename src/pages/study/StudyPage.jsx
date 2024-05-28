@@ -145,7 +145,7 @@ const StyleStudyInner = styled(InnerStyle)`
   display:grid;
   grid-template-columns: 3fr 7fr;
   gap: 20px;
-  padding-top:65px;
+  padding-top:70px;
   ${media.mo}{
     padding-top:70px;
   }

@@ -117,6 +117,7 @@ const StyleWrap = styled.div<StyleProps>`
     font-size:14px;
     background:none;
     transition:${transitions.base};
+    color:${props => props.theme.color};
     outline:none;
   }
   .placeholder {

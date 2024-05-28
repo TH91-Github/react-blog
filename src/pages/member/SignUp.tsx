@@ -1,10 +1,8 @@
-import InputText from "components/element/InputText";
-import { fireDB } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 import { colors, shadow, transitions } from "assets/style/Variable";
+import InputText from "components/element/InputText";
+import { useCallback, useRef } from "react";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 export default function SignUp() {
   const refList = useRef<HTMLInputElement[]>([]);
@@ -103,7 +101,6 @@ export default function SignUp() {
 }
 
 const StyleWrap = styled.div`
-  padding:50px 0;
   .member-cont {
     &::after, .input-wrap::after {
       background: ${colors.yellow};

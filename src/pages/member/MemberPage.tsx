@@ -1,4 +1,4 @@
-import { colors, shadow, transitions } from "assets/style/Variable";
+import { colors, media, shadow, transitions } from "assets/style/Variable";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components"
 
@@ -14,6 +14,7 @@ export default function MemberPage(){
 const StyleWrap = styled.div`
   position:relative;
   min-height:500px;
+  padding:70px 30px 60px;
   .bg-line {
     position:absolute;
     z-index:-1;
@@ -79,5 +80,8 @@ const StyleWrap = styled.div`
     .s-tit {
       font-size:14px;
     }
+  }
+  ${media.mo}{
+    padding:70px 15px 30px;
   }
 `;
