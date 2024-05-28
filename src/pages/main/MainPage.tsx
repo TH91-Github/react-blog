@@ -80,10 +80,25 @@ const StyleWrap = styled.div`
   }
   ${media.mo}{
     .visual {
+      padding:0 15px;
       &-bord {
-        width: 80%;
+        width: 100%;
         height:80%;
         min-height:400px;
+      }
+      .visual-text {
+        right:25px;
+        bottom:25px;
+        .title {
+          font-size:${rem(36)};
+          color:#fff;
+          text-shadow: ${shadow.textBase};
+        }
+        .desc {
+          font-size:${rem(18)};
+          color:#fff;
+          text-shadow: ${shadow.textBase};
+        }
       }
     }
   }

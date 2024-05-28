@@ -61,7 +61,7 @@ export const StyleArrowLeft = styled.button.attrs({
   position:relative;
   width: 30px;
   height: 30px;
-  border:1px solid ${props => props.$bg || colors.baseWhite};
+
   border-radius:3px;
   &::before {
     position:absolute;

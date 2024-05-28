@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { InnerStyle } from "assets/style/StyledCm";
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import styled from "styled-components";
 import { studyDataBase } from "./study";
 import { mapObjectChange } from "utils/common";
@@ -145,5 +145,8 @@ const StyleStudyInner = styled(InnerStyle)`
   display:grid;
   grid-template-columns: 3fr 7fr;
   gap: 20px;
-  margin-top:30px;
+  padding-top:65px;
+  ${media.mo}{
+    padding-top:70px;
+  }
 `;

@@ -1,34 +1,32 @@
-import { colors, shadow } from "assets/style/Variable";
-import { useSelector } from "react-redux";
+import { colors, media, shadow } from "assets/style/Variable";
 import { NavLink } from "react-router-dom";
 import { routerList } from "routes/RouterList";
-import { RootState } from "store/store";
-import styled from "styled-components"
+import styled from "styled-components";
 import { rem } from "utils/common";
-
-export default function Navigation(){
-  const isMobile = useSelector((state : RootState) => state.mobileChk);
-
+interface NavigationType {
+  menuOn: boolean
+}
+export default function Navigation({menuOn}:NavigationType){
   return (
-    <StyleNav className={`gnb ${isMobile? 'gnb-mo': ''}`}>
-      <ul className="gnb-lists">
-        {
-          routerList.map((routerItem,idx) => {
-            return idx > 0 && (routerItem.view === undefined || routerItem.view) && 
-            <li key={routerItem.id}>
-              <NavLink to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
-                {routerItem.id}
-              </NavLink>
-            </li>
-          })
-        }
-      </ul>
-    </StyleNav>   
+    <StyledNav className={`gnb ${menuOn ? 'open' : ''}`}>
+      <div className="gnb-inner">
+        <ul className="gnb-lists">
+          {routerList
+            .filter((routerItem, idx) => idx > 0 && (routerItem.view === undefined || routerItem.view))
+            .map((routerItem) => (
+              <li key={routerItem.id}>
+                <NavLink to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
+                  {routerItem.id}
+                </NavLink>
+              </li>
+            ))}
+        </ul>
+      </div>
+    </StyledNav>  
   )
 }
 
-const StyleNav = styled.div`
-
+const StyledNav = styled.div`
   flex-grow:1;
   .gnb{
     &-lists{
@@ -40,7 +38,7 @@ const StyleNav = styled.div`
     &-link {
       display:inline-block;
       padding:20px 0;
-      font-weight:900;
+      font-weight:600;
       font-size:${rem(21)};
       color:${colors.baseWhite};
       text-shadow:${shadow.textBase};
@@ -51,5 +49,56 @@ const StyleNav = styled.div`
       }
     }
   }
-
+  ${media.tab}{
+    .gnb{
+      &-lists {
+        gap: 10px;
+      }
+      &-link {
+        padding:15px 10px;
+        font-size:${rem(18)};
+      }
+    }
+  }
+  ${media.mo}{
+    display:none;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100svh;
+    padding-top:61px;
+    opacity:0;
+    &.open {
+      display:block;
+      opacity:0;
+      animation: gnbOpenAni .3s both;
+      @keyframes gnbOpenAni{
+        0%{opacity:0;}
+        100%{opacity:1;}
+      }
+    }
+    .gnb{
+      &-inner {
+        height:100%;
+        background:${props => props.theme.bgColor};
+        backdrop-filter: blur(10px);
+      }
+      &-lists{
+        flex-direction: column;
+        gap:0px;
+        & > li {
+          width:100%;
+          border-bottom:1px solid ${colors.lineColor};
+        }
+      }
+      &-link {
+        display:block;
+        padding:20px 15px;
+        font-size:${rem(16)};
+        font-weight:500;
+        color:${props => props.theme.color};
+      }
+    }
+  }
 `;

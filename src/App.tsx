@@ -26,7 +26,6 @@ function App() : JSX.Element {
     };
   }, [handleResize]);
 
-  console.log("App")
   return (
     <AppLayout>
       <GlobalStyles />

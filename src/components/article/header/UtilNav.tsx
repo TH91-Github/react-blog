@@ -1,21 +1,22 @@
-import { useSelector } from "react-redux";
 import { colors } from "assets/style/Variable";
-import { useState } from "react";
-import styled from "styled-components"
+import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import ThemeBtn from "./ThemeBtn";
+import styled from "styled-components";
 import HeaderSearch from "./HeaderSearch";
+import ThemeBtn from "./ThemeBtn";
 import UserLogin from "./UserLogin";
 
-export default function UtilNav () {
-  const [more, setMore] = useState(false);
+interface UtilNavType {
+  menuOn: boolean
+  handleGnbMoreClick: () => void;
+}
+export default function UtilNav ({ menuOn, handleGnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   
   // mo : more-menu
   function menuClick(){
-    setMore(prev => !prev)
+    handleGnbMoreClick();
   }
-  console.log('utilNav')
   return (
     <StyleUtilNav className="util">
       {/* 
@@ -38,11 +39,11 @@ export default function UtilNav () {
           isMobile && <div className="util-item">
             <button 
               type="button" 
-              className={`more-btn ${more ? 'open' :''}`}
+              className={`more-btn ${menuOn ? 'open' :''}`}
               onClick={() => menuClick()}>
               <span className="blind">
                 {
-                  more ? '닫기' : '더보기'
+                  menuOn ? '닫기' : '더보기'
                 }
               </span>
               {
@@ -109,7 +110,7 @@ const StyleUtilNav = styled.div`
     width:5px;
     height:5px;
     border-radius:50%;
-    background:${colors.baseBlack};
+    background:${props => props.theme.color};
     transition: all .3s;
     &.circle-1 {
       top:0;

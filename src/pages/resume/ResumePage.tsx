@@ -130,8 +130,7 @@ const StyleWrap = styled.div`
 `;
 const StyleStudyInner = styled(InnerStyle)`
   display:flex;
-  margin-top:30px;
-  padding:0;
+  padding:70px 0;
 `;
 
 const LoadingMessage = styled.div`
