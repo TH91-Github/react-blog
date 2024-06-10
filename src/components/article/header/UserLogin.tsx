@@ -1,10 +1,9 @@
-import React from 'react';
-import { SvgLogOut, SvgLogin, SvgSearch } from "assets/style/SVGIcon";
+import { SvgLogOut, SvgLogin } from "assets/style/SVGIcon";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RootState } from "store/store";
-import styled from "styled-components"
+import styled from "styled-components";
 
 export default function UserLogin(){
   const theme = useSelector((state : RootState) => state.useTheme);

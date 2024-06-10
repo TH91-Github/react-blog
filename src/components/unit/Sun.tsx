@@ -1,7 +1,14 @@
 import React from 'react';
 import sunImage from 'assets/images/weather/sun.png';
-import { default as sun1Image, default as sun3Image, default as sun5Image, default as sun7Image } from 'assets/images/weather/sun_1.png';
-import { default as sun2Image, default as sun4Image, default as sun6Image, default as sun8Image } from 'assets/images/weather/sun_2.png';
+import sun1Image from 'assets/images/weather/sun_1.png';
+import sun2Image from 'assets/images/weather/sun_2.png';
+import sun3Image from 'assets/images/weather/sun_3.png';
+import sun4Image from 'assets/images/weather/sun_4.png';
+import sun5Image from 'assets/images/weather/sun_5.png';
+import sun6Image from 'assets/images/weather/sun_6.png';
+import sun7Image from 'assets/images/weather/sun_7.png';
+import sun8Image from 'assets/images/weather/sun_8.png';
+
 import styled, { keyframes } from "styled-components";
 // 나머지 이미지도 동일하게 import
 
@@ -86,5 +93,53 @@ const StyleSunItem = styled.span<StyleProps>`
     height: 18.27%;
     animation-name: ${SunAni(0, 1)};
   }
-  // 나머지 스타일도 동일하게 처리
+  &.sun-2 {
+    top: 13.067%;
+    left: 70%;
+    width: 17.067%;
+    height: 17.067%;
+    animation-name: ${SunAni(-1,1)};
+  }
+  &.sun-3{
+    top: 43.067%;
+    left: 81.2%;
+    width: 18.267%;
+    height: 14%;
+    animation-name: ${SunAni(-1,0)};
+  }
+  &.sun-4{
+    top: 69.867%;
+    left: 70%;
+    width: 17.067%;
+    height: 17.067%;
+    animation-name: ${SunAni(-1,-1)};
+  }
+  &.sun-5{
+    top: 81.067%;
+    left: 42.933%;
+    width: 14%;
+    height: 18.267%;
+    animation-name: ${SunAni(0,-1)};
+  }
+  &.sun-6{
+    top: 69.867%;
+    left: 12.933%;
+    width: 17.067%;
+    height: 17.067%;
+    animation-name: ${SunAni(1,-1)};
+  }
+  &.sun-7{
+    top: 43.067%;
+    left: 0.4%;
+    width: 18.4%;
+    height: 14%;
+    animation-name: ${SunAni(1,0)};
+  }
+  &.sun-8{
+    top: 13.067%;
+    left: 12.933%;
+    width: 17.067%;
+    height: 17.067%;
+    animation-name: ${SunAni(1,1)};
+  }
 `;

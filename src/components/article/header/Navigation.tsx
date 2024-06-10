@@ -42,14 +42,15 @@ const StyledNav = styled.div`
       font-weight:600;
       font-size:${rem(21)};
       color:${colors.baseWhite};
-      text-shadow:${shadow.textBase};
+      text-shadow:${shadow.textBase}, rgba(127, 127, 127, 0.4) 1px 1px, rgba(127, 127, 127, 0.3) -1px -1px;
       transition:all .3s;
       &:hover{
         color:${colors.yellow};
-        text-shadow:${shadow.textBaseW};
+        text-shadow:${shadow.textBaseW}, rgba(127, 127, 127, 0.4) 1px 1px, rgba(127, 127, 127, 0.3) 2px 2px;
       }
     }
   }
+
   ${media.tab}{
     .gnb{
       &-lists {
