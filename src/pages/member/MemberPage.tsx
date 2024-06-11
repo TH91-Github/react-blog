@@ -1,13 +1,13 @@
-import { colors, media, shadow } from "assets/style/Variable";
 import React from 'react';
+import { colors, media, shadow } from "assets/style/Variable";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 export default function MemberPage(){
   return (
-    <StyleWrap className="member">
-      <div className="bg-line"></div>
+    <StyleWrap className="member">      
       <Outlet />
+      <div className="bg-line"></div>
     </StyleWrap>
   )
 }
@@ -16,13 +16,8 @@ const StyleWrap = styled.div`
   position:relative;
   min-height:500px;
   padding:70px 30px 60px;
-  .bg-line {
-    position:absolute;
-    z-index:-1;
-    top:0;
-    left:0;
-    width:100%;
-    min-height:100svh;
+  & > div {
+    padding:30px 0 0;
   }
   .member {
     &-wrap{
@@ -66,23 +61,67 @@ const StyleWrap = styled.div`
     display:flex;
     flex-direction: column;
     &-item{
-      margin-top:15px;
-      padding-top:15px;
+      position:relative;
+      padding:15px 0;
       border-top:1px solid ${colors.lineColor};
       &:first-child{
-        margin-top:0;
         padding-top:0;
         border-top:none;
       }
-      .input-wrap{
+      .input-box{
+        display:flex;
+        gap:10px;
+      }
+      .input-item{
+        flex-grow:1;
         margin-top:10px;
+        &::after{
+          position:absolute;
+          top:0;
+          left:0;
+          width:4px;
+          height:100%;
+          background:${colors.blue};
+          content:'';
+        }
       }
     }
     .s-tit {
       font-size:14px;
     }
+    .s-text {
+      margin-top:15px;
+      padding-left:10px;
+      font-size:12px;
+      font-weight:300;
+      line-height:12px;
+      color:${colors.subTextColor};
+      .error{
+        font-weight:500;
+        color:${colors.red};
+      }
+    }
+  }
+  .bg-line {
+    position:absolute;
+    z-index:-1;
+    top:0;
+    left:0;
+    width:100%;
+    min-height:100svh;
   }
   ${media.mo}{
     padding:70px 15px 30px;
+    .member {
+      &-wrap{
+        .title{
+          font-size:28px;
+        }
+      }
+      &-cont{
+        margin-top:20px;
+        padding-top:20px;
+      }
+    }
   }
 `;

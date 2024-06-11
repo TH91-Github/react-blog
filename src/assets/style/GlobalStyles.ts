@@ -26,14 +26,13 @@ export const GlobalStyles = createGlobalStyle`
     position:absolute;
     top:-9999px;
     left:-9999px;
-    font-size:1;
+    font-size:1px;
     opacity:0;
   }
   .btnG {
     background:${colors.blueG};
     color:${colors.baseWhite};
   }
-
   .dot-list-style {
     & > li {
       position:relative;

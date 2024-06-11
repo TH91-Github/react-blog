@@ -9,9 +9,8 @@ import { mapObjectChange } from 'utils/common';
 import StudyDetail from "./StudyDetail";
 import { StudyDataType, studyDataBase } from './study';
 
-interface StudyPageProps {}
 
-export default function StudyPage({}: StudyPageProps) {
+export default function StudyPage() {
   const params = useParams<{ id?: string }>(); // useParams를 제네릭으로 타입 지정
   const [studyData, setStudyData] = useState<StudyDataType[] | null>(null); // StudyItem[] 타입으로 지정
   const [navList, setNavList] = useState<{ title: string; size: number }[]>([]); // navList 타입 지정
@@ -39,7 +38,6 @@ export default function StudyPage({}: StudyPageProps) {
         listMap.set(keyVal, (listMap.get(keyVal) || 0) + 1);
       }
     }
-
     setNavList(mapObjectChange(listMap));
   }
 

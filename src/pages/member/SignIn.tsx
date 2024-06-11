@@ -1,5 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
-import InputText from "components/element/InputText";
+import InputElement from "components/element/InputElement";
 import React, { useRef } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -14,8 +14,6 @@ export default function SignIn() {
     // id일 경우 회원 목록을 불러와서 체크
 
     // pw 
-
-
   };
 
   const refListChk = (e : HTMLInputElement) => {
@@ -33,7 +31,7 @@ export default function SignIn() {
           <form className="form" onSubmit={handleLogin}>
             <div className="form-item">
               <p className="s-tit">아이디 or 이메일</p>
-              <InputText
+              <InputElement
                 ref={refListChk}
                 name={'login-id'}
                 className={'login-id'}
@@ -42,7 +40,7 @@ export default function SignIn() {
             </div>
             <div className="form-item">
               <p className="s-tit">비밀번호</p>
-              <InputText
+              <InputElement
                 ref={refListChk}
                 name={'password'}
                 type={'password'}

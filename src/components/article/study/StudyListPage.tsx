@@ -3,11 +3,11 @@ import styled from "styled-components";
 import StudySearch from "./StudySearch";
 import { StudyDataType } from 'pages/study/study';
 
-interface StudyListPage {
+interface StudyListPageType {
   studyList:any
   clickEvent: (item: StudyDataType) => void;
 }
-export default function StudyListPage({studyList, clickEvent}:StudyListPage){
+export default function StudyListPage({studyList, clickEvent}:StudyListPageType){
 
   function handlerClick(item:StudyDataType){
     clickEvent(item)

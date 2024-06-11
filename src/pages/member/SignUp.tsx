@@ -1,21 +1,22 @@
 import { colors, shadow, transitions } from "assets/style/Variable";
-import InputText from "components/element/InputText";
-import React, { useCallback, useRef } from 'react';
+import EmailChk from "components/article/member/EmailChk";
+import LogInIDChk from "components/article/member/LogInIDChk";
+import NameChk from "components/article/member/NameChk";
+import PasswordChk from "components/article/member/PasswordChk";
+import React, { useRef } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+export interface RefInputType {
+  lineColor?:string;
+  refPush: (e: HTMLInputElement) => void;
+}
 export default function SignUp() {
   const refList = useRef<HTMLInputElement[]>([]);
 
-  // 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  // 비밀번호 체크 로직
-  const handlePasswordCheck = useCallback((pVal: string)=> {
-    console.log(pVal)
-  },[]);
-  
 
   const refListChk = (e : HTMLInputElement) => {
     // refList e(input)이 없는 경우 추가
@@ -23,61 +24,36 @@ export default function SignUp() {
       e && refList.current.push(e)
     }
   }
-
+  console.log(refList)
+  /*
+    1. 
+    - 유효성체크
+    - id @이메일 정상적인 이메일인지
+    - 간편 아이디 최소 4글자
+    - 비밀번호 최소 6자리
+    - useDatabase 생성 비교 (email, 간편 아이디 검사)
+    - Authentication 정보 가져와서 비교 (없다면 생성)
+    - 아무이상 없다면 등록 후 로그인 페이지로 url 변경 
+  */
   return (
     <StyleWrap className="signup">
       <div className="member-wrap">
         <h1 className="title">Sign up</h1>
         <div className="member-cont">
+          <p className="reference"><span className="sup">*</span>필수 입력</p>
           <form className="form" onSubmit={handleLogin}>
-            <div className="form-item">
-              <p className="s-tit">이메일</p>
-              <InputText
-                ref={refListChk}
-                name={'email'}
-                className={'signup-email'}
-                placeholder={'이메일을 입력하세요.'}
-              />
-            </div>
-            <div className="form-item">
-              <p className="s-tit">간편 아이디</p>
-              <InputText
-                ref={refListChk}
-                name={'id'}
-                className={'signup-id'}
-                placeholder={'아이디를 입력하세요.'}
-              />
-            </div>
-            <div className="form-item">
-              <p className="s-tit">이름</p>
-              <InputText
-                ref={refListChk}
-                name={'user-name'}
-                className={'signup-name'}
-                placeholder={'이름을 입력하세요.'}
-              />
-            </div>
-            <div className="form-item">
-              <p className="s-tit">비밀번호</p>
-              <InputText
-                ref={refListChk}
-                name={'password'}
-                type={'password'}
-                className={'signup-pw1'}
-                placeholder={'비밀번호를 입력하세요.'}
-              />
-            </div>
-            <div className="form-item">
-              <p className="s-tit">비밀번호 확인</p>
-              <InputText
-                ref={refListChk}
-                name={'password-chk'}
-                type={'password'}
-                className={'signup-pw2'}
-                placeholder={'비밀번호를 다시 입력해주세요.'}
-                changeEvent={handlePasswordCheck}
-              />
-            </div>
+            <EmailChk 
+              lineColor={colors.yellow}
+              refPush={refListChk} />
+            <LogInIDChk 
+              lineColor={colors.yellow}
+              refPush={refListChk} />
+            <NameChk 
+              lineColor={colors.yellow}
+              refPush={refListChk} />
+            <PasswordChk 
+              lineColor={colors.yellow}
+              refPush={refListChk} />
             <div className="form-item">
               {/* <div className="remember">
               </div> */}
@@ -95,15 +71,30 @@ export default function SignUp() {
           </form>
         </div>
       </div>
-      
     </StyleWrap>
   );
 }
 
 const StyleWrap = styled.div`
-  .member-cont {
-    &::after, .input-wrap::after {
+  & .member-cont {
+    &::after, .input-item::after {
       background: ${colors.yellow};
+    }
+  }
+  .sup{ 
+    color:${colors.red}
+  }
+  .reference {
+    font-size:12px;
+    text-align:right;
+    .sup{
+      margin-right:2px;
+      vertical-align: middle;
+    }
+  }
+  .s-tit{
+    & > .sup {
+      margin-left:2px;
     }
   }
   .signup{
@@ -113,13 +104,16 @@ const StyleWrap = styled.div`
       margin-top:10px;
       padding:10px;
       border-radius:10px;
-      background:${colors.yellowG};
+      background:${colors.yellow};
       & > span{
         font-size:18px;
         font-weight:600;
         text-shadow:${shadow.textBase};
       }
     }
+  }
+  .form{
+    margin-top:20px;
   }
   .login{
     display:flex;

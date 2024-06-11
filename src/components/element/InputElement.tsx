@@ -1,5 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
-import React, { forwardRef, useCallback, useState } from "react";
+import React, { forwardRef, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface InputType {
@@ -11,8 +11,10 @@ interface InputType {
   prevVal?: string;
   maxWidth?: string;
   inputError?: boolean;
+  focusColor?: string;
   keyEvent?: () => void;
   changeEvent?: (e: string) => void;
+  blurEvent?: (e: string) => void;
 }
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
@@ -25,22 +27,27 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     prevVal,
     maxWidth,
     inputError,
+    focusColor,
     keyEvent,
     changeEvent,
+    blurEvent,
   }: InputType, ref ) {
   const [passwordType, setPasswordType] = useState<string>(type ==='password' ? 'password' : 'text');
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
-  let propsTime:ReturnType<typeof setTimeout>;
+  const propsTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const focusIn = useCallback(() => {
     setIsFocus(true);
   }, []);
 
   const focusOut = useCallback(() => {
+    // 👇 입력 되어 있을 경우 포커스 남도록 
     // if (typeof val === "string" && !(val.length > 0)) {
-      setIsFocus(false);
+    //   setIsFocus(false);
     // }
+    setIsFocus(false);
+    blurEvent && blurEvent(val);
   }, [val]);
 
   const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -50,16 +57,19 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setVal(value);
-      clearTimeout(propsTime)
-      propsTime = setTimeout(() =>{
-        console.log('야호')
-      },1000)
-  },[]);
+    if (propsTimeRef.current) {
+      clearTimeout(propsTimeRef.current);
+    }
+    propsTimeRef.current = setTimeout(() =>{
+      changeEvent && changeEvent(value)
+    },500)
+  },[changeEvent]);
 
   return (
     <StyleWrap
-      className={`input-wrap ${inputError ? "error" : ""} ${ isFocus ? "isFocus" : "" }`}
-      $maxWidth={maxWidth ? maxWidth : undefined} >
+      className={`input-item${inputError ? " error" : ""}${ isFocus ? " isFocus" : "" }`}
+      $maxWidth={maxWidth ? maxWidth : undefined} 
+      $lineColor={focusColor === undefined ? colors.blue: focusColor}>
       <input
         ref={ref}
         type={passwordType}
@@ -77,7 +87,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
       {
         val.length === 0 && (
           <span className="placeholder">
-            <span>{placeholder}</span>
+            {placeholder}
           </span>
         )
       }
@@ -87,6 +97,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
 
 type StyleProps = {
   $maxWidth: string | undefined;
+  $lineColor: string;
 };
 
 const StyleWrap = styled.div<StyleProps>`
@@ -95,18 +106,9 @@ const StyleWrap = styled.div<StyleProps>`
   position:relative;
   ${props => props.$maxWidth && `max-width: ${props.$maxWidth};`}
   border-radius:2px;
-  &::after{
-    position:absolute;
-    top:0;
-    left:0;
-    width:4px;
-    height:100%;
-    background:${colors.blue};
-    content:'';
-  }
   &.isFocus {
     .input {
-      border:1px solid ${colors.blue};
+      border:1px solid ${props => props.$lineColor};
     }
   }
   .input {
@@ -127,11 +129,9 @@ const StyleWrap = styled.div<StyleProps>`
     transform:translateY(-50%);
     pointer-events : none;
     line-height:1;
-    span {
-      font-size:14px;
-      font-weight:300;
-      color:${colors.subTextColor};
-    }
+    font-size:14px;
+    font-weight:300;
+    color:${colors.subTextColor};
   }
 `;
 
