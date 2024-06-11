@@ -3,28 +3,54 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NameChk from "components/article/member/NameChk";
 import PasswordChk from "components/article/member/PasswordChk";
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { randomNum } from "utils/common";
 
+interface inputObjType {
+  id: string,
+  el: HTMLInputElement,
+  check:boolean
+}
 export interface RefInputType {
   lineColor?:string;
-  refPush: (e: HTMLInputElement) => void;
+  refPush: (tag:HTMLInputElement, state:boolean) => void;
 }
-export default function SignUp() {
-  const refList = useRef<HTMLInputElement[]>([]);
 
+export default function SignUp() {
+  const refList = useRef<inputObjType[]>([]);
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-
-  const refListChk = (e : HTMLInputElement) => {
-    // refList e(input)이 없는 경우 추가
-    if(!refList.current.includes(e)){
-      e && refList.current.push(e)
+  const refListChk = useCallback((tag:HTMLInputElement, state:boolean)=> {
+    console.log(refList)
+    if(!refList.current.map(item => item.el).includes(tag)){
+      const inputObj : inputObjType= {
+        id:`input-1`,
+        el: tag,
+        check:false
+      }
+      refList.current.push(inputObj)
     }
-  }
-  console.log(refList)
+
+    // if(!refList.current.map((item,idx) => item.el).includes(tag)){
+    //   const inputObj : inputObjType= {
+    //     id:`input-${idx}`,
+    //     el: tag,
+    //     check:false
+    //   }
+    //   refList.current.push(inputObj)
+    // }else{
+
+    // }
+    // if(!refList.current.includes(e)){
+    //   const inputObj:inputObjType = {
+    //     el:e
+    //   }
+    //   e && refList.current.push(inputObj)
+  },[])
+  console.log('렌더')
   /*
     1. 
     - 유효성체크
@@ -76,9 +102,11 @@ export default function SignUp() {
 }
 
 const StyleWrap = styled.div`
-  & .member-cont {
-    &::after, .input-item::after {
-      background: ${colors.yellow};
+  &.signup {
+    .member-cont {
+      &::after, .form-item .input-item::after {
+        background: ${colors.yellow};
+      }
     }
   }
   .sup{ 

@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
+import { ResumeDocumentType, ResumeState, ThemeState } from './types';
 import { StringOnly } from 'types/baseType';
-import { ResumeDocumentType, ResumeState } from './types';
 
 // mobile 체크
 export const mobileChk = createSlice({ 
@@ -15,15 +15,11 @@ export const mobileChk = createSlice({
   }
 })
 // dark/light 모드 체크
-interface ThemeState {
-  mode:string;
-  color:StringOnly
-}
 const themeInitialState: ThemeState ={
   mode:'light',
   color: lightTheme
 }
-export const useTheme = createSlice({ // 
+export const useTheme = createSlice({
   name: "dark/light theme",
   initialState: themeInitialState,
   reducers: {
@@ -32,6 +28,19 @@ export const useTheme = createSlice({ //
     }
   }
 })
+
+// user data - firebase
+const userDataState: StringOnly[] = [];
+export const userDataLists = createSlice({
+  name: "user lists",
+  initialState: userDataState,
+  reducers: {
+    actionUserUpdata(state, propsAction: PayloadAction<StringOnly[]>){
+      return state = propsAction.payload;
+    }
+  }
+})
+
 // resume - firebase
 // createAsyncThunk: redux Toolkit 비동기 작업을 정의 하는데 사용. - pending / fulfilled / rejected
 export const fetchResumeData = createAsyncThunk<ResumeDocumentType>(
@@ -45,7 +54,7 @@ export const fetchResumeData = createAsyncThunk<ResumeDocumentType>(
   }
 );
 
-const initialState: ResumeState = {
+const resumeSliceState: ResumeState = {
   data: null,
   loading: false,
   error: null
@@ -53,7 +62,7 @@ const initialState: ResumeState = {
 
 export const resumeSlice = createSlice({
   name: 'resume',
-  initialState,
+  initialState : resumeSliceState,
   reducers: {},
   extraReducers: (builder) => {
     builder

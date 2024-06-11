@@ -35,8 +35,25 @@ export function mapObjectChange(mapList: Map<string, number>): TitleSize[] {
 }
 
 // email 체크
-export function emailValidation (email:string){
-  // 한글 @ 포함 확인
-  const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-  return !regex.test(email) ? false : true 
+export function emailValidation (email:string):boolean{
+  // 한글 @ 포함 확인 / .포함 / id 4글자:{4,} .이후 2글자:{2,} 
+  const regex = /^[A-Za-z0-9._%+-]{4,}@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return !regex.test(email)
 }
+
+// 랜덤 값 (최대 값, 이름지정_랜덤 값)
+export const randomNum = (_max:number, name?:string) :string => { 
+  let newId = Math.floor(Math.random() * Number(_max + 1))
+  return `${name === undefined ? 'random': name}-${newId}`;
+}
+
+// export function randomIdChk (listId, name) { // (비교리스트, 지정id값) 리스트 내 id 비교 중복 값 없는 id 지정
+//   const idName = name ?? "random"
+//   let uniqueId = '';
+//   for(let idNum = 0 ; idNum < 1; idNum++){
+//     let createId = { id : randomNum(9999, idName)}
+//     listId.findIndex((idItem) => idItem.id === createId.id) >= 0 && idNum--;
+//     uniqueId = createId.id;
+//   }
+//   return uniqueId;
+// }

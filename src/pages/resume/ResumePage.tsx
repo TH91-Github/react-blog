@@ -10,6 +10,7 @@ import { fetchResumeData } from 'reducers/sliceActions';
 import { AppDispatch, RootState } from 'store/store';
 import styled from 'styled-components';
 
+// Resume 데이터만 reducers를 통해 가져오기 - 테스트 겸 연습용
 export default function ResumePage() {
   const { data: resumeData, loading, error } = useSelector((state: RootState) => state.resume);
   const dispatch: AppDispatch = useDispatch();

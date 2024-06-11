@@ -1,11 +1,12 @@
 import { configureStore} from '@reduxjs/toolkit'
-import { mobileChk, resumeSlice, useTheme } from 'reducers/sliceActions';
+import { mobileChk, resumeSlice, useTheme, userDataLists } from 'reducers/sliceActions';
 
 export const store = configureStore({
   reducer: { 
     mobileChk: mobileChk.reducer,
     useTheme: useTheme.reducer,
-    resume: resumeSlice.reducer
+    resume: resumeSlice.reducer,
+    userDataLists: userDataLists.reducer,
   }
 }) 
 
@@ -14,3 +15,4 @@ export type AppDispatch = typeof store.dispatch;
 
 export const { actionMobileChk } = mobileChk.actions;
 export const { actionTheme } = useTheme.actions;
+export const { actionUserUpdata } = userDataLists.actions;

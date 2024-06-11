@@ -5,6 +5,7 @@ import { RefInputType } from "pages/member/SignUp";
 export default function LogInIDChk({lineColor, refPush}:RefInputType){
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
+  const [completion, setCompletion] = useState(false);
 
   const handlelogInIDCheck = useCallback((logInIdVal: string)=> {
     console.log(logInIdVal)
@@ -12,25 +13,23 @@ export default function LogInIDChk({lineColor, refPush}:RefInputType){
 
   useEffect(() => {
     if (refInput.current && refPush) {
-      refPush(refInput.current);
+      refPush(refInput.current, completion);
     }
-  }, [refInput, refPush]);
+  }, [refInput, refPush, completion]);
 
   return(
     <div className="form-item">
       <p className="s-tit">
         <span>간편 아이디</span>
       </p>
-      <div className="input-box">
-        <InputElement
-          ref={refInput}
-          name={'id'}
-          className={'signup-id'}
-          placeholder={'아이디를 입력하세요.'}
-          focusColor={lineColor}
-          changeEvent={handlelogInIDCheck}
-        />
-      </div>
+      <InputElement
+        ref={refInput}
+        name={'id'}
+        className={'signup-id'}
+        placeholder={'아이디를 입력하세요.'}
+        focusColor={lineColor}
+        changeEvent={handlelogInIDCheck}
+      />
       <p className="s-text">
         {
           valError 

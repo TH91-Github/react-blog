@@ -6,6 +6,7 @@ export default function PasswordChk({lineColor, refPush}:RefInputType){
   const refInput = useRef<HTMLInputElement>(null);
   const [valError1, setValError1] = useState(false);
   const [valError2, setValError2] = useState(false);
+  const [completion, setCompletion] = useState(false);
 
   // 비밀번호 체크
   const handlePasswordCheck = useCallback((pw1Val: string)=> {
@@ -18,9 +19,9 @@ export default function PasswordChk({lineColor, refPush}:RefInputType){
 
   useEffect(() => {
     if (refInput.current && refPush) {
-      refPush(refInput.current);
+      refPush(refInput.current, completion);
     }
-  }, [refInput, refPush]);
+  }, [refInput, refPush, completion]);
 
   return(
     <>
@@ -29,17 +30,15 @@ export default function PasswordChk({lineColor, refPush}:RefInputType){
           <span>비밀번호</span>
           <sup className="sup">*</sup>
         </p>
-        <div className="input-box">
-          <InputElement
-            ref={refInput}
-            name={'password'}
-            type={'password'}
-            className={'signup-pw1'}
-            placeholder={'비밀번호를 입력하세요.'}
-            focusColor={lineColor}
-            changeEvent={handlePasswordCheck}
-          />
-        </div>
+        <InputElement
+          ref={refInput}
+          name={'password'}
+          type={'password'}
+          className={'signup-pw1'}
+          placeholder={'비밀번호를 입력하세요.'}
+          focusColor={lineColor}
+          changeEvent={handlePasswordCheck}
+        />
         {
           !valError1 && <p className="s-text"><span className="txt error">6~20자의 영문 대/소문자, 숫자, 특수문자를 사용해주세요.</span></p>
         }

@@ -14,7 +14,8 @@ interface InputType {
   focusColor?: string;
   keyEvent?: () => void;
   changeEvent?: (e: string) => void;
-  blurEvent?: (e: string) => void;
+  focusEvent?: () => void;
+  blurEvent?: () => void;
 }
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
@@ -30,6 +31,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     focusColor,
     keyEvent,
     changeEvent,
+    focusEvent,
     blurEvent,
   }: InputType, ref ) {
   const [passwordType, setPasswordType] = useState<string>(type ==='password' ? 'password' : 'text');
@@ -39,6 +41,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
 
   const focusIn = useCallback(() => {
     setIsFocus(true);
+    focusEvent && focusEvent();
   }, []);
 
   const focusOut = useCallback(() => {
@@ -47,8 +50,8 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     //   setIsFocus(false);
     // }
     setIsFocus(false);
-    blurEvent && blurEvent(val);
-  }, [val]);
+    blurEvent && blurEvent();
+  }, [blurEvent]);
 
   const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     e.key === "Enter" && keyEvent && keyEvent();
@@ -102,7 +105,6 @@ type StyleProps = {
 
 const StyleWrap = styled.div<StyleProps>`
   display:block;
-  overflow:hidden;
   position:relative;
   ${props => props.$maxWidth && `max-width: ${props.$maxWidth};`}
   border-radius:2px;
@@ -114,7 +116,7 @@ const StyleWrap = styled.div<StyleProps>`
   .input {
     display:block;
     width:100%;
-    padding:5px 10px;
+    padding:8px 10px;
     border:1px solid transparent;
     font-size:14px;
     background:none;

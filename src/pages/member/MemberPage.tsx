@@ -68,12 +68,7 @@ const StyleWrap = styled.div`
         padding-top:0;
         border-top:none;
       }
-      .input-box{
-        display:flex;
-        gap:10px;
-      }
       .input-item{
-        flex-grow:1;
         margin-top:10px;
         &::after{
           position:absolute;
@@ -83,6 +78,11 @@ const StyleWrap = styled.div`
           height:100%;
           background:${colors.blue};
           content:'';
+        }
+      }
+      &.error{
+        .input {
+          color:${colors.red};
         }
       }
     }
