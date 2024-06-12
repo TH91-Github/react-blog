@@ -15,4 +15,4 @@ export type AppDispatch = typeof store.dispatch;
 
 export const { actionMobileChk } = mobileChk.actions;
 export const { actionTheme } = useTheme.actions;
-export const { actionUserUpdata } = userDataLists.actions;
+export const { actionUserUpdate } = userDataLists.actions;

@@ -19,9 +19,9 @@ export default function PasswordChk({lineColor, refPush}:RefInputType){
 
   useEffect(() => {
     if (refInput.current && refPush) {
-      refPush(refInput.current, completion);
+      refPush(refInput.current);
     }
-  }, [refInput, refPush, completion]);
+  }, [refInput, refPush]);
 
   return(
     <>

@@ -6,7 +6,7 @@ import PasswordChk from "components/article/member/PasswordChk";
 import React, { useCallback, useRef } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { randomNum } from "utils/common";
+import { randomIdChk } from "utils/common";
 
 interface inputObjType {
   id: string,
@@ -15,41 +15,39 @@ interface inputObjType {
 }
 export interface RefInputType {
   lineColor?:string;
-  refPush: (tag:HTMLInputElement, state:boolean) => void;
+  refPush: (tag:HTMLInputElement) => void;
+  refUpdate: (tag:HTMLInputElement, state:boolean) => void;
 }
 
 export default function SignUp() {
   const refList = useRef<inputObjType[]>([]);
+
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  const refListChk = useCallback((tag:HTMLInputElement, state:boolean)=> {
-    console.log(refList)
+
+  const refListChk = useCallback((tag:HTMLInputElement) => {
     if(!refList.current.map(item => item.el).includes(tag)){
-      const inputObj : inputObjType= {
-        id:`input-1`,
+      const inputObj : inputObjType = {
+        id: randomIdChk(refList.current,'input'),
         el: tag,
         check:false
       }
       refList.current.push(inputObj)
     }
+  },[]);
 
-    // if(!refList.current.map((item,idx) => item.el).includes(tag)){
-    //   const inputObj : inputObjType= {
-    //     id:`input-${idx}`,
-    //     el: tag,
-    //     check:false
-    //   }
-    //   refList.current.push(inputObj)
-    // }else{
+  const refListUpdate = useCallback((tag:HTMLInputElement, state:boolean) => {
+    console.log(tag)
+    console.log(state)
+    refList.current.forEach(item => {
+      if (item.el === tag) {
+        item.check = state;
+      }
+    });
+    console.log(refList.current)
+  }, []);
 
-    // }
-    // if(!refList.current.includes(e)){
-    //   const inputObj:inputObjType = {
-    //     el:e
-    //   }
-    //   e && refList.current.push(inputObj)
-  },[])
   console.log('렌더')
   /*
     1. 
@@ -70,16 +68,20 @@ export default function SignUp() {
           <form className="form" onSubmit={handleLogin}>
             <EmailChk 
               lineColor={colors.yellow}
-              refPush={refListChk} />
+              refPush={refListChk}
+              refUpdate={refListUpdate} />
             <LogInIDChk 
               lineColor={colors.yellow}
-              refPush={refListChk} />
+              refPush={refListChk}
+              refUpdate={refListUpdate}  />
             <NameChk 
               lineColor={colors.yellow}
-              refPush={refListChk} />
+              refPush={refListChk}
+              refUpdate={refListUpdate} />
             <PasswordChk 
               lineColor={colors.yellow}
-              refPush={refListChk} />
+              refPush={refListChk}
+              refUpdate={refListUpdate} />
             <div className="form-item">
               {/* <div className="remember">
               </div> */}

@@ -47,13 +47,14 @@ export const randomNum = (_max:number, name?:string) :string => {
   return `${name === undefined ? 'random': name}-${newId}`;
 }
 
-// export function randomIdChk (listId, name) { // (비교리스트, 지정id값) 리스트 내 id 비교 중복 값 없는 id 지정
-//   const idName = name ?? "random"
-//   let uniqueId = '';
-//   for(let idNum = 0 ; idNum < 1; idNum++){
-//     let createId = { id : randomNum(9999, idName)}
-//     listId.findIndex((idItem) => idItem.id === createId.id) >= 0 && idNum--;
-//     uniqueId = createId.id;
-//   }
-//   return uniqueId;
-// }
+// (비교리스트, 지정id값) 리스트 내 id 비교 중복 값 없는 id 지정
+export function randomIdChk (listId:any[], name:string) { 
+  const idName = name ?? "random"
+  let uniqueId = '';
+  for(let idNum = 0 ; idNum < 1; idNum++){
+    let createId = { id : randomNum(9999, idName)}
+    listId.findIndex((idItem) => idItem.id === createId.id) >= 0 && idNum--;
+    uniqueId = createId.id;
+  }
+  return uniqueId;
+}

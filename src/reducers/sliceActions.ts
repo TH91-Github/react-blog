@@ -35,7 +35,7 @@ export const userDataLists = createSlice({
   name: "user lists",
   initialState: userDataState,
   reducers: {
-    actionUserUpdata(state, propsAction: PayloadAction<StringOnly[]>){
+    actionUserUpdate(state, propsAction: PayloadAction<StringOnly[]>){
       return state = propsAction.payload;
     }
   }

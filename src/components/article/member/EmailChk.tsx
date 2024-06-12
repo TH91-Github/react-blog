@@ -5,12 +5,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { emailValidation } from "utils/common";
 
-export default function EmailChk({lineColor, refPush}:RefInputType){
+export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
   const userData = useSelector((state : RootState) => state.userDataLists);
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
-  const [completion, setCompletion] = useState(false);
 
   const handleEmailFocus = useCallback(()=>{
     setValError(false)
@@ -19,30 +18,39 @@ export default function EmailChk({lineColor, refPush}:RefInputType){
   const handleEmailBlur = useCallback(()=> {
     if(!refInput.current) return
     const inputVal = refInput.current.value.trim();
+    
     // 유효성 검사
     inputVal.length>0
-    ?setValError(emailValidation(inputVal))
-    :setValError(false)
+    ? setValError(emailValidation(inputVal))
+    : setValError(false)
+
     // 중복 검사
     if(inputVal.length>0 && !emailValidation(inputVal)){
-      if(userData.map(item => item.email).includes(inputVal)){
-        setValError(true)
-        setDuplicate(true) 
-      }else{
-        setDuplicate(false)
-        console.log('최종') // 완료 boolean 설정.
-        setCompletion(true);
-      }
+      checkDuplicateEmail(inputVal)
+    }else{
+      refUpdate(refInput.current, false);
     }
-  },[userData]);
 
+  },[userData, refUpdate]);
+
+  const checkDuplicateEmail = useCallback((email:string)=>{
+    if(userData.map(item => item.email).includes(email)){
+      setValError(true)
+      setDuplicate(true)
+      refUpdate(refInput.current!, false);
+    }else{
+      setDuplicate(false)
+      refUpdate(refInput.current!, true);
+    }
+  },[userData, refUpdate])
+  
   // input - ref
   useEffect(() => {
     if (refInput.current && refPush) {
-      console.log('ㅇ?')
-      refPush(refInput.current, completion);
+      refPush(refInput.current);
     }
-  }, [refInput, refPush, completion]);
+  }, [refInput, refPush]);
+
   return(
     <div className={`form-item ${valError ? 'error':''}`}>
       <p className="s-tit">
