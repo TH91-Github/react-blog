@@ -1,7 +1,7 @@
 import { colors, shadow, transitions } from "assets/style/Variable";
 import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
-import NameChk from "components/article/member/NameChk";
+import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
 import React, { useCallback, useRef } from 'react';
 import { NavLink } from "react-router-dom";
@@ -26,16 +26,23 @@ export default function SignUp() {
     event.preventDefault();
   };
 
-  const refListChk = useCallback((tag:HTMLInputElement) => {
+  const refListCheck = useCallback((tag:HTMLInputElement) => {
     if(!refList.current.map(item => item.el).includes(tag)){
       const inputObj : inputObjType = {
         id: randomIdChk(refList.current,'input'),
         el: tag,
-        check:false
+        check: essentialChk(tag)
       }
       refList.current.push(inputObj)
     }
   },[]);
+
+  // 필수가 아닌 요소 true 반환
+  const essentialChk = (checkTag:HTMLInputElement):boolean =>{
+    const essentialName = ['id'];
+    const name = checkTag.getAttribute('name') 
+    return name && essentialName.includes(name) ? true : false
+  }
 
   const refListUpdate = useCallback((tag:HTMLInputElement, state:boolean) => {
     console.log(tag)
@@ -68,19 +75,19 @@ export default function SignUp() {
           <form className="form" onSubmit={handleLogin}>
             <EmailChk 
               lineColor={colors.yellow}
-              refPush={refListChk}
+              refPush={refListCheck}
               refUpdate={refListUpdate} />
             <LogInIDChk 
               lineColor={colors.yellow}
-              refPush={refListChk}
+              refPush={refListCheck}
               refUpdate={refListUpdate}  />
-            <NameChk 
+            <NickNameChk 
               lineColor={colors.yellow}
-              refPush={refListChk}
+              refPush={refListCheck}
               refUpdate={refListUpdate} />
             <PasswordChk 
               lineColor={colors.yellow}
-              refPush={refListChk}
+              refPush={refListCheck}
               refUpdate={refListUpdate} />
             <div className="form-item">
               {/* <div className="remember">
@@ -143,7 +150,7 @@ const StyleWrap = styled.div`
     }
   }
   .form{
-    margin-top:20px;
+    margin-top:10px;
   }
   .login{
     display:flex;

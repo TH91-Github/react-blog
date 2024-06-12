@@ -15,7 +15,7 @@ interface InputType {
   keyEvent?: () => void;
   changeEvent?: (e: string) => void;
   focusEvent?: () => void;
-  blurEvent?: () => void;
+  blurEvent?: (value:string) => void;
 }
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
@@ -42,15 +42,15 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   const focusIn = useCallback(() => {
     setIsFocus(true);
     focusEvent && focusEvent();
-  }, []);
+  }, [focusEvent]);
 
-  const focusOut = useCallback(() => {
+  const focusOut = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     // 👇 입력 되어 있을 경우 포커스 남도록 
     // if (typeof val === "string" && !(val.length > 0)) {
     //   setIsFocus(false);
     // }
     setIsFocus(false);
-    blurEvent && blurEvent();
+    blurEvent && blurEvent(e.target.value);
   }, [blurEvent]);
 
   const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setVal(value);
+    setVal(value.trim());
     if (propsTimeRef.current) {
       clearTimeout(propsTimeRef.current);
     }
@@ -79,7 +79,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
         id={id}
         name={name}
         className={`input ${className ? className : ''}`}
-        // value={val}
+        value={val}
         onFocus={focusIn}
         onBlur={focusOut}
         onKeyUp={keyUp}

@@ -36,6 +36,7 @@ export const routerList = [
   {
     id: "Portfolio",
     path: "portfolio",
+    view: false,
     title: '포트폴리오',
     element: <PortfolioPage />,
   },

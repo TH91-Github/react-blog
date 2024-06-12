@@ -3,7 +3,7 @@ import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import { emailValidation } from "utils/common";
+import { emailCheck } from "utils/regex";
 
 export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
   const userData = useSelector((state : RootState) => state.userDataLists);
@@ -15,17 +15,17 @@ export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
     setValError(false)
   },[])
   // 이메일 유효성 & 중복
-  const handleEmailBlur = useCallback(()=> {
+  const handleEmailBlur = useCallback((value: string)=> {
     if(!refInput.current) return
-    const inputVal = refInput.current.value.trim();
+    const inputVal = value.trim();
     
     // 유효성 검사
     inputVal.length>0
-    ? setValError(emailValidation(inputVal))
+    ? setValError(emailCheck(inputVal))
     : setValError(false)
 
     // 중복 검사
-    if(inputVal.length>0 && !emailValidation(inputVal)){
+    if(inputVal.length>0 && !emailCheck(inputVal)){
       checkDuplicateEmail(inputVal)
     }else{
       refUpdate(refInput.current, false);
