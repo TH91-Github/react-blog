@@ -3,96 +3,133 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { randomIdChk } from "utils/common";
 
-interface inputObjType {
+interface InputStateType {
   id: string,
-  el: HTMLInputElement,
+  name: string|null,
   check:boolean
 }
 export interface RefInputType {
   lineColor?:string;
   refPush: (tag:HTMLInputElement) => void;
-  refUpdate: (tag:HTMLInputElement, state:boolean) => void;
+  validationUpdate: (name:string|null, state:boolean) => void;
 }
 
 export default function SignUp() {
-  const refList = useRef<inputObjType[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const refList = useRef<HTMLInputElement[]>([]);
+  const [validation, setValidation] = useState<InputStateType[]>([])
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
-  const refListCheck = useCallback((tag:HTMLInputElement) => {
-    if(!refList.current.map(item => item.el).includes(tag)){
-      const inputObj : inputObjType = {
-        id: randomIdChk(refList.current,'input'),
-        el: tag,
+  // ref push - input
+  const refListCheck = useCallback((tag: HTMLInputElement) => {
+    if (!refList.current.some(item => item === tag)) {
+      refList.current.push(tag);
+      const inputState: InputStateType = {
+        id: randomIdChk(refList.current, 'input'),
+        name: tag.getAttribute('name'),
         check: essentialChk(tag)
       }
-      refList.current.push(inputObj)
+      setValidation(prev => [
+        ...prev,
+        inputState
+      ])
     }
-  },[]);
-
+  }, []);
   // 필수가 아닌 요소 true 반환
   const essentialChk = (checkTag:HTMLInputElement):boolean =>{
-    const essentialName = ['id'];
+    const essentialName = ['loginId'];
     const name = checkTag.getAttribute('name') 
     return name && essentialName.includes(name) ? true : false
   }
-
-  const refListUpdate = useCallback((tag:HTMLInputElement, state:boolean) => {
-    console.log(tag)
-    console.log(state)
-    refList.current.forEach(item => {
-      if (item.el === tag) {
-        item.check = state;
-      }
-    });
-    console.log(refList.current)
+  // 각 input 유효성 검사 체크 업데이트: 통과-true, 실패-false
+  const inputValidationUpdate = useCallback((name:string|null, state:boolean) => {
+    const checkUpdate = {check : state }
+    setValidation(prev => prev.map((item) => 
+      item.name === name ? {...item, ...checkUpdate } : item
+    ))
   }, []);
 
+  // 최종 확인 - 
+  const completionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log(refList.current)
+    console.log(validation)
+
+    // false input 찾기
+    const hasChecked = validation.find(item=>!item.check);
+    if(hasChecked){
+      console.log(hasChecked.name)
+      let message = messageCase(hasChecked.name!);
+      let focusInput = refList.current.find(refItem => refItem.getAttribute('name') === hasChecked.name)
+
+      console.log(`❌ ${message}을 다시 확인해주세요.`)
+      // focusInput?.focus()
+    }else{
+      console.log('완료')
+    }
+
+
+    // const hasUnchecked = refList.current.find(refItem => !refItem.check);
+    
+    // if (hasUnchecked) {
+    //   const nameType = hasUnchecked.el.getAttribute('name');
+    //   let message = messageCase(nameType!);
+    //   // 
+    //   hasUnchecked.el.focus();
+    // } else {
+    //   console.log('완료');
+    //   // formRef.current?.submit(); // 유효성 검사 통과 시 폼 제출
+    // }
+  };
+
+  // alert message case
+  const messageCase = (messageCheck: string) => {
+    const messages: { [key: string]: string } = {
+      email: "이메일",
+      loginId: "간편 아이디",
+      nickName: "닉네임",
+      password: "비밀번호",
+      passwordCheck: "비밀번호 재입력"
+    };
+    return messages[messageCheck] || "입력";
+  }
+
   console.log('렌더')
-  /*
-    1. 
-    - 유효성체크
-    - id @이메일 정상적인 이메일인지
-    - 간편 아이디 최소 4글자
-    - 비밀번호 최소 6자리
-    - useDatabase 생성 비교 (email, 간편 아이디 검사)
-    - Authentication 정보 가져와서 비교 (없다면 생성)
-    - 아무이상 없다면 등록 후 로그인 페이지로 url 변경 
-  */
   return (
     <StyleWrap className="signup">
       <div className="member-wrap">
         <h1 className="title">Sign up</h1>
         <div className="member-cont">
           <p className="reference"><span className="sup">*</span>필수 입력</p>
-          <form className="form" onSubmit={handleLogin}>
+          <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
             <EmailChk 
               lineColor={colors.yellow}
               refPush={refListCheck}
-              refUpdate={refListUpdate} />
+              validationUpdate={inputValidationUpdate} />
             <LogInIDChk 
               lineColor={colors.yellow}
               refPush={refListCheck}
-              refUpdate={refListUpdate}  />
+              validationUpdate={inputValidationUpdate}  />
             <NickNameChk 
               lineColor={colors.yellow}
               refPush={refListCheck}
-              refUpdate={refListUpdate} />
+              validationUpdate={inputValidationUpdate} />
             <PasswordChk 
               lineColor={colors.yellow}
               refPush={refListCheck}
-              refUpdate={refListUpdate} />
+              validationUpdate={inputValidationUpdate} />
             <div className="form-item">
               {/* <div className="remember">
               </div> */}
-              <button type="submit" className="signup-btn btnG" title="회원가입 확인">
+              <button 
+                type="button" 
+                className="signup-btn btnG" 
+                title="회원가입 확인"
+                onClick={(e)=>completionClick(e)}>
                 <span>확인</span>
               </button>
             </div>

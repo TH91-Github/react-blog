@@ -6,55 +6,62 @@ import { RootState } from "store/store";
 import { enNumberCheck } from "utils/regex";
 
 
-export default function LogInIDChk({lineColor, refPush, refUpdate}:RefInputType){
+export default function LogInIDChk({lineColor, refPush, validationUpdate}:RefInputType){
   const userData = useSelector((state : RootState) => state.userDataLists);
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
 
-  const handleLogInIDBlur = useCallback((value: string)=> {
-    const inputVal = value.trim();
+
+  const handleFocus = useCallback(()=>{ // 초기화
+    setValError(false)
+    setDuplicate(false);
+  },[])
+
+  const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
+    const inputVal = e.target.value.trim();
+    const inputName = e.target.getAttribute('name');
     // 입력이 0일 경우 필수 요소가 아니기에 통과
     if (inputVal.length === 0) {
       setValError(false);
-      passCheck(true)
+      passCheck(inputName, true)
     } else if (inputVal.length < 4 || inputVal.length > 20) {
       // 에러
-      passCheck(false)
+      passCheck(inputName, false)
     } else {
       // 정상 범위 내 4~20자 내
       if(enNumberCheck(inputVal)){ // 영문 숫자 조합 체크
-        passCheck(true)
-        checkDuplicateID(inputVal) // 중복 체크
+        passCheck(inputName, true)
+        checkDuplicateID(inputName, inputVal) // 중복 체크
       }else{
-        passCheck(false)
+        passCheck(inputName, false)
       }
     }
-  },[userData, refUpdate]);
+  },[userData]);
 
   // 중복
-  const checkDuplicateID = useCallback((logid:string)=>{
-    if(userData.map(item => item.logInId).includes(logid)){
+  const checkDuplicateID = useCallback((loginName:string | null, loginId:string)=>{
+    if(userData.map(item => item.logInId).includes(loginId)){
       setDuplicate(true)
-      passCheck(false)
+      passCheck(loginName, false)
     }else{
       setDuplicate(false)
-      passCheck(true)
+      passCheck(loginName, true)
     }
-  },[userData, refUpdate])
+  },[userData])
 
   // 문제가 있는 경우 false
-  function passCheck(passBoolean:boolean){
+  function passCheck(passName:string | null, passBoolean:boolean){
     if(!refInput.current) return
     setValError(!passBoolean);
-    refUpdate(refInput.current, passBoolean);
+    validationUpdate(passName, passBoolean);
   }
 
   useEffect(() => {
     if (refInput.current && refPush) {
       refPush(refInput.current);
     }
-  }, [refInput, refPush, refUpdate]);
+  }, [refInput, refPush]);
 
   return(
     <div className="form-item">
@@ -63,11 +70,12 @@ export default function LogInIDChk({lineColor, refPush, refUpdate}:RefInputType)
       </p>
       <InputElement
         ref={refInput}
-        name={'id'}
+        name={'loginId'}
         className={'signup-id'}
         placeholder={'아이디를 입력하세요.'}
         focusColor={lineColor}
-        blurEvent={handleLogInIDBlur}
+        focusEvent={handleFocus}
+        blurEvent={handleBlur}
       />
       <p className="s-text">
         {

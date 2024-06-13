@@ -3,24 +3,24 @@ import { RefInputType } from "pages/member/SignUp";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { specialCharactersSpacesCheck } from "utils/regex";
 
-export default function NameChk({lineColor, refPush, refUpdate}:RefInputType){
+export default function NameChk({lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
 
-  const handleNameBlur = useCallback((value: string)=> {
+  const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     if(!refInput.current) return
-    const inputVal = value.trim();
-
+    const inputVal = e.target.value.trim();
+    const inputName = e.target.getAttribute('name');
     if (inputVal.length === 0) { // 필수 요소로 0 error
       setValError(false)
-      refUpdate(refInput.current, false);
+      validationUpdate(inputName, false);
     }else if(inputVal.length > 10 || specialCharactersSpacesCheck(inputVal)){ 
       // 문자 10 이상, 특수문자&띄어쓰기 포함 시 error
       setValError(true)
-      refUpdate(refInput.current, false);
+      validationUpdate(inputName, false);
     }else{ // 1~10 닉네임
       setValError(false)
-      refUpdate(refInput.current, true);
+      validationUpdate(inputName, true);
     }
   },[]);
 
@@ -38,11 +38,11 @@ export default function NameChk({lineColor, refPush, refUpdate}:RefInputType){
       </p>
       <InputElement
         ref={refInput}
-        name={'user-name'}
+        name={'nickName'}
         className={'signup-name'}
         placeholder={'닉네임을 입력하세요.'}
         focusColor={lineColor}
-        blurEvent={handleNameBlur}
+        blurEvent={handleBlur}
       />
       {
         valError && <p className="s-text"><span className="error">1~10자의 특수기호, 띄어쓰기 제외 문자를 입력해주세요.</span></p>

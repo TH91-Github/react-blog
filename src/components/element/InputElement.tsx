@@ -15,7 +15,7 @@ interface InputType {
   keyEvent?: () => void;
   changeEvent?: (e: string) => void;
   focusEvent?: () => void;
-  blurEvent?: (value:string) => void;
+  blurEvent?: (e:React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
@@ -50,7 +50,7 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     //   setIsFocus(false);
     // }
     setIsFocus(false);
-    blurEvent && blurEvent(e.target.value);
+    blurEvent && blurEvent(e);
   }, [blurEvent]);
 
   const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {

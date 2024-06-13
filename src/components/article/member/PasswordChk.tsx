@@ -3,40 +3,44 @@ import { RefInputType } from "pages/member/SignUp";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { spacesCheck } from "utils/regex";
 
-export default function PasswordChk({lineColor, refPush, refUpdate}:RefInputType){
+export default function PasswordChk({lineColor, refPush, validationUpdate}:RefInputType){
   const refInput1 = useRef<HTMLInputElement>(null);
   const refInput2 = useRef<HTMLInputElement>(null);
   const [valError1, setValError1] = useState(false);
   const [valError2, setValError2] = useState(false);
 
   // 비밀번호 체크
-  const handlePasswordCheck = useCallback((pw1Val: string)=> {
+  const handlePasswordCheck = useCallback((e:React.ChangeEvent<HTMLInputElement>)=> {
     if(!refInput1.current) return
+    const pw1Val = e.target.value;
+    const inputName = e.target.getAttribute('name') || 'input';
     if(pw1Val.length === 0){ // 스페이스 바
       setValError1(false)
-      refUpdate(refInput1.current, false);
+      validationUpdate(inputName, false);
     }else if(pw1Val.length < 6 || pw1Val.length > 20){
       setValError1(true)
-      refUpdate(refInput1.current, false);
+      validationUpdate(inputName, false);
     }else{
       if(spacesCheck(pw1Val)){ // 스페이스 바 체크
         setValError1(true)
-        refUpdate(refInput1.current, false);
+        validationUpdate(inputName, false);
       }else{ // 정상적으로 비밀번호 입력 완료
         setValError1(false)
-        refUpdate(refInput1.current, true);
+        validationUpdate(inputName, true);
       }
     }
   },[]);
 
   // 비밀번호 1번과 동일한지 0일경우 false
-  const handlePasswordCheck2 = useCallback((pw2Val: string)=> {
+  const handlePasswordCheck2 = useCallback((e:React.ChangeEvent<HTMLInputElement>)=> {
     if(!refInput1.current || !refInput2.current) return
+    const pw2Val = e.target.value;
+    const inputName2 = e.target.getAttribute('name') || 'input';
     if(refInput1.current.value === pw2Val){
       setValError2(false)
-      refUpdate(refInput2.current, true);
+      validationUpdate(inputName2, true);
     }else{
-      refUpdate(refInput2.current, false);
+      validationUpdate(inputName2, false);
       pw2Val.length === 0 ? setValError2(false) : setValError2(true)
     }
   },[]);
@@ -75,7 +79,7 @@ export default function PasswordChk({lineColor, refPush, refUpdate}:RefInputType
         </p>
         <InputElement
           ref={refInput2}
-          name={'password-chk'}
+          name={'passwordCheck'}
           type={'password'}
           className={'signup-pw2'}
           placeholder={'비밀번호를 다시 입력해주세요.'}

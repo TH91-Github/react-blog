@@ -5,20 +5,21 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { emailCheck } from "utils/regex";
 
-export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
+export default function EmailChk({lineColor, refPush, validationUpdate}:RefInputType){
   const userData = useSelector((state : RootState) => state.userDataLists);
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
 
-  const handleEmailFocus = useCallback(()=>{
+  const handleFocus = useCallback(()=>{ // 초기화
     setValError(false)
+    setDuplicate(false);
   },[])
   // 이메일 유효성 & 중복
-  const handleEmailBlur = useCallback((value: string)=> {
+  const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     if(!refInput.current) return
-    const inputVal = value.trim();
-    
+    const inputVal = e.target.value.trim();
+    const inputName = e.target.getAttribute('name');
     // 유효성 검사
     inputVal.length>0
     ? setValError(emailCheck(inputVal))
@@ -26,23 +27,22 @@ export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
 
     // 중복 검사
     if(inputVal.length>0 && !emailCheck(inputVal)){
-      checkDuplicateEmail(inputVal)
+      checkDuplicateEmail(inputName, inputVal)
     }else{
-      refUpdate(refInput.current, false);
+      validationUpdate(inputName, false);
     }
+  },[userData, validationUpdate]);
 
-  },[userData, refUpdate]);
-
-  const checkDuplicateEmail = useCallback((email:string)=>{
+  const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
     if(userData.map(item => item.email).includes(email)){
       setValError(true)
       setDuplicate(true)
-      refUpdate(refInput.current!, false);
+      validationUpdate(name, false);
     }else{
       setDuplicate(false)
-      refUpdate(refInput.current!, true);
+      validationUpdate(name, true);
     }
-  },[userData, refUpdate])
+  },[userData, validationUpdate])
   
   // input - ref
   useEffect(() => {
@@ -63,8 +63,8 @@ export default function EmailChk({lineColor, refPush, refUpdate}:RefInputType){
         className={'signup-email'}
         placeholder={'이메일을 입력하세요.'}
         focusColor={lineColor}
-        focusEvent={handleEmailFocus}
-        blurEvent={handleEmailBlur}
+        focusEvent={handleFocus}
+        blurEvent={handleBlur}
       />
       <p className="s-text">
         {
