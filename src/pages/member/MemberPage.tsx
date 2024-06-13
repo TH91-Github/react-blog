@@ -16,6 +16,17 @@ const StyleWrap = styled.div`
   position:relative;
   min-height:500px;
   padding:70px 30px 60px;
+
+  input:autofill,
+  input:autofill:active {
+    -webkit-text-fill-color: ${(props)=> props.theme.color};
+    text-fill-color:${(props)=> props.theme.color};
+    -webkit-box-shadow: 0 0 0px 1000px ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite} inset;
+    box-shadow: 0 0 0px 1000px ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite} inset;
+    border:1px solid ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite};
+    transition: none;
+  }
+
   & > div {
     padding:30px 0 0;
   }
@@ -26,7 +37,7 @@ const StyleWrap = styled.div`
       margin:0 auto;
       padding:30px;
       border-radius:10px;
-      background:${(props)=> props.theme.type === 'light' ? 'rgba(255,255,255,0.3)': 'rgba(127,127,127,0.3)'};
+      background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite}; 
       backdrop-filter:blur(4px);
       box-shadow:${(props)=> props.theme.type === 'light' ? props.theme.shadowBg : shadow.textBaseW};
       .title{ 

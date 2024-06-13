@@ -21,7 +21,7 @@ export const GlobalStyles = createGlobalStyle`
     background-color: transparent;
     color: inherit;
     cursor: pointer;
-  }
+  }   
   .blind{
     position:absolute;
     top:-9999px;
