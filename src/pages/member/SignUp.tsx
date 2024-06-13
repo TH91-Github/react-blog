@@ -65,25 +65,13 @@ export default function SignUp() {
       console.log(hasChecked.name)
       let message = messageCase(hasChecked.name!);
       let focusInput = refList.current.find(refItem => refItem.getAttribute('name') === hasChecked.name)
-
       console.log(`❌ ${message}을 다시 확인해주세요.`)
       // focusInput?.focus()
     }else{
+      // 유효성 검사 통과 시 
       console.log('완료')
+      // formRef.current?.submit(); 
     }
-
-
-    // const hasUnchecked = refList.current.find(refItem => !refItem.check);
-    
-    // if (hasUnchecked) {
-    //   const nameType = hasUnchecked.el.getAttribute('name');
-    //   let message = messageCase(nameType!);
-    //   // 
-    //   hasUnchecked.el.focus();
-    // } else {
-    //   console.log('완료');
-    //   // formRef.current?.submit(); // 유효성 검사 통과 시 폼 제출
-    // }
   };
 
   // alert message case
