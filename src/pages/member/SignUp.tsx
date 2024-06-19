@@ -3,11 +3,11 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
-import { createUserWithEmailAndPassword, doc, fireDB, getDoc, setDoc } from "../../firebase";
+import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, getDoc, setDoc, updateDoc } from "../../firebase";
 import React, { useCallback, useRef, useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { randomIdChk } from "utils/common";
+import { currentTime, randomIdChk } from "utils/common";
 
 interface InputStateType {
   id: string,
@@ -25,17 +25,19 @@ interface LogoInDataType {
   loginId: string | undefined,
   nickName: string,
   password: string,
+  signupTime:string,
   lastLogInTime: string,
   theme:string,
-  uId:string | null | undefined,
+  uid:string | null | undefined,
 }
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validation, setValidation] = useState<InputStateType[]>([])
   const [loginData, setLoginData] = useState<LogoInDataType>()
-
+  
   // ref push - input
   const refListCheck = useCallback((tag: HTMLInputElement) => {
     if (!refList.current.some(item => item === tag)) {
@@ -79,8 +81,7 @@ export default function SignUp() {
     }else{
       // 유효성 검사 통과 시 
       console.log('완료')
-      const resultData = userDataPush()
-      
+      handleSignup();
     }
   };
 
@@ -96,41 +97,35 @@ export default function SignUp() {
     return messages[messageCheck] || "입력";
   }
   // user 데이터 생성
-  const userDataPush = () => {
-    const userData = {
+  const handleSignup = async () => {
+    const date = currentTime();
+    const resultData : LogoInDataType = {
       email: refList.current[0].value,
-      loginIn:refList.current[1].value,
+      loginId:refList.current[1].value || '',
       nickName:refList.current[2].value,
       password:refList.current[3].value,
-      lastLogInTime: "2024",
+      signupTime:`${date.year}.${date.month}.${date.date}/${date.hours}:${date.minutes}:${date.seconds}`,
+      lastLogInTime: "",
       theme:"light",
-      uId: '',
+      uid: '',
     }
-    return userData
-  }
-  const handleSignup = async () => {
-
     try {
-      // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      
-      // const docRef = doc(fireDB, 'thData', 'userData');
-      // await setDoc(doc(fireDB, "thData", "userData"), {
-      //   name: "Los Angeles",
-      //   state: "CA",
-      //   country: "USA"
-      // });
-
-      // await addDo(collection(db, "users"), {
-      //   uid: userCredential.user.uid,
-      //   email: email,
-      // });
-      // setUser(userCredential.user);
-      // setError('');
+      // 계정 관리 Authentication 등록
+      const userCredential = await createUserWithEmailAndPassword(auth, resultData.email, resultData.password);
+      resultData.uid = userCredential.user.uid
+      // firebase에 user 정보 저장
+      const docRef = doc(fireDB, 'thData', 'userData');
+      await updateDoc(docRef, {
+        userList: arrayUnion(resultData)
+      });
+      navigate('/member');
+      console.log('완료')
+      // 완료 레이어 팝업 -> member 이동
     } catch (error) {
-      // setError(error.message);
+      console.log(error) // 에러 안내 팝업 
     }
   };
+
 
 
   console.log('렌더')

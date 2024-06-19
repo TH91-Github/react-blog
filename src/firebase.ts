@@ -1,7 +1,7 @@
 // 🚩 firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 // import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
@@ -24,5 +24,5 @@ const provider = new GoogleAuthProvider();
 export {
     fireDB, auth, provider, 
     signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    doc, setDoc, getDoc, 
+    doc, setDoc, getDoc, updateDoc,arrayUnion
 }

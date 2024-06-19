@@ -12,6 +12,7 @@ export default function UserDataFetching(){
         const userData = await getDoc(docRef);
         if (userData.exists() && userData.data().userList) {
           const data = userData.data().userList;
+          console.log(data)
           dispatch(actionUserUpdate(data))
         } else {
           console.log("데이터가 없습니다.");

@@ -34,8 +34,6 @@ export function mapObjectChange(mapList: Map<string, number>): TitleSize[] {
   return newObjects;
 }
 
-
-
 // 랜덤 값 (최대 값, 이름지정_랜덤 값)
 export const randomNum = (_max:number, name?:string) :string => { 
   let newId = Math.floor(Math.random() * Number(_max + 1))
@@ -52,4 +50,17 @@ export function randomIdChk (listId:any[], name:string) {
     uniqueId = createId.id;
   }
   return uniqueId;
+}
+
+// 현재 시간 반환
+export function currentTime() {
+  const now = new Date();
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    date: now.getDate(),
+    hours: now.getHours(),
+    minutes: now.getMinutes(),
+    seconds: now.getSeconds()
+  };
 }
