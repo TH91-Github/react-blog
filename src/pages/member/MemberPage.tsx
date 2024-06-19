@@ -28,7 +28,7 @@ const StyleWrap = styled.div`
   }
 
   & > div {
-    padding:30px 0 0;
+    padding:10px 0 0;
   }
   .member {
     &-wrap{

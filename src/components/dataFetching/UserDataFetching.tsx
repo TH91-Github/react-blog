@@ -1,5 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
-import { fireDB } from "../../firebase";
+import { fireDB, doc, getDoc } from "../../firebase";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { actionUserUpdate } from "store/store";

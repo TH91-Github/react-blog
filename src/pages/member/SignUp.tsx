@@ -3,6 +3,7 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
+import { createUserWithEmailAndPassword, doc, fireDB, getDoc, setDoc } from "../../firebase";
 import React, { useCallback, useRef, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -10,7 +11,7 @@ import { randomIdChk } from "utils/common";
 
 interface InputStateType {
   id: string,
-  name: string|null,
+  name: string,
   check:boolean
 }
 export interface RefInputType {
@@ -19,10 +20,21 @@ export interface RefInputType {
   validationUpdate: (name:string|null, state:boolean) => void;
 }
 
+interface LogoInDataType {
+  email:string,
+  loginId: string | undefined,
+  nickName: string,
+  password: string,
+  lastLogInTime: string,
+  theme:string,
+  uId:string | null | undefined,
+}
+
 export default function SignUp() {
   const formRef = useRef<HTMLFormElement>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validation, setValidation] = useState<InputStateType[]>([])
+  const [loginData, setLoginData] = useState<LogoInDataType>()
 
   // ref push - input
   const refListCheck = useCallback((tag: HTMLInputElement) => {
@@ -30,7 +42,7 @@ export default function SignUp() {
       refList.current.push(tag);
       const inputState: InputStateType = {
         id: randomIdChk(refList.current, 'input'),
-        name: tag.getAttribute('name'),
+        name: tag.getAttribute('name') ?? '',
         check: essentialChk(tag)
       }
       setValidation(prev => [
@@ -56,9 +68,6 @@ export default function SignUp() {
   // 최종 확인 - 
   const completionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(refList.current)
-    console.log(validation)
-
     // false input 찾기
     const hasChecked = validation.find(item=>!item.check);
     if(hasChecked){
@@ -66,11 +75,12 @@ export default function SignUp() {
       let message = messageCase(hasChecked.name!);
       let focusInput = refList.current.find(refItem => refItem.getAttribute('name') === hasChecked.name)
       console.log(`❌ ${message}을 다시 확인해주세요.`)
-      // focusInput?.focus()
+      focusInput?.focus();
     }else{
       // 유효성 검사 통과 시 
       console.log('완료')
-      // formRef.current?.submit(); 
+      const resultData = userDataPush()
+      
     }
   };
 
@@ -85,6 +95,43 @@ export default function SignUp() {
     };
     return messages[messageCheck] || "입력";
   }
+  // user 데이터 생성
+  const userDataPush = () => {
+    const userData = {
+      email: refList.current[0].value,
+      loginIn:refList.current[1].value,
+      nickName:refList.current[2].value,
+      password:refList.current[3].value,
+      lastLogInTime: "2024",
+      theme:"light",
+      uId: '',
+    }
+    return userData
+  }
+  const handleSignup = async () => {
+
+    try {
+      // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      
+      // const docRef = doc(fireDB, 'thData', 'userData');
+      // await setDoc(doc(fireDB, "thData", "userData"), {
+      //   name: "Los Angeles",
+      //   state: "CA",
+      //   country: "USA"
+      // });
+
+      // await addDo(collection(db, "users"), {
+      //   uid: userCredential.user.uid,
+      //   email: email,
+      // });
+      // setUser(userCredential.user);
+      // setError('');
+    } catch (error) {
+      // setError(error.message);
+    }
+  };
+
 
   console.log('렌더')
   return (
