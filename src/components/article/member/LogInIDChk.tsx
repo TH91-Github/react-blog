@@ -5,13 +5,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { enNumberCheck } from "utils/regex";
 
-
-export default function LogInIDChk({lineColor, refPush, validationUpdate}:RefInputType){
+export default function LogInIDChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
   const userData = useSelector((state : RootState) => state.userDataLists);
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
-
 
   const handleFocus = useCallback(()=>{ // 초기화
     setValError(false)
@@ -37,18 +35,18 @@ export default function LogInIDChk({lineColor, refPush, validationUpdate}:RefInp
         passCheck(inputName, false)
       }
     }
-  },[userData]);
+  },[]);
 
   // 중복
   const checkDuplicateID = useCallback((loginName:string | null, loginId:string)=>{
-    if(userData.map(item => item.logInId).includes(loginId)){
+    if(userList?.map(item => item.logInId).includes(loginId)){
       setDuplicate(true)
       passCheck(loginName, false)
     }else{
       setDuplicate(false)
       passCheck(loginName, true)
     }
-  },[userData])
+  },[userList])
 
   // 문제가 있는 경우 false
   function passCheck(passName:string | null, passBoolean:boolean){

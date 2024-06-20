@@ -1,12 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
 import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { emailCheck } from "utils/regex";
 
-export default function EmailChk({lineColor, refPush, validationUpdate}:RefInputType){
-  const userData = useSelector((state : RootState) => state.userDataLists);
+export default function EmailChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
@@ -31,10 +28,10 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
     }else{
       validationUpdate(inputName, false);
     }
-  },[userData, validationUpdate]);
+  },[validationUpdate]);
 
   const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
-    if(userData.map(item => item.email).includes(email)){
+    if(userList?.map(item => item.email).includes(email)){
       setValError(true)
       setDuplicate(true)
       validationUpdate(name, false);
@@ -42,7 +39,7 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
       setDuplicate(false)
       validationUpdate(name, true);
     }
-  },[userData, validationUpdate])
+  },[userList, validationUpdate])
   
   // input - ref
   useEffect(() => {

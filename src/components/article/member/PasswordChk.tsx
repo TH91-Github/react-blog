@@ -29,7 +29,7 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
         validationUpdate(inputName, true);
       }
     }
-  },[]);
+  },[validationUpdate]);
 
   // 비밀번호 1번과 동일한지 0일경우 false
   const handlePasswordCheck2 = useCallback((e:React.ChangeEvent<HTMLInputElement>)=> {
@@ -43,7 +43,7 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
       validationUpdate(inputName2, false);
       pw2Val.length === 0 ? setValError2(false) : setValError2(true)
     }
-  },[]);
+  },[validationUpdate]);
 
   useEffect(() => {
     if (refInput1.current && refInput2.current && refPush) {

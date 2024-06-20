@@ -3,11 +3,14 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
-import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, getDoc, setDoc, updateDoc } from "../../firebase";
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { currentTime, randomIdChk } from "utils/common";
+import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, updateDoc } from "../../firebase";
+import { AppDispatch, RootState, actionUserUpdate } from "store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { StringOnly } from "types/baseType";
 
 interface InputStateType {
   id: string,
@@ -15,28 +18,19 @@ interface InputStateType {
   check:boolean
 }
 export interface RefInputType {
+  userList?: StringOnly[]
   lineColor?:string;
   refPush: (tag:HTMLInputElement) => void;
   validationUpdate: (name:string|null, state:boolean) => void;
 }
 
-interface LogoInDataType {
-  email:string,
-  loginId: string | undefined,
-  nickName: string,
-  password: string,
-  signupTime:string,
-  lastLogInTime: string,
-  theme:string,
-  uid:string | null | undefined,
-}
-
 export default function SignUp() {
+  const userData = useSelector((state : RootState) => state.userDataLists);
+  const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validation, setValidation] = useState<InputStateType[]>([])
-  const [loginData, setLoginData] = useState<LogoInDataType>()
   
   // ref push - input
   const refListCheck = useCallback((tag: HTMLInputElement) => {
@@ -68,8 +62,7 @@ export default function SignUp() {
   }, []);
 
   // 최종 확인 - 
-  const completionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const completionClick = () => {
     // false input 찾기
     const hasChecked = validation.find(item=>!item.check);
     if(hasChecked){
@@ -99,7 +92,7 @@ export default function SignUp() {
   // user 데이터 생성
   const handleSignup = async () => {
     const date = currentTime();
-    const resultData : LogoInDataType = {
+    const resultData : StringOnly = {
       email: refList.current[0].value,
       loginId:refList.current[1].value || '',
       nickName:refList.current[2].value,
@@ -112,7 +105,7 @@ export default function SignUp() {
     try {
       // 계정 관리 Authentication 등록
       const userCredential = await createUserWithEmailAndPassword(auth, resultData.email, resultData.password);
-      resultData.uid = userCredential.user.uid
+      resultData.uid = userCredential.user.uid ? userCredential.user.uid : '';
       // firebase에 user 정보 저장
       const docRef = doc(fireDB, 'thData', 'userData');
       await updateDoc(docRef, {
@@ -121,13 +114,12 @@ export default function SignUp() {
       navigate('/member');
       console.log('완료')
       // 완료 레이어 팝업 -> member 이동
+      dispatch(actionUserUpdate([...userData, resultData]));
     } catch (error) {
       console.log(error) // 에러 안내 팝업 
     }
   };
-
-
-
+  
   console.log('렌더')
   return (
     <StyleWrap className="signup">
@@ -137,6 +129,7 @@ export default function SignUp() {
           <p className="reference"><span className="sup">*</span>필수 입력</p>
           <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
             <EmailChk 
+              userList={userData}
               lineColor={colors.yellow}
               refPush={refListCheck}
               validationUpdate={inputValidationUpdate} />
@@ -159,7 +152,7 @@ export default function SignUp() {
                 type="button" 
                 className="signup-btn btnG" 
                 title="회원가입 확인"
-                onClick={(e)=>completionClick(e)}>
+                onClick={completionClick}>
                 <span>확인</span>
               </button>
             </div>

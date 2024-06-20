@@ -1,40 +1,58 @@
 import { colors, transitions } from "assets/style/Variable";
 import InputElement from "components/element/InputElement";
-import React, { useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SignIn() {
   const refList = useRef<HTMLInputElement[]>([]);
+  const [login, setLogin] = useState(false);
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleLogin = () => {
     console.log(refList.current)
-    // id 확인 id or email 확인
-    // id일 경우 회원 목록을 불러와서 체크
-
+    const id = refList.current.find( item => item.getAttribute('name') === 'id');
+    const pw = refList.current.find( item => item.getAttribute('name') === 'password');
+    
+    if(id && pw){
+      validationID(id.value)
+    }
     // pw 
   };
 
-  const refListChk = (e : HTMLInputElement) => {
+  const validationID = (idVal : string) => { 
+    // @ 기준 있다면 email 체크 없다면 간편 아이디 체크
+    if(idVal.includes('@')){
+      // 이메일 체크
+
+    }else{
+      // id 체크
+
+    }
+      
+    return true
+  }
+
+
+  const refListChk = useCallback((e : HTMLInputElement) => {
     // refList e(input)이 없는 경우 추가
     if(!refList.current.includes(e)){
       e && refList.current.push(e)
     }
-  }
+  },[])
+
   console.log('LOGIN')
   return (
     <StyleWrap className="login">
       <div className="member-wrap">
         <h1 className="title">Login</h1>
         <div className="member-cont">
-          <form className="form" onSubmit={handleLogin}>
+          <form className="form" onSubmit={(e) => e.preventDefault()}>
             <div className="form-item">
               <p className="s-tit">아이디 or 이메일</p>
               <InputElement
                 ref={refListChk}
-                name={'login-id'}
-                className={'login-id'}
+                name={'id'}
+                className={'id'}
                 placeholder={'아이디를 입력하세요.'}
               />
             </div>
@@ -52,7 +70,10 @@ export default function SignIn() {
               {/* <div className="remember">
 
               </div> */}
-              <button type="submit" className="login-btn btnG" title="로그인 확인">
+              <button type="submit" 
+                className="login-btn btnG" 
+                title="로그인 확인"
+                onClick={handleLogin}>
                 <span>확인</span>
               </button>
             </div>

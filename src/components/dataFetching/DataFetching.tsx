@@ -1,19 +1,22 @@
 import { fireDB, doc, getDoc } from "../../firebase";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { actionUserUpdate } from "store/store";
 
-export default function UserDataFetching(){
+interface DataFetchingType {
+  collection: string,
+  document: string,
+  actionFunc: (d :any) => any;
+}
+export default function DataFetching({collection, document, actionFunc} : DataFetchingType){
   const dispatch = useDispatch();
   useEffect(()=>{
     const fetchUsers = async () => {
       try {
-        const docRef = doc(fireDB, 'thData', 'userData');
+        const docRef = doc(fireDB, collection, document);
         const userData = await getDoc(docRef);
         if (userData.exists() && userData.data().userList) {
           const data = userData.data().userList;
-          console.log(data)
-          dispatch(actionUserUpdate(data))
+          dispatch(actionFunc(data))
         } else {
           console.log("데이터가 없습니다.");
         }
