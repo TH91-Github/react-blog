@@ -8,7 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { currentTime, randomIdChk } from "utils/common";
 import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, updateDoc } from "../../firebase";
-import { AppDispatch, RootState, actionUserUpdate } from "store/store";
+import { AppDispatch, RootState, actionUserListUpdate } from "store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { StringOnly } from "types/baseType";
 
@@ -25,7 +25,7 @@ export interface RefInputType {
 }
 
 export default function SignUp() {
-  const userData = useSelector((state : RootState) => state.userDataLists);
+  const userData = useSelector((state : RootState) => state.storeUserLists);
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
@@ -66,14 +66,12 @@ export default function SignUp() {
     // false input 찾기
     const hasChecked = validation.find(item=>!item.check);
     if(hasChecked){
-      console.log(hasChecked.name)
       let message = messageCase(hasChecked.name!);
       let focusInput = refList.current.find(refItem => refItem.getAttribute('name') === hasChecked.name)
       console.log(`❌ ${message}을 다시 확인해주세요.`)
       focusInput?.focus();
     }else{
       // 유효성 검사 통과 시 
-      console.log('완료')
       handleSignup();
     }
   };
@@ -112,9 +110,8 @@ export default function SignUp() {
         userList: arrayUnion(resultData)
       });
       navigate('/member');
-      console.log('완료')
       // 완료 레이어 팝업 -> member 이동
-      dispatch(actionUserUpdate([...userData, resultData]));
+      dispatch(actionUserListUpdate([...userData, resultData]));
     } catch (error) {
       console.log(error) // 에러 안내 팝업 
     }
@@ -134,6 +131,7 @@ export default function SignUp() {
               refPush={refListCheck}
               validationUpdate={inputValidationUpdate} />
             <LogInIDChk 
+              userList={userData}
               lineColor={colors.yellow}
               refPush={refListCheck}
               validationUpdate={inputValidationUpdate}  />

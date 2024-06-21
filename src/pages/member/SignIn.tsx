@@ -1,45 +1,70 @@
-import { colors, transitions } from "assets/style/Variable";
-import InputElement from "components/element/InputElement";
 import { useCallback, useRef, useState } from 'react';
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { auth, signInWithEmailAndPassword } from "../../firebase";
+import { AppDispatch, RootState } from "store/store";
+import InputElement from "components/element/InputElement";
+import { colors, transitions } from "assets/style/Variable";
 import styled from "styled-components";
+import { StringOnly } from "types/baseType";
 
 export default function SignIn() {
+  const dispatch = useDispatch<AppDispatch>();
+  const userData = useSelector((state : RootState) => state.storeUserLists);
   const refList = useRef<HTMLInputElement[]>([]);
-  const [login, setLogin] = useState(false);
+  const [validationError, setValidationError] = useState({id:false,pw:false})
+  // const [login, setLogin] = useState(false);
 
-  const handleLogin = () => {
-    console.log(refList.current)
-    const id = refList.current.find( item => item.getAttribute('name') === 'id');
-    const pw = refList.current.find( item => item.getAttribute('name') === 'password');
+  const handleIDPWCheck = () => {
+    const idInput  = refList.current.find( item => item.getAttribute('name') === 'id');
+    const pwInput = refList.current.find( item => item.getAttribute('name') === 'password');
     
-    if(id && pw){
-      validationID(id.value)
+    if (idInput && pwInput) {
+      setValidationError({
+        id: !idInput.value,
+        pw: pwInput.value.length < 6
+      });
+      validationID(idInput.value, pwInput.value);
     }
-    // pw 
   };
 
-  const validationID = (idVal : string) => { 
-    // @ 기준 있다면 email 체크 없다면 간편 아이디 체크
-    if(idVal.includes('@')){
-      // 이메일 체크
-
-    }else{
-      // id 체크
-
+  // @ 기준 있다면 email 체크 없다면 간편 아이디 체크
+  const validationID = (idVal : string, pwVal : string) => { 
+    const key = idVal.includes('@') ? 'email' : 'loginId';
+    const user = userData.find(item => item[key] === idVal);
+    // ID 1차 유저 목록에서 체크 확인
+    console.log(user)
+    if (user) {
+      const newId = key === 'email' ? idVal : user.email;
+      console.log('로그인 시도하자')
+      handleLogin(newId,pwVal, user)
+    } else {
+      setValidationError(prev => ({ ...prev, id: true }));
     }
+  }
+  // firebase 로그인 시도
+  const handleLogin = async (loginID:string,loginPW:string, userDB:StringOnly) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
+      console.log(userCredential.user) // {Auth, DB : userDB} 정보를 담을 예정.
       
-    return true
+      // dispatch(userLoginSlice()) 여기서 부터
+    } catch (error) {
+      // 로그인 하는 입력 실패 시 비밀번호 확인 요청
+      setValidationError(prev => ({ ...prev, pw: true }));
+    }
+  };
+
+  const googleLogin = () => {
+    console.log('google login')
   }
 
-
+  // refList e(input)이 없는 경우 추가
   const refListChk = useCallback((e : HTMLInputElement) => {
-    // refList e(input)이 없는 경우 추가
     if(!refList.current.includes(e)){
       e && refList.current.push(e)
     }
   },[])
-
   console.log('LOGIN')
   return (
     <StyleWrap className="login">
@@ -55,6 +80,9 @@ export default function SignIn() {
                 className={'id'}
                 placeholder={'아이디를 입력하세요.'}
               />
+              {
+                validationError.id && <p className="s-text"><span className="error">아이디 또는 이메일을 확인해주세요.</span></p>
+              }
             </div>
             <div className="form-item">
               <p className="s-tit">비밀번호</p>
@@ -65,6 +93,9 @@ export default function SignIn() {
                 className={'login-pw'}
                 placeholder={'비밀번호를 입력하세요.'}
               />
+              {
+                validationError.pw && <p className="s-text"><span className="error">비밀번호를 다시 한번 확인해 주세요.</span></p>
+              }
             </div>
             <div className="form-item">
               {/* <div className="remember">
@@ -73,7 +104,7 @@ export default function SignIn() {
               <button type="submit" 
                 className="login-btn btnG" 
                 title="로그인 확인"
-                onClick={handleLogin}>
+                onClick={handleIDPWCheck}>
                 <span>확인</span>
               </button>
             </div>
@@ -81,11 +112,16 @@ export default function SignIn() {
               <h2 className="tit">SNS</h2>
               <ul className="login-sns-lsits">
                 <li>
-                  <button className="btn" title="Google login">Google</button>
+                  <button 
+                    className="btn" 
+                    title="Google login"
+                    onClick={googleLogin}>
+                    Google
+                  </button>
                 </li>
-                <li>
+                {/* <li>
                   <button className="btn" title="Github login">Github</button>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="sign-up">

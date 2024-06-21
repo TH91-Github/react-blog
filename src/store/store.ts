@@ -1,18 +1,20 @@
 import { configureStore} from '@reduxjs/toolkit'
-import { mobileChk, resumeSlice, useTheme, userDataLists } from 'reducers/sliceActions';
+import { mobileChkSlice, resumeSlice, themeSlice, storeUserListsSlice, userLoginSlice } from 'reducers/sliceActions';
 
 export const store = configureStore({
   reducer: { 
-    mobileChk: mobileChk.reducer,
-    useTheme: useTheme.reducer,
-    resume: resumeSlice.reducer,
-    userDataLists: userDataLists.reducer,
+    mobileChk: mobileChkSlice.reducer,
+    storeTheme: themeSlice.reducer,
+    storeResume: resumeSlice.reducer,
+    storeUserLists: storeUserListsSlice.reducer,
+    storeUserLogin: userLoginSlice.reducer,
   }
 }) 
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;
 
-export const { actionMobileChk } = mobileChk.actions;
-export const { actionTheme } = useTheme.actions;
-export const { actionUserUpdate } = userDataLists.actions;
+export const { actionMobileChk } = mobileChkSlice.actions;
+export const { actionTheme } = themeSlice.actions;
+export const { actionUserListUpdate } = storeUserListsSlice.actions;
+export const { actionUserLoginUpdate } = userLoginSlice.actions;

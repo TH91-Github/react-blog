@@ -4,6 +4,13 @@ export interface ThemeState {
   mode:string
   color:StringOnly
 }
+// 로그인 user 상태
+export interface userLoginType {
+  loginState: boolean,
+  auth: any,
+  user: StringOnly | null,
+}
+
 // resume - firebase - document와 필드 구조
 export interface ResumCompanyType {
   name: string;

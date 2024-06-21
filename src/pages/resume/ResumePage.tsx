@@ -12,9 +12,9 @@ import styled from 'styled-components';
 
 // Resume 데이터만 reducers를 통해 가져오기 - 테스트 겸 연습용
 export default function ResumePage() {
-  const { data: resumeData, loading, error } = useSelector((state: RootState) => state.resume);
+  const { data: resumeData, loading, error } = useSelector((state: RootState) => state.storeResume);
   const dispatch: AppDispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.useTheme);
+  const theme = useSelector((state: RootState) => state.storeTheme);
   const [sideView, setSideView] = useState<boolean>(false);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 export default function AppLayout({ children }: AppLayoutProps) {
-  const  theme = useSelector((state : RootState) => state.useTheme);
+  const  theme = useSelector((state : RootState) => state.storeTheme);
   // 이용자에 따라 다크/라이트 모드 체크 확인 후 변경
   return (
     <ThemeProvider theme={theme.color}>

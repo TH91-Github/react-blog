@@ -5,7 +5,7 @@ import { RootState } from "store/store";
 import styled from "styled-components"
 
 export default function HeaderSearch(){
-  const theme = useSelector((state : RootState) => state.useTheme);
+  const theme = useSelector((state : RootState) => state.storeTheme);
   
   function handlerClick(){
     console.log('open');

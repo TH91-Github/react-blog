@@ -6,7 +6,6 @@ import { RootState } from "store/store";
 import { enNumberCheck } from "utils/regex";
 
 export default function LogInIDChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
-  const userData = useSelector((state : RootState) => state.userDataLists);
   const refInput = useRef<HTMLInputElement>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
@@ -18,7 +17,7 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
 
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     const inputVal = e.target.value.trim();
-    const inputName = e.target.getAttribute('name');
+    const inputName = e.target.getAttribute('name') ?? '';
     // 입력이 0일 경우 필수 요소가 아니기에 통과
     if (inputVal.length === 0) {
       setValError(false);
@@ -38,8 +37,9 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
   },[]);
 
   // 중복
-  const checkDuplicateID = useCallback((loginName:string | null, loginId:string)=>{
-    if(userList?.map(item => item.logInId).includes(loginId)){
+  
+  const checkDuplicateID = useCallback((loginName:string, loginId:string)=>{
+    if(userList?.some(item => item.loginId === loginId)){
       setDuplicate(true)
       passCheck(loginName, false)
     }else{
@@ -78,7 +78,7 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
       <p className="s-text">
         {
           !valError 
-          ? <span>특수문자를 포함할 수 없으며, 6~20자의 영문 대/소문자, 숫자를 사용해주세요.</span>
+          ? <span>특수문자를 포함할 수 없으며, 4~20자의 영문 대/소문자, 숫자를 사용해주세요.</span>
           : <span className="error">{duplicate ? 'ID가 중복되어 사용할 수 없습니다.': '잘못된 아이디 형식입니다'}</span>
         }
       </p>

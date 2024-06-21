@@ -21,7 +21,6 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
     inputVal.length>0
     ? setValError(emailCheck(inputVal))
     : setValError(false)
-
     // 중복 검사
     if(inputVal.length>0 && !emailCheck(inputVal)){
       checkDuplicateEmail(inputName, inputVal)
@@ -29,9 +28,8 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
       validationUpdate(inputName, false);
     }
   },[validationUpdate]);
-
   const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
-    if(userList?.map(item => item.email).includes(email)){
+    if(userList?.some(item => item.email === email)){
       setValError(true)
       setDuplicate(true)
       validationUpdate(name, false);

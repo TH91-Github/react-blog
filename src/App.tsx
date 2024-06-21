@@ -1,3 +1,16 @@
+/*
+✅ import 순서 
+React 관련 훅 (useCallback, useRef, useState)
+React Router (NavLink)
+Redux 관련 훅 (useDispatch, useSelector)
+Firebase 관련 모듈 (auth, signInWithEmailAndPassword)
+Store 관련 타입 (AppDispatch, RootState)
+컴포넌트 (InputElement)
+스타일 변수 (colors, transitions)
+styled-components (styled)
+타입 정의 (StringOnly)
+*/ 
+
 import React, { useCallback, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -31,8 +44,7 @@ function App() : JSX.Element {
       <GlobalStyles />
       <div className="container">
         <Header 
-          location={location}
-        />
+          location={location} />
         <Outlet />
       </div>
     </AppLayout>

@@ -1,5 +1,5 @@
 import { fireDB, doc, getDoc } from "../../firebase";
-import { AppDispatch, actionUserUpdate } from "store/store";
+import { AppDispatch, actionUserListUpdate } from "store/store";
 
 export const fetchUserData = async (dispatch:AppDispatch) => {
   try {
@@ -7,7 +7,7 @@ export const fetchUserData = async (dispatch:AppDispatch) => {
     const userData = await getDoc(docRef);
     if (userData.exists() && userData.data().userList) {
       const data = userData.data().userList;
-      dispatch(actionUserUpdate(data));
+      dispatch(actionUserListUpdate(data));
       return { success: true, message: "데이터가 성공적으로 업데이트되었습니다." };
     } else {
       console.log("데이터가 없습니다.");

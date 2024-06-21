@@ -20,19 +20,8 @@ interface InputType {
 
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   {
-    name,
-    type,
-    id,
-    className,
-    placeholder,
-    prevVal,
-    maxWidth,
-    inputError,
-    focusColor,
-    keyEvent,
-    changeEvent,
-    focusEvent,
-    blurEvent,
+    name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
+    keyEvent, changeEvent, focusEvent, blurEvent,
   }: InputType, ref ) {
   const [passwordType, setPasswordType] = useState<string>(type ==='password' ? 'password' : 'text');
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);

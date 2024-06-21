@@ -6,7 +6,7 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 
 export default function UserLogin(){
-  const theme = useSelector((state : RootState) => state.useTheme);
+  const theme = useSelector((state : RootState) => state.storeTheme);
   const [login, setLogIn] = useState(false);
   
   // user Member

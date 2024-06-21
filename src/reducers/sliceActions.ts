@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
-import { ResumeDocumentType, ResumeState, ThemeState } from './types';
+import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 import { StringOnly } from 'types/baseType';
 
-// mobile 체크
-export const mobileChk = createSlice({ 
+// 📍mobile 체크
+export const mobileChkSlice = createSlice({ 
   name: "Mobile check",
   initialState: false,
   reducers: {
@@ -14,12 +14,12 @@ export const mobileChk = createSlice({
     }
   }
 })
-// dark/light 모드 체크
+// 📍dark/light 모드 체크
 const themeInitialState: ThemeState ={
   mode:'light',
   color: lightTheme
 }
-export const useTheme = createSlice({
+export const themeSlice = createSlice({
   name: "dark/light theme",
   initialState: themeInitialState,
   reducers: {
@@ -29,19 +29,36 @@ export const useTheme = createSlice({
   }
 })
 
-// user data - firebase
+// 📍user data - firebase
 const userDataState: StringOnly[] = [];
-export const userDataLists = createSlice({
+export const storeUserListsSlice = createSlice({
   name: "user lists",
   initialState: userDataState,
   reducers: {
-    actionUserUpdate(state, propsAction: PayloadAction<StringOnly[]>){
+    actionUserListUpdate(state, propsAction: PayloadAction<StringOnly[]>){
       return state = propsAction.payload;
     }
   }
 })
 
-// resume - firebase
+// 📍logIn 상태 및 Auth, user DB 정보
+const userLoginState: userLoginType = {
+  loginState:false,
+  auth:'',
+  user: null
+};
+export const userLoginSlice = createSlice({
+  name: "user login",
+  initialState: userLoginState,
+  reducers: {
+    actionUserLoginUpdate(state, propsAction: PayloadAction<userLoginType>){
+      return state = propsAction.payload;
+    }
+  }
+})
+
+
+// 🌟 resume - firebase
 // createAsyncThunk: redux Toolkit 비동기 작업을 정의 하는데 사용. - pending / fulfilled / rejected
 export const fetchResumeData = createAsyncThunk<ResumeDocumentType>(
   'resume/fetchResumeData',

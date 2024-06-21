@@ -5,7 +5,7 @@ import { RootState, actionTheme } from "store/store";
 import DarkLight from "components/unit/DarkLight";
 
 export default function ThemeBtn(){
-  const theme = useSelector((state : RootState) => state.useTheme);
+  const theme = useSelector((state : RootState) => state.storeTheme);
   const dispatch = useDispatch();
 
   // dark light mode
