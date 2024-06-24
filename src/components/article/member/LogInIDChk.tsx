@@ -1,59 +1,51 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import { enNumberCheck } from "utils/regex";
 
 export default function LogInIDChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<HTMLInputElement>(null);
-  const [valError, setValError] = useState(false);
-  const [duplicate, setDuplicate] = useState(false);
+  const [inputState, setInputState] = useState({
+    valError: false,
+    duplicate: false,
+  });
 
   const handleFocus = useCallback(()=>{ // 초기화
-    setValError(false)
-    setDuplicate(false);
+    setInputState({ valError: false, duplicate: false });
   },[])
+
+  // 문제가 있는 경우 false
+  const passCheck = useCallback( (passName:string | null, passBoolean:boolean)=>{
+    if(!refInput.current) return
+    setInputState((prevState) => ({
+      ...prevState,
+      valError: !passBoolean,
+    }));
+    validationUpdate(passName, passBoolean); // value, 상태
+  },[validationUpdate]);
+
+  // 중복
+  const checkDuplicateID = useCallback((loginName: string, loginId: string) => {
+    const isDuplicate = userList?.some(item => item.loginId === loginId) ?? false;
+    setInputState((prevState) => ({
+      ...prevState,
+      duplicate: isDuplicate,
+    }));
+    passCheck(loginName, !isDuplicate);
+  }, [userList, passCheck]);
 
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     const inputVal = e.target.value.trim();
     const inputName = e.target.getAttribute('name') ?? '';
-    // 입력이 0일 경우 필수 요소가 아니기에 통과
-    if (inputVal.length === 0) {
-      setValError(false);
-      passCheck(inputName, true)
-    } else if (inputVal.length < 4 || inputVal.length > 20) {
-      // 에러
-      passCheck(inputName, false)
-    } else {
-      // 정상 범위 내 4~20자 내
-      if(enNumberCheck(inputVal)){ // 영문 숫자 조합 체크
-        passCheck(inputName, true)
-        checkDuplicateID(inputName, inputVal) // 중복 체크
-      }else{
-        passCheck(inputName, false)
-      }
-    }
-  },[]);
+    const isValLength = inputVal.length === 0 || (inputVal.length >= 4 && inputVal.length <= 20);
+    const isEnNumeric = enNumberCheck(inputVal);
+    const isValid = (inputVal.length === 0) || (isValLength && isEnNumeric);
 
-  // 중복
-  
-  const checkDuplicateID = useCallback((loginName:string, loginId:string)=>{
-    if(userList?.some(item => item.loginId === loginId)){
-      setDuplicate(true)
-      passCheck(loginName, false)
-    }else{
-      setDuplicate(false)
-      passCheck(loginName, true)
+    passCheck(inputName, isValid);
+    if (isValid && inputVal.length > 0) { // 정상 범위 내 4~20자 내 + 영문 숫자 조합 체크
+      checkDuplicateID(inputName, inputVal); // 중복 체크
     }
-  },[userList])
-
-  // 문제가 있는 경우 false
-  function passCheck(passName:string | null, passBoolean:boolean){
-    if(!refInput.current) return
-    setValError(!passBoolean);
-    validationUpdate(passName, passBoolean);
-  }
+  }, [passCheck, checkDuplicateID]);
 
   useEffect(() => {
     if (refInput.current && refPush) {
@@ -77,9 +69,15 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
       />
       <p className="s-text">
         {
-          !valError 
-          ? <span>특수문자를 포함할 수 없으며, 4~20자의 영문 대/소문자, 숫자를 사용해주세요.</span>
-          : <span className="error">{duplicate ? 'ID가 중복되어 사용할 수 없습니다.': '잘못된 아이디 형식입니다'}</span>
+          !inputState.valError 
+          ? 
+            <span>특수문자, 한글을 사용할 수 없으며, 4~20자의 영문 대/소문자 포함하여 사용해주세요.</span>
+          : 
+            <span className="error">
+              {inputState.duplicate
+                ? "ID가 중복되어 사용할 수 없습니다."
+                : "잘못된 아이디 형식입니다."}
+            </span>
         }
       </p>
     </div>

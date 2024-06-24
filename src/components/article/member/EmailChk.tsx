@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { emailCheck } from "utils/regex";
 
 export default function EmailChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
@@ -12,6 +12,18 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
     setValError(false)
     setDuplicate(false);
   },[])
+
+  const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
+    if(userList?.some(item => item.email === email)){
+      setValError(true)
+      setDuplicate(true)
+      validationUpdate(name, false);
+    }else{
+      setDuplicate(false)
+      validationUpdate(name, true);
+    }
+  },[userList, validationUpdate])
+
   // 이메일 유효성 & 중복
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     if(!refInput.current) return
@@ -27,17 +39,7 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
     }else{
       validationUpdate(inputName, false);
     }
-  },[validationUpdate]);
-  const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
-    if(userList?.some(item => item.email === email)){
-      setValError(true)
-      setDuplicate(true)
-      validationUpdate(name, false);
-    }else{
-      setDuplicate(false)
-      validationUpdate(name, true);
-    }
-  },[userList, validationUpdate])
+  },[validationUpdate, checkDuplicateEmail]);
   
   // input - ref
   useEffect(() => {

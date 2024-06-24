@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { specialCharactersSpacesCheck } from "utils/regex";
 
 export default function NameChk({lineColor, refPush, validationUpdate}:RefInputType){
@@ -22,7 +22,7 @@ export default function NameChk({lineColor, refPush, validationUpdate}:RefInputT
       setValError(false)
       validationUpdate(inputName, true);
     }
-  },[]);
+  },[validationUpdate]);
 
   useEffect(() => {
     if (refInput.current && refPush) {

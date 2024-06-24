@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { spacesCheck } from "utils/regex";
 
 export default function PasswordChk({lineColor, refPush, validationUpdate}:RefInputType){
