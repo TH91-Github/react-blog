@@ -67,9 +67,6 @@ const StyleUtilNav = styled.div`
       gap:10px;
       align-items:center;
     }
-    &-item{
-      font-size:0;
-    }
   }
   .icon {
     display:block;

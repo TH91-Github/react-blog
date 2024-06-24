@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { auth, signInWithEmailAndPassword } from "../../firebase";
-import { AppDispatch, RootState } from "store/store";
+import { AppDispatch, RootState, actionUserLoginUpdate } from "store/store";
 import InputElement from "components/element/InputElement";
 import { colors, transitions } from "assets/style/Variable";
 import styled from "styled-components";
@@ -10,48 +10,62 @@ import { StringOnly } from "types/baseType";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const userData = useSelector((state : RootState) => state.storeUserLists);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validationError, setValidationError] = useState({id:false,pw:false})
   // const [login, setLogin] = useState(false);
 
-  const handleIDPWCheck = () => {
+  const handleFocusID = useCallback(()=>{ // id 에러 초기화
+    setValidationError(prev => ({ ...prev, id: false }));
+  },[])
+
+  const handleFocusPW = useCallback(()=>{ // pw 에러 초기화
+    setValidationError(prev => ({ ...prev, pw: false }));
+  },[])
+
+  const handleIDPWCheck = () => { // id,pw 확인
     const idInput  = refList.current.find( item => item.getAttribute('name') === 'id');
     const pwInput = refList.current.find( item => item.getAttribute('name') === 'password');
     
     if (idInput && pwInput) {
-      setValidationError({
-        id: !idInput.value,
-        pw: pwInput.value.length < 6
-      });
-      validationID(idInput.value, pwInput.value);
+      const isId = validationID(idInput.value);
+      const isPw = pwInput.value.length >= 6;
+
+      if(isId && isPw){ // email/로그인ID, 비밀번호 모두 입력 시 
+          console.log("로그인 시도")
+          handleLogin(isId,pwInput.value)
+          setValidationError({ id:false, pw: false });
+      }else{
+        setValidationError({
+          id: isId ? false : true,
+          pw: !isPw });
+      }
     }
   };
 
   // @ 기준 있다면 email 체크 없다면 간편 아이디 체크
-  const validationID = (idVal : string, pwVal : string) => { 
+  const validationID = (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
     const user = userData.find(item => item[key] === idVal);
-    // ID 1차 유저 목록에서 체크 확인
-    console.log(user)
-    if (user) {
-      const newId = key === 'email' ? idVal : user.email;
-      console.log('로그인 시도하자')
-      handleLogin(newId,pwVal, user)
-    } else {
-      setValidationError(prev => ({ ...prev, id: true }));
-    }
+    return  user ?( key === 'email' ? idVal : user.email) : false
   }
+
   // firebase 로그인 시도
-  const handleLogin = async (loginID:string,loginPW:string, userDB:StringOnly) => {
+  const handleLogin = async (loginID:string,loginPW:string, userDB?:StringOnly) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
-      console.log(userCredential.user) // {Auth, DB : userDB} 정보를 담을 예정.
-      
-      // dispatch(userLoginSlice()) 여기서 부터
+      const userLoginData = {
+        loginState: true,
+        uid: userCredential.user.uid,
+        user: userData.find(item => item.uid === userCredential.user.uid) ?? null
+      }
+      dispatch(actionUserLoginUpdate(userLoginData));
+      navigate('/');
+      console.log('성공')
     } catch (error) {
-      // 로그인 하는 입력 실패 시 비밀번호 확인 요청
-      setValidationError(prev => ({ ...prev, pw: true }));
+      console.log(error)
+      setValidationError({ id:true, pw: true });
     }
   };
 
@@ -78,6 +92,7 @@ export default function SignIn() {
                 ref={refListChk}
                 name={'id'}
                 className={'id'}
+                focusEvent={handleFocusID}
                 placeholder={'아이디를 입력하세요.'}
               />
               {
@@ -91,6 +106,7 @@ export default function SignIn() {
                 name={'password'}
                 type={'password'}
                 className={'login-pw'}
+                focusEvent={handleFocusPW}
                 placeholder={'비밀번호를 입력하세요.'}
               />
               {

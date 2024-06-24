@@ -7,7 +7,7 @@ export interface ThemeState {
 // 로그인 user 상태
 export interface userLoginType {
   loginState: boolean,
-  auth: any,
+  uid: any,
   user: StringOnly | null,
 }
 

@@ -109,9 +109,9 @@ export default function SignUp() {
       await updateDoc(docRef, {
         userList: arrayUnion(resultData)
       });
-      navigate('/member');
       // 완료 레이어 팝업 -> member 이동
       dispatch(actionUserListUpdate([...userData, resultData]));
+      navigate('/member');
     } catch (error) {
       console.log(error) // 에러 안내 팝업 
     }

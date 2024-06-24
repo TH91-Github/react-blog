@@ -43,8 +43,8 @@ export const storeUserListsSlice = createSlice({
 
 // 📍logIn 상태 및 Auth, user DB 정보
 const userLoginState: userLoginType = {
-  loginState:false,
-  auth:'',
+  loginState: false,
+  uid: null,
   user: null
 };
 export const userLoginSlice = createSlice({
