@@ -25,9 +25,9 @@ export interface RefInputType {
 }
 
 export default function SignUp() {
-  const userData = useSelector((state : RootState) => state.storeUserLists);
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
+  const userData = useSelector((state : RootState) => state.storeUserLists);
   const formRef = useRef<HTMLFormElement>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validation, setValidation] = useState<InputStateType[]>([])

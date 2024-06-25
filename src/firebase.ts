@@ -1,9 +1,9 @@
 // 🚩 firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
-
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser } from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 // import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
+
 
 const firebaseConfig = {
     // firebase 설정과 관련된 개인 정보
@@ -21,8 +21,5 @@ const auth = getAuth(app);
 const fireDB = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-export {
-    fireDB, auth, provider, 
-    signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    doc, setDoc, getDoc, updateDoc,arrayUnion
+export { fireDB, auth, provider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser, doc, setDoc, getDoc, updateDoc,arrayUnion, arrayRemove
 }
