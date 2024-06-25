@@ -57,7 +57,6 @@ export default function UserLogin(){
     }
   }
   
-  
   const handleUserRemove = async() => {
     console.log('계정 삭제');
     const currentUser = auth.currentUser; // 로그인 정보

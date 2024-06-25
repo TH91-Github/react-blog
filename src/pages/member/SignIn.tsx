@@ -1,20 +1,20 @@
-import { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { auth, signInWithEmailAndPassword } from "../../firebase";
-import { AppDispatch, RootState, actionUserLoginUpdate } from "store/store";
+import { arrayUnion, auth, doc, fireDB, provider, signInWithEmailAndPassword, signInWithPopup, updateDoc } from "../../firebase";
+import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
 import InputElement from "components/element/InputElement";
 import { colors, transitions } from "assets/style/Variable";
 import styled from "styled-components";
 import { StringOnly } from "types/baseType";
+import { currentTime } from 'utils/common';
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const userData = useSelector((state : RootState) => state.storeUserLists);
+  const userData = useSelector((state: RootState) => state.storeUserLists);
   const refList = useRef<HTMLInputElement[]>([]);
-  const [validationError, setValidationError] = useState({id:false,pw:false})
-  // const [login, setLogin] = useState(false);
+  const [validationError, setValidationError] = useState({ id: false, pw: false });
 
   const handleFocusID = useCallback(()=>{ // id 에러 초기화
     setValidationError(prev => ({ ...prev, id: false }));
@@ -32,14 +32,14 @@ export default function SignIn() {
       const isId = validationID(idInput.value);
       const isPw = pwInput.value.length >= 6;
 
-      if(isId && isPw){ // email/로그인ID, 비밀번호 모두 입력 시 
-          console.log("로그인 시도")
-          handleLogin(isId,pwInput.value)
-          setValidationError({ id:false, pw: false });
-      }else{
+      if (isId && isPw) { // email/로그인ID, 비밀번호 모두 입력 시 
+        handleLogin(isId, pwInput.value);
+        setValidationError({ id: false, pw: false });
+      } else {
         setValidationError({
-          id: isId ? false : true,
-          pw: !isPw });
+          id: !isId,
+          pw: !isPw
+        });
       }
     }
   };
@@ -52,7 +52,7 @@ export default function SignIn() {
   }
 
   // firebase 로그인 시도
-  const handleLogin = async (loginID:string,loginPW:string, userDB?:StringOnly) => {
+  const handleLogin = async (loginID: string, loginPW: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
       const userLoginData = {
@@ -69,10 +69,43 @@ export default function SignIn() {
     }
   };
 
-  const googleLogin = () => {
-    console.log('google login')
-  }
+  const handleGoogleLogin = async() => {
+    try {
+      const googleData = await signInWithPopup(auth, provider);
+      const isUserData = userData.find(item => item.uid === googleData.user.uid);
+      let newUserData: StringOnly | null = null;
 
+      if (!isUserData) {
+        const date = currentTime();
+        newUserData = {
+          email: googleData.user.email || '',
+          loginId: '',
+          nickName: googleData.user.displayName || '',
+          password: 'google-login',
+          signupTime: `${date.year}.${date.month}.${date.date}/${date.hours}:${date.minutes}:${date.seconds}`,
+          lastLogInTime: "",
+          theme: "light",
+          uid: googleData.user.uid || '',
+        };
+        const docRef = doc(fireDB, 'thData', 'userData');
+        await updateDoc(docRef, {
+          userList: arrayUnion(newUserData)
+        });
+        dispatch(actionUserListUpdate([...userData, newUserData]));
+      }
+      // 구글 계정이 있는 경우 existingUser 없는 경우 newUserData 
+      const updatedUserData = isUserData || newUserData;
+      const googleLoginData = {
+        loginState: true,
+        uid: googleData.user.uid,
+        user: updatedUserData
+      };
+      dispatch(actionUserLoginUpdate(googleLoginData));
+      navigate('/');
+     } catch (error) {
+      console.error("Error during sign-in:", error);
+    }
+  }
   // refList e(input)이 없는 경우 추가
   const refListChk = useCallback((e : HTMLInputElement) => {
     if(!refList.current.includes(e)){
@@ -131,7 +164,7 @@ export default function SignIn() {
                   <button 
                     className="btn" 
                     title="Google login"
-                    onClick={googleLogin}>
+                    onClick={handleGoogleLogin}>
                     Google
                   </button>
                 </li>
