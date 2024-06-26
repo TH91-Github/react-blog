@@ -1,6 +1,6 @@
 import React from 'react';
 import { InnerStyle } from "assets/style/StyledCm";
-import { breakpoints, colors, media, transitions } from "assets/style/Variable";
+import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
 import Navigation from "components/article/header/Navigation";
 import UtilNav from "components/article/header/UtilNav";
 import Logo from "components/element/Logo";
@@ -101,9 +101,9 @@ const StyledHeader = styled.header`
   &.main-header {
     top: calc((100% - clamp(${rem(500)}, 80%, ${rem(600)})) / 2);
     .header-wrap {
-      width:clamp(${rem(800)}, 80%, ${breakpoints.pc}px);
+      width:clamp(${rem(800)}, 90%, ${breakpoints.pc}px);
       margin:0 auto;
-      padding:20px 15px;
+      padding:20px 0;
     }
   }
   &.scroll {
@@ -117,6 +117,15 @@ const StyledHeader = styled.header`
     .header-wrap{
       padding:0;
       width:100%;
+    }
+    .gnb-link{
+      font-size:18px;
+      color: ${colors.baseBlack};
+      text-shadow: unset;
+      &:hover{
+        color:${colors.yellow};
+         text-shadow:${shadow.textBaseW};
+      }
     }
   }
   ${media.mo}{

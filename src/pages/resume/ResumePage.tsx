@@ -73,6 +73,7 @@ const StyleWrap = styled.div`
     &-side {
       position:relative;
       width:30%;
+      background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
       .resume-icon{
         width:330px;
         height:330px;

@@ -43,8 +43,8 @@ const StyleWrap = styled.div`
     &-bord {
       position:relative;
       z-index:5;
-      width:clamp(${rem(800)}, 80% , ${breakpoints.pc}px);
-      height:clamp(${rem(500)}, 80%, ${rem(600)});
+      width:clamp(${rem(800)}, 90% , ${breakpoints.pc}px);
+      height:clamp(${rem(500)}, 90%, ${rem(600)});
       border-top: 2px solid rgba(148,148,148, .3);
       border-radius:2px;
       background-color: rgba(227,227,227,0.3);
