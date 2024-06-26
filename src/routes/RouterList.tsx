@@ -28,9 +28,9 @@ export const routerList = [
     element: <WeatherPage />,
   },
   {
-    id: "Map favorites",
+    id: "Map",
     path: "map",
-    title: '나의 지도',
+    title: '지도',
     element: <MapPage />,
   },
   {
