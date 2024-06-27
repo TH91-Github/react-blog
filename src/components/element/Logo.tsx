@@ -2,13 +2,14 @@ import React from 'react';
 import { colors, shadow } from "assets/style/Variable";
 import styled from "styled-components";
 
-export default function Logo () {
+export default React.memo(function Logo () {
   const cube = new Array(9).fill(0);
+  console.log('cube')
   return (
     <StyleLogo className="logo">
       <span className="logo-cube" aria-hidden="true">
         {
-          cube.map((item,idx) => <span key={idx} className={'cube-'+idx}></span>)
+          cube.map((_,idx) => <span key={idx} className={'cube-'+idx}></span>)
         }
       </span>
       <span className="logo-text">
@@ -23,7 +24,7 @@ export default function Logo () {
       <span className="blind">blog</span>
     </StyleLogo>
   )
-}
+})
 
 const StyleLogo = styled.div`
     display:flex;
@@ -35,18 +36,19 @@ const StyleLogo = styled.div`
       position:relative;
       width:30px;
       height:30px;
-      gap:1px;
+      gap:2px;
       // pointer-events: none;
       & > span{
         display:block;
-        width:calc((100% - 2px) / 3);
-        height:calc((100% - 2px) / 3);
+        width:calc((100% - 4px) / 3);
+        height:calc((100% - 4px) / 3);
         border-radius:2px;
         background:${colors.originWhite};
         box-shadow: rgba(127, 127, 127, 0.4) 0.5px 0.5px 1px;
         transition: all .3s;
         animation-duration: 7s;
         animation-iteration-count: infinite;
+        animation-fill-mode: both;
         &:hover { 
           background:${colors.yellow};  
         }
