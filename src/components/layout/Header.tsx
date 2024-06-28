@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { InnerStyle } from "assets/style/StyledCm";
 import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
 import Navigation from "components/article/header/Navigation";
 import UtilNav from "components/article/header/UtilNav";
@@ -33,7 +32,7 @@ export default function Header({location}:PropsLocation){
       headerRef.current.style.transform = `translateY(0)`;
       setIsFixed(true)
     }
-  },[isFixed]);
+  },[]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

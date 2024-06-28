@@ -1,15 +1,12 @@
-import WebPImg from 'components/element/WebpImg';
 import React from 'react';
 import styled from "styled-components";
 import { NumberOnly, StyleProps } from "types/baseType";
 
 export default function Moon ({iconSize} : NumberOnly){
   const dark = true;
-  const moonSrc = require('assets/images/weather/moon.png'); // 이미지 경로
   return (
     <StyleMoon $width={iconSize} className={`moon ${dark ? 'moon-dark': ''}`}>
       <span className="moon-circle">
-        <WebPImg src={moonSrc} alt="Moon"  />
         <img src={require('assets/images/weather/moon.png')} alt="" />
       </span>
       {
