@@ -17,7 +17,6 @@ export default function MainPage() : JSX.Element{
           <div className="testbox"></div>
         </div>
         <div className="content">
-
         </div>
       </StyleWrap>
   )

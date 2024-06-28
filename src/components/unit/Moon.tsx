@@ -1,12 +1,17 @@
+import WebPImg from 'components/element/WebpImg';
 import React from 'react';
 import styled from "styled-components";
 import { NumberOnly, StyleProps } from "types/baseType";
 
 export default function Moon ({iconSize} : NumberOnly){
   const dark = true;
+  const moonSrc = require('assets/images/weather/moon.png'); // 이미지 경로
   return (
     <StyleMoon $width={iconSize} className={`moon ${dark ? 'moon-dark': ''}`}>
-      <span className="moon-circle"></span>
+      <span className="moon-circle">
+        <WebPImg src={moonSrc} alt="Moon"  />
+        <img src={require('assets/images/weather/moon.png')} alt="" />
+      </span>
       {
         dark && <span className="dark-mode">
           <span className="moon-star"></span>
@@ -46,8 +51,6 @@ const StyleMoon = styled.span<StyleProps>`
     left:50%;
     width: 100%;
     height: 100%;
-    background: url('${require('assets/images/weather/moon.png')}') no-repeat;
-    background-size: cover;
     transform: translate(-50%, -50%);
   }
   .dark-mode {
