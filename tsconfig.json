@@ -15,7 +15,10 @@
     "paths": {
       "assets/*": ["assets/*"],
       "components/*": ["components/*"],
-      "types/*": ["types/*"]
+      "types/*": [
+        "types/*",
+        "kakao.maps.d.ts"
+      ]
     }
   },
   "include": ["src"]
