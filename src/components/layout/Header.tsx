@@ -111,6 +111,7 @@ const StyledHeader = styled.header`
     align-items:center;
     position:relative;
     width:100%;
+    max-width:${breakpoints.pc}px;
     margin:0 auto;
     padding:0 30px;
     height:100%;

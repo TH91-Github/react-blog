@@ -48,7 +48,7 @@ export default function SignIn() {
   const validationID = (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
     const user = userData.find(item => item[key] === idVal);
-    return  user ?( key === 'email' ? idVal : user.email) : false
+    return  (user && idVal.length > 0) ? ( key === 'email' ? idVal : user.email) : false
   }
 
   // firebase 로그인 시도
@@ -158,7 +158,7 @@ export default function SignIn() {
               </button>
             </div>
             <div className="login-sns">
-              <h2 className="tit">SNS</h2>
+              <h2 className="tit">OR</h2>
               <ul className="login-sns-lsits">
                 <li>
                   <button 

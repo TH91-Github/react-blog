@@ -3,7 +3,7 @@ import React, { forwardRef, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface InputType {
-  name: string,
+  name?: string,
   type?: string,
   id?: string;
   className?: string;
@@ -17,7 +17,6 @@ interface InputType {
   focusEvent?: () => void;
   blurEvent?: (e:React.ChangeEvent<HTMLInputElement>) => void;
 }
-
 export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   {
     name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
@@ -27,13 +26,14 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
   const propsTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const focusIn = useCallback(() => {
+  const handleFocusIn = useCallback(() => {
     setIsFocus(true);
     focusEvent && focusEvent();
   }, [focusEvent]);
 
-  const focusOut = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFocusOut = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     // 👇 입력 되어 있을 경우 포커스 남도록 
     // if (typeof val === "string" && !(val.length > 0)) {
     //   setIsFocus(false);
@@ -42,11 +42,11 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     blurEvent && blurEvent(e);
   }, [blurEvent]);
 
-  const keyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     e.key === "Enter" && keyEvent && keyEvent();
   }, [keyEvent] );
 
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setVal(value.trim());
     if (propsTimeRef.current) {
@@ -57,22 +57,36 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
     },500)
   },[changeEvent]);
 
+  const handleValRemove = () => {
+    setVal('');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
+
   return (
     <StyleWrap
       className={`input-item${inputError ? " error" : ""}${ isFocus ? " isFocus" : "" }`}
       $maxWidth={maxWidth ? maxWidth : undefined} 
       $lineColor={focusColor === undefined ? colors.blue: focusColor}>
       <input
-        ref={ref}
+        ref={(el) => {
+          inputRef.current = el;
+          if (typeof ref === 'function') {
+            ref(el);
+          } else if (ref) {
+            ref.current = el;
+          }
+        }}
         type={passwordType}
         id={id}
         name={name}
         className={`input ${className ? className : ''}`}
         value={val}
-        onFocus={focusIn}
-        onBlur={focusOut}
-        onKeyUp={keyUp}
-        onChange={onChange}
+        onFocus={handleFocusIn}
+        onBlur={handleFocusOut}
+        onKeyUp={handleKeyUp}
+        onChange={handleOnChange}
         autoComplete={name}
         title={placeholder ? placeholder : "입력해주세요"}
       />
@@ -82,6 +96,16 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
             {placeholder}
           </span>
         )
+      }
+      {
+        <button
+          type="button"
+          className={`remove ${val.length > 0 ? 'on':''}`}
+          onClick={handleValRemove}>
+          <span className="blind">
+            입력 삭제
+          </span>
+        </button>
       }
     </StyleWrap>
   );
@@ -94,6 +118,7 @@ type StyleProps = {
 
 const StyleWrap = styled.div<StyleProps>`
   display:block;
+  overflow:hidden;
   position:relative;
   ${props => props.$maxWidth && `max-width: ${props.$maxWidth};`}
   border-radius:2px;
@@ -105,7 +130,7 @@ const StyleWrap = styled.div<StyleProps>`
   .input {
     display:block;
     width:100%;
-    padding:8px 10px;
+    padding:8px 30px 8px 10px;
     border:1px solid transparent;
     font-size:14px;
     background:none;
@@ -123,6 +148,47 @@ const StyleWrap = styled.div<StyleProps>`
     font-size:14px;
     font-weight:300;
     color:${colors.subTextColor};
+  }
+  .remove {
+    display:none;
+    position:absolute;
+    top:50%;
+    right:5px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:${colors.lineColor};
+    transform: translate(200%, -50%);
+    &::before, &::after{
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 3px;
+      height:70%;
+      border-radius: 3px;
+      background: ${colors.bgContBlack};
+      transition: all .3s;
+      content:'';
+    }
+    &::before {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    &::after {
+      transform: translate(-50%, -50%) rotate(-135deg);
+    }
+    &.on {
+      display:block;
+      animation: val-remove-ani 1s both; 
+      @keyframes val-remove-ani {
+        0%{
+          transform: translate(200%, -50%) rotate(180deg);
+        }
+        100% {
+          transform: translate(0%, -50%) rotate(0deg);
+        }
+      }
+    }
   }
 `;
 
