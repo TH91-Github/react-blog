@@ -53,7 +53,7 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
 
   const handleOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setVal(value.trim());
+    setVal(value);
     if (propsTimeRef.current) {
       clearTimeout(propsTimeRef.current);
     }

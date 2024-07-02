@@ -22,13 +22,21 @@ const KakaoMap = () => {
     }
 
     const ps = new window.kakao.maps.services.Places();
+    let totalCount = 0;
+    const pageSize = 2; // 한 번에 가져올 개수
+    const maxResults = 15; // 최대 가져올 개수
+    const keyword = "신도림역"; // 검색 키워드
 
-    if (map) {
-      ps.keywordSearch("신도림역 맛집", (data, status, _pagination) => {
+    const fetchData = (page: number) => {
+      ps.keywordSearch(keyword, (data, status, pagination) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
           const newMarkers: MarkerType[] = [];
 
+          // 페이징을 통해 처리할 수 있는 최대 개수 계산
+          totalCount = pagination.totalCount;
+
+          // 요청 결과를 처리
           for (let i = 0; i < data.length; i++) {
             newMarkers.push({
               position: {
@@ -39,17 +47,26 @@ const KakaoMap = () => {
             });
             bounds.extend(new window.kakao.maps.LatLng(parseFloat(data[i].y), parseFloat(data[i].x)));
           }
-          console.log(newMarkers)
-          setMarkers(newMarkers);
-          map.setBounds(bounds);
+
+          // 현재까지 수집된 결과 추가
+          setMarkers((prevMarkers) => [...prevMarkers, ...newMarkers]);
+          map?.setBounds(bounds);
+
+          // // 다음 페이지 요청
+          // if (다음 페이지 관련 요청) {
+          //   fetchData(page + 1);
+          // }
         }
-        console.log(data.length) // size 지정 없다면 기본 15개
-        console.log(_pagination) // 페이징 최대 정보
-      },{
-        page: 1, // 1페이지
-        size: 5 // 5개
+      }, {
+        page,
+        size: pageSize
       });
+    };
+
+    if (map) {
+      fetchData(1); // 초기 요청 시작
     }
+
   }, [map]);
 
   return (
@@ -69,7 +86,7 @@ const KakaoMap = () => {
             onClick={() => setInfo(marker)}
           >
             {info && info.content === marker.content && (
-              <div style={{ color: "#000" }}>이름 : {marker.content}</div>
+              <div style={{ color: "#000" }}>{marker.content}</div>
             )}
           </MapMarker>
         ))}
