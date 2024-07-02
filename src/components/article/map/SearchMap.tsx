@@ -12,8 +12,7 @@ export default function SearchMap(){
 
   const handleClick = () =>{
     if (refInput.current) {
-      const inputElement = refInput.current.getInputElement();
-      console.log(inputElement);
+      refInput.current.resetValue();
     }
   }
 

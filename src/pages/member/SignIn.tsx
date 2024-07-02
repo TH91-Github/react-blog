@@ -15,7 +15,6 @@ export default function SignIn() {
   const userData = useSelector((state: RootState) => state.storeUserLists);
   const refInputID = useRef<InputElementRef>(null);
   const refInputPW = useRef<InputElementRef>(null);
-  const refList = useRef<HTMLInputElement[]>([]);
   const [validationError, setValidationError] = useState({ id: false, pw: false });
 
   const handleFocusID = useCallback(()=>{ // id 에러 초기화

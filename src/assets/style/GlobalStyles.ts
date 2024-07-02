@@ -22,6 +22,15 @@ export const GlobalStyles = createGlobalStyle`
     color: inherit;
     cursor: pointer;
   }   
+  input:autofill,
+  input:autofill:active {
+    -webkit-text-fill-color: ${(props)=> props.theme.color};
+    text-fill-color:${(props)=> props.theme.color};
+    -webkit-box-shadow: 0 0 0px 1000px ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite} inset;
+    box-shadow: 0 0 0px 1000px ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite} inset;
+    border:1px solid ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.baseWhite};
+    transition: none;
+  }
   .blind{
     position:absolute;
     top:-9999px;

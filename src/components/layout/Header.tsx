@@ -23,6 +23,14 @@ export default function Header({location}:PropsLocation){
   const headerTop = useRef(0);
   const memoriesY = useRef(0);
 
+  const headerTopChk = useCallback(() => { // headerTop header Top 위치 입력
+    if(headerRef.current && location.pathname === "/"){
+      headerTop.current = headerRef.current.getBoundingClientRect().top;
+    }else{
+      headerTop.current = 0;
+    }
+  },[location]);
+
   const handleScroll = useCallback(() => {
     if(location.pathname === "/" && headerTop.current === 0) headerTopChk();
     if(window.scrollY < headerTop.current + 10){
@@ -32,7 +40,7 @@ export default function Header({location}:PropsLocation){
       headerRef.current!.style.transform = `translateY(0)`;
       setIsFixed(true)
     }
-  },[location]);
+  },[location, headerTopChk]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -48,16 +56,9 @@ export default function Header({location}:PropsLocation){
     memoriesY.current = 0;
     mobileScrollOff(false);
     headerTopChk();
-  }, [location, isMobile]);  
+  }, [location, isMobile, headerTopChk]);  
 
-  const headerTopChk = () => { // headerTop header Top 위치 입력
-    if(headerRef.current && location.pathname === "/"){
-      headerTop.current = headerRef.current.getBoundingClientRect().top;
-    }else{
-      headerTop.current = 0;
-    }
-  }
-  const handleGnbMoreClick = () => {
+  function gnbMoreClick() {
     mobileScrollOff(!isMoGnb);
     setIsMoGnb(!isMoGnb);
   }
@@ -91,7 +92,7 @@ export default function Header({location}:PropsLocation){
             </NavLink>
           </div>
           <Navigation menuOn={isMoGnb} />
-          <UtilNav handleGnbMoreClick={handleGnbMoreClick} menuOn={isMoGnb} />
+          <UtilNav gnbMoreClick={gnbMoreClick} menuOn={isMoGnb} />
         </div>
       </div>
     </StyledHeader>

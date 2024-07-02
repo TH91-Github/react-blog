@@ -73,11 +73,9 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
   useImperativeHandle(ref, () => ({
     // input 반환
     getInputElement: () => inputRef.current,
+    // 초기화
     resetValue: () => {
       setVal('');
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
     }
   }));
   

@@ -8,14 +8,14 @@ import UserLogin from "./UserLogin";
 
 interface UtilNavType {
   menuOn: boolean
-  handleGnbMoreClick: () => void;
+  gnbMoreClick: () => void;
 }
-export default function UtilNav ({ menuOn, handleGnbMoreClick }:UtilNavType) {
+export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   
   // mo : more-menu
   function menuClick(){
-    handleGnbMoreClick();
+    gnbMoreClick();
   }
   return (
     <StyleUtilNav className="util">
