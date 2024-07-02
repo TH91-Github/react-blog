@@ -137,7 +137,6 @@ const StyledHeader = styled.header`
     top:0;
     left:0;
     width:100%;
-    transform:0 !important;
     transition: unset;
     .header-wrap{
       background:${props => props.theme.opacityBg};

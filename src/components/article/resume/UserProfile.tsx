@@ -23,7 +23,7 @@ const StyleWrap = styled.div`
   text-align:right;
   .tit {
     font-size:18px;
-    color:${colors.blue};
+    color:${colors.purple};
   }
   .name{
     margin-top:20px;

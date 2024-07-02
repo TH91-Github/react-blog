@@ -2,19 +2,21 @@ import React from 'react';
 import { breakpoints, colors, media, shadow } from "assets/style/Variable"
 import styled from "styled-components"
 import { rem } from "utils/common"
+import MainVisualIcon from 'components/article/main/MainVisualIcon';
 
 export default function MainPage() : JSX.Element{ 
   console.log('main')
   return (
       <StyleWrap className="main">
         <div className="visual">
+          <MainVisualIcon />
           <div className="visual-bord">
             <div className="visual-text">
               <h1 className="title">Title</h1>
               <p className="desc">sub text</p>
             </div>
           </div>
-          <div className="testbox"></div>
+          
         </div>
         <div className="content">
         </div>
@@ -47,7 +49,7 @@ const StyleWrap = styled.div`
       border-top: 2px solid rgba(148,148,148, .3);
       border-radius:2px;
       background-color: rgba(227,227,227,0.3);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(3px);
       box-shadow: ${shadow.whiteLine}; 
     }
     .visual-text {
@@ -66,13 +68,8 @@ const StyleWrap = styled.div`
         text-shadow: ${shadow.textBase};
       }
     }
-    .testbox { 
-      position:absolute;
-      top:50%;
-      left:50%;
-      width:100px;
-      height:100px;
-      background:#000;
+    &-icon {
+      
     }
   }
   .content {

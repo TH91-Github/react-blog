@@ -42,6 +42,7 @@ export const colors = {
   blue: "#419ef5",
   red: "#e8392c",
   navy: "#333A73",
+  purple: "#c332c9",
   // point gradient
   yellowG:"linear-gradient(90deg, rgba(255, 176, 0,1) 20.469152475672583%,rgba(255, 204, 0,1) 80.47022574413279%)",
   blueG:"linear-gradient(90deg, rgba(65, 158, 245,1) 20.42373356246264%,rgba(117, 188, 255,1) 80.42448072325163%)",
