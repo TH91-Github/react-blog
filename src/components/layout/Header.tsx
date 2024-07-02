@@ -24,15 +24,15 @@ export default function Header({location}:PropsLocation){
   const memoriesY = useRef(0);
 
   const handleScroll = useCallback(() => {
-    if(!headerRef.current) return
-    if(window.scrollY <= headerTop.current){
+    if(location.pathname === "/" && headerTop.current === 0) headerTopChk();
+    if(window.scrollY < headerTop.current + 10){
       setIsFixed(false)
-      headerRef.current.style.transform = `translateY(-${window.scrollY}px)`;
+      headerRef.current!.style.transform = `translateY(-${window.scrollY}px)`;
     }else{
-      headerRef.current.style.transform = `translateY(0)`;
+      headerRef.current!.style.transform = `translateY(0)`;
       setIsFixed(true)
     }
-  },[]);
+  },[location]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -47,15 +47,17 @@ export default function Header({location}:PropsLocation){
     setIsFixed(false)
     memoriesY.current = 0;
     mobileScrollOff(false);
+    headerTopChk();
+  }, [location, isMobile]);  
 
+  const headerTopChk = () => { // headerTop header Top 위치 입력
     if(headerRef.current && location.pathname === "/"){
       headerTop.current = headerRef.current.getBoundingClientRect().top;
     }else{
       headerTop.current = 0;
     }
-  }, [location, isMobile]);  
-
-  function handleGnbMoreClick(){
+  }
+  const handleGnbMoreClick = () => {
     mobileScrollOff(!isMoGnb);
     setIsMoGnb(!isMoGnb);
   }

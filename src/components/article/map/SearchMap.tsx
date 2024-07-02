@@ -1,16 +1,20 @@
 import { SvgSearch } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import InputElement from "components/element/InputElement";
+import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 export default function SearchMap(){
-  const refInput = useRef<HTMLInputElement>(null);
+  const refInput = useRef<InputElementRef>(null);
+  // const refInput = useRef<HTMLInputElement>(null);
   const [searchOn, setSearchOn] = useState(false);
   const [searchVal, setSearchVal] = useState('');
 
   const handleClick = () =>{
-    console.log(refInput.current)
+    if (refInput.current) {
+      const inputElement = refInput.current.getInputElement();
+      console.log(inputElement);
+    }
   }
 
   return (

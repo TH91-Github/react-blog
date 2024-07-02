@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { arrayUnion, auth, doc, fireDB, provider, signInWithEmailAndPassword, signInWithPopup, updateDoc } from "../../firebase";
 import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
-import InputElement from "components/element/InputElement";
+import InputElement, { InputElementRef } from "components/element/InputElement";
 import { colors, transitions } from "assets/style/Variable";
 import styled from "styled-components";
 import { StringOnly } from "types/baseType";
@@ -13,6 +13,8 @@ export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.storeUserLists);
+  const refInputID = useRef<InputElementRef>(null);
+  const refInputPW = useRef<InputElementRef>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validationError, setValidationError] = useState({ id: false, pw: false });
 
@@ -25,8 +27,8 @@ export default function SignIn() {
   },[])
 
   const handleIDPWCheck = () => { // id,pw 확인
-    const idInput  = refList.current.find( item => item.getAttribute('name') === 'id');
-    const pwInput = refList.current.find( item => item.getAttribute('name') === 'password');
+    const idInput= refInputID.current!.getInputElement();
+    const pwInput = refInputPW.current!.getInputElement();
     
     if (idInput && pwInput) {
       const isId = validationID(idInput.value);
@@ -106,12 +108,6 @@ export default function SignIn() {
       console.error("Error during sign-in:", error);
     }
   }
-  // refList e(input)이 없는 경우 추가
-  const refListChk = useCallback((e : HTMLInputElement) => {
-    if(!refList.current.includes(e)){
-      e && refList.current.push(e)
-    }
-  },[])
   console.log('LOGIN')
   return (
     <StyleWrap className="login">
@@ -122,7 +118,7 @@ export default function SignIn() {
             <div className="form-item">
               <p className="s-tit">아이디 or 이메일</p>
               <InputElement
-                ref={refListChk}
+                ref={refInputID}
                 name={'id'}
                 className={'id'}
                 focusEvent={handleFocusID}
@@ -135,7 +131,7 @@ export default function SignIn() {
             <div className="form-item">
               <p className="s-tit">비밀번호</p>
               <InputElement
-                ref={refListChk}
+                ref={refInputPW}
                 name={'password'}
                 type={'password'}
                 className={'login-pw'}

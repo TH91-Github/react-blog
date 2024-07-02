@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import InputElement from "components/element/InputElement";
+import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { specialCharactersSpacesCheck } from "utils/regex";
 
 export default function NameChk({lineColor, refPush, validationUpdate}:RefInputType){
-  const refInput = useRef<HTMLInputElement>(null);
+  const refInput = useRef<InputElementRef>(null);
   const [valError, setValError] = useState(false);
 
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
-    if(!refInput.current) return
+    if(!refInput.current!.getInputElement()) return
     const inputVal = e.target.value.trim();
     const inputName = e.target.getAttribute('name');
     if (inputVal.length === 0) { // 필수 요소로 0 error
@@ -26,7 +26,8 @@ export default function NameChk({lineColor, refPush, validationUpdate}:RefInputT
 
   useEffect(() => {
     if (refInput.current && refPush) {
-      refPush(refInput.current);
+      const inputElement = refInput.current.getInputElement();
+      inputElement && refPush(inputElement);
     }
   }, [refInput, refPush]);
 

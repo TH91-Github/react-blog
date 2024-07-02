@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import InputElement from "components/element/InputElement";
+import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { spacesCheck } from "utils/regex";
 
 export default function PasswordChk({lineColor, refPush, validationUpdate}:RefInputType){
-  const refInput1 = useRef<HTMLInputElement>(null);
-  const refInput2 = useRef<HTMLInputElement>(null);
+  const refInput1 = useRef<InputElementRef>(null);
+  const refInput2 = useRef<InputElementRef>(null);
   const [valError1, setValError1] = useState(false);
   const [valError2, setValError2] = useState(false);
 
@@ -33,10 +33,12 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
 
   // 비밀번호 1번과 동일한지 0일경우 false
   const handlePasswordCheck2 = useCallback((e:React.ChangeEvent<HTMLInputElement>)=> {
-    if(!refInput1.current || !refInput2.current) return
+    const inputElement1 = refInput1.current!.getInputElement();
+    const inputElement2 = refInput2.current!.getInputElement();
+    if(!inputElement1 || !inputElement2) return
     const pw2Val = e.target.value;
     const inputName2 = e.target.getAttribute('name') || 'input';
-    if(refInput1.current.value === pw2Val){
+    if(inputElement1.value === pw2Val){
       setValError2(false)
       validationUpdate(inputName2, true);
     }else{
@@ -47,8 +49,10 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
 
   useEffect(() => {
     if (refInput1.current && refInput2.current && refPush) {
-      refPush(refInput1.current);
-      refPush(refInput2.current);
+      const inputElement1 = refInput1.current.getInputElement();
+      const inputElement2 = refInput2.current.getInputElement();
+      inputElement1 && refPush(inputElement1);
+      inputElement2 && refPush(inputElement2);
     }
   }, [refInput1, refInput2, refPush]);
 

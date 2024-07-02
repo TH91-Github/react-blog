@@ -1,5 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
-import React, { forwardRef, useCallback, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface InputType {
@@ -17,12 +17,17 @@ interface InputType {
   focusEvent?: () => void;
   blurEvent?: (e:React.ChangeEvent<HTMLInputElement>) => void;
 }
-export default(forwardRef<HTMLInputElement, InputType>( function InputText(
+
+export interface InputElementRef {
+  getInputElement: () => HTMLInputElement | null;
+  resetValue: () => void;
+}
+
+export default(forwardRef<InputElementRef, InputType>( function InputText(
   {
     name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
     keyEvent, changeEvent, focusEvent, blurEvent,
   }: InputType, ref ) {
-  const [passwordType, setPasswordType] = useState<string>(type ==='password' ? 'password' : 'text');
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
   const propsTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -59,26 +64,31 @@ export default(forwardRef<HTMLInputElement, InputType>( function InputText(
 
   const handleValRemove = () => {
     setVal('');
+    console.log(ref)
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    // input 반환
+    getInputElement: () => inputRef.current,
+    resetValue: () => {
+      setVal('');
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  }));
+  
   return (
     <StyleWrap
       className={`input-item${inputError ? " error" : ""}${ isFocus ? " isFocus" : "" }`}
       $maxWidth={maxWidth ? maxWidth : undefined} 
       $lineColor={focusColor === undefined ? colors.blue: focusColor}>
       <input
-        ref={(el) => {
-          inputRef.current = el;
-          if (typeof ref === 'function') {
-            ref(el);
-          } else if (ref) {
-            ref.current = el;
-          }
-        }}
-        type={passwordType}
+        ref={inputRef}
+        type={type ==='password' ? 'password' : 'text'}
         id={id}
         name={name}
         className={`input ${className ? className : ''}`}

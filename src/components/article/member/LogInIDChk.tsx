@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import InputElement from "components/element/InputElement";
+import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { enNumberCheck } from "utils/regex";
 
 export default function LogInIDChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
-  const refInput = useRef<HTMLInputElement>(null);
+  const refInput = useRef<InputElementRef>(null);
   const [inputState, setInputState] = useState({
     valError: false,
     duplicate: false,
@@ -16,7 +16,7 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
 
   // 문제가 있는 경우 false
   const passCheck = useCallback( (passName:string | null, passBoolean:boolean)=>{
-    if(!refInput.current) return
+    if(!refInput.current!.getInputElement()) return
     setInputState((prevState) => ({
       ...prevState,
       valError: !passBoolean,
@@ -49,7 +49,8 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
 
   useEffect(() => {
     if (refInput.current && refPush) {
-      refPush(refInput.current);
+      const inputElement = refInput.current.getInputElement();
+      inputElement && refPush(inputElement);
     }
   }, [refInput, refPush]);
 
