@@ -3,7 +3,6 @@
     "target": "es5",
     "module": "commonjs",
     "lib": ["dom", "es2015", "es2017"],
-    // "jsx": "react",
     "jsx": "react-jsx",
     "outDir": "./dist",
     "rootDir": "./src",
@@ -15,11 +14,8 @@
     "paths": {
       "assets/*": ["assets/*"],
       "components/*": ["components/*"],
-      "types/*": [
-        "types/*",
-        "kakao.maps.d.ts"
-      ]
+      "types/*": ["types/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/types"]
 }

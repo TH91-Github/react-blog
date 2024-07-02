@@ -1,6 +1,7 @@
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media } from 'assets/style/Variable';
 import KakaoMap from 'components/article/map/KakaoMap';
+
 import SearchMap from 'components/article/map/SearchMap';
 import React from 'react';
 import styled from "styled-components";
