@@ -2,18 +2,55 @@ import { useEffect, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 
-interface MarkerType {
+
+export interface MarkerType {
   position: {
     lat: number;
     lng: number;
   };
   content: string;
 }
+interface kakaoMapType {
+  searchKey:string;
+  markerList: (e:MarkerType[]) => void;
+}
 
-const KakaoMap = () => {
+const KakaoMap = ({searchKey, markerList}:kakaoMapType) => {
   const [info, setInfo] = useState<MarkerType | null>(null);
   const [markers, setMarkers] = useState<MarkerType[]>([]);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
+
+  const fetchPlaces = (map: kakao.maps.Map, keyword: string) => {
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(
+      keyword,
+      (data, status, _pagination) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const bounds = new window.kakao.maps.LatLngBounds();
+          const newMarkers = data.map((place) => {
+            bounds.extend(
+              new window.kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x))
+            );
+            const placeData = {
+              position: {
+                lat: parseFloat(place.y),
+                lng: parseFloat(place.x),
+              },
+              content: place.place_name,
+            }
+            return placeData;
+          });
+          setMarkers(newMarkers);
+          map.setBounds(bounds);
+          markerList(newMarkers); // 부모에게 전달
+        }
+      },
+      {
+        page: 1, // 1페이지
+        size: 5, // 5개
+      }
+    );
+  };
 
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
@@ -21,37 +58,16 @@ const KakaoMap = () => {
       return;
     }
 
-    const ps = new window.kakao.maps.services.Places();
-
-    if (map) {
-      ps.keywordSearch("신도림역 맛집", (data, status, _pagination) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          const bounds = new window.kakao.maps.LatLngBounds();
-          const newMarkers: MarkerType[] = [];
-
-          for (let i = 0; i < data.length; i++) {
-            newMarkers.push({
-              position: {
-                lat: parseFloat(data[i].y),
-                lng: parseFloat(data[i].x),
-              },
-              content: data[i].place_name,
-            });
-            bounds.extend(new window.kakao.maps.LatLng(parseFloat(data[i].y), parseFloat(data[i].x)));
-          }
-          console.log(newMarkers)
-          setMarkers(newMarkers);
-          map.setBounds(bounds);
-        }
-        console.log(data.length) // size 지정 없다면 기본 15개
-        console.log(_pagination) // 페이징 최대 정보
-      },{
-        page: 1, // 1페이지
-        size: 5 // 5개
-      });
+    if (map && searchKey) {
+      try {
+        fetchPlaces(map, searchKey);
+      }catch(error){
+        console.log('검색 중 오류가 발생했습니다. '+ error)
+      }
     }
-  }, [map]);
+  }, [map, searchKey]);
 
+  console.log('kakao map')
   return (
     <StyleKakaoMap>
       <Map

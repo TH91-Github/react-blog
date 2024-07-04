@@ -101,7 +101,7 @@ export default function Header({location}:PropsLocation){
 
 const StyledHeader = styled.header`
   position: fixed;
-  z-index: 99;
+  z-index: 10;
   top:0;
   left:0;
   width:100%;

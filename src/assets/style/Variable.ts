@@ -96,7 +96,6 @@ export const darkTheme = {
   shadowBg: shadow.bgBaseW,
 }
 
-
 // transition
 export const transitions = {
   base: "all .3s",

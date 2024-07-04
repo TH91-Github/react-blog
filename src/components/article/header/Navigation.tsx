@@ -48,6 +48,10 @@ const StyledNav = styled.div`
         color:${colors.yellow};
         text-shadow:${shadow.textBaseW}, rgba(127, 127, 127, 0.4) 1px 1px, rgba(127, 127, 127, 0.3) 2px 2px;
       }
+      &.active {
+        color: ${colors.purple};
+        text-shadow:${shadow.textBase};
+      }
     }
   }
 

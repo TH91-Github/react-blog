@@ -1,28 +1,34 @@
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media } from 'assets/style/Variable';
-import KakaoMap from 'components/article/map/KakaoMap';
+import KakaoMap, { MarkerType } from 'components/article/map/KakaoMap';
+import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from "styled-components";
 
 export default function MapPage() {
+  const [searchVal, setSearchVal] = useState('');
+  const [searchData, setSearchData] = useState([]);
 
+  const searchResult= (val:string) => {
+    setSearchVal(val)
+  }
+  const markerList = (e:MarkerType[]) =>{
+    console.log(e)
+  }
   return (
     <StyleWrap className="map">
       <StyleStudyInner>
         {/* 카카오 맵 테스트 */}
         <div className="map-lists">
           {/* 검색 */}
-			    <SearchMap />
+			    <SearchMap searchResult={searchResult}/>
           {/* 리스트 */}
-          <div>
-
-          </div>
+          <SearchList />
         </div>
         <div className="map-inner">
-          
-          <KakaoMap />
+          <KakaoMap searchKey={searchVal} markerList={markerList} />
         </div>
       </StyleStudyInner>
     </StyleWrap>
@@ -37,16 +43,16 @@ const StyleStudyInner = styled(InnerStyle)`
   grid-template-columns: 2fr 7fr;
   height:100%;
   padding-top:70px;
-
   .map-lists {
-    padding:10px;
-    border:1px solid red;
+    display:flex;
+    flex-direction: column;
+    gap:10px;
+    position:relative;
+    z-index:11;
   }
   .map-inner{
   
   }
-
-
   ${media.mo}{
     padding-top:70px;
   }

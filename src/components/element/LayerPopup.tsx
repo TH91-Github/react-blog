@@ -11,7 +11,7 @@ interface LayerPopupType {
   descAlign?: string,
   checkBtn?: boolean,
   closeBtn?: boolean,
-  layerPopupClose?: () => void
+  layerPopupClose: () => void
 }
 export default function LayerPopup ({
   titMessage, descMessage, autoCloseSecond, dimmedView, titleAlign, descAlign, checkBtn, closeBtn, layerPopupClose
@@ -142,9 +142,15 @@ type StyleLayerPopupType = {
 }
 
 const StyleLayerPopup = styled.div<StyleLayerPopupType>`
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:991;
+  width:100%;
+  height:100%;
   .dimmed {
-    position:fixed;
-    z-index:990;
+    position:absolute;
+    z-index:992;
     top:0;
     left:0;
     width:100%;
@@ -153,8 +159,8 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
     animation: popupShowAni ${props => props.$aniSecond || 0.5}s ease-out both;
   }
   .layer-popup {
-    position:fixed;
-    z-index:991;
+    position:absolute;
+    z-index:993;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
@@ -167,7 +173,7 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
     position:relative;
     min-width:180px;
     min-height:100px;
-    padding:20px;
+    padding:30px 20px;
     border-radius:10px;
     background: ${colors.originWhite};
   }
@@ -228,10 +234,10 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
   }
   .close-btn {
     position:absolute;
-    top:10px;
-    right:10px;
-    width:20px;
-    height:20px;
+    top:5px;
+    right:5px;
+    width:16px;
+    height:16px;
     transition: ${transitions.base};
     &::before, &::after {
       position:absolute;

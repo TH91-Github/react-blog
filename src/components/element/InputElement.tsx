@@ -15,7 +15,7 @@ interface InputType {
   keyEvent?: () => void;
   changeEvent?: (e: string) => void;
   focusEvent?: () => void;
-  blurEvent?: (e:React.ChangeEvent<HTMLInputElement>) => void;
+  blurEvent?: (e:React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export interface InputElementRef {
@@ -39,10 +39,6 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
   }, [focusEvent]);
 
   const handleFocusOut = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    // 👇 입력 되어 있을 경우 포커스 남도록 
-    // if (typeof val === "string" && !(val.length > 0)) {
-    //   setIsFocus(false);
-    // }
     setIsFocus(false);
     blurEvent && blurEvent(e);
   }, [blurEvent]);
@@ -64,7 +60,6 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
 
   const handleValRemove = () => {
     setVal('');
-    console.log(ref)
     if (inputRef.current) {
       inputRef.current.focus();
     }
