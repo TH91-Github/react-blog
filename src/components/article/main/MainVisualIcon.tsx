@@ -62,7 +62,7 @@ const StyleMainIcon = styled.div`
     0%, 100% { transform: rotate(0); }
     50% { transform: rotate(10deg); }
   }
-  @keyframes mainIconAni {
+  @keyframes mainIconAni1 {
     0% { transform: rotate(0); }
     40% { transform: translateY(-10px) rotate(-10deg); }
     80% { transform: rotate(15deg); }

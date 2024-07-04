@@ -38,7 +38,7 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
     focusEvent && focusEvent();
   }, [focusEvent]);
 
-  const handleFocusOut = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFocusOut = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     // 👇 입력 되어 있을 경우 포커스 남도록 
     // if (typeof val === "string" && !(val.length > 0)) {
     //   setIsFocus(false);

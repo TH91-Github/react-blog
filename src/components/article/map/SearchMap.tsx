@@ -7,9 +7,8 @@ import styled from "styled-components"
 
 export default function SearchMap(){
   const refInput = useRef<InputElementRef>(null);
-  // const refInput = useRef<HTMLInputElement>(null);
   const [searchVal, setSearchVal] = useState('');
-  const [popupState, setPopupState] = useState(true);
+  const [popupState, setPopupState] = useState(false);
 
   const handleClick = () =>{
     if (refInput.current) {
@@ -18,8 +17,12 @@ export default function SearchMap(){
     }
   }
 
-  const layerpopupOnOff = () => {
-    console.log('동작')
+  const layerPopupClose = () => {
+    console.log('동작222')
+    setPopupState(false)
+  }
+  const popOn = () => {
+    setPopupState(true)
   }
   return (
     <>
@@ -39,9 +42,13 @@ export default function SearchMap(){
           </span>
           <span className="blind">검색</span>
         </button>
+        <button
+          onClick={popOn}>
+          팝업 오픈
+        </button>
       </StyleSearch>
       {
-        popupState && <LayerPopup layerPopupActive={layerpopupOnOff} titMessage={'테스트'}/>
+        popupState && <LayerPopup layerPopupClose={layerPopupClose} titMessage={'테스트'}/>
       }
       
     </>
