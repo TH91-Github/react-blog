@@ -9,13 +9,13 @@ import styled from "styled-components";
 
 export default function MapPage() {
   const [searchVal, setSearchVal] = useState('');
-  const [searchData, setSearchData] = useState([]);
+  const [searchData, setSearchData] = useState<MarkerType[] | null>(null);
 
   const searchResult= (val:string) => {
     setSearchVal(val)
   }
   const markerList = (e:MarkerType[]) =>{
-    console.log(e)
+    setSearchData(e)
   }
   return (
     <StyleWrap className="map">
@@ -25,7 +25,7 @@ export default function MapPage() {
           {/* 검색 */}
 			    <SearchMap searchResult={searchResult}/>
           {/* 리스트 */}
-          <SearchList />
+          <SearchList searchData={searchData}/>
         </div>
         <div className="map-inner">
           <KakaoMap searchKey={searchVal} markerList={markerList} />
