@@ -1,22 +1,24 @@
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media } from 'assets/style/Variable';
-import KakaoMap, { MarkerType } from 'components/article/map/KakaoMap';
+import KakaoMapAPI, { mapDataType } from 'components/article/map/KakaoMapAPI';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from "styled-components";
 
 export default function MapPage() {
   const [searchVal, setSearchVal] = useState('');
-  const [searchData, setSearchData] = useState<MarkerType[] | null>(null);
+  const [mapPageData, setMapPageData] = useState<mapDataType | null>(null); // 초기값을 null로 설정
 
-  const searchResult= (val:string) => {
-    setSearchVal(val)
-  }
-  const markerList = (e:MarkerType[]) =>{
-    setSearchData(e)
-  }
+  const searchResult = (val: string) => {
+    setSearchVal(val);
+  };
+
+  const mapDataUpdate = (data: mapDataType) => {
+    console.log('업데이트', data);
+    setMapPageData(data)
+  };
   return (
     <StyleWrap className="map">
       <StyleStudyInner>
@@ -25,10 +27,13 @@ export default function MapPage() {
           {/* 검색 */}
 			    <SearchMap searchResult={searchResult}/>
           {/* 리스트 */}
-          <SearchList searchData={searchData}/>
+          <SearchList searchData={mapPageData}/>
         </div>
         <div className="map-inner">
-          <KakaoMap searchKey={searchVal} markerList={markerList} />
+          <KakaoMapAPI 
+            searchKey={searchVal} 
+            mapDataUpdate={mapDataUpdate} 
+            />
         </div>
       </StyleStudyInner>
     </StyleWrap>

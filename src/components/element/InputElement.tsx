@@ -12,7 +12,7 @@ interface InputType {
   maxWidth?: string;
   inputError?: boolean;
   focusColor?: string;
-  keyEvent?: () => void;
+  keyEnter?: () => void;
   changeEvent?: (e: string) => void;
   focusEvent?: () => void;
   blurEvent?: (e:React.FocusEvent<HTMLInputElement>) => void;
@@ -26,7 +26,7 @@ export interface InputElementRef {
 export default(forwardRef<InputElementRef, InputType>( function InputText(
   {
     name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
-    keyEvent, changeEvent, focusEvent, blurEvent,
+    keyEnter, changeEvent, focusEvent, blurEvent,
   }: InputType, ref ) {
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
@@ -44,8 +44,8 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
   }, [blurEvent]);
 
   const handleKeyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.key === "Enter" && keyEvent && keyEvent();
-  }, [keyEvent] );
+    e.key === "Enter" && keyEnter && keyEnter();
+  }, [keyEnter] );
 
   const handleOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

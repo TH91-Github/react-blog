@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export default React.memo(function Logo () {
   const cube = new Array(9).fill(0);
-  console.log('cube')
   return (
     <StyleLogo className="logo">
       <span className="logo-cube" aria-hidden="true">

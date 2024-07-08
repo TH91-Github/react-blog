@@ -32,6 +32,9 @@ export default function SearchMap({searchResult}:SearchMapType){
     const {value} = e.target
     setOnVal(value.length > 0 ? true : false)
   }
+  const handleEnter = () => {
+    handleClick();
+  }
   const layerPopupClose = () => {
     setPopupState(false)
   }
@@ -43,6 +46,7 @@ export default function SearchMap({searchResult}:SearchMapType){
           name={'map-search'}
           placeholder={'장소 검색'} 
           blurEvent={blurEvent}
+          keyEnter={handleEnter}
           changeEvent={changeEvent} />
       </span>
       <button 

@@ -1,12 +1,13 @@
 import { colors } from "assets/style/Variable";
+
 import styled from "styled-components"
-import { MarkerType } from "./KakaoMap";
+import { mapDataType, MarkerType } from "./KakaoMapAPI";
+import CurrentLocation from "./CurrentLocation";
 
 interface SearchListType {
-  searchData: MarkerType[] | null
+  searchData: mapDataType | null
 }
 export default function SearchList({searchData}:SearchListType) {
-  console.log(searchData)
   /*
     검색 결과 
     전체 및 검색 결과 수
@@ -16,9 +17,10 @@ export default function SearchList({searchData}:SearchListType) {
   */
   return (
     <StyleSearchList>
+      <CurrentLocation />
       <div>
         {
-          searchData?.map((item,idx) => (
+          searchData && searchData.markerList.map((item,idx) => (
             idx < 10 &&
             <p key={idx}>
               {item.content}
