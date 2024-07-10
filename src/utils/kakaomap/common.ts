@@ -1,4 +1,55 @@
-import { MarkerPositionType } from "components/article/map/KakaoMapAPI";
+import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
+
+
+interface kakaoFetchPlacesType extends kakaoMapType {
+  keyword: string;
+}
+
+export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
+  const map = kakaoData.mapRef;
+  const ps = new window.kakao.maps.services.Places();
+  if(!map) return
+  ps.keywordSearch( keyword, (data, status, _pagination) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const bounds = new window.kakao.maps.LatLngBounds();
+        const newMarkers = data.map((place) => {
+          bounds.extend(
+            new window.kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x))
+          );
+          return {
+            position: {
+              lat: parseFloat(place.y),
+              lng: parseFloat(place.x),
+            },
+            content: place.place_name,
+          }
+        });
+        
+        const newMapData = {
+          ...kakaoData,
+          markerList: newMarkers,
+          pagination: _pagination
+        }
+        kakaoUpdate(newMapData)
+        map.setBounds(bounds);
+
+        // const centerPos = newMarkers[0].position;
+        // // 중심을 검색 첫번째 좌표로 설정한 후 250px 오른쪽으로 이동
+        // const mapCenter = new window.kakao.maps.LatLng(centerPos.lat, centerPos.lng);
+        // map.setCenter(mapCenter);
+
+        // // 250px 만큼 왼쪽으로 이동시킴
+        // centerCorrection &&  map.panBy(-240, 0);
+      }else{
+        console.log('연결이 원활하지 않습니다.')
+      }
+    },
+    {
+      page: kakaoData.page, // 1페이지
+      size: kakaoData.size, // 5개
+    }
+  );
+};
 
 // kakao map 주소 가져오기
 const kakaoGeocoder = new kakao.maps.services.Geocoder();

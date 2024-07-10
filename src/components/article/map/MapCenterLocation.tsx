@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { kakaomapAddressFromCoords } from "utils/kakaomap/common";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { kakaomapAddressFromCoords } from "utils/kakaomap/common";
 
 interface MapCenterLocationType {
   map: kakao.maps.Map | null;
-  mapCenterUpdate: (e:kakao.maps.LatLng) => void;
+  mapCenterUpdate?: (e:kakao.maps.LatLng) => void;
 }
 export default function MapCenterLocation({ map, mapCenterUpdate }: MapCenterLocationType) { // 지도 기준 중심 주소
   const [mapAddress, setMapAddress] = useState('');
@@ -28,7 +28,7 @@ export default function MapCenterLocation({ map, mapCenterUpdate }: MapCenterLoc
         }
         addressTimeRef.current = setTimeout(() => {
           const centerPos = map.getCenter();
-          mapCenterUpdate(centerPos)
+          mapCenterUpdate && mapCenterUpdate(centerPos)
           getAddressFromCoords(centerPos);
         }, 500);
       };
@@ -43,21 +43,24 @@ export default function MapCenterLocation({ map, mapCenterUpdate }: MapCenterLoc
         }
       };
     }
-  }, [map, getAddressFromCoords]);
+  }, [map, getAddressFromCoords, mapCenterUpdate]);
   return (
-    <StyleMapCenterAddress className="test">
-      {mapAddress}
+    <StyleMapCenterAddress className="map-center-address">
+      <span>{mapAddress}</span>
     </StyleMapCenterAddress>
   );
 }
-
 const StyleMapCenterAddress = styled.div`
-  position: absolute;
-  z-index: 2;
-  top: 10px;
-  left: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position:absolute;
+  z-index:2;
+  top:15px;
+  left:50%;
+  & > span {
+    display:inline-block;
+    padding: 10px;
+    background:${props => props.theme.opacityBg};
+    ${props => props.theme.shadowLine};
+    backdrop-filter:blur(4px);
+    border-radius: 5px;
+  }
 `;

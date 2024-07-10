@@ -79,7 +79,6 @@ export default function Header({location}:PropsLocation){
       },50)
     }
   };
-  console.log('header')
   return (
     <StyledHeader
       className={`${!sticky ? "main-header" : ""} ${isMoGnb ? "gnb-on" : ""} ${isFixed ? "is-fixed" : ""}`}
@@ -105,6 +104,7 @@ const StyledHeader = styled.header`
   top:0;
   left:0;
   width:100%;
+  background:${props => props.theme.opacityBg};
   transition: all .01s;
   .header-wrap{
     transition: ${transitions.base};
@@ -127,6 +127,7 @@ const StyledHeader = styled.header`
   }
   &.main-header {
     top: calc((100% - clamp(${rem(500)}, 80%, ${rem(600)})) / 2);
+    background:transparent;
     .header-inner {
       width:clamp(${rem(800)}, 90%, ${breakpoints.pc}px);
       padding:20px 30px;

@@ -1,8 +1,7 @@
-import { colors } from "assets/style/Variable";
 
-import styled from "styled-components"
-import { mapDataType, MarkerType } from "./KakaoMapAPI";
+import styled from "styled-components";
 import CurrentLocation from "./CurrentLocation";
+import { mapDataType } from "types/kakaoComon";
 
 interface SearchListType {
   searchData: mapDataType | null
@@ -35,6 +34,4 @@ export default function SearchList({searchData}:SearchListType) {
 const StyleSearchList = styled.div`
   padding:10px;
   border-bottom-left-radius:10px;
-  background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
-  box-shadow: rgba(127,127,127, 0.3) 1px 5px 5px;
 `;

@@ -1,9 +1,9 @@
 import { SvgSearch } from "assets/style/SVGIcon";
-import { colors, shadow, transitions } from "assets/style/Variable";
+import { colors, transitions } from "assets/style/Variable";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import LayerPopup from "components/element/LayerPopup";
-import { useEffect, useRef, useState } from "react"
-import styled from "styled-components"
+import { useRef, useState } from "react";
+import styled from "styled-components";
 
 interface SearchMapType {
   searchResult: (e: string) => void;
@@ -17,10 +17,9 @@ export default function SearchMap({searchResult}:SearchMapType){
     if (refInput.current) {
       const val = refInput.current.getInputElement()?.value ?? '';
       refInput.current.resetValue();
-      if(val.length > 0){
+      if(val.length > 0){ // 전달
         searchResult && searchResult(val);
-        setOnVal(false);
-      }else{
+      }else{ // 팝업 - 검색어 입력
         setPopupState(true)
       }
     }
@@ -29,7 +28,7 @@ export default function SearchMap({searchResult}:SearchMapType){
     setOnVal(eVal.length > 0 ? true : false)
   }
   const blurEvent = (e : React.FocusEvent<HTMLInputElement>) =>{
-    const {value} = e.target
+    const {value} = e.target;
     setOnVal(value.length > 0 ? true : false)
   }
   const handleEnter = () => {
@@ -72,7 +71,6 @@ const StyleSearch = styled.div`
   padding:10px 10px 5px;
   border-top-left-radius:10px;
   background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
-  box-shadow: rgba(127,127,127, 0.3) 1px 5px 5px;
   .map-search {
     transition:${transitions.base};
     border-bottom:1px solid ${colors.lineColor};

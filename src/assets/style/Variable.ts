@@ -98,9 +98,8 @@ export const darkTheme = {
 
 // transition
 export const transitions = {
-  base: "all .3s",
+  base: "all .3s"
 }
-
 export const animaion = {
   fadeIn : `fadeIn 2s ease both`
 }

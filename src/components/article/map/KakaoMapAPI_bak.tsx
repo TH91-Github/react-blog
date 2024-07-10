@@ -149,6 +149,16 @@ export default KakaoMapAPI;
 
 
 
+// 특정 props 비교 최적화 준비용
+// const renderingChk = <T extends kakaoMapType>(prevProps: T, nextProps: T) => {
+//   return prevProps.searchKey === nextProps.searchKey;
+// return prevProps.searchKey === nextProps.searchKey && prevProps.pages === nextProps.pages;
+// };
+// export default React.memo(KakaoMapAPI,renderingChk);
+// export default React.memo(KakaoMapAPI);
+
+
+
 export interface MarkerPositionType {
   lat: number;
   lng: number;
