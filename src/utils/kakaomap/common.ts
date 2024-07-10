@@ -5,11 +5,10 @@ interface centerCorrectionType {
 }
 interface kakaoFetchPlacesType extends kakaoMapType {
   keyword: string;
-  centerCorrection?: centerCorrectionType // 맵 center를 맞추기 위한 보정 값
 }
 const kakaoGeocoder = new kakao.maps.services.Geocoder();
 
-export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate, centerCorrection}:kakaoFetchPlacesType) => {
+export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
   if(!map) return
@@ -41,7 +40,6 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate, centerCorrect
         }
         kakaoUpdate(newMapData)
         map.setBounds(bounds);
-        map.panBy(centerCorrection?.w ?? 0, 0);
       }else{
         console.log('연결이 원활하지 않습니다.')
       }

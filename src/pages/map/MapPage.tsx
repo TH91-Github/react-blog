@@ -26,21 +26,12 @@ export default function MapPage() {
     setKakaoData(data);
   },[]);
 
-  // map center 보정 값
-  const mapOption = useCallback(()=>{
-    if(!mapPageRef.current) return
-    const mapListsWidth = mapPageRef.current.querySelector('.map-lists') as HTMLDivElement;
-    return {
-      w : ((mapListsWidth.offsetWidth - mapListsWidth.offsetLeft) * - 1) / 2
-    };
-  },[])
-
   // 검색 결과
   const searchResult = useCallback((val: string) => {
     if (kakaoData.mapRef && val && mapPageRef.current) {
 
       try {
-        kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate, centerCorrection:mapOption()});
+        kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate});
       }catch (error) {
         console.log('검색 중 오류가 발생했습니다. '+ error);
       }

@@ -12,9 +12,11 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate}:kakaoMapType) => {
       console.log("카카오맵이 로드되지 않았습니다.");
       return;
     }
-    if(!kakaoData.mapRef) {
-      const initMapData = {...kakaoData, mapRef:map}
-      kakaoUpdate(initMapData);
+    if (map) {
+      if (!kakaoData.mapRef) {
+        const initMapData = { ...kakaoData, mapRef: map };
+        kakaoUpdate(initMapData);
+      }
     }
   }, [map, kakaoData, kakaoUpdate]);
   
