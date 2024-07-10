@@ -8,7 +8,7 @@ interface SearchListType {
   searchData: mapDataType
 }
 export default function SearchList({searchData}:SearchListType) {
-  console.log(searchData)
+  // console.log(searchData)
   /*
     검색 결과 
     전체 및 검색 결과 수
@@ -17,7 +17,7 @@ export default function SearchList({searchData}:SearchListType) {
     호출은 여러개 후 리스트 노출만 < > 관리 <-- 요청 없이 이 방법이 더 좋을 수도
   */
   const handleItemClick = (itemData:MarkerType) => {
-    console.log(itemData)
+    // console.log(itemData)
   }
   return (
     <StyleSearchList>

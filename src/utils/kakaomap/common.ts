@@ -1,30 +1,35 @@
 import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
 
-
 interface kakaoFetchPlacesType extends kakaoMapType {
   keyword: string;
 }
+const kakaoGeocoder = new kakao.maps.services.Geocoder();
 
 export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
   if(!map) return
-  ps.keywordSearch( keyword, (data, status, _pagination) => {
+  ps.keywordSearch( keyword, async (data, status, _pagination) => {
       if (status === window.kakao.maps.services.Status.OK) {
         const bounds = new window.kakao.maps.LatLngBounds();
-        const newMarkers = data.map((place) => {
-          bounds.extend(
-            new window.kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x))
-          );
+        const newMarkers =  await Promise.all(data.map(async (place) => {
+          const position = new window.kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x));
+          bounds.extend(position);
+          let address: string | object;
+          try {
+            address = JSON.parse(await kakaomapAddressFromCoords(position))[0]; // 전체 주소 정보 가져오기
+          } catch (error) {
+            address = '오류가 발생하여 주소를 불러오지 못하였습니다.';
+          }
           return {
             position: {
               lat: parseFloat(place.y),
               lng: parseFloat(place.x),
             },
             content: place.place_name,
+            address: address, // 주소 정보
           }
-        });
-        
+        }));
         const newMapData = {
           ...kakaoData,
           markerList: newMarkers,
@@ -32,12 +37,12 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
         }
         kakaoUpdate(newMapData)
         map.setBounds(bounds);
-
+        map.panBy(-240, 0);
         // const centerPos = newMarkers[0].position;
         // // 중심을 검색 첫번째 좌표로 설정한 후 250px 오른쪽으로 이동
         // const mapCenter = new window.kakao.maps.LatLng(centerPos.lat, centerPos.lng);
         // map.setCenter(mapCenter);
-
+        
         // // 250px 만큼 왼쪽으로 이동시킴
         // centerCorrection &&  map.panBy(-240, 0);
       }else{
@@ -45,20 +50,20 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
       }
     },
     {
-      page: kakaoData.page, // 1페이지
-      size: kakaoData.size, // 5개
+      page: kakaoData.page, // EX) 1 페이지
+      size: kakaoData.size, // EX) 15개 받아오기
     }
   );
 };
 
 // kakao map 주소 가져오기
-const kakaoGeocoder = new kakao.maps.services.Geocoder();
+
 // coords : lat, lon , addrTypeNum : 1 간편 전체 주소, 2: 간편 주소 동까지, 3 전체 정보
 export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum?: number | undefined): Promise<string> {
   return new Promise((resolve, reject) => {
     kakaoGeocoder.coord2Address(coords.getLng(), coords.getLat(), (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
-        let detailAddr: string = '';
+        let detailAddr: string | null;
         switch (addrTypeNum) {
           case 1:
             detailAddr = result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;

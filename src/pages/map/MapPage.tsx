@@ -4,12 +4,13 @@ import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
 import { mapDataType } from 'types/kakaoComon';
 import { getCurrentLocation, kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
+  const mapPageRef = useRef(null);
   const [kakaoData, setKakaoData] = useState<mapDataType>({
     mapRef: null,
     level: 3,
@@ -27,7 +28,9 @@ export default function MapPage() {
 
   // 검색 결과
   const searchResult = useCallback((val: string) => {
-    if (val) {
+    const test = mapPageRef.current
+    console.log(test)
+    if (kakaoData.mapRef && val) {
       try {
         kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate});
       }catch (error) {
@@ -60,7 +63,9 @@ export default function MapPage() {
   },[kakaoData])
 
   return (
-    <StyleWrap className="map">
+    <StyleWrap 
+      ref={mapPageRef}
+      className="map">
       <div className="map-inner">
         <div className="map-lists">
           {/* 검색 */}
@@ -126,6 +131,7 @@ const StyleWrap = styled.div`
     top:80px;
     left:30px;
     z-index:2;
+    width:clamp(150px, 100%, 270px);
     height:calc(90% - 40px);
     min-height:300px;
     &::after {
