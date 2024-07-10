@@ -19,6 +19,8 @@ export const GlobalStyles = createGlobalStyle`
     appearance: none;
     border: none;
     background-color: transparent;
+    font-size:inherit;
+    font-family: inherit;
     color: inherit;
     cursor: pointer;
   }   

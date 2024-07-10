@@ -68,7 +68,7 @@ const StyleSearch = styled.div`
   display:flex;
   gap:10px;
   position:relative;
-  padding:10px 10px 5px;
+  padding:10px 10px 0;
   border-top-left-radius:10px;
   background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
   .map-search {

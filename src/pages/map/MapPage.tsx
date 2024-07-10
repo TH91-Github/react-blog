@@ -10,7 +10,6 @@ import { mapDataType } from 'types/kakaoComon';
 import { getCurrentLocation, kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
-  const [mapPageData, setMapPageData] = useState<mapDataType | null>(null); // 초기값을 null로 설정
   const [kakaoData, setKakaoData] = useState<mapDataType>({
     mapRef: null,
     level: 3,
@@ -67,7 +66,7 @@ export default function MapPage() {
           {/* 검색 */}
 			    <SearchMap searchResult={searchResult}/>
           {/* 리스트 */}
-          <SearchList searchData={mapPageData}/>
+          <SearchList searchData={kakaoData}/>
         </div>
         {/* kakao map */}
         <div className="kakao-map">
@@ -121,6 +120,8 @@ const StyleWrap = styled.div`
     }
   }
   .map-lists {
+    display:flex;
+    flex-direction:column;
     position:absolute;
     top:80px;
     left:30px;
