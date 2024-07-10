@@ -54,7 +54,12 @@ const KakaoMapAPI = ({searchKey, mapDataUpdate}:kakaoMapType) => {
           const mapCenter = new window.kakao.maps.LatLng(centerPos.lat, centerPos.lng);
           kakaoMap.setCenter(mapCenter);
           kakaoMap.panBy(-240, 0);  // 250px 만큼 왼쪽으로 이동시킴
-
+          // const centerPos = newMarkers[0].position;
+          // // 중심을 검색 첫번째 좌표로 설정한 후 250px 오른쪽으로 이동
+          // const mapCenter = new window.kakao.maps.LatLng(centerPos.lat, centerPos.lng);
+          // map.setCenter(mapCenter);
+          
+          // // 250px 만큼 왼쪽으로 이동시킴
         }
       },
       {

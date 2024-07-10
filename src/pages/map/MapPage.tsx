@@ -4,13 +4,13 @@ import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from "styled-components";
 import { mapDataType } from 'types/kakaoComon';
 import { getCurrentLocation, kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
-  const mapPageRef = useRef(null);
+  const mapPageRef = useRef<HTMLDivElement | null>(null);
   const [kakaoData, setKakaoData] = useState<mapDataType>({
     mapRef: null,
     level: 3,
@@ -26,13 +26,21 @@ export default function MapPage() {
     setKakaoData(data);
   },[]);
 
+  // map center 보정 값
+  const mapOption = useCallback(()=>{
+    if(!mapPageRef.current) return
+    const mapListsWidth = mapPageRef.current.querySelector('.map-lists') as HTMLDivElement;
+    return {
+      w : ((mapListsWidth.offsetWidth - mapListsWidth.offsetLeft) * - 1) / 2
+    };
+  },[])
+
   // 검색 결과
   const searchResult = useCallback((val: string) => {
-    const test = mapPageRef.current
-    console.log(test)
-    if (kakaoData.mapRef && val) {
+    if (kakaoData.mapRef && val && mapPageRef.current) {
+
       try {
-        kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate});
+        kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate, centerCorrection:mapOption()});
       }catch (error) {
         console.log('검색 중 오류가 발생했습니다. '+ error);
       }

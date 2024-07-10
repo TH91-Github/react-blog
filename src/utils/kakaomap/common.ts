@@ -1,11 +1,15 @@
 import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
 
+interface centerCorrectionType {
+  w : number
+}
 interface kakaoFetchPlacesType extends kakaoMapType {
   keyword: string;
+  centerCorrection?: centerCorrectionType // 맵 center를 맞추기 위한 보정 값
 }
 const kakaoGeocoder = new kakao.maps.services.Geocoder();
 
-export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
+export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate, centerCorrection}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
   if(!map) return
@@ -37,14 +41,7 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
         }
         kakaoUpdate(newMapData)
         map.setBounds(bounds);
-        map.panBy(-240, 0);
-        // const centerPos = newMarkers[0].position;
-        // // 중심을 검색 첫번째 좌표로 설정한 후 250px 오른쪽으로 이동
-        // const mapCenter = new window.kakao.maps.LatLng(centerPos.lat, centerPos.lng);
-        // map.setCenter(mapCenter);
-        
-        // // 250px 만큼 왼쪽으로 이동시킴
-        // centerCorrection &&  map.panBy(-240, 0);
+        map.panBy(centerCorrection?.w ?? 0, 0);
       }else{
         console.log('연결이 원활하지 않습니다.')
       }

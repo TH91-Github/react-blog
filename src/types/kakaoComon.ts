@@ -5,7 +5,7 @@ export interface MarkerPositionType {
 export interface MarkerType {
   position: MarkerPositionType;
   content: string;
-  address:any;
+  address?:any;
 }
 
 export interface PaginationType {
