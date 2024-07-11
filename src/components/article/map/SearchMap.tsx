@@ -22,10 +22,8 @@ export default function SearchMap({searchResult}:SearchMapType){
       }else{ // 팝업 - 검색어 입력
         setPopupState(true)
       }
+      setOnVal(false);
     }
-  }
-  const changeEvent = (eVal : string) => {
-    setOnVal(eVal.length > 0 ? true : false)
   }
   const blurEvent = (e : React.FocusEvent<HTMLInputElement>) =>{
     const {value} = e.target;
@@ -45,8 +43,7 @@ export default function SearchMap({searchResult}:SearchMapType){
           name={'map-search'}
           placeholder={'장소 검색'} 
           blurEvent={blurEvent}
-          keyEnter={handleEnter}
-          changeEvent={changeEvent} />
+          keyEnter={handleEnter} />
       </span>
       <button 
         type="button"

@@ -3,6 +3,7 @@ import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
 import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 import { StringOnly } from 'types/baseType';
+import { KeyObjectAnyType } from 'types/kakaoComon';
 
 // 📍mobile 체크
 export const mobileChkSlice = createSlice({ 
@@ -52,6 +53,23 @@ export const userLoginSlice = createSlice({
   initialState: userLoginState,
   reducers: {
     actionUserLoginUpdate(state, propsAction: PayloadAction<userLoginType>){
+      return state = propsAction.payload;
+    }
+  }
+})
+
+
+// 📍접속 위치 정보
+const userLocationState: KeyObjectAnyType = {
+  road_address: null,
+  address: null,
+  coords: null
+};
+export const userLocationSlice = createSlice({
+  name: "user location",
+  initialState: userLocationState,
+  reducers: {
+    actionUserLocationUpdate(state, propsAction: PayloadAction<KeyObjectAnyType>){
       return state = propsAction.payload;
     }
   }

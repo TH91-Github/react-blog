@@ -20,6 +20,7 @@ import { GlobalStyles } from 'assets/style/GlobalStyles';
 import Header from 'components/layout/Header';
 import AppLayout from "components/layout/AppLayout";
 import './App.css';
+import CurrentLocation from "components/article/map/CurrentLocation";
 
 function App() : JSX.Element {
   const location = useLocation();
@@ -43,9 +44,10 @@ function App() : JSX.Element {
     <AppLayout>
       <GlobalStyles />
       <div className="container">
-        <Header 
-          location={location} />
+        <Header location={location} />
         <Outlet />
+        {/* 현재위치 store */}
+        <CurrentLocation />
       </div>
     </AppLayout>
   );

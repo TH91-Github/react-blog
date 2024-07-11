@@ -1,14 +1,16 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect,  useCallback } from "react";
 import {getCurrentLocation, kakaomapAddressFromCoords } from "utils/kakaomap/common";
-import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { actionUserLocationUpdate } from "store/store";
 
 export default function CurrentLocation() {
-  const [mapAddress, setMapAddress] = useState('');
-
+  const dispatch = useDispatch();
+  
   const getAddressFromCoords = useCallback(async (coords: kakao.maps.LatLng) => {
     try {
-      const address = await kakaomapAddressFromCoords(coords,2);
-      setMapAddress(address);
+      const position = await kakaomapAddressFromCoords(coords);
+      const address = JSON.parse(position)[0];
+      dispatch(actionUserLocationUpdate({...address, coords:{lat:coords.getLat(), lng:coords.getLng()} }));
     } catch (error) {
       console.log(error);
     }
@@ -21,13 +23,5 @@ export default function CurrentLocation() {
     locationPos();
   }, [getAddressFromCoords]);
 
-  return (
-    <StyleCurrentAddress className="test">
-      {mapAddress}
-    </StyleCurrentAddress>
-  );
+  return null
 }
-
-const StyleCurrentAddress = styled.span`
-
-`;

@@ -4,19 +4,22 @@ import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
 import styled from "styled-components";
 import { mapDataType } from 'types/kakaoComon';
-import { getCurrentLocation, kakaoFetchPlaces } from 'utils/kakaomap/common';
+import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
   const mapPageRef = useRef<HTMLDivElement | null>(null);
+  const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [kakaoData, setKakaoData] = useState<mapDataType>({
     mapRef: null,
     level: 3,
     page: 1,
     size: 15,
-    location: {lat: 37.56682420267543, lng: 126.978652258823}, // 원하는 초기 위치값
+    location: useLocation.coords ?? {lat: 37.56682420267543, lng: 126.978652258823}, // 원하는 초기 위치값
     markerList: [],
     pagination: null,
   });
@@ -29,7 +32,6 @@ export default function MapPage() {
   // 검색 결과
   const searchResult = useCallback((val: string) => {
     if (kakaoData.mapRef && val && mapPageRef.current) {
-
       try {
         kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate});
       }catch (error) {
@@ -37,20 +39,6 @@ export default function MapPage() {
       }
     }
   },[kakaoData, kakaoUpdate]);
-
-  // 현재 위치 불러오기.
-  useEffect(() => {
-    async function mapLocation() {
-      try {
-        console.log('초기')
-        const initLocation = await getCurrentLocation();
-        setKakaoData(prevData => ({ ...prevData, location:initLocation }));
-      } catch (error) {
-        console.log('현재 위치를 불러올 수 없습니다. MapPage : ', error);
-      }
-    }
-    mapLocation();
-  }, []);
 
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표

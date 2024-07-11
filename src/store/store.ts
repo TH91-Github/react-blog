@@ -1,5 +1,5 @@
 import { configureStore} from '@reduxjs/toolkit'
-import { mobileChkSlice, resumeSlice, themeSlice, storeUserListsSlice, userLoginSlice } from 'reducers/sliceActions';
+import { mobileChkSlice, resumeSlice, themeSlice, storeUserListsSlice, userLoginSlice, userLocationSlice } from 'reducers/sliceActions';
 
 export const store = configureStore({
   reducer: { 
@@ -8,6 +8,7 @@ export const store = configureStore({
     storeResume: resumeSlice.reducer,
     storeUserLists: storeUserListsSlice.reducer,
     storeUserLogin: userLoginSlice.reducer,
+    storeLocation: userLocationSlice.reducer
   }
 }) 
 
@@ -18,3 +19,4 @@ export const { actionMobileChk } = mobileChkSlice.actions;
 export const { actionTheme } = themeSlice.actions;
 export const { actionUserListUpdate } = storeUserListsSlice.actions;
 export const { actionUserLoginUpdate } = userLoginSlice.actions;
+export const { actionUserLocationUpdate } = userLocationSlice.actions;

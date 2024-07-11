@@ -90,7 +90,7 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
         onBlur={handleFocusOut}
         onKeyUp={handleKeyUp}
         onChange={handleOnChange}
-        autoComplete={name}
+        autoComplete="off"
         title={placeholder ? placeholder : "입력해주세요"}
       />
       {

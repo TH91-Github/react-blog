@@ -41,7 +41,7 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
         kakaoUpdate(newMapData)
         map.setBounds(bounds);
       }else{
-        console.log('연결이 원활하지 않습니다.')
+        console.log('찾을 수 없습니다.')
       }
     },
     {
@@ -52,7 +52,6 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
 };
 
 // kakao map 주소 가져오기
-
 // coords : lat, lon , addrTypeNum : 1 간편 전체 주소, 2: 간편 주소 동까지, 3 전체 정보
 export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum?: number | undefined): Promise<string> {
   return new Promise((resolve, reject) => {

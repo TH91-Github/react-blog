@@ -55,6 +55,7 @@ const StyleMapCenterAddress = styled.div`
   z-index:2;
   top:15px;
   left:50%;
+  transform: translateX(-50%);
   & > span {
     display:inline-block;
     padding: 10px;

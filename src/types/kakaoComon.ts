@@ -28,3 +28,7 @@ export interface kakaoMapType {
   kakaoData: mapDataType,
   kakaoUpdate: (e:mapDataType) => void;
 }
+
+export interface KeyObjectAnyType {
+  [key:string]: any;
+}

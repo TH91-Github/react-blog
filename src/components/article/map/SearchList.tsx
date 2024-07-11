@@ -1,14 +1,18 @@
 
 import styled from "styled-components";
-import CurrentLocation from "./CurrentLocation";
 import { mapDataType, MarkerType } from "types/kakaoComon";
 import { colors, transitions } from "assets/style/Variable";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import AddressInfo from "./AddressInfo";
 
 interface SearchListType {
   searchData: mapDataType
 }
 export default function SearchList({searchData}:SearchListType) {
-  // console.log(searchData)
+  const useLocation = useSelector((state : RootState) => state.storeLocation);
+  const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.'
+
   /*
     검색 결과 
     전체 및 검색 결과 수
@@ -24,7 +28,7 @@ export default function SearchList({searchData}:SearchListType) {
       <div className="location">
         <p className="tit">
           📌 <span className="blind">현재 위치</span> 
-          <CurrentLocation />
+          {addressText}
         </p>
         <span className="desc">⚠️ 현재 위치가 다를 수 있습니다.</span>
       </div>
@@ -42,7 +46,7 @@ export default function SearchList({searchData}:SearchListType) {
                   <span className="num">{idx + 1}</span>
                   <span className="tit">{item.content}</span>
                 </button>
-                <span className="address">ddd</span>
+                <AddressInfo addressData={item!.address}/>
               </li>
             ))
           }
@@ -53,6 +57,7 @@ export default function SearchList({searchData}:SearchListType) {
 }
 
 const StyleSearchList = styled.div`
+  flex-grow:1;
   overflow:hidden;
   display:flex;
   flex-direction:column;
@@ -67,19 +72,19 @@ const StyleSearchList = styled.div`
     }
   }
   .search-list{
+    flex-grow:1;
+    overflow:hidden;
     overflow-y: scroll;
     & > ul {
+
     }
-    /* 스크롤바 전체 */
     &::-webkit-scrollbar {
       width:8px;
     }
-    /* 스크롤 막대 */
     &::-webkit-scrollbar-thumb {
       background: ${colors.lineColor};
       border-radius: 5px;
     }
-    /* 스크롤 막대 외부 */
     &::-webkit-scrollbar-track {
       background: ${colors.baseWhite};
     }
@@ -126,11 +131,5 @@ const StyleSearchList = styled.div`
         background:${colors.purple};
       }
     }
-  }
-  .address {
-    display:block;
-    margin-top:10px;
-    font-size:14px;
-    color:${colors.subTextColor};
   }
 `;
