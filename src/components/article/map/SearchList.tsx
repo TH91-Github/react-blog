@@ -25,6 +25,7 @@ export default function SearchList({searchData}:SearchListType) {
   const handleItemClick = (itemData:MarkerType) => {
     // console.log(itemData)
   }
+  
   return (
     <StyleSearchList>
       <div className="location">
