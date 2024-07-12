@@ -98,11 +98,17 @@ export const darkTheme = {
 
 // transition
 export const transitions = {
-  base: "all .3s"
+  base: "all .3s",
+  ease: "all .3s ease",
+  easeInOut: "all .3s ease-in-out"
 }
 export const animaion = {
-  fadeIn : `fadeIn 2s ease both`
+  fadeIn : `fadeIn .3s ease-in-out both`,
+  fadeUp : `fadeUp .8s ease both`,
 }
+//   transition:all .3s ease-in-out;
+
 export const keyFrames = {
-  fadeIn : `@keyframes fadeIn { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
+  fadeIn : `@keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;}}`,
+  fadeUp : `@keyframes fadeUp { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
 }
