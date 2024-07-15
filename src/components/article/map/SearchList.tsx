@@ -1,18 +1,20 @@
-
-import styled from "styled-components";
-import { mapDataType, MarkerType } from "types/kakaoComon";
+// SearchList
 import { colors, transitions } from "assets/style/Variable";
+import Bookmark from "components/element/Bookmark";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
+import styled from "styled-components";
+import { mapDataType, MarkerType } from "types/kakaoComon";
 import AddressInfo from "./AddressInfo";
+import { useState } from "react";
 
 interface SearchListType {
   searchData: mapDataType
 }
 export default function SearchList({searchData}:SearchListType) {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
+  const [activeItem, setActiveItem] = useState('');
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.'
-
   /*
     검색 결과 
     전체 및 검색 결과 수
@@ -25,7 +27,15 @@ export default function SearchList({searchData}:SearchListType) {
   const handleItemClick = (itemData:MarkerType) => {
     // console.log(itemData)
   }
-  
+  const handleAddressDetailPopup = (detailID:string) =>{
+    console.log('팝업')
+    console.log(detailID)
+    setActiveItem(detailID)
+  }
+  const handleBookmarkClick = (e:string) => {
+    console.log('클릭')
+    console.log(e)
+  }
   return (
     <StyleSearchList>
       <div className="location">
@@ -33,26 +43,30 @@ export default function SearchList({searchData}:SearchListType) {
           📌 <span className="blind">현재 위치</span> 
           {addressText}
         </p>
-        <span className="desc">⚠️ 현재 위치가 다를 수 있습니다.</span>
+        <span className="desc">⚠️ 현재 위치와 다를 수 있습니다.</span>
       </div>
       <div className="search-list">
         <ul>
-          {
-            searchData.markerList && searchData.markerList.map((item,idx) => (
-              <li 
-                className="item"
-                key={idx}>
-                <button 
-                  type="button"
-                  className="item-btn"
-                  onClick={()=>handleItemClick(item)}>
-                  <span className="num">{idx + 1}</span>
-                  <span className="tit">{item.content}</span>
-                </button>
-                <AddressInfo addressData={item!.address}/>
-              </li>
-            ))
-          }
+        {
+          searchData.markerList?.map((item,idx) => (
+            <li 
+              className="item"
+              key={idx}>
+              <button 
+                type="button"
+                className="item-btn"
+                onClick={()=>handleItemClick(item)}>
+                <span className="num">{idx + 1}</span>
+                <span className="tit">{item.content}</span>
+              </button>
+              <AddressInfo 
+                addressInfoData={item} 
+                addressInfoOn={activeItem} 
+                addressInfoClick={handleAddressDetailPopup}/>
+              <Bookmark itemKey={item.id} bgColor={colors.purple} clickEvent={handleBookmarkClick}/>
+            </li>
+          ))
+        }
         </ul>
       </div>
     </StyleSearchList>
@@ -68,6 +82,9 @@ const StyleSearchList = styled.div`
   padding:10px;
   border-bottom-left-radius:10px;
   .location {
+    .tit{
+      font-size:14px;
+    }
     .desc{
       font-size:12px;
       font-weight:300;
@@ -78,8 +95,8 @@ const StyleSearchList = styled.div`
     flex-grow:1;
     overflow:hidden;
     overflow-y: scroll;
-    & > ul {
-
+    & > ul > li{
+      position:relative;
     }
     &::-webkit-scrollbar {
       width:8px;
@@ -114,6 +131,9 @@ const StyleSearchList = styled.div`
       color:${colors.originWhite};
       transition: ${transitions.base};
     }
+    .tit {
+      text-align:left;
+    }
     &::after{
       position:absolute;
       right:0;
@@ -134,5 +154,12 @@ const StyleSearchList = styled.div`
         background:${colors.purple};
       }
     }
+  }
+  .bookmark-btn {
+    display:block;
+    position:absolute;
+    top:15px;
+    right:10px;
+    width:15px;
   }
 `;

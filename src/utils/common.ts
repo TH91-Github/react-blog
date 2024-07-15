@@ -18,7 +18,8 @@ export function rem(figure:number, remFix?:number):string { // rem 변환
 // 랜덤 값 (최대 값, 이름지정_랜덤 값)
 export const randomNum = (_max:number, name?:string) :string => { 
   let newId = Math.floor(Math.random() * Number(_max + 1))
-  return `${name ===undefined ? 'random': name}-${newId}`;
+  let timeDate = new Date().getTime().toString(); // 시간 값으로 변경 
+  return `${name ===undefined ? 'random': name}-${newId}-${timeDate}`;
 } 
 
 // (비교리스트, 지정id값) 리스트 내 id 비교 중복 값 없는 id 지정

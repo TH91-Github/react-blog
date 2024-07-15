@@ -1,4 +1,5 @@
 import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
+import { randomIdChk } from "utils/common";
 
 interface centerCorrectionType {
   w : number
@@ -25,6 +26,7 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
             address = '오류가 발생하여 주소를 불러오지 못하였습니다.';
           }
           return {
+            id: randomIdChk(kakaoData.markerList,'search'),
             position: {
               lat: parseFloat(place.y),
               lng: parseFloat(place.x),

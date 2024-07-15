@@ -43,11 +43,11 @@ function App() : JSX.Element {
   return (
     <AppLayout>
       <GlobalStyles />
+      <CurrentLocation />
       <div className="container">
         <Header location={location} />
         <Outlet />
         {/* 현재위치 store */}
-        <CurrentLocation />
       </div>
     </AppLayout>
   );

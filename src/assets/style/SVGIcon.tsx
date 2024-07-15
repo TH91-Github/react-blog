@@ -1,6 +1,7 @@
 import React from 'react';
 // Svg styled component
 import styled from 'styled-components';
+import { colors } from './Variable';
 
 type SvgProps = { // default
   $width?:string,
@@ -9,11 +10,13 @@ type SvgProps = { // default
   $fillColor?: string,
 }
 
+const _black = "#121212"
+
 const Svg = styled.svg<SvgProps>`
   width:${props => props.$width || "100%"};
   height:${props => props.$height || "100%"};
   padding: ${props => props.$padding || "0"};
-  fill: ${props => props.$fillColor || "#000"};
+  fill: ${props => props.$fillColor || _black};
 `;
 
 // SvgSearch styled props 검색 돋보기
@@ -105,5 +108,19 @@ export const SvgSkills = ({...props}) => {
     <rect x="3" y="7" width="4" height="4" rx="2" transform="rotate(-90 3 7)" fill={color} stroke={color} strokeWidth="2"/>
     <path d="M5 6V15C5 16.8856 5 17.8284 5.58579 18.4142C6.17157 19 7.11438 19 9 19H14" stroke={color} strokeWidth="2"/>
     <path d="M5 7V7C5 8.88562 5 9.82843 5.58579 10.4142C6.17157 11 7.11438 11 9 11H14" stroke={color} strokeWidth="2"/>
+  </Svg>
+}
+
+
+// 즐겨찾기
+export const SvgBookmark = ({...props}) => {
+  return <Svg $fillColor={props.fillColor || _black } {...props} viewBox="-5 0 20 20" >
+    <g stroke="none" strokeWidth="1"fillRule="evenodd">
+        <g transform="translate(-265.000000, -2679.000000)">
+            <g transform="translate(56.000000, 160.000000)">
+                <path d="M219,2521 L219,2537.998 C219,2538.889 217.923,2539.335 217.293,2538.705 L214.707,2536.119 C214.317,2535.729 213.683,2535.729 213.293,2536.119 L210.707,2538.705 C210.077,2539.335 209,2538.889 209,2537.998 L209,2521 C209,2519.895 209.895,2519 211,2519 L217,2519 C218.105,2519 219,2519.895 219,2521"></path>
+            </g>
+        </g>
+    </g>
   </Svg>
 }

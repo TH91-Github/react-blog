@@ -43,11 +43,15 @@ export default function MapPage() {
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표
   },[])
-
-   // 확인용
-   useEffect(()=>{
-    console.log(kakaoData)
-  },[kakaoData])
+  
+  useEffect(()=>{
+    if(useLocation){
+      setKakaoData( prev => ({
+        ...prev,
+        location: useLocation.coords
+      }))
+    }
+  },[useLocation])
 
   return (
     <StyleWrap 
@@ -73,6 +77,8 @@ export default function MapPage() {
     </StyleWrap>
   )
 }
+
+
 const StyleWrap = styled.div`
   height:100vh;
   background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 

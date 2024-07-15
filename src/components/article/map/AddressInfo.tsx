@@ -1,20 +1,34 @@
 import { animaion, colors, keyFrames } from "assets/style/Variable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { StringOnly } from "types/baseType"
-import { KeyObjectAnyType } from "types/kakaoComon"
+import { KeyObjectAnyType } from "types/kakaoComon";
 
-export default function AddressInfo ({addressData}:KeyObjectAnyType){
+export default function AddressInfo ({addressInfoData, addressInfoOn, addressInfoClick}:KeyObjectAnyType){
   const [detailOn, setDetailOn] = useState(false);
-  const {address, road_address} = addressData;
-
-  console.log(address)
+  const {address, road_address} = addressInfoData.address;
   const handleDetailOn = () =>{
-    setDetailOn(!detailOn);
+    // if(addressInfoOn === addressInfoData.id){
+    //   setDetailOn(!detailOn);
+    // }else{
+    //   setDetailOn(false);
+    // }
+    addressInfoClick && addressInfoClick(addressInfoData.id)
   }
+  
+  useEffect(() => {
+    console.log('업뎃')
+    console.log(addressInfoData.id)
+    console.log('선택 : '+ addressInfoOn)
+    if(addressInfoData.id === addressInfoOn){
+      
+    }else{ 
+    }
+  }, [addressInfoOn]);
 
   return (
-    <StyleAddress className={detailOn ? 'on' : ''}>
+    <StyleAddress 
+      id={addressInfoData.id}
+      className={detailOn ? 'detail-active' : ''}>
       <button 
         type="button"
         className="address-btn"
@@ -34,14 +48,17 @@ export default function AddressInfo ({addressData}:KeyObjectAnyType){
           <span className="badge">지번</span>
           <span className="txt">
             {
-              `${address.region_3depth_name} ${address.main_address_no}`
+              `${address?.region_3depth_name} ${address?.main_address_no}`
             }
           </span>
         </p>
-        <p>
-          <span className="badge">도로명</span>
-          <span className="txt">{road_address.address_name}</span>
-        </p>
+        {
+          road_address &&  
+          <p>
+            <span className="badge">도로명</span>
+            <span className="txt">{road_address?.address_name}</span>
+          </p>
+        }
       </div>
       
     </StyleAddress>
@@ -80,6 +97,7 @@ const StyleAddress = styled.div`
   .address-detail {
     display:none;
     position:absolute;
+    z-index:3;
     top:calc(100% + 5px);
     left:0;
     padding:10px;
@@ -114,7 +132,7 @@ const StyleAddress = styled.div`
       display:inline-block;
     }
   }
-  &.on {
+  &.detail-active {
     .address-btn {
       & > span {
         &::before {

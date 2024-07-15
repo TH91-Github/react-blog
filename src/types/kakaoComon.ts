@@ -3,6 +3,7 @@ export interface MarkerPositionType {
   lng: number,
 }
 export interface MarkerType {
+  id:string;
   position: MarkerPositionType;
   content: string;
   address?:any;
