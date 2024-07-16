@@ -1,34 +1,17 @@
 import { animaion, colors, keyFrames } from "assets/style/Variable";
-import { useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { KeyObjectAnyType } from "types/kakaoComon";
 
-export default function AddressInfo ({addressInfoData, addressInfoOn, addressInfoClick}:KeyObjectAnyType){
-  const [detailOn, setDetailOn] = useState(false);
-  const {address, road_address} = addressInfoData.address;
-  const handleDetailOn = () =>{
-    // if(addressInfoOn === addressInfoData.id){
-    //   setDetailOn(!detailOn);
-    // }else{
-    //   setDetailOn(false);
-    // }
-    addressInfoClick && addressInfoClick(addressInfoData.id)
-  }
-  
-  useEffect(() => {
-    console.log('업뎃')
-    console.log(addressInfoData.id)
-    console.log('선택 : '+ addressInfoOn)
-    if(addressInfoData.id === addressInfoOn){
-      
-    }else{ 
-    }
-  }, [addressInfoOn]);
+const AddressInfo = ({data, clickEvent}:KeyObjectAnyType) => {
+  const {address, road_address} = data.address;
+  const handleDetailOn = useCallback(() =>{
+    clickEvent && clickEvent(data.id)
+  },[clickEvent, data.id])
 
   return (
     <StyleAddress 
-      id={addressInfoData.id}
-      className={detailOn ? 'detail-active' : ''}>
+      className={data.detailOpen ? 'detail-active' : ''}>
       <button 
         type="button"
         className="address-btn"
@@ -60,16 +43,17 @@ export default function AddressInfo ({addressInfoData, addressInfoOn, addressInf
           </p>
         }
       </div>
-      
     </StyleAddress>
   )
 }
+export default AddressInfo;
 
 const StyleAddress = styled.div`
   position:relative;
   margin-top:10px;
   .address-btn {
     font-size:14px;
+    text-align:left;
     & > span {
       display:inline-block;
       position:relative;

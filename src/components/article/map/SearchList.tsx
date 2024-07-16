@@ -1,40 +1,45 @@
 // SearchList
 import { colors, transitions } from "assets/style/Variable";
-import Bookmark from "components/element/Bookmark";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { mapDataType, MarkerType } from "types/kakaoComon";
-import AddressInfo from "./AddressInfo";
-import { useState } from "react";
-
+import ListItem from "./ListItem";
 interface SearchListType {
   searchData: mapDataType
 }
+export interface ListType extends MarkerType {
+  detailOpen: boolean
+} 
 export default function SearchList({searchData}:SearchListType) {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
-  const [activeItem, setActiveItem] = useState('');
-  const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.'
-  /*
-    검색 결과 
-    전체 및 검색 결과 수
-    페이지 단위
-    < > 이전 다음 버튼 생성 후 호출 또는
-    호출은 여러개 후 리스트 노출만 < > 관리 <-- 요청 없이 이 방법이 더 좋을 수도
-    
-    list item 높이에 따른 scroll 입력하기
-  */
+  const [markerList, setMarkerList] = useState<ListType[]>([]);
+  const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
+
+  // 검색 결과 리스트 업데이트
+  useEffect(()=>{
+    const addressList = searchData.markerList?.map(item => ({ ...item, detailOpen: false }))
+    setMarkerList(addressList)
+  },[searchData.markerList])
+
+  // 목록 클릭
   const handleItemClick = (itemData:MarkerType) => {
     // console.log(itemData)
   }
-  const handleAddressDetailPopup = (detailID:string) =>{
-    console.log('팝업')
-    console.log(detailID)
-    setActiveItem(detailID)
-  }
+  // 상세 주소 팝업
+  const handleAddressDetailPopup = useCallback((detailID:string) =>{
+    setMarkerList(
+      prev => prev.map(
+        item => item.id === detailID 
+        ? {...item, detailOpen: !item.detailOpen}
+        : {...item, detailOpen: false}
+      )
+    )
+  },[])
+  // 북마크
   const handleBookmarkClick = (e:string) => {
     console.log('클릭')
-    console.log(e)
   }
   return (
     <StyleSearchList>
@@ -47,26 +52,17 @@ export default function SearchList({searchData}:SearchListType) {
       </div>
       <div className="search-list">
         <ul>
-        {
-          searchData.markerList?.map((item,idx) => (
-            <li 
-              className="item"
-              key={idx}>
-              <button 
-                type="button"
-                className="item-btn"
-                onClick={()=>handleItemClick(item)}>
-                <span className="num">{idx + 1}</span>
-                <span className="tit">{item.content}</span>
-              </button>
-              <AddressInfo 
-                addressInfoData={item} 
-                addressInfoOn={activeItem} 
-                addressInfoClick={handleAddressDetailPopup}/>
-              <Bookmark itemKey={item.id} bgColor={colors.purple} clickEvent={handleBookmarkClick}/>
-            </li>
-          ))
-        }
+          {
+            markerList?.map((item,idx) => (
+              <ListItem
+                item={item}
+                number={idx+1}
+                clickEvent={handleItemClick}
+                addressInfoEvent={handleAddressDetailPopup}
+                bookmarkEvent={handleBookmarkClick}
+                key={idx} />
+            ))
+          }
         </ul>
       </div>
     </StyleSearchList>
@@ -108,58 +104,5 @@ const StyleSearchList = styled.div`
     &::-webkit-scrollbar-track {
       background: ${colors.baseWhite};
     }
-  }
-  .item {
-    padding:10px 15px;
-    font-size:16px;
-  }
-  .item-btn{
-    overflow:hidden;
-    display:flex;
-    gap:10px;
-    align-items:center;
-    position:relative;
-    padding:2px 0 3px;
-    .num {
-      display:inline-block;
-      width:20px;
-      height:20px;
-      border-radius:50%;
-      background:${colors.yellow};
-      font-size:14px;
-      line-height:20px;
-      color:${colors.originWhite};
-      transition: ${transitions.base};
-    }
-    .tit {
-      text-align:left;
-    }
-    &::after{
-      position:absolute;
-      right:0;
-      bottom:0;
-      width:calc(100% - 30px);
-      height:2px;
-      border-radius:2px;
-      background:${colors.purple};
-      transition: ${transitions.base};
-      transform: translateX(100%);
-      content:'';
-    }
-    &:hover, &:focus {
-      &::after {
-        transform: translateX(0);
-      }
-      .num {
-        background:${colors.purple};
-      }
-    }
-  }
-  .bookmark-btn {
-    display:block;
-    position:absolute;
-    top:15px;
-    right:10px;
-    width:15px;
   }
 `;

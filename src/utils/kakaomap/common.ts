@@ -1,9 +1,6 @@
 import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
 import { randomIdChk } from "utils/common";
 
-interface centerCorrectionType {
-  w : number
-}
 interface kakaoFetchPlacesType extends kakaoMapType {
   keyword: string;
 }
