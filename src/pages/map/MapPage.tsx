@@ -29,6 +29,12 @@ export default function MapPage() {
     setKakaoData(data);
   },[]);
 
+  /* 
+    📍 추가 기능 - 데이터 수집 
+    검색 결과 정보 firebase 추가 (id, 별점, 댓글, 추가 정보를 구하기 위한 데이터 수집)
+    기존에 데이터가 있는지 비교 (이름과 위치로 비교) 없다면 추가 있다면 기존 값으로 대체
+  */
+
   // 검색 결과
   const searchResult = useCallback((val: string) => {
     if (kakaoData.mapRef && val && mapPageRef.current) {
@@ -123,7 +129,7 @@ const StyleWrap = styled.div`
     position:absolute;
     top:80px;
     left:30px;
-    z-index:2;
+    z-index:100;
     width:clamp(150px, 100%, 270px);
     height:calc(90% - 40px);
     min-height:300px;
@@ -138,10 +144,6 @@ const StyleWrap = styled.div`
       backdrop-filter:blur(4px);
       pointer-events:none;
       content:'';
-    }
-    & > div {
-      position:relative;
-      z-index:2;
     }
   }
   .kakao-map{

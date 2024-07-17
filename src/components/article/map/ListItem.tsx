@@ -4,6 +4,8 @@ import Bookmark from "components/element/Bookmark";
 import { colors, transitions } from "assets/style/Variable";
 import React from "react";
 import { ListType } from "./SearchList";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 interface ListItemType {
   item: ListType;
@@ -12,6 +14,7 @@ interface ListItemType {
   addressInfoEvent: (e:string) => void;
   bookmarkEvent: (e:string) => void;
 }
+
 const ListItem = ({
   item, 
   number, 
@@ -19,6 +22,25 @@ const ListItem = ({
   addressInfoEvent,
   bookmarkEvent
 }:ListItemType) => {
+  const {loginState,user} = useSelector((state : RootState) => state.storeUserLogin);
+  console.log('list')
+  console.log(user)
+
+  const handleBookmarkClick = (eId:string) => {
+    
+    console.log(item)
+    console.log(loginState)
+  }
+  
+  /*
+    유저 정보가 있을시 - 로그인
+    유저 bookmarkData - 내장소 있는지 없다면 내장소 추가
+    내장소 데이터가 있다면 위치 값 비교 
+    // 다르다면 추가 같다면 삭제
+    const map = new Map();
+    map.set('a', (map.get('a') || {test:'111'}));
+
+  */
   return(
     <StyleItem 
       className="item">
@@ -34,8 +56,8 @@ const ListItem = ({
         clickEvent={addressInfoEvent}/>
       <Bookmark
         itemKey={item.id} 
-        bgColor={colors.purple} 
-        clickEvent={bookmarkEvent}/>
+        bgColor={colors.subTextColor} 
+        clickEvent={handleBookmarkClick}/>
     </StyleItem>
   )
 }

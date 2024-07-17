@@ -4,13 +4,13 @@ import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
 import { useCallback, useRef, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { AppDispatch, RootState, actionUserListUpdate } from "store/store";
 import styled from "styled-components";
+import { UserDataType } from "types/baseType";
 import { currentTime, randomIdChk } from "utils/common";
 import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, updateDoc } from "../../firebase";
-import { AppDispatch, RootState, actionUserListUpdate } from "store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { StringOnly } from "types/baseType";
 
 interface InputStateType {
   id: string,
@@ -18,7 +18,7 @@ interface InputStateType {
   check:boolean
 }
 export interface RefInputType {
-  userList?: StringOnly[]
+  userList?: UserDataType[]
   lineColor?:string;
   refPush: (tag:HTMLInputElement) => void;
   validationUpdate: (name:string|null, state:boolean) => void;
@@ -90,7 +90,7 @@ export default function SignUp() {
   // user 데이터 생성
   const handleSignup = async () => {
     const date = currentTime();
-    const resultData : StringOnly = {
+    const resultData : UserDataType = {
       email: refList.current[0].value,
       loginId:refList.current[1].value || '',
       nickName:refList.current[2].value,
@@ -99,6 +99,7 @@ export default function SignUp() {
       lastLogInTime: "",
       theme:"light",
       uid: '',
+      bookmarkData:[[]],
     }
     try {
       // 계정 관리 Authentication 등록

@@ -75,6 +75,8 @@ const StyleSearchList = styled.div`
   display:flex;
   flex-direction:column;
   gap:20px;
+  position:relative;
+  z-index:102;
   padding:10px;
   border-bottom-left-radius:10px;
   .location {

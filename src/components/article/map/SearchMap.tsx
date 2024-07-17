@@ -65,6 +65,7 @@ const StyleSearch = styled.div`
   display:flex;
   gap:10px;
   position:relative;
+  z-index:103;
   padding:10px 10px 0;
   border-top-left-radius:10px;
   background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};

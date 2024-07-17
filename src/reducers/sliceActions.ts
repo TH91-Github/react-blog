@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
-import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
-import { StringOnly } from 'types/baseType';
+import { UserDataType } from 'types/baseType';
 import { KeyObjectAnyType } from 'types/kakaoComon';
+import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 
 // 📍mobile 체크
 export const mobileChkSlice = createSlice({ 
@@ -31,12 +31,12 @@ export const themeSlice = createSlice({
 })
 
 // 📍user data - firebase
-const userDataState: StringOnly[] = [];
+const userDataState: UserDataType[] = [];
 export const storeUserListsSlice = createSlice({
   name: "user lists",
   initialState: userDataState,
   reducers: {
-    actionUserListUpdate(state, propsAction: PayloadAction<StringOnly[]>){
+    actionUserListUpdate(state, propsAction: PayloadAction<UserDataType[]>){
       return state = propsAction.payload;
     }
   }
@@ -45,7 +45,6 @@ export const storeUserListsSlice = createSlice({
 // 📍logIn 상태 및 Auth, user DB 정보
 const userLoginState: userLoginType = {
   loginState: false,
-  uid: null,
   user: null
 };
 export const userLoginSlice = createSlice({
@@ -57,7 +56,6 @@ export const userLoginSlice = createSlice({
     }
   }
 })
-
 
 // 📍접속 위치 정보
 const userLocationState: KeyObjectAnyType = {

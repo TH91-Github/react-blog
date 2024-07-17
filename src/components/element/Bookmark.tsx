@@ -1,13 +1,13 @@
 import { SvgBookmark } from "assets/style/SVGIcon";
 
 interface BookmarkType {
-  itemKey: string;
+  itemKey?: string | undefined;
   bgColor?: string;
   clickEvent: (e:string) => void;
 }
 export default function Bookmark({itemKey, bgColor, clickEvent}:BookmarkType) {
   const handleClick = () => {
-    clickEvent(itemKey);
+    itemKey && clickEvent(itemKey);
   }
   return (
     <button

@@ -6,9 +6,9 @@ export const store = configureStore({
     mobileChk: mobileChkSlice.reducer,
     storeTheme: themeSlice.reducer,
     storeResume: resumeSlice.reducer,
-    storeUserLists: storeUserListsSlice.reducer,
-    storeUserLogin: userLoginSlice.reducer,
-    storeLocation: userLocationSlice.reducer
+    storeUserLists: storeUserListsSlice.reducer, // 유저리스트
+    storeUserLogin: userLoginSlice.reducer, // 유저정보
+    storeLocation: userLocationSlice.reducer, // 현재위치
   }
 }) 
 

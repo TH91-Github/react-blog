@@ -38,7 +38,6 @@ export default function UserLogin(){
   const userLoginInit = (loginState: boolean) => {
     const userLoginData = {
       loginState,
-      uid: null,
       user: null
     };
     dispatch(actionUserLoginUpdate(userLoginData));

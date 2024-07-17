@@ -1,13 +1,13 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { arrayUnion, auth, doc, fireDB, provider, signInWithEmailAndPassword, signInWithPopup, updateDoc } from "../../firebase";
-import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
-import InputElement, { InputElementRef } from "components/element/InputElement";
 import { colors, transitions } from "assets/style/Variable";
+import InputElement, { InputElementRef } from "components/element/InputElement";
+import { useCallback, useRef, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
 import styled from "styled-components";
-import { StringOnly } from "types/baseType";
-import { currentTime } from 'utils/common';
+import { UserDataType } from "types/baseType";
+import { currentTime, randomNum } from 'utils/common';
+import { arrayUnion, auth, doc, fireDB, provider, signInWithEmailAndPassword, signInWithPopup, updateDoc } from "../../firebase";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
@@ -58,7 +58,6 @@ export default function SignIn() {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
       const userLoginData = {
         loginState: true,
-        uid: userCredential.user.uid,
         user: userData.find(item => item.uid === userCredential.user.uid) ?? null
       }
       dispatch(actionUserLoginUpdate(userLoginData));
@@ -74,7 +73,7 @@ export default function SignIn() {
     try {
       const googleData = await signInWithPopup(auth, provider);
       const isUserData = userData.find(item => item.uid === googleData.user.uid);
-      let newUserData: StringOnly | null = null;
+      let newUserData: UserDataType | null = null;
 
       if (!isUserData) {
         const date = currentTime();
@@ -82,11 +81,12 @@ export default function SignIn() {
           email: googleData.user.email || '',
           loginId: '',
           nickName: googleData.user.displayName || '',
-          password: 'google-login',
+          password: randomNum(9999, 'google-login'),
           signupTime: `${date.year}.${date.month}.${date.date}/${date.hours}:${date.minutes}:${date.seconds}`,
           lastLogInTime: "",
           theme: "light",
           uid: googleData.user.uid || '',
+          bookmarkData:[[]],
         };
         const docRef = doc(fireDB, 'thData', 'userData');
         await updateDoc(docRef, {
@@ -98,7 +98,6 @@ export default function SignIn() {
       const updatedUserData = isUserData || newUserData;
       const googleLoginData = {
         loginState: true,
-        uid: googleData.user.uid,
         user: updatedUserData
       };
       dispatch(actionUserLoginUpdate(googleLoginData));

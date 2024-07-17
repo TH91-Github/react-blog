@@ -1,3 +1,5 @@
+import { MarkerType } from "./kakaoComon"
+
 export interface LocationType {
   hash: string,
   key: string,
@@ -13,6 +15,18 @@ export interface StringOnly {
 }
 export interface  StringNumber{
   [key:string] : string | number
+}
+
+export interface UserDataType {
+  email : string;
+  lastLogInTime : string;
+  loginId : string;
+  nickName : string;
+  password : string;
+  signupTime : string;
+  theme : string;
+  uid : string;
+  bookmarkData?: [MarkerType[]|null];
 }
 
 // 🚩 styled component

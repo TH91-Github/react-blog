@@ -1,4 +1,4 @@
-import { StringOnly } from "types/baseType";
+import { StringOnly, UserDataType } from "types/baseType";
 
 export interface ThemeState {
   mode:string
@@ -7,8 +7,7 @@ export interface ThemeState {
 // 로그인 user 상태
 export interface userLoginType {
   loginState: boolean,
-  uid: any,
-  user: StringOnly | null,
+  user: UserDataType | null,
 }
 
 // resume - firebase - document와 필드 구조
