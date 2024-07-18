@@ -1,18 +1,22 @@
 // SearchList
-import { colors, transitions } from "assets/style/Variable";
+import { colors } from "assets/style/Variable";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { actionUserLoginUpdate, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { mapDataType, MarkerType } from "types/kakaoComon";
+import { MapDataType, MarkerType } from "types/kakaoComon";
 import ListItem from "./ListItem";
+import { UserBookmarkType, UserDataType } from "types/baseType";
+
 interface SearchListType {
-  searchData: mapDataType
+  searchData: MapDataType
 }
 export interface ListType extends MarkerType {
   detailOpen: boolean
 } 
 export default function SearchList({searchData}:SearchListType) {
+  const dispatch = useDispatch<AppDispatch>(); 
+  const {loginState, user} = useSelector((state : RootState) => state.storeUserLogin);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [markerList, setMarkerList] = useState<ListType[]>([]);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
@@ -37,10 +41,46 @@ export default function SearchList({searchData}:SearchListType) {
       )
     )
   },[])
+  
   // 북마크
-  const handleBookmarkClick = (e:string) => {
-    console.log('클릭')
+  const handleBookmarkClick = (eId:string) => {
+    console.log(eId)
+    if(user){
+      const selectPlace = markerList.find(item => item.id === eId);
+      let newUser = {...user};
+      const myBookmark:UserBookmarkType = {
+        id: `MyPlace-${eId}`,
+        title: selectPlace?.place_name ?? '장소 이름이 없어요😢',
+        desc: '',
+        bookmark: selectPlace ? selectPlace :null
+      }
+      if(user.kakaoMapData){
+        let duplication = newUser.kakaoMapData!.some(item => item.id === myBookmark.id)
+        console.log(duplication)
+        // 중복 되는 값이 있다면 filter 제거
+        // 중복 되는 값이 없다면 추가
+      }else{
+        // 새롭게 추가
+        newUser.kakaoMapData = [myBookmark];
+        console.log(newUser)
+        updateBookmark(newUser);
+        // store 저장 및 fetch
+      }
+    }else{
+      alert('로그인이 필요합니다.')
+      return
+    }
   }
+
+  const updateBookmark = useCallback( async(eData:UserDataType) => {
+    // const docRef = doc(fireDB, 'thData', 'userData');
+    //   await updateDoc(docRef, {
+    //     userList: arrayUnion(resultData)
+    //   });
+      // 완료 레이어 팝업 -> member 이동
+    // dispatch(actionUserLoginUpdate({eData:}));
+  },[dispatch,loginState]);
+  console.log(user)
   return (
     <StyleSearchList>
       <div className="location">

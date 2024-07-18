@@ -30,12 +30,12 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate}:kakaoMapType) => {
         {
           kakaoData.markerList.map((marker) => (
             <MapMarker
-              key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
+              key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
               position={marker.position}
               onClick={() => setPointPop(marker)}
             >
-              {pointPop && pointPop.content === marker.content && (
-                <div style={{ color: "#000" }}>이름 : {marker.content}</div>
+              {pointPop && pointPop.place_name === marker.place_name && (
+                <div style={{ color: "#000" }}>이름 : {marker.place_name}</div>
               )}
             </MapMarker>
           ))

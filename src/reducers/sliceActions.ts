@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
 import { lightTheme } from 'assets/style/Variable';
 import { UserDataType } from 'types/baseType';
-import { KeyObjectAnyType } from 'types/kakaoComon';
+import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
 import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 
 // 📍mobile 체크
@@ -51,7 +51,22 @@ export const userLoginSlice = createSlice({
   name: "user login",
   initialState: userLoginState,
   reducers: {
-    actionUserLoginUpdate(state, propsAction: PayloadAction<userLoginType>){
+    actionUserLogin(state, propsAction: PayloadAction<userLoginType>){
+      return state = propsAction.payload;
+    },
+    actionUserLoginUpdate(state, propsAction:PayloadAction<UserDataType>){
+      return state = { loginState: state.loginState, user:propsAction.payload}
+    }
+  }
+})
+
+// 📍kakao map data - firebase
+const kakaoDataState:KakaofireStore[] = [];
+export const storeKakaoDataSlice = createSlice({
+  name: "kakao map data",
+  initialState: kakaoDataState,
+  reducers: {
+    actionKakaoDataUpdate(state, propsAction: PayloadAction<[]>){
       return state = propsAction.payload;
     }
   }

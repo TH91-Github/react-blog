@@ -2,13 +2,6 @@ export interface MarkerPositionType {
   lat: number,
   lng: number,
 }
-export interface MarkerType {
-  id?: string | undefined;
-  position: MarkerPositionType;
-  content: string;
-  address?:any;
-}
-
 export interface PaginationType {
   totalCount: number,
   hasNextPage: boolean,
@@ -16,7 +9,16 @@ export interface PaginationType {
   gotoPage: (page: number) => void,
 }
 
-export interface mapDataType {
+export interface MarkerType {
+  id: string,
+  position: MarkerPositionType,
+  place_name: string,
+  category_name: string,
+  phone:string,
+  url:string,
+  address?:any,
+}
+export interface MapDataType {
   mapRef: kakao.maps.Map | null,
   level: number,
   page: number,
@@ -25,9 +27,13 @@ export interface mapDataType {
   markerList: MarkerType[],
   pagination: PaginationType | null,
 }
+export interface KakaofireStore {
+  id: string,
+  place_name: string,
+}
 export interface kakaoMapType {
-  kakaoData: mapDataType,
-  kakaoUpdate: (e:mapDataType) => void;
+  kakaoData: MapDataType,
+  kakaoUpdate: (e:MapDataType) => void;
 }
 
 export interface KeyObjectAnyType {

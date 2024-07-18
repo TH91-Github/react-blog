@@ -4,7 +4,7 @@ import { arrayRemove, auth, deleteUser, doc, fireDB, signOut, updateDoc} from ".
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
+import { AppDispatch, RootState, actionUserListUpdate, actionUserLogin } from "store/store";
 import styled from "styled-components";
 
 export default function UserLogin(){
@@ -40,7 +40,7 @@ export default function UserLogin(){
       loginState,
       user: null
     };
-    dispatch(actionUserLoginUpdate(userLoginData));
+    dispatch(actionUserLogin(userLoginData));
   }
 
   // 로그아웃

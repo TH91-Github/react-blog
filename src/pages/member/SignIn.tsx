@@ -3,7 +3,7 @@ import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserListUpdate, actionUserLoginUpdate } from "store/store";
+import { AppDispatch, RootState, actionUserListUpdate, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomNum } from 'utils/common';
@@ -60,7 +60,7 @@ export default function SignIn() {
         loginState: true,
         user: userData.find(item => item.uid === userCredential.user.uid) ?? null
       }
-      dispatch(actionUserLoginUpdate(userLoginData));
+      dispatch(actionUserLogin(userLoginData));
       navigate('/');
       console.log('성공')
     } catch (error) {
@@ -86,7 +86,7 @@ export default function SignIn() {
           lastLogInTime: "",
           theme: "light",
           uid: googleData.user.uid || '',
-          bookmarkData:[[]],
+          kakaoMapData:[],
         };
         const docRef = doc(fireDB, 'thData', 'userData');
         await updateDoc(docRef, {
@@ -100,7 +100,7 @@ export default function SignIn() {
         loginState: true,
         user: updatedUserData
       };
-      dispatch(actionUserLoginUpdate(googleLoginData));
+      dispatch(actionUserLogin(googleLoginData));
       navigate('/');
      } catch (error) {
       console.error("Error during sign-in:", error);

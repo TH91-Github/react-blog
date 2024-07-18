@@ -1,11 +1,10 @@
 import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
-import { randomIdChk } from "utils/common";
 
 interface kakaoFetchPlacesType extends kakaoMapType {
   keyword: string;
 }
-const kakaoGeocoder = new kakao.maps.services.Geocoder();
 
+const kakaoGeocoder = new kakao.maps.services.Geocoder();
 export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
@@ -22,13 +21,17 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
           } catch (error) {
             address = '오류가 발생하여 주소를 불러오지 못하였습니다.';
           }
+          // id와 주소를 비교 
           return {
-            id: randomIdChk(kakaoData.markerList,'search'),
+            id: place.id,
             position: {
               lat: parseFloat(place.y),
               lng: parseFloat(place.x),
             },
-            content: place.place_name,
+            place_name: place.place_name,
+            category_name: place.category_name,
+            phone:place.phone,
+            url:place.place_url,
             address: address, // 주소 정보
           }
         }));

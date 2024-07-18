@@ -8,13 +8,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { mapDataType } from 'types/kakaoComon';
+import { MapDataType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
   const mapPageRef = useRef<HTMLDivElement | null>(null);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
-  const [kakaoData, setKakaoData] = useState<mapDataType>({
+  const [kakaoData, setKakaoData] = useState<MapDataType>({
     mapRef: null,
     level: 3,
     page: 1,
@@ -24,11 +24,23 @@ export default function MapPage() {
     pagination: null,
   });
 
+  // // 등록된 장소 데이터 가져오기
+  // useEffect(()=>{
+  //   const fetchMap = async () => {
+  //     const result = await fetchKakaoMapData(dispatch);
+  //     if (!result.success) {
+  //       console.error(result.message);
+  //     }
+  //   };
+  //   fetchMap();
+  // },[dispatch])
+
   // 카카오맵 업데이트
-  const kakaoUpdate = useCallback((data: mapDataType) => {
+  const kakaoUpdate = useCallback((data: MapDataType) => {
     setKakaoData(data);
   },[]);
 
+  
   /* 
     📍 추가 기능 - 데이터 수집 
     검색 결과 정보 firebase 추가 (id, 별점, 댓글, 추가 정보를 구하기 위한 데이터 수집)
@@ -50,6 +62,7 @@ export default function MapPage() {
     // console.log(pos)// 중심 좌표
   },[])
   
+  // 초기 중심 위치
   useEffect(()=>{
     if(useLocation){
       setKakaoData( prev => ({
@@ -78,7 +91,6 @@ export default function MapPage() {
           {/* 맵 가운데 주소 */}
           <MapCenterLocation map={kakaoData.mapRef} mapCenterUpdate={mapCenterUpdate}/>
         </div>
-        
       </div>
     </StyleWrap>
   )

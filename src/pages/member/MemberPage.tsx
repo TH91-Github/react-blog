@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { colors, media, shadow } from "assets/style/Variable";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { fetchUserData } from 'utils/fetch/userListFetch';
 import { AppDispatch } from 'store/store';
 import { useDispatch } from 'react-redux';
+import { fetchUserData } from 'utils/fetch/firebaseUserFetch';
 
 export default function MemberPage(){
   const dispatch = useDispatch<AppDispatch>(); 

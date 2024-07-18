@@ -9,7 +9,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState, actionUserListUpdate } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
-import { currentTime, randomIdChk } from "utils/common";
+import { currentTime, randomIdChk, randomNum } from "utils/common";
 import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, updateDoc } from "../../firebase";
 
 interface InputStateType {
@@ -99,12 +99,13 @@ export default function SignUp() {
       lastLogInTime: "",
       theme:"light",
       uid: '',
-      bookmarkData:[[]],
+      kakaoMapData:[],
     }
     try {
       // 계정 관리 Authentication 등록
       const userCredential = await createUserWithEmailAndPassword(auth, resultData.email, resultData.password);
       resultData.uid = userCredential.user.uid ? userCredential.user.uid : '';
+      resultData.password = randomNum(9999, 'secret-login');
       // firebase에 user 정보 저장
       const docRef = doc(fireDB, 'thData', 'userData');
       await updateDoc(docRef, {

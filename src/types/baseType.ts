@@ -17,7 +17,13 @@ export interface  StringNumber{
   [key:string] : string | number
 }
 
-export interface UserDataType {
+export interface UserBookmarkType {
+  id: string,
+  title: string,
+  desc: string,
+  bookmark: MarkerType | null
+}
+export interface UserDataType { // 유저 정보
   email : string;
   lastLogInTime : string;
   loginId : string;
@@ -26,7 +32,7 @@ export interface UserDataType {
   signupTime : string;
   theme : string;
   uid : string;
-  bookmarkData?: [MarkerType[]|null];
+  kakaoMapData?: UserBookmarkType[];
 }
 
 // 🚩 styled component

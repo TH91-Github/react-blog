@@ -1,11 +1,9 @@
-import styled from "styled-components"
-import AddressInfo from "./AddressInfo";
-import Bookmark from "components/element/Bookmark";
 import { colors, transitions } from "assets/style/Variable";
+import Bookmark from "components/element/Bookmark";
 import React from "react";
+import styled from "styled-components";
+import AddressInfo from "./AddressInfo";
 import { ListType } from "./SearchList";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 
 interface ListItemType {
   item: ListType;
@@ -14,7 +12,6 @@ interface ListItemType {
   addressInfoEvent: (e:string) => void;
   bookmarkEvent: (e:string) => void;
 }
-
 const ListItem = ({
   item, 
   number, 
@@ -22,25 +19,11 @@ const ListItem = ({
   addressInfoEvent,
   bookmarkEvent
 }:ListItemType) => {
-  const {loginState,user} = useSelector((state : RootState) => state.storeUserLogin);
-  console.log('list')
-  console.log(user)
 
   const handleBookmarkClick = (eId:string) => {
-    
-    console.log(item)
-    console.log(loginState)
+    bookmarkEvent(eId)
   }
   
-  /*
-    유저 정보가 있을시 - 로그인
-    유저 bookmarkData - 내장소 있는지 없다면 내장소 추가
-    내장소 데이터가 있다면 위치 값 비교 
-    // 다르다면 추가 같다면 삭제
-    const map = new Map();
-    map.set('a', (map.get('a') || {test:'111'}));
-
-  */
   return(
     <StyleItem 
       className="item">
@@ -49,7 +32,7 @@ const ListItem = ({
         className="item-btn"
         onClick={()=>clickEvent(item)}>
         <span className="num">{number}</span>
-        <span className="tit">{item.content}</span>
+        <span className="tit">{item.place_name}</span>
       </button>
       <AddressInfo 
         data={item} 
@@ -64,7 +47,7 @@ const ListItem = ({
 export default React.memo(ListItem, (prevProps, nextProps) => {
   return (
     prevProps.item.detailOpen === nextProps.item.detailOpen &&
-    prevProps.item.content === nextProps.item.content
+    prevProps.item.place_name === nextProps.item.place_name
   );
 });
 
