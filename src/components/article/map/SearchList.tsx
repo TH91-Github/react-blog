@@ -90,7 +90,7 @@ export default function SearchList({searchData}:SearchListType) {
  
 
   const updateBookmark = useCallback(async () => {
-    try {
+    try {  
 
       const userCollectionRef2 = collection(fireDB, 'thData', 'userData', 'users');
       const userDocSnap3 = await getDocs(userCollectionRef2);
