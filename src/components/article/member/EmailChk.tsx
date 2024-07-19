@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { emailCheck } from "utils/regex";
+import { duplicateDoc } from "utils/firebase/common";
 
-export default function EmailChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
+export default function EmailChk({lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<InputElementRef>(null);
   const [valError, setValError] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
@@ -13,8 +14,10 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
     setDuplicate(false);
   },[])
 
-  const checkDuplicateEmail = useCallback((name:string|null, email:string)=>{
-    if(userList?.some(item => item.email === email)){
+  // 중복 검사 
+  const checkDuplicateEmail = useCallback(async(name:string|null, emailVal:string)=>{
+    const duplicateEmail = await duplicateDoc('userData','users', name ?? 'email', emailVal);
+    if(!duplicateEmail){
       setValError(true)
       setDuplicate(true)
       validationUpdate(name, false);
@@ -22,7 +25,7 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
       setDuplicate(false)
       validationUpdate(name, true);
     }
-  },[userList, validationUpdate])
+  },[validationUpdate])
 
   // 이메일 유효성 & 중복
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
@@ -35,7 +38,7 @@ export default function EmailChk({userList, lineColor, refPush, validationUpdate
     : setValError(false)
     // 중복 검사
     if(inputVal.length>0 && !emailCheck(inputVal)){
-      checkDuplicateEmail(inputName, inputVal)
+      checkDuplicateEmail(inputName, inputVal); // email, val
     }else{
       validationUpdate(inputName, false);
     }

@@ -47,9 +47,7 @@ export function currentTime() {
   };
 }
 
-
 /* 추가 수정 필요한 function 👇 */
-
 // all 포함 map 생성
 type TitleSize = {
   title: string,

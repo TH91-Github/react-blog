@@ -4,13 +4,13 @@ import { arrayRemove, auth, deleteUser, doc, fireDB, signOut, updateDoc} from ".
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserListUpdate, actionUserLogin } from "store/store";
+import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
 
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const userData = useSelector((state : RootState) => state.storeUserLists);
+  // const userData = useSelector((state : RootState) => state.storeUserLists);
   const {loginState, user} = useSelector((state : RootState) => state.storeUserLogin);
   const theme = useSelector((state : RootState) => state.storeTheme);
   const [myPagelayer, setMyPagelayer] = useState(false);
@@ -57,35 +57,35 @@ export default function UserLogin(){
   }
   
   const handleUserRemove = async() => {
-    console.log('계정 삭제');
-    const currentUser = auth.currentUser; // 로그인 정보
-    if (currentUser) {
-      // user 정보가 많을 경우 filter 보다 splice를 사용해서
-      const indexToRemove = userData.findIndex(item => item.uid === currentUser.uid && item.email === currentUser.email);
-      try {
-        if (indexToRemove !== -1) {
-          const removeData = [...userData];
-          const userToRemove = removeData.splice(indexToRemove, 1)[0]; // 제거된 요소 반환
+    // console.log('계정 삭제');
+    // const currentUser = auth.currentUser; // 로그인 정보
+    // if (currentUser) {
+    //   // user 정보가 많을 경우 filter 보다 splice를 사용해서
+    //   const indexToRemove = userData.findIndex(item => item.uid === currentUser.uid && item.email === currentUser.email);
+    //   try {
+    //     if (indexToRemove !== -1) {
+    //       const removeData = [...userData];
+    //       const userToRemove = removeData.splice(indexToRemove, 1)[0]; // 제거된 요소 반환
 
-          // firestore에서 사용자 정보 제거
-          const docRef = doc(fireDB, 'thData', 'userData');
-          await updateDoc(docRef, {
-            userList: arrayRemove(userToRemove)
-          });
+    //       // firestore에서 사용자 정보 제거
+    //       const docRef = doc(fireDB, 'thData', 'userData');
+    //       await updateDoc(docRef, {
+    //         userList: arrayRemove(userToRemove)
+    //       });
 
-          // firebase - Authentication에서 사용자 계정 삭제
-          await deleteUser(currentUser).then(() => {
-            dispatch(actionUserListUpdate(removeData));
-            userLoginInit(false);
-            navigate('/');
-          }).catch((error) => {
-            console.log(error.message);
-          });
-        }
-      }catch (error) {
-        console.error("Error removing document: ", error);
-      }
-    }
+    //       // firebase - Authentication에서 사용자 계정 삭제
+    //       await deleteUser(currentUser).then(() => {
+    //         // dispatch(actionUserListUpdate(removeData));
+    //         userLoginInit(false);
+    //         navigate('/');
+    //       }).catch((error) => {
+    //         console.log(error.message);
+    //       });
+    //     }
+    //   }catch (error) {
+    //     console.error("Error removing document: ", error);
+    //   }
+    // }
   }
 
   const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {

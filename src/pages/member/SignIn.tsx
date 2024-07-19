@@ -3,16 +3,16 @@ import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserListUpdate, actionUserLogin } from "store/store";
+import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomNum } from 'utils/common';
-import { arrayUnion, auth, doc, fireDB, provider, signInWithEmailAndPassword, signInWithPopup, updateDoc } from "../../firebase";
+import { arrayUnion, auth, collection, doc, fireDB, getDoc, getDocs, provider, query, signInWithEmailAndPassword, signInWithPopup, updateDoc, where } from "../../firebase";
+import { duplicateDoc, pushDataDoc } from "utils/firebase/common";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const userData = useSelector((state: RootState) => state.storeUserLists);
   const refInputID = useRef<InputElementRef>(null);
   const refInputPW = useRef<InputElementRef>(null);
   const [validationError, setValidationError] = useState({ id: false, pw: false });
@@ -45,11 +45,16 @@ export default function SignIn() {
     }
   };
 
-  // @ 기준 있다면 email 체크 없다면 간편 아이디 체크
+  // ❌ 수정해야함 - @ 기준 있다면 email 체크 없다면 간편 아이디 체크
   const validationID = (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
-    const user = userData.find(item => item[key] === idVal);
-    return  (user && idVal.length > 0) ? ( key === 'email' ? idVal : user.email) : false
+    
+    // email 인지 id 인지 판단 후 email일 경우 진행 
+    // id일경우 id 조회 후 email 가져오기
+
+    // const user = userData.find(item => item[key] === idVal);
+    // return  (user && idVal.length > 0) ? ( key === 'email' ? idVal : user.email) : false
+    return 'test'
   }
 
   // firebase 로그인 시도
@@ -58,7 +63,8 @@ export default function SignIn() {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
       const userLoginData = {
         loginState: true,
-        user: userData.find(item => item.uid === userCredential.user.uid) ?? null
+        user: null // uid 비교하여 맞는 경우 데이터 가져오기 없는 경우 null
+        // user: userData.find(item => item.uid === userCredential.user.uid) ?? null
       }
       dispatch(actionUserLogin(userLoginData));
       navigate('/');
@@ -72,12 +78,18 @@ export default function SignIn() {
   const handleGoogleLogin = async() => {
     try {
       const googleData = await signInWithPopup(auth, provider);
-      const isUserData = userData.find(item => item.uid === googleData.user.uid);
-      let newUserData: UserDataType | null = null;
+      // 구글 아이디 중복체크
+      const userCollectionRef2 = collection(fireDB, 'thData', 'userData', 'users');
+      const q = query(userCollectionRef2, where('uid', '==', googleData.user.uid));
+      const querySnapshot = await getDocs(q);
+      let isUserData : UserDataType | null = null;
 
-      if (!isUserData) {
+      if(!querySnapshot.empty){ // 이미 계정에 대한 정보가 있을 경우 
+        isUserData = querySnapshot.docs[0].data() as UserDataType // 타입 명시적 변환
+      }else{
         const date = currentTime();
-        newUserData = {
+        const resultData = {
+          id:'',
           email: googleData.user.email || '',
           loginId: '',
           nickName: googleData.user.displayName || '',
@@ -87,26 +99,24 @@ export default function SignIn() {
           theme: "light",
           uid: googleData.user.uid || '',
           kakaoMapData:[],
-        };
-        const docRef = doc(fireDB, 'thData', 'userData');
-        await updateDoc(docRef, {
-          userList: arrayUnion(newUserData)
-        });
-        dispatch(actionUserListUpdate([...userData, newUserData]));
+        }
+        isUserData = resultData
       }
-      // 구글 계정이 있는 경우 existingUser 없는 경우 newUserData 
-      const updatedUserData = isUserData || newUserData;
+
+      // 📍 firebase에 user 정보 저장
+      pushDataDoc('userData','users', isUserData)
       const googleLoginData = {
         loginState: true,
-        user: updatedUserData
+        user: isUserData // 최종 데이터
       };
       dispatch(actionUserLogin(googleLoginData));
       navigate('/');
      } catch (error) {
-      console.error("Error during sign-in:", error);
+      console.log("error:", error);
     }
   }
   console.log('LOGIN')
+
   return (
     <StyleWrap className="login">
       <div className="member-wrap">

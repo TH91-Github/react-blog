@@ -30,18 +30,6 @@ export const themeSlice = createSlice({
   }
 })
 
-// 📍user data - firebase
-const userDataState: UserDataType[] = [];
-export const storeUserListsSlice = createSlice({
-  name: "user lists",
-  initialState: userDataState,
-  reducers: {
-    actionUserListUpdate(state, propsAction: PayloadAction<UserDataType[]>){
-      return state = propsAction.payload;
-    }
-  }
-})
-
 // 📍logIn 상태 및 Auth, user DB 정보
 const userLoginState: userLoginType = {
   loginState: false,

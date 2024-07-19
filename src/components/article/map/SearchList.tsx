@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { MapDataType, MarkerType } from "types/kakaoComon";
 import ListItem from "./ListItem";
 import { UserBookmarkType, UserDataType } from "types/baseType";
-import { arrayUnion, collection, doc, fireDB, updateDoc, getDoc, setDoc,getDocs } from "../../../firebase";
+import { arrayUnion, collection, doc, fireDB, updateDoc, getDoc, setDoc,getDocs, where, query } from "../../../firebase";
 
 interface SearchListType {
   searchData: MapDataType
@@ -91,12 +91,6 @@ export default function SearchList({searchData}:SearchListType) {
 
   const updateBookmark = useCallback(async () => {
     try {  
-
-      const userCollectionRef2 = collection(fireDB, 'thData', 'userData', 'users');
-      const userDocSnap3 = await getDocs(userCollectionRef2);
-      userDocSnap3.forEach((item:any) => {
-        console.log(`${item.id} => ${item.data()}`);
-      });
 
       // const userDocRef = doc(fireDB, 'thData', 'userData', 'users', 'XpFgHlo6bc5UiRpnQQb5');
   

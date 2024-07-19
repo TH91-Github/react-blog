@@ -4,13 +4,12 @@ import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
 import { useCallback, useRef, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserListUpdate } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomIdChk, randomNum } from "utils/common";
-import { arrayUnion, auth, createUserWithEmailAndPassword, doc, fireDB, updateDoc } from "../../firebase";
+import { pushDataDoc } from "utils/firebase/common";
+import { auth, createUserWithEmailAndPassword } from "../../firebase";
 
 interface InputStateType {
   id: string,
@@ -18,16 +17,13 @@ interface InputStateType {
   check:boolean
 }
 export interface RefInputType {
-  userList?: UserDataType[]
   lineColor?:string;
   refPush: (tag:HTMLInputElement) => void;
   validationUpdate: (name:string|null, state:boolean) => void;
 }
 
 export default function SignUp() {
-  const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
-  const userData = useSelector((state : RootState) => state.storeUserLists);
   const formRef = useRef<HTMLFormElement>(null);
   const refList = useRef<HTMLInputElement[]>([]);
   const [validation, setValidation] = useState<InputStateType[]>([])
@@ -91,6 +87,7 @@ export default function SignUp() {
   const handleSignup = async () => {
     const date = currentTime();
     const resultData : UserDataType = {
+      id:'',
       email: refList.current[0].value,
       loginId:refList.current[1].value || '',
       nickName:refList.current[2].value,
@@ -106,13 +103,10 @@ export default function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(auth, resultData.email, resultData.password);
       resultData.uid = userCredential.user.uid ? userCredential.user.uid : '';
       resultData.password = randomNum(9999, 'secret-login');
-      // firebase에 user 정보 저장
-      const docRef = doc(fireDB, 'thData', 'userData');
-      await updateDoc(docRef, {
-        userList: arrayUnion(resultData)
-      });
+      // 📍 firebase에 user 정보 저장
+      pushDataDoc('userData','users',resultData)
+
       // 완료 레이어 팝업 -> member 이동
-      dispatch(actionUserListUpdate([...userData, resultData]));
       navigate('/member');
     } catch (error) {
       console.log(error) // 에러 안내 팝업 
@@ -128,12 +122,10 @@ export default function SignUp() {
           <p className="reference"><span className="sup">*</span>필수 입력</p>
           <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
             <EmailChk 
-              userList={userData}
               lineColor={colors.yellow}
               refPush={refListCheck}
               validationUpdate={inputValidationUpdate} />
             <LogInIDChk 
-              userList={userData}
               lineColor={colors.yellow}
               refPush={refListCheck}
               validationUpdate={inputValidationUpdate}  />

@@ -24,6 +24,7 @@ export interface UserBookmarkType {
   bookmark: MarkerType | null
 }
 export interface UserDataType { // 유저 정보
+  id: string;
   email : string;
   lastLogInTime : string;
   loginId : string;

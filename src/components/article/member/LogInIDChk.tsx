@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { enNumberCheck } from "utils/regex";
+import { duplicateDoc } from "utils/firebase/common";
 
-export default function LogInIDChk({userList, lineColor, refPush, validationUpdate}:RefInputType){
+export default function LogInIDChk({lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<InputElementRef>(null);
   const [inputState, setInputState] = useState({
     valError: false,
@@ -17,7 +18,7 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
   // 문제가 있는 경우 false
   const passCheck = useCallback( (passName:string | null, passBoolean:boolean)=>{
     if(!refInput.current!.getInputElement()) return
-    setInputState((prevState) => ({
+    setInputState(prevState => ({
       ...prevState,
       valError: !passBoolean,
     }));
@@ -25,14 +26,14 @@ export default function LogInIDChk({userList, lineColor, refPush, validationUpda
   },[validationUpdate]);
 
   // 중복
-  const checkDuplicateID = useCallback((loginName: string, loginId: string) => {
-    const isDuplicate = userList?.some(item => item.loginId === loginId) ?? false;
+  const checkDuplicateID = useCallback(async(loginName: string, loginId: string) => {
+    const duplicateEmail = await duplicateDoc('userData','users', loginName ?? 'loginId', loginId);
     setInputState((prevState) => ({
       ...prevState,
-      duplicate: isDuplicate,
+      duplicate: !duplicateEmail,
     }));
-    passCheck(loginName, !isDuplicate);
-  }, [userList, passCheck]);
+    passCheck(loginName, duplicateEmail); // 중복 검사 이후 상태 반영
+  }, [passCheck]);
 
   const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     const inputVal = e.target.value.trim();
