@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { MapDataType, MarkerType } from "types/kakaoComon";
 import ListItem from "./ListItem";
 import { UserBookmarkType, UserDataType } from "types/baseType";
+import { arrayUnion, collection, doc, fireDB, updateDoc, getDoc, setDoc,getDocs } from "../../../firebase";
 
 interface SearchListType {
   searchData: MapDataType
@@ -56,31 +57,75 @@ export default function SearchList({searchData}:SearchListType) {
       }
       if(user.kakaoMapData){
         let duplication = newUser.kakaoMapData!.some(item => item.id === myBookmark.id)
-        console.log(duplication)
-        // 중복 되는 값이 있다면 filter 제거
-        // 중복 되는 값이 없다면 추가
+        if (duplication) {
+          // 중복되는 값이 있다면 제거
+          newUser.kakaoMapData = newUser.kakaoMapData!.filter(item => item.id !== myBookmark.id);
+        } else {
+          // 중복되는 값이 없다면 추가
+          newUser.kakaoMapData!.push(myBookmark);
+        }
       }else{
         // 새롭게 추가
         newUser.kakaoMapData = [myBookmark];
-        console.log(newUser)
-        updateBookmark(newUser);
-        // store 저장 및 fetch
       }
+      // updateBookmark(newUser);
     }else{
       alert('로그인이 필요합니다.')
       return
     }
   }
 
-  const updateBookmark = useCallback( async(eData:UserDataType) => {
-    // const docRef = doc(fireDB, 'thData', 'userData');
-    //   await updateDoc(docRef, {
-    //     userList: arrayUnion(resultData)
-    //   });
-      // 완료 레이어 팝업 -> member 이동
-    // dispatch(actionUserLoginUpdate({eData:}));
-  },[dispatch,loginState]);
-  console.log(user)
+  // const updateBookmark = useCallback( async(eData:UserDataType) => {
+  //   const docRef = doc(fireDB, 'thData', 'userData');
+
+  //   // 기존에 firedatabase 값은 그대로에 추가가 되었음.
+
+  //   await updateDoc(docRef, {
+  //     userList: arrayUnion(eData)
+  //   });
+  //   // dispatch(actionUserLoginUpdate(eData));
+  // },[dispatch,loginState]);
+  // // console.log(user)
+
+ 
+
+  const updateBookmark = useCallback(async () => {
+    try {
+
+      const userCollectionRef2 = collection(fireDB, 'thData', 'userData', 'users');
+      const userDocSnap3 = await getDocs(userCollectionRef2);
+      userDocSnap3.forEach((item:any) => {
+        console.log(`${item.id} => ${item.data()}`);
+      });
+
+      // const userDocRef = doc(fireDB, 'thData', 'userData', 'users', 'XpFgHlo6bc5UiRpnQQb5');
+  
+      // // 사용자의 현재 데이터 가져오기
+      // const userDocSnap = await getDoc(userDocRef);
+  
+      // console.log(userDocSnap)
+      // if(userDocSnap.exists()){
+      //   console.log(userDocSnap.data())
+      // }
+      // if (userDocSnap.exists()) {
+      //   // Firestore에 사용자의 데이터를 업데이트
+      //   await updateDoc(userDocRef, eData);
+  
+      //   // Redux store 업데이트
+      //   dispatch(actionUserLoginUpdate(eData));
+      // } else {
+      //   console.log("No such document!");
+      // }
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  }, [dispatch]);
+
+  useEffect(()=>{
+    updateBookmark()
+  },[updateBookmark])
+
+
   return (
     <StyleSearchList>
       <div className="location">
