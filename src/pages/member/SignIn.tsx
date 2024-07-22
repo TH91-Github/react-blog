@@ -1,14 +1,14 @@
 import { colors, transitions } from "assets/style/Variable";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useCallback, useRef, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserLogin } from "store/store";
+import { AppDispatch, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomNum } from 'utils/common';
-import { arrayUnion, auth, collection, doc, fireDB, getDoc, getDocs, provider, query, signInWithEmailAndPassword, signInWithPopup, updateDoc, where } from "../../firebase";
-import { duplicateDoc, pushDataDoc } from "utils/firebase/common";
+import { duplicateGetDoc, pushDataDoc } from "utils/firebase/common";
+import { auth, collection, fireDB, getDocs, provider, query, signInWithEmailAndPassword, signInWithPopup, where } from "../../firebase";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,12 +25,12 @@ export default function SignIn() {
     setValidationError(prev => ({ ...prev, pw: false }));
   },[])
 
-  const handleIDPWCheck = () => { // id,pw 확인
+  const handleIDPWCheck = async() => { // id,pw 확인
     const idInput= refInputID.current!.getInputElement();
     const pwInput = refInputPW.current!.getInputElement();
     
     if (idInput && pwInput) {
-      const isId = validationID(idInput.value);
+      const isId = await validationID(idInput.value);
       const isPw = pwInput.value.length >= 6;
 
       if (isId && isPw) { // email/로그인ID, 비밀번호 모두 입력 시 
@@ -45,26 +45,23 @@ export default function SignIn() {
     }
   };
 
-  // ❌ 수정해야함 - @ 기준 있다면 email 체크 없다면 간편 아이디 체크
-  const validationID = (idVal : string) => {
+  const validationID = useCallback(async (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
-    
+    const loginValue = await duplicateGetDoc('userData','users', key , idVal);
+
     // email 인지 id 인지 판단 후 email일 경우 진행 
     // id일경우 id 조회 후 email 가져오기
-
-    // const user = userData.find(item => item[key] === idVal);
-    // return  (user && idVal.length > 0) ? ( key === 'email' ? idVal : user.email) : false
-    return 'test'
-  }
+    return  (loginValue && idVal.length > 0) ? ( key === 'email' ? idVal : loginValue.email) : false
+  },[])
 
   // firebase 로그인 시도
-  const handleLogin = async (loginID: string, loginPW: string) => {
+  const handleLogin = useCallback(async (loginID: string, loginPW: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
+      const userData = await duplicateGetDoc('userData','users', 'email' , loginID);
       const userLoginData = {
-        loginState: true,
-        user: null // uid 비교하여 맞는 경우 데이터 가져오기 없는 경우 null
-        // user: userData.find(item => item.uid === userCredential.user.uid) ?? null
+        loginState: userCredential.operationType === 'signIn'? true : false,
+        user: userData
       }
       dispatch(actionUserLogin(userLoginData));
       navigate('/');
@@ -73,9 +70,9 @@ export default function SignIn() {
       console.log(error)
       setValidationError({ id:true, pw: true });
     }
-  };
+  },[dispatch,navigate]);
 
-  const handleGoogleLogin = async() => {
+  const handleGoogleLogin = useCallback(async() => { // 구글 아이디 로그인 및 계정 등록
     try {
       const googleData = await signInWithPopup(auth, provider);
       // 구글 아이디 중복체크
@@ -114,8 +111,7 @@ export default function SignIn() {
      } catch (error) {
       console.log("error:", error);
     }
-  }
-  console.log('LOGIN')
+  },[dispatch, navigate])
 
   return (
     <StyleWrap className="login">

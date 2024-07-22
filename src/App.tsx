@@ -21,6 +21,7 @@ import Header from 'components/layout/Header';
 import AppLayout from "components/layout/AppLayout";
 import './App.css';
 import CurrentLocation from "components/article/map/CurrentLocation";
+import { removeDoc } from "utils/firebase/common";
 
 function App() : JSX.Element {
   const location = useLocation();
@@ -40,6 +41,9 @@ function App() : JSX.Element {
     };
   }, [handleResize]);
 
+  const testClick = () => {
+    removeDoc('userData','users','test@naver.com')
+  }
   return (
     <AppLayout>
       <GlobalStyles />
@@ -48,6 +52,12 @@ function App() : JSX.Element {
         <Header location={location} />
         <Outlet />
         {/* 현재위치 store */}
+        <div>
+          <button 
+            onClick={testClick}>
+            testsetsetset
+          </button>
+        </div>
       </div>
     </AppLayout>
   );

@@ -1,11 +1,12 @@
 import { SvgLogOut, SvgLogin } from "assets/style/SVGIcon";
 import { colors, shadow } from "assets/style/Variable";
-import { arrayRemove, auth, deleteUser, doc, fireDB, signOut, updateDoc} from "../../../firebase";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
+import { removeDoc } from "utils/firebase/common";
+import { auth, deleteUser, signOut } from "../../../firebase";
 
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();
@@ -57,35 +58,24 @@ export default function UserLogin(){
   }
   
   const handleUserRemove = async() => {
-    // console.log('계정 삭제');
-    // const currentUser = auth.currentUser; // 로그인 정보
-    // if (currentUser) {
-    //   // user 정보가 많을 경우 filter 보다 splice를 사용해서
-    //   const indexToRemove = userData.findIndex(item => item.uid === currentUser.uid && item.email === currentUser.email);
-    //   try {
-    //     if (indexToRemove !== -1) {
-    //       const removeData = [...userData];
-    //       const userToRemove = removeData.splice(indexToRemove, 1)[0]; // 제거된 요소 반환
+    console.log('계정 삭제');
+    const currentUser = auth.currentUser; // 로그인 정보
+    console.log(currentUser)
 
-    //       // firestore에서 사용자 정보 제거
-    //       const docRef = doc(fireDB, 'thData', 'userData');
-    //       await updateDoc(docRef, {
-    //         userList: arrayRemove(userToRemove)
-    //       });
-
-    //       // firebase - Authentication에서 사용자 계정 삭제
-    //       await deleteUser(currentUser).then(() => {
-    //         // dispatch(actionUserListUpdate(removeData));
-    //         userLoginInit(false);
-    //         navigate('/');
-    //       }).catch((error) => {
-    //         console.log(error.message);
-    //       });
-    //     }
-    //   }catch (error) {
-    //     console.error("Error removing document: ", error);
-    //   }
-    // }
+    if (currentUser) {
+      // firebase - Authentication에서 사용자 계정 삭제
+      try {
+        await deleteUser(currentUser).then(() => {
+          currentUser.email && removeDoc('userData','users',currentUser.email)
+          userLoginInit(false);
+          navigate('/');
+        }).catch((error) => {
+          console.log(error.message);
+        });
+      }catch(error){
+        console.log(error)
+      }
+    }
   }
 
   const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
