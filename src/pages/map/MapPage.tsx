@@ -51,7 +51,7 @@ export default function MapPage() {
   const searchResult = useCallback((val: string) => {
     if (kakaoData.mapRef && val && mapPageRef.current) {
       try {
-        kakaoFetchPlaces({kakaoData, keyword:val, kakaoUpdate});
+        kakaoFetchPlaces({kakaoData, keyword:'아이파트너즈', kakaoUpdate});
       }catch (error) {
         console.log('검색 중 오류가 발생했습니다. '+ error);
       }

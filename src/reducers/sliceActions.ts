@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { lightTheme } from 'assets/style/Variable';
 import { UserDataType } from 'types/baseType';
 import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
+import { fetchResumeData, toggleUserBookmark } from './thunk/asyncThunk';
 import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 
 // 📍mobile 체크
@@ -25,12 +25,12 @@ export const themeSlice = createSlice({
   initialState: themeInitialState,
   reducers: {
     actionTheme(state, propsAction: PayloadAction<ThemeState>){
-      return state = propsAction.payload
+      return { ...state, ...propsAction.payload };
     }
   }
 })
 
-// 📍logIn 상태 및 Auth, user DB 정보
+// 📍logIn 상태 
 const userLoginState: userLoginType = {
   loginState: false,
   user: null
@@ -40,12 +40,15 @@ export const userLoginSlice = createSlice({
   initialState: userLoginState,
   reducers: {
     actionUserLogin(state, propsAction: PayloadAction<userLoginType>){
-      return state = propsAction.payload;
+      return { ...state, ...propsAction.payload };
     },
-    actionUserLoginUpdate(state, propsAction:PayloadAction<UserDataType>){
-      return state = { loginState: state.loginState, user:propsAction.payload}
-    }
-  }
+  },
+  //  👇 참고용
+  // extraReducers: (builder) => { 
+  //   builder.addCase(toggleUserBookmark.fulfilled, (state, action) => {
+  //     state.user = action.payload.user;
+  //   });
+  // },
 })
 
 // 📍kakao map data - firebase
@@ -76,26 +79,13 @@ export const userLocationSlice = createSlice({
   }
 })
 
-
 // 🌟 resume - firebase
-// createAsyncThunk: redux Toolkit 비동기 작업을 정의 하는데 사용. - pending / fulfilled / rejected
-export const fetchResumeData = createAsyncThunk<ResumeDocumentType>(
-  'resume/fetchResumeData',
-  async () => {
-    const data = await firebaseGetDoc('thData', 'profile');
-    if (!data) {
-      throw new Error('Error - 찾을 수 없습니다.');
-    }
-    return data;
-  }
-);
-
 const resumeSliceState: ResumeState = {
   data: null,
   loading: false,
   error: null
 };
-
+// 비동기 액션 asyncThunk 사용 ➡️ ./thunk/asyncThunk.ts
 export const resumeSlice = createSlice({
   name: 'resume',
   initialState : resumeSliceState,

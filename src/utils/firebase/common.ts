@@ -1,5 +1,5 @@
-import { UserDataType } from "types/baseType";
-import { fireDB, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where } from "../../firebase";
+import { StringOnly, UserBookmarkType, UserDataType } from "types/baseType";
+import { fireDB, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where, updateDoc } from "../../firebase";
 
 // 추가
 export const pushDataDoc = async(docName:string, collectionName:string, data:UserDataType) => {
@@ -41,15 +41,30 @@ export const duplicateGetDoc = async(docName:string, collectionName:string, key:
   }
 }
 
+// 필드 데이터 변경
+export const collectionDocUpdate = async(docName:string, collectionName:string, docId:string, upDatakey:string, updateData: string | UserBookmarkType[]) => {
+  const queryUpdateRef = collection(fireDB, 'thData', docName, collectionName);
+  const upDateDoc = doc(queryUpdateRef, docId);
+  const upDateSnap = await getDoc(upDateDoc);
+
+  if(upDateSnap.exists()){
+    const data = upDateSnap.data();
+    const changeData = { ...data, [upDatakey]:updateData}; // upDatakey 변경 key val : 변경 data
+    await updateDoc(upDateDoc, changeData);
+  }else{
+    console.log('upDate document를 찾지 못했어요. 😢')
+  }
+}
+
 // 필드 id 찾은 후 삭제
 export const removeDoc = async(docName:string, collectionName:string, emailId:string) => {
-  const queryGetDocRef = collection(fireDB, 'thData', docName, collectionName);
-  const getDocResult = query(queryGetDocRef, where('email', '==', emailId));
-  const querySnapshot = await getDocs(getDocResult);
+  const queryRemoveRef = collection(fireDB, 'thData', docName, collectionName);
+  const removeDocResult = query(queryRemoveRef, where('email', '==', emailId));
+  const querySnapshot = await getDocs(removeDocResult);
 
   if (!querySnapshot.empty){ 
     const docId = querySnapshot.docs[0].id;
-    const findUserDocRef = doc(queryGetDocRef, docId);
+    const findUserDocRef = doc(queryRemoveRef, docId);
     await deleteDoc(findUserDocRef);
   }else{
     console.log('정보 삭제를 실패했어요.. 😢')

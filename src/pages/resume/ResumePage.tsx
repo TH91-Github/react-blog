@@ -6,9 +6,9 @@ import OtherInfo from 'components/article/resume/OtherInfo';
 import ResumeMain from 'components/article/resume/ResumeMain';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchResumeData } from 'reducers/sliceActions';
 import { AppDispatch, RootState } from 'store/store';
 import styled from 'styled-components';
+import { fetchResumeData } from 'reducers/thunk/asyncThunk';
 
 // Resume 데이터만 reducers를 통해 가져오기 - 테스트 겸 연습용
 export default function ResumePage() {

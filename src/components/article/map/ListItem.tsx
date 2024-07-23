@@ -23,7 +23,7 @@ const ListItem = ({
   const handleBookmarkClick = (eId:string) => {
     bookmarkEvent(eId)
   }
-  
+  console.log(item.id)
   return(
     <StyleItem 
       className="item">
@@ -39,7 +39,7 @@ const ListItem = ({
         clickEvent={addressInfoEvent}/>
       <Bookmark
         itemKey={item.id} 
-        bgColor={colors.subTextColor} 
+        bgColor={item.bookmark?colors.purple :colors.subTextColor} 
         clickEvent={handleBookmarkClick}/>
     </StyleItem>
   )
@@ -47,7 +47,8 @@ const ListItem = ({
 export default React.memo(ListItem, (prevProps, nextProps) => {
   return (
     prevProps.item.detailOpen === nextProps.item.detailOpen &&
-    prevProps.item.place_name === nextProps.item.place_name
+    prevProps.item.place_name === nextProps.item.place_name && 
+    prevProps.item.bookmark === nextProps.item.bookmark
   );
 });
 
