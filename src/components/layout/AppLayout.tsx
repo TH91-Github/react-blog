@@ -3,6 +3,7 @@ import { colors } from "assets/style/Variable";
 import styled, { ThemeProvider } from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
+import FixedPopup from "components/element/FixedPopup";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <ThemeProvider theme={theme.color}>
       <StyleWrap className="App">
         {children}
+        {/* alert popup*/}
+        <FixedPopup />
       </StyleWrap>
     </ThemeProvider>
   );

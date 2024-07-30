@@ -11,7 +11,7 @@ const AddressInfo = ({data, clickEvent}:KeyObjectAnyType) => {
 
   return (
     <StyleAddress 
-      className={data.detailOpen ? 'detail-active' : ''}>
+      className={`address ${data.detailOpen ? 'detail-active' : ''}`}>
       <button 
         type="button"
         className="address-btn"
@@ -50,7 +50,21 @@ export default AddressInfo;
 
 const StyleAddress = styled.div`
   position:relative;
-  margin-top:10px;
+  margin-top:5px;
+  padding-top:5px;
+  &::before{ 
+    display:block;
+    position:absolute;
+    top:0;
+    left:5px;
+    width:1px;
+    height:8px;
+    border-radius:5px;
+    background:${colors.purple};
+    transform: rotate(45deg) translate(-50%, -50%);
+    transform-origin:center center;
+    content:'';
+  }
   .address-btn {
     font-size:14px;
     text-align:left;

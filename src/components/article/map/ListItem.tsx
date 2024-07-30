@@ -1,10 +1,10 @@
-import { colors, transitions } from "assets/style/Variable";
+import { colors, ellipsisStyle, transitions } from "assets/style/Variable";
 import Bookmark from "components/element/Bookmark";
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import AddressInfo from "./AddressInfo";
 import { ListType } from "./SearchList";
-import { actionUserLogin, AppDispatch, RootState } from "store/store";
+import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { UserBookmarkType } from "types/baseType";
 import { collectionDocUpdate } from "utils/firebase/common";
@@ -43,7 +43,7 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:
       collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
       bookmarkEvent(eId) // marke 리스트 업데이트.
     }else{ // 로그인 해주세요
-      console.log("로그인이 필요해요.. 😥")
+      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
     }
   },[user])
   return(
@@ -58,7 +58,7 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:
       </button>
       <AddressInfo 
         data={item} 
-        clickEvent={addressInfoEvent}/>
+        clickEvent={addressInfoEvent} />
       <Bookmark
         itemKey={item.id} 
         bgColor={item.isBookmark ? colors.purple : colors.subTextColor} 
@@ -75,13 +75,15 @@ export default React.memo(ListItem, (prevProps, nextProps) => {
 });
 
 const StyleItem = styled.li`
-  padding:10px 15px;
-  font-size:16px;
+  padding:10px 25px 10px 15px;
+  border-top:1px solid ${colors.lineColor};
+  &:first-child {
+    border-top:none;
+  }
   .item-btn{
     overflow:hidden;
     display:flex;
     gap:10px;
-    align-items:center;
     position:relative;
     padding:2px 0 3px;
     .num {
@@ -96,6 +98,8 @@ const StyleItem = styled.li`
       transition: ${transitions.base};
     }
     .tit {
+      width:calc(100% - 30px);
+      ${ellipsisStyle(2,20)}
       text-align:left;
     }
     &::after{
@@ -118,6 +122,9 @@ const StyleItem = styled.li`
         background:${colors.purple};
       }
     }
+  }
+  .address{
+
   }
   .bookmark-btn {
     display:block;

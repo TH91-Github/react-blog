@@ -3,15 +3,17 @@ import { colors, transitions } from "assets/style/Variable";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import LayerPopup from "components/element/LayerPopup";
 import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { actionAlert, AppDispatch } from "store/store";
 import styled from "styled-components";
 
 interface SearchMapType {
   searchResult: (e: string) => void;
 }
 export default function SearchMap({searchResult}:SearchMapType){
+  const dispatch = useDispatch<AppDispatch>();
   const refInput = useRef<InputElementRef>(null);
   const [onVal, setOnVal] = useState(false); 
-  const [popupState, setPopupState] = useState(false);
 
   const handleClick = () =>{
     if (refInput.current) {
@@ -20,7 +22,7 @@ export default function SearchMap({searchResult}:SearchMapType){
       if(val.length > 0){ // 전달
         searchResult && searchResult(val);
       }else{ // 팝업 - 검색어 입력
-        setPopupState(true)
+        dispatch(actionAlert({titMessage:'검색어를 입력해주세요.',isPopup:true, ref:null, autoClose:2000}))
       }
       setOnVal(false);
     }
@@ -31,9 +33,6 @@ export default function SearchMap({searchResult}:SearchMapType){
   }
   const handleEnter = () => {
     handleClick();
-  }
-  const layerPopupClose = () => {
-    setPopupState(false)
   }
   return (
     <StyleSearch>
@@ -54,9 +53,6 @@ export default function SearchMap({searchResult}:SearchMapType){
         </span>
         <span className="blind">검색</span>
       </button>
-      {
-        popupState && <LayerPopup titMessage="검색어를 입력해주세요." layerPopupClose={layerPopupClose} />
-      }
     </StyleSearch>
   )
 }

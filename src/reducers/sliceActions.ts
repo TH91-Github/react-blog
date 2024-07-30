@@ -2,8 +2,22 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { lightTheme } from 'assets/style/Variable';
 import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
 import { fetchResumeData } from './thunk/asyncThunk';
-import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
+import { alertCommonType, ResumeDocumentType, ResumeState, testStateType, ThemeState, userLoginType } from './types';
 
+// 📍테스트용 
+const testState : testStateType = {
+  isOn: false,
+  arr: []
+};
+export const testSlice = createSlice({
+  name: "user login",
+  initialState: testState,
+  reducers: {
+    actionTest(state, propsAction: PayloadAction<testStateType>){
+      return { ...state, ...propsAction.payload };
+    },
+  },
+})
 // 📍mobile 체크
 export const mobileChkSlice = createSlice({ 
   name: "Mobile check",
@@ -28,6 +42,23 @@ export const themeSlice = createSlice({
     }
   }
 })
+// 📍alert
+const alertCommon :alertCommonType = {
+  isPopup: false,
+  titMessage: '',
+  ref:null,
+  txtMessage:'',
+  autoClose: undefined,
+};
+export const alertCommonSlice = createSlice({
+  name: "user login",
+  initialState: alertCommon,
+  reducers: {
+    actionAlert(state, propsAction: PayloadAction<alertCommonType>){
+      return { ...state, ...propsAction.payload };
+    },
+  },
+})
 
 // 📍logIn 상태 
 const userLoginState: userLoginType = {
@@ -50,25 +81,9 @@ export const userLoginSlice = createSlice({
   // },
 })
 
-// 📍테스트용 
-interface testStateType {
-  isOn:boolean,
-  arr: any
-}
-const testState :testStateType = {
-  isOn: false,
-  arr: []
-};
-export const testSlice = createSlice({
-  name: "user login",
-  initialState: testState,
-  reducers: {
-    actionTest(state, propsAction: PayloadAction<testStateType>){
-      console.log(propsAction.payload)
-      return { ...state, ...propsAction.payload };
-    },
-  },
-})
+
+
+
 
 
 // 📍kakao map data - firebase

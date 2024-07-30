@@ -61,6 +61,20 @@ export const colors = {
   lineColor: "#dbdbdb",
 }
 
+export const ellipsisStyle = (lineClamp:number, fontSize:number) => {
+  const lineHeight = fontSize ? fontSize : 20 ;
+  const lineNum = lineClamp ?? 1;
+  return `
+    overflow: hidden;
+    display:-webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: ${lineNum};
+    line-height: ${lineHeight}px;
+    text-overflow: ellipsis;
+    max-height: ${lineHeight * lineNum }px;
+  `;
+};
+
 // shadow
 export const shadow = {
   textBase: 'rgba(127, 127, 127, 1) 0.7px 1px 1px',

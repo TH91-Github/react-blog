@@ -120,15 +120,12 @@ export default function LayerPopup ({
             </div>
           }
           {
-            // 자동으로 닫기 설정 있을 시 닫기 버튼 off
-            !autoCloseSecond && 
-              <button
-                className="close-btn"
-                onClick={handleClose}>
-                <span className="blind">닫기</span>
-              </button>
+            <button
+              className="close-btn"
+              onClick={handleClose}>
+              <span className="blind">닫기</span>
+            </button>
           }
-          
         </div>
       </div>
     </StyleLayerPopup>

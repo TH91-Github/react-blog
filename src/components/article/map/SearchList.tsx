@@ -106,15 +106,15 @@ const StyleSearchList = styled.div`
   .search-list{
     flex-grow:1;
     overflow:hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     & > ul > li{
       position:relative;
     }
     &::-webkit-scrollbar {
-      width:8px;
+      width:5px;
     }
     &::-webkit-scrollbar-thumb {
-      background: ${colors.lineColor};
+      background: ${colors.navy};
       border-radius: 5px;
     }
     &::-webkit-scrollbar-track {

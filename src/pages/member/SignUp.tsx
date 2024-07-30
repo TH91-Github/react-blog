@@ -112,8 +112,6 @@ export default function SignUp() {
       console.log(error) // 에러 안내 팝업 
     }
   };
-  
-  console.log('렌더')
   return (
     <StyleWrap className="signup">
       <div className="member-wrap">

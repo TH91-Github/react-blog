@@ -33,3 +33,16 @@ export interface ResumeState {
   loading: boolean;
   error: string | null;
 }
+
+export interface alertCommonType {
+  isPopup: boolean;
+  titMessage: string;
+  ref: React.RefObject<HTMLDivElement | HTMLInputElement | HTMLButtonElement> | null;
+  txtMessage?: string;
+  autoClose?: number | undefined;
+}
+
+export interface testStateType {
+  isOn:boolean;
+  arr: any;
+}
