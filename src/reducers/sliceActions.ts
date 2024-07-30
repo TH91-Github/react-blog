@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { lightTheme } from 'assets/style/Variable';
-import { UserDataType } from 'types/baseType';
 import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
-import { fetchResumeData, toggleUserBookmark } from './thunk/asyncThunk';
+import { fetchResumeData } from './thunk/asyncThunk';
 import { ResumeDocumentType, ResumeState, ThemeState, userLoginType } from './types';
 
 // 📍mobile 체크
@@ -50,6 +49,27 @@ export const userLoginSlice = createSlice({
   //   });
   // },
 })
+
+// 📍테스트용 
+interface testStateType {
+  isOn:boolean,
+  arr: any
+}
+const testState :testStateType = {
+  isOn: false,
+  arr: []
+};
+export const testSlice = createSlice({
+  name: "user login",
+  initialState: testState,
+  reducers: {
+    actionTest(state, propsAction: PayloadAction<testStateType>){
+      console.log(propsAction.payload)
+      return { ...state, ...propsAction.payload };
+    },
+  },
+})
+
 
 // 📍kakao map data - firebase
 const kakaoDataState:KakaofireStore[] = [];

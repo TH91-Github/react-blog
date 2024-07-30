@@ -1,5 +1,5 @@
-import { StringOnly, UserBookmarkType, UserDataType } from "types/baseType";
-import { fireDB, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where, updateDoc } from "../../firebase";
+import { UserBookmarkType, UserDataType } from "types/baseType";
+import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
 
 // 추가
 export const pushDataDoc = async(docName:string, collectionName:string, data:UserDataType) => {

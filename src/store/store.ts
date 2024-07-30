@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { mobileChkSlice, resumeSlice, storeKakaoDataSlice, themeSlice, userLocationSlice, userLoginSlice } from 'reducers/sliceActions';
+import { mobileChkSlice, resumeSlice, storeKakaoDataSlice, testSlice, themeSlice, userLocationSlice, userLoginSlice } from 'reducers/sliceActions';
 import { thunk } from 'redux-thunk';
 
 export const store = configureStore({
   reducer: { 
+    storeTest: testSlice.reducer, // 테스트 확인용
     mobileChk: mobileChkSlice.reducer,
     storeTheme: themeSlice.reducer,
     storeResume: resumeSlice.reducer,
@@ -17,6 +18,7 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;
 
+export const { actionTest } = testSlice.actions;
 export const { actionMobileChk } = mobileChkSlice.actions;
 export const { actionTheme } = themeSlice.actions;
 export const { actionUserLogin } = userLoginSlice.actions;
