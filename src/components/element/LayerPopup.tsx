@@ -21,6 +21,7 @@ export default function LayerPopup ({
   const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isHidden, setIsHidden] = useState(false);
   const popAniSecond = 500;
+  const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
 
   // animation 끝난 후 닫기 
   const handleTransitionEnd = useCallback(() => {
@@ -36,6 +37,9 @@ export default function LayerPopup ({
   const handleClose = useCallback(() => {
     setIsHidden(true);
     handleTransitionEnd();
+    if(autoCloseSecond && autoCloseTimeRef.current){
+      clearTimeout(autoCloseTimeRef.current);
+    }
   },[handleTransitionEnd]);
 
   useEffect(()=>{
@@ -54,7 +58,7 @@ export default function LayerPopup ({
       }
       autoCloseTimeRef.current = setTimeout(() =>{
         handleClose(); // 닫기 기능
-      }, autoCloseSecond < 2000 ? 2000 : autoCloseSecond ) // 최소 기본 2초
+      }, autoCloseS ) // 최소 기본 2초
     }
   },[autoCloseSecond, handleClose])
 
@@ -89,6 +93,7 @@ export default function LayerPopup ({
     <StyleLayerPopup 
       ref={popupRef}
       $aniSecond={(popAniSecond / 1000)}
+      $autoClose={autoCloseSecond && autoCloseS}
       className={`${isHidden ? 'hidden' : ''}`}>
       {
         (dimmedView ?? true) && <div className="dimmed" onClick={handleClose}></div>
@@ -136,6 +141,7 @@ type StyleLayerPopupType = {
   $aniSecond?: number,
   $titAlign?: string,
   $descAlign?: string,
+  $autoClose?: number
 }
 
 const StyleLayerPopup = styled.div<StyleLayerPopupType>`
@@ -164,6 +170,7 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
     animation: popupShowAni ${props => props.$aniSecond || 0.5}s ease-out both;
   }
   .layer-popup-inner {
+    overflow:hidden;
     display:flex;
     justify-content:center;
     align-items: center;
@@ -173,6 +180,22 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
     padding:30px 20px;
     border-radius:10px;
     background: ${colors.originWhite};
+    ${props => props.$autoClose && `
+      &::before {
+        display:block;
+        position:absolute;
+        bottom:0;
+        right:0;
+        width:100%;
+        height:2px;
+        background:${colors.yellow};
+        transform-origin:100% center;
+        animation: popupAutoClose 2s linear both;
+        content:'';
+      }
+    `}
+
+    
   }
   .title {
     font-size:18px;
@@ -279,5 +302,8 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
       opacity:0;
     }
   }
-
+  @keyframes popupAutoClose {
+    0%{transform: scaleX(1);}
+    100%{ transform: scaleX(0);}
+  }
 `;
