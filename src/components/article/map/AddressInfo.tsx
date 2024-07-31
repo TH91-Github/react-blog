@@ -15,6 +15,7 @@ const AddressInfo = ({data, clickEvent}:KeyObjectAnyType) => {
       <button 
         type="button"
         className="address-btn"
+        title={`지번 ${road_address ? '도로명':''} 보기`}
         onClick={handleDetailOn}>
         <span>
           {

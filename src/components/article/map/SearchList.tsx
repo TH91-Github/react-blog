@@ -34,7 +34,16 @@ export default function SearchList({searchData}:SearchListType) {
 
   // 목록 클릭
   const handleItemClick = (itemData:MarkerType) => {
-    // console.log(itemData)
+    const {lat, lng} = itemData.position;
+    const pointer = new kakao.maps.LatLng(lat, lng)
+    if (searchData.mapRef) {
+    const projection = searchData.mapRef.getProjection();
+    const newCenterPoint = projection.pointFromCoords(pointer);
+    newCenterPoint.x += -135; // 메뉴 리스트 가로 만큼 재이동
+    const newCenterCoords = projection.coordsFromPoint(newCenterPoint);
+    // 클릭 장소 중심 이동
+    searchData.mapRef.setCenter(newCenterCoords);
+    }
   }
 
   // 상세 주소 팝업

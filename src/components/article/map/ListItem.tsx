@@ -52,6 +52,7 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:
       <button 
         type="button"
         className="item-btn"
+        title={item.place_name}
         onClick={()=>clickEvent(item)}>
         <span className="num">{number}</span>
         <span className="tit">{item.place_name}</span>
