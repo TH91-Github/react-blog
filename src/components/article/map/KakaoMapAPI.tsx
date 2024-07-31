@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
+import { CustomOverlayMap, Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 import styled from "styled-components";
-import { kakaoMapType, MarkerType } from "types/kakaoComon";
+import { kakaoMapBasicType, MarkerType } from "types/kakaoComon";
+import MarkerBasic from "./MarkerBasic";
 
-const KakaoMapAPI = ({kakaoData, kakaoUpdate}:kakaoMapType) => {
+interface kakaoMapType extends kakaoMapBasicType {
+  activePoint: string | null;
+}
+
+const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
 
@@ -20,6 +28,30 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate}:kakaoMapType) => {
     }
   }, [map, kakaoData, kakaoUpdate]);
   
+  useEffect(()=>{ // 리스트 클릭 전달 받은 id
+    if(!map) return
+    if(activePoint) {
+      const pick = kakaoData.markerList.find(item => item.id === activePoint) ?? null;
+      if(pick){
+        const {lat, lng} = pick.position;
+        const pointer = new kakao.maps.LatLng(lat, lng)
+        const projection = map.getProjection();
+        const newCenterPoint = projection.pointFromCoords(pointer);
+        newCenterPoint.x += isMobile ? 0 : -135; // pc일 경우 메뉴 리스트 가로 만큼 재이동
+        const newCenterCoords = projection.coordsFromPoint(newCenterPoint);
+        // 클릭 장소 중심 이동
+        map.setCenter(newCenterCoords);
+        map.setLevel(4);
+      }
+      setPointPop(pick);
+    }
+  },[activePoint, kakaoData.markerList])
+
+  const handleMarkerClick = (marker:MarkerType | null) => { // 마커 클릭
+    console.log(marker)
+    setPointPop(marker)
+  }
+
   console.log('kakao map')
   return (
     <StyleKakaoMap>
@@ -28,16 +60,17 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate}:kakaoMapType) => {
         level={kakaoData.level ?? 3}
         onCreate={setMap} >
         {
-          kakaoData.markerList.map((marker) => (
-            <MapMarker
+          kakaoData.markerList.map((marker,idx) => (
+            <CustomOverlayMap
               key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
-              position={marker.position}
-              onClick={() => setPointPop(marker)}
-            >
-              {pointPop && pointPop.place_name === marker.place_name && (
-                <div style={{ color: "#000" }}>이름 : {marker.place_name}</div>
-              )}
-            </MapMarker>
+              position={marker.position}>
+              <MarkerBasic 
+                number={idx+1}
+                marker={marker}
+                active={pointPop?.place_name === marker.place_name ?? false }
+                clickEvent={handleMarkerClick} />
+              
+            </CustomOverlayMap>
           ))
         }
         {/* 지도 컨트롤 */}
@@ -55,6 +88,13 @@ const StyleKakaoMap = styled.div`
   & > div {
     width: 100%;
     height: 100%;
+  }
+  .custom-marker {
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    background:red;
   }
 `;
 

@@ -1,6 +1,6 @@
-import { kakaoMapType, MarkerPositionType } from "types/kakaoComon";
+import { kakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
 
-interface kakaoFetchPlacesType extends kakaoMapType {
+interface kakaoFetchPlacesType extends kakaoMapBasicType {
   keyword: string;
 }
 

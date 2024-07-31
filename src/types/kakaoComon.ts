@@ -31,7 +31,7 @@ export interface KakaofireStore {
   id: string,
   place_name: string,
 }
-export interface kakaoMapType {
+export interface kakaoMapBasicType {
   kakaoData: MapDataType,
   kakaoUpdate: (e:MapDataType) => void;
 }

@@ -8,12 +8,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { MapDataType } from 'types/kakaoComon';
+import { MapDataType, MarkerType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
   const mapPageRef = useRef<HTMLDivElement | null>(null);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
+  const [activePoint, setActivePoint] = useState<string | null>(null);
   const [kakaoData, setKakaoData] = useState<MapDataType>({
     mapRef: null,
     level: 3,
@@ -37,10 +38,10 @@ export default function MapPage() {
 
   // 카카오맵 업데이트
   const kakaoUpdate = useCallback((data: MapDataType) => {
+    setActivePoint(null)
     setKakaoData(data);
   },[]);
 
-  
   /* 
     📍 추가 기능 - 데이터 수집 
     검색 결과 정보 firebase 추가 (id, 별점, 댓글, 추가 정보를 구하기 위한 데이터 수집)
@@ -53,10 +54,16 @@ export default function MapPage() {
       try {
         kakaoFetchPlaces({kakaoData, keyword: val, kakaoUpdate});
       }catch (error) {
-        console.log('검색 중 오류가 발생했습니다. '+ error);
+        console.log('검색 중 오류 발생 😲 \n 다시 시도해주세요 😢 '+ error);
       }
     }
   },[kakaoData, kakaoUpdate]);
+
+  // 선택 좌표
+  const selectChange = (selectID:string) => { 
+    console.log(selectID)
+    setActivePoint(selectID)
+  }
 
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표
@@ -81,13 +88,17 @@ export default function MapPage() {
           {/* 검색 */}
 			    <SearchMap searchResult={searchResult}/>
           {/* 리스트 */}
-          <SearchList searchData={kakaoData}/>
+          <SearchList 
+            searchData={kakaoData}
+            listClick={selectChange}
+          />
         </div>
         {/* kakao map */}
         <div className="kakao-map">
           <KakaoMapAPI 
             kakaoData={kakaoData} 
-            kakaoUpdate={kakaoUpdate} />
+            kakaoUpdate={kakaoUpdate} 
+            activePoint={activePoint} />
           {/* 맵 가운데 주소 */}
           <MapCenterLocation map={kakaoData.mapRef} mapCenterUpdate={mapCenterUpdate}/>
         </div>
