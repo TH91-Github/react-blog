@@ -24,7 +24,7 @@ export default function SearchList({searchData, listClick}:SearchListType) {
   // 검색 결과 리스트 업데이트
   useEffect(()=>{
     let addressList = searchData.markerList?.map(item => ({ ...item, detailOpen: false, isBookmark:false }))
-    if(user){
+    if(user){ // 유저 북마크 체크
       const userBookmark = user.kakaoMapData?.map(item => item.id)
       addressList = addressList.map(item => {
         return userBookmark?.includes(item.id) ? {...item, isBookmark: !item.isBookmark} : item

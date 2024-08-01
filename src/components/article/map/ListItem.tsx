@@ -1,13 +1,9 @@
+import React from "react";
 import { colors, ellipsisStyle, transitions } from "assets/style/Variable";
 import Bookmark from "components/element/Bookmark";
-import React, { useCallback } from "react";
 import styled from "styled-components";
 import AddressInfo from "./AddressInfo";
 import { ListType } from "./SearchList";
-import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { UserBookmarkType } from "types/baseType";
-import { collectionDocUpdate } from "utils/firebase/common";
 
 interface ListItemType {
   item: ListType;
@@ -17,35 +13,7 @@ interface ListItemType {
   bookmarkEvent: (e:string) => void;
 }
 const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:ListItemType) => {
-  const dispatch = useDispatch<AppDispatch>(); 
-  const {loginState, user} = useSelector((state: RootState) => state.storeUserLogin);
 
-  const handleBookmarkClick = useCallback((eId:string) => {
-    const newData = user ? {...user} : null;
-    if(loginState && newData){// 로그인 유무
-      const duplication = newData.kakaoMapData?.some(item => item.id === eId)
-      const myBookmark : UserBookmarkType = { // 등록할 위치 정보
-        id: eId,
-        title: item.place_name ?? '장소 이름이 없어요😢',
-        desc: '',
-        bookmark: item ? item :null
-      }
-      if(newData.kakaoMapData){
-        if(duplication){
-          newData.kakaoMapData = newData.kakaoMapData.filter(item => item.id !==eId)
-        }else{
-          newData.kakaoMapData = [...newData.kakaoMapData, myBookmark]
-        }
-      }else{
-        newData.kakaoMapData = [myBookmark]
-      }
-      dispatch(actionUserLogin({loginState, user: newData}));
-      collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
-      bookmarkEvent(eId) // marke 리스트 업데이트.
-    }else{ // 로그인 해주세요
-      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
-    }
-  },[user])
   return(
     <StyleItem 
       className="item">
@@ -61,9 +29,8 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:
         data={item} 
         clickEvent={addressInfoEvent} />
       <Bookmark
-        itemKey={item.id} 
-        bgColor={item.isBookmark ? colors.purple : colors.subTextColor} 
-        clickEvent={handleBookmarkClick}/>
+        bookmarkItem={item}
+        clickEvent={(e)=>bookmarkEvent(e)}/>
     </StyleItem>
   )
 }
