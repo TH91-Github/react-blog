@@ -178,7 +178,35 @@ const StyleMarker = styled.div<StyleMarkerType>`
     }
   }
   &.active {
-   .point-bar{ 
+    &::before, &::after {
+      position:absolute;
+      z-index:-1;
+      bottom:calc(-50% + 3px);
+      left:50%;
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      background: ${props => props.$bgColor};
+      transform: translateX(-50%);
+      animation: activePointAni 2s .7s ease infinite both;
+      pointer-events:none;
+      content:'';
+    }
+    &::after {
+      animation: activePointAni 2s ease infinite both;
+      content:'';
+    }
+    @keyframes activePointAni {
+      0% {
+        transform: translateX(-50%) scale(0);
+        opacity:0.9;
+      }
+      100% {
+        transform: translateX(-50%) scale(3);
+        opacity:0;
+      }
+    }
+    .point-bar{ 
       transform: scale(1.2);
     }
     .marker-btn{
