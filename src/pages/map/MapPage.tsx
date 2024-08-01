@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { MapDataType, MarkerType } from 'types/kakaoComon';
+import { MapDataType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
@@ -24,17 +24,6 @@ export default function MapPage() {
     markerList: [],
     pagination: null,
   });
-
-  // // 등록된 장소 데이터 가져오기
-  // useEffect(()=>{
-  //   const fetchMap = async () => {
-  //     const result = await fetchKakaoMapData(dispatch);
-  //     if (!result.success) {
-  //       console.error(result.message);
-  //     }
-  //   };
-  //   fetchMap();
-  // },[dispatch])
 
   // 카카오맵 업데이트
   const kakaoUpdate = useCallback((data: MapDataType) => {

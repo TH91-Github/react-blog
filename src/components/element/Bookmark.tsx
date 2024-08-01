@@ -1,7 +1,7 @@
 import { SvgBookmark } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
 import { ListType } from "components/article/map/SearchList";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";
 import { UserBookmarkType } from "types/baseType";
@@ -9,11 +9,11 @@ import { collectionDocUpdate } from "utils/firebase/common";
 
 interface BookmarkType {
   bookmarkItem: ListType;
-  clickEvent?: (e:string) => void;
 }
-export default function Bookmark({bookmarkItem, clickEvent}:BookmarkType) {
+export default function Bookmark({bookmarkItem}:BookmarkType) {
   const dispatch = useDispatch<AppDispatch>(); 
   const {loginState, user} = useSelector((state: RootState) => state.storeUserLogin);
+  const [isBookMark, setIsBookMark] = useState(false);
 
   const handleBookmarkClick = useCallback(() => {
     const newData = user ? {...user} : null;
@@ -25,22 +25,28 @@ export default function Bookmark({bookmarkItem, clickEvent}:BookmarkType) {
         desc: '',
         bookmark: bookmarkItem ? bookmarkItem :null
       }
-      if(newData.kakaoMapData){
-        if(duplication){
+      if(newData.kakaoMapData){ 
+        if(duplication){ // 삭제
           newData.kakaoMapData = newData.kakaoMapData.filter(item => item.id !==bookmarkItem.id)
-        }else{
+        }else{ // 추가
           newData.kakaoMapData = [...newData.kakaoMapData, myBookmark]
         }
-      }else{
+      }else{ // ⚠️ kakaoMapData 데이터가 아예 없는 초기 계정 전용.
         newData.kakaoMapData = [myBookmark]
       }
+
       dispatch(actionUserLogin({loginState, user: newData}));
       collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
-      clickEvent && clickEvent(bookmarkItem.id) // marke 리스트 업데이트.
     }else{ // 로그인 해주세요
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
     }
-  },[user])
+  },[user, bookmarkItem, dispatch, loginState])
+
+  useEffect(()=>{ // 유저 즐겨찾기에 있는 경우 icon color 변경
+    if(!user) return
+    const isMyBookmark = user.kakaoMapData?.some(mapItem => mapItem.id === bookmarkItem.id && mapItem.title === bookmarkItem.place_name) ?? false
+    setIsBookMark(isMyBookmark)
+  },[user, bookmarkItem])
 
   return (
     <button
@@ -48,7 +54,7 @@ export default function Bookmark({bookmarkItem, clickEvent}:BookmarkType) {
       className="bookmark-btn"
       onClick={handleBookmarkClick}>
       <span className="icon">
-        <SvgBookmark $fillColor={bookmarkItem.isBookmark ? colors.purple : colors.subTextColor}/> 
+        <SvgBookmark $fillColor={isBookMark ? colors.purple : colors.subTextColor}/> 
       </span>
       <span className="blind">즐겨찾기</span>
     </button>

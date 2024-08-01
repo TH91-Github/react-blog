@@ -10,10 +10,8 @@ interface ListItemType {
   number:number;
   clickEvent: (e:ListType) => void;
   addressInfoEvent: (e:string) => void;
-  bookmarkEvent: (e:string) => void;
 }
-const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:ListItemType) => {
-
+const ListItem = ({ item,  number, clickEvent,addressInfoEvent }:ListItemType) => {
   return(
     <StyleItem 
       className="item">
@@ -29,8 +27,7 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent, bookmarkEvent }:
         data={item} 
         clickEvent={addressInfoEvent} />
       <Bookmark
-        bookmarkItem={item}
-        clickEvent={(e)=>bookmarkEvent(e)}/>
+        bookmarkItem={item} />
     </StyleItem>
   )
 }

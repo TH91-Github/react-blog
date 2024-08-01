@@ -14,6 +14,7 @@ export const store = configureStore({
     storeLocation: userLocationSlice.reducer, // 현재위치
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  devTools:true,
 }) 
 
 export type RootState = ReturnType<typeof store.getState>

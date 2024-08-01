@@ -17,21 +17,14 @@ export interface ListType extends MarkerType {
 } 
 export default function SearchList({searchData, listClick}:SearchListType) {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
-  const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const [markerList, setMarkerList] = useState<ListType[]>([]);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
 
   // 검색 결과 리스트 업데이트
   useEffect(()=>{
     let addressList = searchData.markerList?.map(item => ({ ...item, detailOpen: false, isBookmark:false }))
-    if(user){ // 유저 북마크 체크
-      const userBookmark = user.kakaoMapData?.map(item => item.id)
-      addressList = addressList.map(item => {
-        return userBookmark?.includes(item.id) ? {...item, isBookmark: !item.isBookmark} : item
-      })
-    }
     setMarkerList(addressList)
-  },[searchData.markerList,user])
+  },[searchData.markerList])
 
   // 목록 클릭
   const handleItemClick = (itemData:MarkerType) => {
@@ -50,12 +43,6 @@ export default function SearchList({searchData, listClick}:SearchListType) {
     )
   },[])
   
-  // 리스트 북마크 아이콘 업데이트
-  const handleBookmarkClick = useCallback((eId:string) => {
-    setMarkerList(prev => prev.map(
-      item => item.id === eId ? { ...item, isBookmark: !item.isBookmark } : item
-    ))
-  },[setMarkerList])
 
   return (
     <StyleSearchList>
@@ -64,7 +51,11 @@ export default function SearchList({searchData, listClick}:SearchListType) {
           📌 <span className="blind">현재 위치</span> 
           {addressText}
         </p>
-        <span className="desc">⚠️ 현재 위치와 다를 수 있습니다.</span>
+        <span className="desc">
+          ⚠️ 현재 위치와 다를 수 있습니다.<br />
+          서비스 준비로 최대 15개 노출됩니다.<br />
+          (위치 포함해서 더 정확하게 검색해주세요!!🙏)
+        </span>
       </div>
       <div className="search-list">
         <ul>
@@ -75,7 +66,6 @@ export default function SearchList({searchData, listClick}:SearchListType) {
                 number={idx+1}
                 clickEvent={handleItemClick}
                 addressInfoEvent={handleAddressDetailPopup}
-                bookmarkEvent={handleBookmarkClick}
                 key={idx} />
             ))
           }
