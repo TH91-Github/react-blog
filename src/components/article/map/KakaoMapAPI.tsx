@@ -50,7 +50,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
   },[map, activePoint, kakaoData.markerList, isMobile])
 
   const handleMarkerClick = (marker:MarkerType | null) => { // ✅ 마커 클릭
-    setPointPop(marker)
+    setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker)
   }
 
   // console.log('kakao map')
