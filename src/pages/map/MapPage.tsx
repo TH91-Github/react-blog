@@ -1,6 +1,7 @@
 import { breakpoints, colors } from 'assets/style/Variable';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
+import MyBookmarkList from 'components/article/map/MyBookmarkList';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
@@ -71,14 +72,20 @@ export default function MapPage() {
       ref={mapPageRef}
       className="map">
       <div className="map-inner">
-        <div className="map-lists">
-          {/* 검색 */}
-			    <SearchMap searchResult={searchResult}/>
-          {/* 리스트 */}
-          <SearchList 
-            searchData={kakaoData}
-            listClick={selectChange}
-          />
+        <div className="map-content">
+          <div className="content">
+            {/* 검색 */}
+            <SearchMap searchResult={searchResult}/>
+            {/* 리스트 */}
+            <SearchList 
+              searchData={kakaoData}
+              listClick={selectChange}
+            />
+          </div>
+          <div className="map-side-menu">
+            {/* 회원 - 즐겨찾기 */}
+            <MyBookmarkList />
+          </div>
         </div>
         {/* kakao map */}
         <div className="kakao-map">
@@ -133,15 +140,20 @@ const StyleWrap = styled.div`
       transform: scaleX(1); background:${colors.purple};
     }
   }
-  .map-lists {
+  .map-content{
     display:flex;
-    flex-direction:column;
     position:absolute;
+    z-index:100;
     top:80px;
     left:30px;
-    z-index:100;
-    width:clamp(150px, 100%, 270px);
     height:calc(90% - 40px);
+  }
+  .content {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    width:clamp(150px, 100%, 270px);
+    height:100%;
     min-height:300px;
     &::after {
       position:absolute;
@@ -155,6 +167,9 @@ const StyleWrap = styled.div`
       pointer-events:none;
       content:'';
     }
+  }
+  .map-side-menu{
+    padding:0 10px 0 5px;
   }
   .kakao-map{
     position:relative;

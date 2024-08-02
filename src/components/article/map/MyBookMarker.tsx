@@ -1,5 +1,5 @@
 import { SvgStar } from "assets/style/SVGIcon";
-import { colors, transitions } from "assets/style/Variable";
+import { colors, shadow, transitions } from "assets/style/Variable";
 import { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
@@ -16,7 +16,6 @@ export default function BookMarker({map, clickEvent}:BookMarkerType) {
   const [isPopup, setIsPopup] = useState(false);
   const [zoom, setZoom] = useState(0);
 
-
   const handleZoomChange = useCallback(() =>{
     map && setZoom(map.getLevel());
   },[map])
@@ -32,7 +31,6 @@ export default function BookMarker({map, clickEvent}:BookMarkerType) {
     // clickEvent(marker)
     console.log('내 즐겨찾기 - 상세 페이지 오픈')
   }
-  console.log(zoom)
   return (
     <>
       {
@@ -102,10 +100,11 @@ const StyleMarker = styled.div<StyleMarkerType>`
     .title {
       position:absolute;
       left:50%;
-      top:100%;
+      top:calc(100% + 5px);
       font-size:14px;
-      font-weight:600;
+      font-weight:800;
       transform: translateX(-50%);
+      text-shadow:${shadow.textBaseW};
     }
   }
 `;

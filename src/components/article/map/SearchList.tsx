@@ -4,17 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { MapDataType, MarkerType } from "types/kakaoComon";
+import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
 import ListItem from "./ListItem";
 
 interface SearchListType {
   searchData: MapDataType;
   listClick: (e:string) => void;
 }
-export interface ListType extends MarkerType {
-  detailOpen: boolean;
-  isBookmark: boolean;
-} 
 export default function SearchList({searchData, listClick}:SearchListType) {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [markerList, setMarkerList] = useState<ListType[]>([]);

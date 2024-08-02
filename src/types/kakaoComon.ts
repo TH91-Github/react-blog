@@ -18,6 +18,12 @@ export interface MarkerType {
   url:string,
   address?:any,
 }
+
+export interface ListType extends MarkerType {
+  detailOpen?: boolean;
+  isBookmark?: boolean;
+} 
+
 export interface MapDataType {
   mapRef: kakao.maps.Map | null,
   page: number,

@@ -1,16 +1,16 @@
 import { SvgBookmark } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import { ListType } from "components/article/map/SearchList";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";
 import { UserBookmarkType } from "types/baseType";
+import { ListType } from "types/kakaoComon";
 import { collectionDocUpdate } from "utils/firebase/common";
 
 interface BookmarkType {
   bookmarkItem: ListType;
 }
-export default function Bookmark({bookmarkItem}:BookmarkType) {
+export default function Bookmark({ bookmarkItem }:BookmarkType) {
   const dispatch = useDispatch<AppDispatch>(); 
   const {loginState, user} = useSelector((state: RootState) => state.storeUserLogin);
   const [isBookMark, setIsBookMark] = useState(false);

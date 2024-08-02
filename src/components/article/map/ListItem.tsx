@@ -2,8 +2,8 @@ import React from "react";
 import { colors, ellipsisStyle, transitions } from "assets/style/Variable";
 import styled from "styled-components";
 import AddressInfo from "./AddressInfo";
-import { ListType } from "./SearchList";
 import Bookmark from "./Bookmark";
+import { ListType } from "types/kakaoComon";
 
 interface ListItemType {
   item: ListType;
@@ -12,6 +12,7 @@ interface ListItemType {
   addressInfoEvent: (e:string) => void;
 }
 const ListItem = ({ item,  number, clickEvent,addressInfoEvent }:ListItemType) => {
+  console.log(item)
   return(
     <StyleItem 
       className="item">
