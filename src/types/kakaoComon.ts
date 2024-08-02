@@ -20,7 +20,6 @@ export interface MarkerType {
 }
 export interface MapDataType {
   mapRef: kakao.maps.Map | null,
-  level: number,
   page: number,
   size: number,
   location: MarkerPositionType,

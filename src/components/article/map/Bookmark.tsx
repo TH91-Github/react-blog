@@ -54,7 +54,7 @@ export default function Bookmark({bookmarkItem}:BookmarkType) {
       className="bookmark-btn"
       onClick={handleBookmarkClick}>
       <span className="icon">
-        <SvgBookmark $fillColor={isBookMark ? colors.purple : colors.subTextColor}/> 
+        <SvgBookmark $fillColor={isBookMark ? colors.green : colors.subTextColor}/> 
       </span>
       <span className="blind">즐겨찾기</span>
     </button>

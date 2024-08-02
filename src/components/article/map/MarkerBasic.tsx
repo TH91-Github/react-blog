@@ -26,11 +26,12 @@ export default function MarkerBasic({number, marker, active, clickEvent}:MarkerB
           });
         }
         // 클릭된 요소의 부모 요소의 z-index를 원하는 값으로 설정
-        parentDiv.style.zIndex = "1";
+        parentDiv.style.zIndex = "10";
       }
     }
     clickEvent(marker)
   }
+  
   const handleCloseClick = () => {
     clickEvent(null)
   }

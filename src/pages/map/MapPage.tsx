@@ -17,7 +17,6 @@ export default function MapPage() {
   const [activePoint, setActivePoint] = useState<string | null>(null);
   const [kakaoData, setKakaoData] = useState<MapDataType>({
     mapRef: null,
-    level: 3,
     page: 1,
     size: 15,
     location: useLocation.coords ?? {lat: 37.56682420267543, lng: 126.978652258823}, // 원하는 초기 위치값
@@ -50,7 +49,6 @@ export default function MapPage() {
 
   // 선택 좌표
   const selectChange = (selectID:string) => { 
-    console.log(selectID)
     setActivePoint(selectID)
   }
 

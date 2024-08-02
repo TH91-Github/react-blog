@@ -1,9 +1,9 @@
 import React from "react";
 import { colors, ellipsisStyle, transitions } from "assets/style/Variable";
-import Bookmark from "components/element/Bookmark";
 import styled from "styled-components";
 import AddressInfo from "./AddressInfo";
 import { ListType } from "./SearchList";
+import Bookmark from "./Bookmark";
 
 interface ListItemType {
   item: ListType;

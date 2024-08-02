@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { kakaoMapBasicType, MarkerType } from "types/kakaoComon";
 import MarkerBasic from "./MarkerBasic";
-
+import MyBookMarker from "./MyBookMarker";
 interface kakaoMapType extends kakaoMapBasicType {
   activePoint: string | null;
 }
 
 const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
-  const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
-
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
       console.log("카카오맵이 로드되지 않았습니다.");
@@ -53,13 +51,18 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
     setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker)
   }
 
-  // console.log('kakao map')
+  const handleZoomChange = useCallback((target: kakao.maps.Map) => {
+    // level: target.getLevel(),
+  }, [kakaoUpdate]);
+
+  console.log('kakao map')
   return (
     <StyleKakaoMap>
       <Map
         center={kakaoData.location ?? { lat: 37.56682420267543, lng: 126.978652258823 }}
-        level={kakaoData.level ?? 3}
-        onCreate={setMap} >
+        level={3}
+        onZoomChanged={handleZoomChange}
+        onCreate={setMap}>
         {
           kakaoData.markerList.map((marker,idx) => (
             <CustomOverlayMap
@@ -70,10 +73,13 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
                 marker={marker}
                 active={pointPop?.id === marker.id ?? false }
                 clickEvent={handleMarkerClick} />
-              
             </CustomOverlayMap>
           ))
         }
+        {/* ⭐ 즐겨 찾기 */}
+        <MyBookMarker 
+          map={map}
+          clickEvent={() => console.log('')} />
         {/* 지도 컨트롤 */}
         <MapTypeControl position={"TOPRIGHT"} /> 
         <ZoomControl position={"RIGHT"} />
