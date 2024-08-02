@@ -1,5 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { MarkerType } from "types/kakaoComon";
 
@@ -13,25 +13,9 @@ export default function MarkerBasic({number, marker, active, clickEvent}:MarkerB
   const markerRef = useRef<HTMLDivElement | null>(null);
 
   const handlePopClick = () =>{ 
-    if(markerRef.current){
-      const parentDiv = markerRef.current.parentElement;
-      if (parentDiv) {
-        // 다른 형제들 z-index 원복 및 0 
-        const siblings = parentDiv.parentElement?.children;
-        if (siblings) { // HTMLCollection 객체
-          Array.from(siblings).forEach(sibling => {
-            if (sibling instanceof HTMLElement) {
-              sibling.style.zIndex = "0";
-            }
-          });
-        }
-        // 클릭된 요소의 부모 요소의 z-index를 원하는 값으로 설정
-        parentDiv.style.zIndex = "10";
-      }
-    }
     clickEvent(marker)
   }
-  
+
   const handleCloseClick = () => {
     clickEvent(null)
   }

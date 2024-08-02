@@ -67,7 +67,8 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
           kakaoData.markerList.map((marker,idx) => (
             <CustomOverlayMap
               key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
-              position={marker.position}>
+              position={marker.position}
+              zIndex={pointPop?.id === marker.id ? 2 : 1}>
               <MarkerBasic 
                 number={idx+1}
                 marker={marker}
