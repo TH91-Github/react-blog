@@ -3,14 +3,18 @@ import { colors, transitions } from "assets/style/Variable";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import styled from "styled-components"
-import Bookmark from "./Bookmark";
+import styled from "styled-components";
 import { ListType } from "types/kakaoComon";
+import Bookmark from "./Bookmark";
 
-export default function MyBookmarkList () {
+type placePopChangeType = {
+  placePopChange: () => void; 
+};
+
+export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
   const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const listRef = useRef<HTMLDivElement| null>(null)
-  const [isListOpen, setIsListOpen] = useState(true);
+  const [isListOpen, setIsListOpen] = useState(false);
   const [isScroll, setMemuScroll] = useState(false);
   const handleListClick = () =>{ 
     setIsListOpen(!isListOpen);
@@ -29,8 +33,8 @@ export default function MyBookmarkList () {
     };
   }, []);
 
-  const handleMyBookmarkClick = () =>{
-    alert('준비중')
+  const handleMyBookmarkClick = (e:any) =>{
+    placePopChange()
   }
   return (
     <>
@@ -41,7 +45,7 @@ export default function MyBookmarkList () {
               className="my-bookmark-btn"
               onClick={handleListClick} >
               <span className="icon-star"><SvgStar $fillColor={colors.yellow} /></span>
-              <span className="blind">열기</span>
+              <span className="text">{isListOpen?'닫기':'열기'}</span>
             </button>
             {
               isListOpen &&
@@ -65,7 +69,7 @@ export default function MyBookmarkList () {
                             <button
                               type="button"
                               title={`${bookmarkItem.title} 자세히 보기`}
-                              onClick={() => handleMyBookmarkClick}>
+                              onClick={() => handleMyBookmarkClick(bookmarkItem)}>
                               <span>{bookmarkItem.title}</span>
                             </button>
                             {/* 즐겨찾기 */}
@@ -73,18 +77,12 @@ export default function MyBookmarkList () {
                           </StyleMyBookMarkItem>
                         ))
                         :
-                        <li>
-
-                        </li>
+                        <li> 정보를 불러오지 못했어요.. 😲</li>
                     }
-                    <li>
-                      
-                    </li>
                   </ul>
                 </div>
               </div>
             }
-            
           </StyleMyBookmarkList>
           : null
       }
@@ -109,6 +107,9 @@ const StyleMyBookmarkList = styled.div`
     border-radius:5px;
     background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
     ${props => props.theme.shadowLine};
+    .text {
+      text-indent:-999px;
+    }
     &:hover {
       .icon-star > svg path {
         fill:${colors.green};
@@ -120,8 +121,21 @@ const StyleMyBookmarkList = styled.div`
     position:relative;
     width:25px;
     height:25px;
-    & > svg path {
-      transition: ${transitions.base};
+    &::before, &::after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:5px;
+      height:5px;
+      border-radius:50%;
+      background:${colors.green};
+      transform: translate(-50%, -50%);
+      transition: all .3s ease-in;
+      opacity:0;
+      content:'';
+    }
+    & > svg, & > svg path {
+      transition: all .3s .3s ease-in;
     }
   }
   .my-list{
@@ -158,6 +172,32 @@ const StyleMyBookmarkList = styled.div`
       .my-list-head {
         background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
         ${props => props.theme.shadowLine};
+      }
+    }
+  }
+  &.active {
+    .icon-star{
+      &::before, &::after {
+        position:absolute;
+        top: 50%;
+        left:50%;
+        width: 3px;
+        height: 100%;
+        border-radius: 3px;
+        background:${props => props.theme.color};
+        transition: all .3s .3s ease-in;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        opacity:1;
+        content:"";
+      }
+      &::after{ 
+        transform: translate(-50%, -50%) rotate(-135deg);
+      }
+      & > svg {
+        transform:scale(0.1);
+      }
+      & > svg, & > svg path {
+        transition: ${transitions.base};
       }
     }
   }

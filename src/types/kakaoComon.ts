@@ -18,12 +18,10 @@ export interface MarkerType {
   url:string,
   address?:any,
 }
-
 export interface ListType extends MarkerType {
   detailOpen?: boolean;
   isBookmark?: boolean;
 } 
-
 export interface MapDataType {
   mapRef: kakao.maps.Map | null,
   page: number,
@@ -40,7 +38,10 @@ export interface kakaoMapBasicType {
   kakaoData: MapDataType,
   kakaoUpdate: (e:MapDataType) => void;
 }
-
 export interface KeyObjectAnyType {
   [key:string]: any;
+}
+export interface placePopStateType {
+  show: boolean;
+  place: any;
 }

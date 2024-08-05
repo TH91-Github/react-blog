@@ -40,7 +40,7 @@ export default function LayerPopup ({
     if(autoCloseSecond && autoCloseTimeRef.current){
       clearTimeout(autoCloseTimeRef.current);
     }
-  },[handleTransitionEnd]);
+  },[handleTransitionEnd, autoCloseSecond]);
 
   useEffect(()=>{
     // 초기 첫 pop open 시 포커스 이동
@@ -52,7 +52,6 @@ export default function LayerPopup ({
   // 몇 초 후 자동 닫기
   useEffect(()=>{
     if(autoCloseSecond){
-      console.log('autoclose')
       if(autoCloseTimeRef.current) {
         clearTimeout(autoCloseTimeRef.current);
       }
@@ -60,7 +59,7 @@ export default function LayerPopup ({
         handleClose(); // 닫기 기능
       }, autoCloseS ) // 최소 기본 2초
     }
-  },[autoCloseSecond, handleClose])
+  },[autoCloseSecond, autoCloseS, handleClose])
 
   // 포커스 이탈 방지
   useEffect(() => {

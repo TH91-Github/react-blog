@@ -1,6 +1,6 @@
 // SearchList
 import { colors } from "assets/style/Variable";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
@@ -11,7 +11,7 @@ interface SearchListType {
   searchData: MapDataType;
   listClick: (e:string) => void;
 }
-export default function SearchList({searchData, listClick}:SearchListType) {
+const SearchList = ({searchData, listClick}:SearchListType) => {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [markerList, setMarkerList] = useState<ListType[]>([]);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
@@ -38,8 +38,7 @@ export default function SearchList({searchData, listClick}:SearchListType) {
       )
     )
   },[])
-  
-
+  console.log('list')
   return (
     <StyleSearchList>
       <div className="location">
@@ -70,6 +69,8 @@ export default function SearchList({searchData, listClick}:SearchListType) {
     </StyleSearchList>
   )
 }
+
+export default React.memo(SearchList)
 
 const StyleSearchList = styled.div`
   flex-grow:1;

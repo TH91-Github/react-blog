@@ -2,6 +2,7 @@ import { breakpoints, colors } from 'assets/style/Variable';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
+import PlaceDetail from 'components/article/map/PlaceDetail';
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
@@ -9,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { MapDataType } from 'types/kakaoComon';
+import { MapDataType, placePopStateType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
@@ -24,6 +25,10 @@ export default function MapPage() {
     markerList: [],
     pagination: null,
   });
+  const [placePop , setPlacePop] = useState<placePopStateType>({
+    show: false,
+    place:null,
+  })
 
   // 카카오맵 업데이트
   const kakaoUpdate = useCallback((data: MapDataType) => {
@@ -53,10 +58,16 @@ export default function MapPage() {
     setActivePoint(selectID)
   }
 
+  // 맵에 활성화된 장소 상세 정보
+  const placePopChange = () => {
+    // const activePlace = kakaoData.markerList.filter(listItem => listItem.id === activePoint);
+    // setPlacePop({ place:{...activePlace}, show: true });
+  }
+
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표
   },[])
-  
+
   // 초기 중심 위치
   useEffect(()=>{
     if(useLocation){
@@ -84,7 +95,15 @@ export default function MapPage() {
           </div>
           <div className="map-side-menu">
             {/* 회원 - 즐겨찾기 */}
-            <MyBookmarkList />
+            <MyBookmarkList 
+              placePopChange={placePopChange}/>
+            {
+              placePop.show && 
+              <PlaceDetail 
+                place={placePop}
+                placePopChange={placePopChange}
+              />
+            }
           </div>
         </div>
         {/* kakao map */}
