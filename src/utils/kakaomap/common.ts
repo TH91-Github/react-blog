@@ -42,7 +42,6 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
           markerList: newMarkers,
           pagination: _pagination
         }
-        console.log(newMapData)
         kakaoUpdate(newMapData)
         map.setBounds(bounds);
 

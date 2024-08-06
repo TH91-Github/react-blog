@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { colors } from './Variable';
+import { colors, transitions } from './Variable';
 
 export const GlobalStyles = createGlobalStyle`
   body {
@@ -59,7 +59,32 @@ export const GlobalStyles = createGlobalStyle`
       }
     }
   }
-
+  .close-arrow {
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:25px;
+    height:25px;
+    text-indent:-9999px;
+    transition: ${transitions.base};
+    &::before, &::after {
+      position:absolute;
+      top: 50%;
+      left:50%;
+      width: 3px;
+      height: 100%;
+      border-radius: 3px;
+      background:${colors.baseBlack};
+      transform: translate(-50%, -50%) rotate(-45deg);
+      content:"";
+    }
+    &::after{ 
+      transform: translate(-50%, -50%) rotate(-135deg);
+    }
+    &:hover, &:focus {
+      transform: rotate(180deg);
+    }
+  }
   /* 스크롤바 전체 */
   body::-webkit-scrollbar {
     width:8px;

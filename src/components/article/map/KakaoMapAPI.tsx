@@ -58,7 +58,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   const detailPopEvent = () => {
     placePopChange(pointPop);
   }
-  console.log('kakao map')
+  // console.log('kakao map')
   return (
     <StyleKakaoMap>
       <Map

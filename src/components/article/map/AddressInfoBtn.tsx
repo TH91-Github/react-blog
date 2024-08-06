@@ -3,7 +3,11 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { KeyObjectAnyType } from "types/kakaoComon";
 
-const AddressInfo = ({data, clickEvent}:KeyObjectAnyType) => {
+interface AddressInfoBtnType extends KeyObjectAnyType {
+  clickEvent?: (e:string) => void;
+}
+
+export default function AddressInfoBtn ({data, clickEvent}:AddressInfoBtnType)  {
   const {address, road_address} = data.address;
   const handleDetailOn = useCallback(() =>{
     clickEvent && clickEvent(data.id)
@@ -47,7 +51,6 @@ const AddressInfo = ({data, clickEvent}:KeyObjectAnyType) => {
     </StyleAddress>
   )
 }
-export default AddressInfo;
 
 const StyleAddress = styled.div`
   position:relative;

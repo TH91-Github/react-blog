@@ -43,5 +43,5 @@ export interface KeyObjectAnyType {
 }
 export interface placePopStateType {
   show: boolean;
-  place: any;
+  place: MarkerType | null;
 }

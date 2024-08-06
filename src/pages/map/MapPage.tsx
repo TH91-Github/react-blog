@@ -96,7 +96,7 @@ export default function MapPage() {
             {
               placePop.show && 
               <PlaceDetail 
-                place={placePop}
+                placeData={placePop}
                 placePopChange={placePopChange}
               />
             }
