@@ -13,6 +13,9 @@ export interface NumberOnly {
 export interface StringOnly {
   [key:string] : string
 }
+export interface StringOnlyArr {
+  [key:string] : string[]
+}
 export interface  StringNumber{
   [key:string] : string | number
 }

@@ -7,17 +7,20 @@ interface MarkerBasicType {
   number?:number;
   marker: MarkerType;
   active: boolean;
-  clickEvent : (e:MarkerType | null) => void;
+  pointActiveEvent : (eId:MarkerType | null) => void;
+  detailPopEvent : () => void;
 }
-export default function MarkerBasic({number, marker, active, clickEvent}:MarkerBasicType) {
+export default function MarkerBasic({number, marker, active, pointActiveEvent, detailPopEvent}:MarkerBasicType) {
   const markerRef = useRef<HTMLDivElement | null>(null);
 
   const handlePopClick = () =>{ 
-    clickEvent(marker)
+    pointActiveEvent(marker)
   }
-
+  const handleDetaileClick = () => {
+    detailPopEvent();
+  }
   const handleCloseClick = () => {
-    clickEvent(null)
+    pointActiveEvent(null)
   }
   return (
     <StyleMarker 
@@ -33,7 +36,12 @@ export default function MarkerBasic({number, marker, active, clickEvent}:MarkerB
       {
         active && (
           <div className="marker-pop">
-            <p className="name">{marker.place_name}</p>
+            <button
+              type="button"
+              title={`${marker.place_name} 자세히 보기`}
+              onClick={handleDetaileClick}>
+              <p>{marker.place_name}</p>
+            </button>
             <button type="button" className="close" onClick={handleCloseClick}>
               <span className="blind">닫기</span>
             </button>

@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { ListType } from "types/kakaoComon";
+import { ListType, MarkerType } from "types/kakaoComon";
 import Bookmark from "./Bookmark";
 
 type placePopChangeType = {
-  placePopChange: () => void; 
+  placePopChange: (e:MarkerType | null) => void; 
 };
 
 export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
@@ -34,7 +34,7 @@ export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
   }, []);
 
   const handleMyBookmarkClick = (e:any) =>{
-    placePopChange()
+    placePopChange(null)
   }
   return (
     <>

@@ -81,11 +81,6 @@ export const userLoginSlice = createSlice({
   // },
 })
 
-
-
-
-
-
 // 📍kakao map data - firebase
 const kakaoDataState:KakaofireStore[] = [];
 export const storeKakaoDataSlice = createSlice({

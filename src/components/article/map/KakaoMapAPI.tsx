@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
@@ -6,11 +6,14 @@ import styled from "styled-components";
 import { kakaoMapBasicType, MarkerType } from "types/kakaoComon";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
+import { mapCenterSetting } from "utils/kakaomap/common";
 interface kakaoMapType extends kakaoMapBasicType {
   activePoint: string | null;
+  activeChange: () => void;
+  placePopChange: (e:MarkerType | null) => void;
 }
 
-const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
+const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePopChange}:kakaoMapType) => {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
@@ -36,32 +39,31 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
         const pointer = new kakao.maps.LatLng(lat, lng)
         map.setLevel(4); // 확대 후 센터 이동 -> 센터 이동 후 확대 시 위치를 제대로 못 잡을 경우 발생.
         map.setCenter(pointer);
-        const projection = map.getProjection();
-        const newCenterPoint = projection.pointFromCoords(pointer);
-        newCenterPoint.x += isMobile ? 0 : -135; // pc일 경우 메뉴 리스트 가로 만큼 재이동
-        const newCenterCoords = projection.coordsFromPoint(newCenterPoint);
-        // 클릭 장소 중심 이동
-        map.setCenter(newCenterCoords);
+
+        // PC 사이드 리스트 -> 센터 보정
+        mapCenterSetting(map,-135);
       }
+      console.log(pick)
       setPointPop(pick);
     }
   },[map, activePoint, kakaoData.markerList, isMobile])
 
-  const handleMarkerClick = (marker:MarkerType | null) => { // ✅ 마커 클릭
+  const pointActiveEvent = (marker:MarkerType | null) => { // ✅ 마커 클릭
+    if(marker === null){
+      activeChange()
+      placePopChange(null);
+    }
     setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker)
   }
-
-  const handleZoomChange = useCallback((target: kakao.maps.Map) => {
-    // level: target.getLevel(),
-  }, [kakaoUpdate]);
-
+  const detailPopEvent = () => {
+    placePopChange(pointPop);
+  }
   console.log('kakao map')
   return (
     <StyleKakaoMap>
       <Map
         center={kakaoData.location ?? { lat: 37.56682420267543, lng: 126.978652258823 }}
         level={3}
-        onZoomChanged={handleZoomChange}
         onCreate={setMap}>
         {
           kakaoData.markerList.map((marker,idx) => (
@@ -73,7 +75,8 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint}:kakaoMapType) => {
                 number={idx+1}
                 marker={marker}
                 active={pointPop?.id === marker.id ?? false }
-                clickEvent={handleMarkerClick} />
+                pointActiveEvent={pointActiveEvent}
+                detailPopEvent={detailPopEvent} />
             </CustomOverlayMap>
           ))
         }

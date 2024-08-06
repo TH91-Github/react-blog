@@ -5,21 +5,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components"
 import Bookmark from "./Bookmark";
-import { ListType, placePopStateType } from "types/kakaoComon";
+import { ListType, MarkerType, placePopStateType } from "types/kakaoComon";
 
 interface placePopChangeType {
   place: placePopStateType;
-  placePopChange: () => void; 
+  placePopChange: (e:MarkerType | null) => void; 
 }
 export default function PlaceDetail ({place, placePopChange}:placePopChangeType) {
   const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const [isDetaileOpen, setIsListOpen] = useState(true);
 
   const handleCloseClick = () =>{ 
-    placePopChange();
+    placePopChange(null);
   }
 
-  
+  console.log(place)
+
+
   return (
     <StylePlaceDetail className="place-detail">
       <div className="place-inner">
@@ -53,7 +55,7 @@ const StylePlaceDetail = styled.div`
     border-bottom-right-radius: 10px;
     background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
     ${props => props.theme.shadowLine};
-    animation:placeOnBGAni 2s;
+    animation:placeOnBGAni .5s;
     content:'';
   }
   @keyframes placeOnBGAni {

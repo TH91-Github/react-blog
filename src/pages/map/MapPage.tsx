@@ -10,13 +10,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { MapDataType, placePopStateType } from 'types/kakaoComon';
+import { MapDataType, MarkerType, placePopStateType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
   const mapPageRef = useRef<HTMLDivElement | null>(null);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
-  const [activePoint, setActivePoint] = useState<string | null>(null);
   const [kakaoData, setKakaoData] = useState<MapDataType>({
     mapRef: null,
     page: 1,
@@ -25,6 +24,7 @@ export default function MapPage() {
     markerList: [],
     pagination: null,
   });
+  const [activePoint, setActivePoint] = useState<string | null>(null);
   const [placePop , setPlacePop] = useState<placePopStateType>({
     show: false,
     place:null,
@@ -35,12 +35,6 @@ export default function MapPage() {
     setActivePoint(null)
     setKakaoData(data);
   },[]);
-
-  /* 
-    📍 추가 기능 - 데이터 수집 
-    검색 결과 정보 firebase 추가 (id, 별점, 댓글, 추가 정보를 구하기 위한 데이터 수집)
-    기존에 데이터가 있는지 비교 (이름과 위치로 비교) 없다면 추가 있다면 기존 값으로 대체
-  */
 
   // 검색 결과
   const searchResult = useCallback((val: string) => {
@@ -53,16 +47,18 @@ export default function MapPage() {
     }
   },[kakaoData, kakaoUpdate]);
 
-  // 선택 좌표
-  const selectChange = (selectID:string) => { 
+  // 검색 리스트 place 선택 좌표
+  const listClick = (selectID:string) => { 
     setActivePoint(selectID)
   }
-
-  // 맵에 활성화된 장소 상세 정보
-  const placePopChange = () => {
-    // const activePlace = kakaoData.markerList.filter(listItem => listItem.id === activePoint);
-    // setPlacePop({ place:{...activePlace}, show: true });
+  const activeChange = () => {
+    setActivePoint(null)
   }
+
+  // ⭐ 맵에 활성화된 장소 상세 정보
+  const placePopChange = (ePlace:MarkerType | null) => {
+    setPlacePop( ePlace ? { place:{...ePlace}, show: true } : {place:null, show:false});
+  };
 
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표
@@ -90,13 +86,13 @@ export default function MapPage() {
             {/* 리스트 */}
             <SearchList 
               searchData={kakaoData}
-              listClick={selectChange}
+              listClick={listClick}
             />
           </div>
           <div className="map-side-menu">
             {/* 회원 - 즐겨찾기 */}
             <MyBookmarkList 
-              placePopChange={placePopChange}/>
+              placePopChange={placePopChange} />
             {
               placePop.show && 
               <PlaceDetail 
@@ -111,7 +107,9 @@ export default function MapPage() {
           <KakaoMapAPI 
             kakaoData={kakaoData} 
             kakaoUpdate={kakaoUpdate} 
-            activePoint={activePoint} />
+            activePoint={activePoint} 
+            activeChange={activeChange}
+            placePopChange={placePopChange} />
           {/* 맵 가운데 주소 */}
           <MapCenterLocation map={kakaoData.mapRef} mapCenterUpdate={mapCenterUpdate}/>
         </div>
@@ -161,6 +159,7 @@ const StyleWrap = styled.div`
   }
   .map-content{
     display:flex;
+    gap:5px;
     position:absolute;
     z-index:100;
     top:80px;
@@ -188,7 +187,8 @@ const StyleWrap = styled.div`
     }
   }
   .map-side-menu{
-    padding:0 10px 0 5px;
+    position:relative;
+    padding:0 10px 0 0;
   }
   .kakao-map{
     position:relative;
