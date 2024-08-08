@@ -13,7 +13,7 @@ export default function StudySearch(){
           {/* className={val.length && 'on' } */}
         <div className="search-line on">
           <span className="search-icon">
-            <SvgSearch $bgcolor="transparent" $fillColor={colors.green}/>  
+            <SvgSearch $fillColor={colors.green}/>  
           </span>
         </div>
         <span className="blind">검색</span>

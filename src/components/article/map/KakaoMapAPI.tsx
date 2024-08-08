@@ -3,17 +3,17 @@ import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { kakaoMapBasicType, MarkerType } from "types/kakaoComon";
+import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
 import { mapCenterSetting } from "utils/kakaomap/common";
-interface kakaoMapType extends kakaoMapBasicType {
+interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
   placePopChange: (e:MarkerType | null) => void;
 }
 
-const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePopChange}:kakaoMapType) => {
+const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePopChange}:KakaoMapType) => {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);

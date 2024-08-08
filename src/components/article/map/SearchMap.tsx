@@ -49,7 +49,7 @@ export default function SearchMap({searchResult}:SearchMapType){
         className="btn"
         onClick={handleClick}>
         <span className="search-icon">
-          <SvgSearch $bgcolor="transparent" $fillColor={colors.blue}/>  
+          <SvgSearch $fillColor={colors.blue}/>  
         </span>
         <span className="blind">검색</span>
       </button>

@@ -1,18 +1,19 @@
-import { SvgStar } from "assets/style/SVGIcon";
-import { colors, transitions } from "assets/style/Variable";
-import { useEffect, useRef, useState } from "react";
+import { colors } from "assets/style/Variable";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import styled from "styled-components"
-import Bookmark from "./Bookmark";
-import { ListType, MarkerType, placePopStateType } from "types/kakaoComon";
+import styled from "styled-components";
+import { MarkerType, PlacePopStateType } from "types/kakaoComon";
+import Bookmark from "../Bookmark";
 import PlaceDetailTab from "./PlaceDetailTab";
 
 interface placePopChangeType {
-  placeData: placePopStateType;
+  placeData: PlacePopStateType;
   placePopChange: (e:MarkerType | null) => void; 
 }
-export default function PlaceDetail ({placeData, placePopChange}:placePopChangeType) {
+export interface PlaceType {
+  place : MarkerType
+}
+export default function PlaceDetailPage ({placeData, placePopChange}:placePopChangeType) {
   const { place } = placeData;
   const {address, road_address} = place!.address;
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
@@ -167,11 +168,9 @@ const StylePlaceDetail = styled.div`
     padding:5px 0;
   }
   .place-cont {
+    position:relative;
     margin-top:15px;
-    padding:0 10px 10px;
-    border-top:10px solid ${colors.lineColor};
+    padding-bottom:10px;
+    border-top:5px solid ${colors.lineColor};
   }
-
-
-  
 `;

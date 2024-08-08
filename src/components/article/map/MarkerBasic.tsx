@@ -189,16 +189,6 @@ const StyleMarker = styled.div<StyleMarkerType>`
       animation: activePointAni 2s ease infinite both;
       content:'';
     }
-    @keyframes activePointAni {
-      0% {
-        transform: translateX(-50%) scale(0);
-        opacity:0.9;
-      }
-      100% {
-        transform: translateX(-50%) scale(3);
-        opacity:0;
-      }
-    }
     .point-bar{ 
       transform: scale(1.2);
     }

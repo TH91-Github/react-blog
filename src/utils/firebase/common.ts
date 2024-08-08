@@ -1,6 +1,7 @@
 import { UserBookmarkType, UserDataType } from "types/baseType";
 import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
 
+// ✅ thData 기본
 // 추가
 export const pushDataDoc = async(docName:string, collectionName:string, data:UserDataType) => {
   const userCollection = collection(fireDB, 'thData', docName, collectionName);
@@ -69,4 +70,23 @@ export const removeDoc = async(docName:string, collectionName:string, emailId:st
   }else{
     console.log('정보 삭제를 실패했어요.. 😢')
   }
+}
+
+
+
+
+
+const TEST = async (docName: string, collectionName: string, subCollectionName: string, key: string, val: string): Promise<boolean> => {
+  // 문서 내 컬렉션 경로 설정
+  const docRef = doc(fireDB, 'map', docName);
+  const subCollectionRef = collection(docRef, collectionName, subCollectionName);
+  
+  // 쿼리 설정
+  const duplicatResult = query(subCollectionRef, where(key, '==', val));
+  
+  // 쿼리 실행
+  const querySnapshot = await getDocs(duplicatResult);
+  
+  // 결과 반환
+  return querySnapshot.empty;
 }

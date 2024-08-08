@@ -34,14 +34,35 @@ export interface KakaofireStore {
   id: string,
   place_name: string,
 }
-export interface kakaoMapBasicType {
+export interface KakaoMapBasicType {
   kakaoData: MapDataType,
   kakaoUpdate: (e:MapDataType) => void;
 }
 export interface KeyObjectAnyType {
   [key:string]: any;
 }
-export interface placePopStateType {
+export interface PlacePopStateType {
   show: boolean;
   place: MarkerType | null;
+}
+
+export interface PlaceReviewType {
+  collectionName: string,
+  docId:string,
+  placeName:string,
+  userId:string,
+  reviewText:string,
+  rating:number
+}
+export interface ReviewFirebaseType {
+  authorID:string,
+  id: string,
+  order:number,
+  rating:number,
+  text:string,
+  time: any,
+}
+export interface ReviewDataType {
+  rating: number,
+  data: null | ReviewFirebaseType[]
 }

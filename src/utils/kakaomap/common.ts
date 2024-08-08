@@ -1,8 +1,8 @@
 import { StringOnly, StringOnlyArr } from "types/baseType";
-import { kakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
+import { KakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
 import { isMobileChk } from "utils/common";
 
-interface kakaoFetchPlacesType extends kakaoMapBasicType {
+interface kakaoFetchPlacesType extends KakaoMapBasicType {
   keyword: string;
 }
 
@@ -130,15 +130,6 @@ export const mapCenterSetting = (map:kakao.maps.Map, correctionNumber:number) =>
 }
 
 // 도별, 도시 이름으로 카테고리 분류 
-export function locationCategory(keyword:string) {
-  for (const region in locationKeywords) {
-    if (locationKeywords[region].includes(keyword)) {
-      console.log(region)
-      return region;
-    }
-  }
-  return "ETC";
-}
 const locationKeywords:StringOnlyArr= {
   "Seoul": ["서울", "서울특별시"],
   "Incheon": ["인천", "인천광역시"],
@@ -160,3 +151,11 @@ const locationKeywords:StringOnlyArr= {
   "Dokdo":["독도"],
   "ETC": [""]
 };
+export function locationCategory(keyword:string) {
+  for (const region in locationKeywords) {
+    if (locationKeywords[region].includes(keyword)) {
+      return region;
+    }
+  }
+  return "ETC";
+}

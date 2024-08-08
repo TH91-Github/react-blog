@@ -2,7 +2,8 @@ import { breakpoints, colors } from 'assets/style/Variable';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
-import PlaceDetail from 'components/article/map/PlaceDetail';
+import PlaceDetailPage from 'components/article/map/place/PlaceDetailPage';
+
 import SearchList from 'components/article/map/SearchList';
 
 import SearchMap from 'components/article/map/SearchMap';
@@ -10,7 +11,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
-import { MapDataType, MarkerType, placePopStateType } from 'types/kakaoComon';
+import { MapDataType, MarkerType, PlacePopStateType } from 'types/kakaoComon';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
@@ -25,7 +26,7 @@ export default function MapPage() {
     pagination: null,
   });
   const [activePoint, setActivePoint] = useState<string | null>(null);
-  const [placePop , setPlacePop] = useState<placePopStateType>({
+  const [placePop , setPlacePop] = useState<PlacePopStateType>({
     show: false,
     place:null,
   })
@@ -72,6 +73,8 @@ export default function MapPage() {
         location: useLocation.coords
       }))
     }
+    const d = new Date();
+    console.log(new Date())
   },[useLocation])
 
   return (
@@ -95,7 +98,7 @@ export default function MapPage() {
               placePopChange={placePopChange} />
             {
               placePop.show && 
-              <PlaceDetail 
+              <PlaceDetailPage 
                 placeData={placePop}
                 placePopChange={placePopChange}
               />
@@ -194,5 +197,15 @@ const StyleWrap = styled.div`
     position:relative;
     width: 100%;
     height: 100%;
+  }
+  @keyframes activePointAni {
+    0% {
+      transform: translateX(-50%) scale(0);
+      opacity:0.9;
+    }
+    100% {
+      transform: translateX(-50%) scale(1.5);
+      opacity:0;
+    }
   }
 `;
