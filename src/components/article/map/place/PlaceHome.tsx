@@ -6,9 +6,10 @@ import { PlaceType } from "./PlaceDetailPage";
 export default function PlaceHome({place}:PlaceType) {
   console.log(place)
 
-  const urlHttps = (url:string) => {
+  const urlHttps = (url:string) => { // kakako link 
     return url.replace('http:','https:')
   }
+
   return (
     <StylePlaceHome className="place-home">
       <div className="address-info">
@@ -23,7 +24,7 @@ export default function PlaceHome({place}:PlaceType) {
       </div>
       <div className="link">
         <i className="icon-internet"><SvgInternet $fillColor={colors.yellow} /></i>
-        <p><a href={urlHttps(place.url)} target="_blank" title={`${place.place_name} | 카카오맵 새 창`}>{urlHttps(place.url)}</a></p>
+        <p><a href={urlHttps(place.url)} target="_blank" rel="noopener noreferrer" title={`${place.place_name} | 카카오맵 새 창`}>{urlHttps(place.url)}</a></p>
       </div>
       {/* 
         주소

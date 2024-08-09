@@ -1,5 +1,6 @@
 import { PlaceReviewType, ReviewDataType } from "types/kakaoComon";
-import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
+import { collection, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
+import { DateChange } from "utils/common";
 
 // ✅ Map Place
 // place 정보 가져오기 
@@ -27,7 +28,7 @@ export const placeGetDoc = async(collectionName:string, docId:string) :Promise<n
     if(placeDocSnap.data().rating !== resultRating) {
       await updateDoc(placeDocRef, { 
         rating: resultRating,
-        updateTime: new Date(),
+        updateTime: DateChange('full'),
       });
     }
     return reviewData;
@@ -59,7 +60,7 @@ export const placeAddDoc = async(placeData:PlaceReviewType) :Promise<boolean>=> 
 }
 // 리뷰 등록
 const placeReviewAddDoc = async(placeData:PlaceReviewType) =>{
-  const {collectionName, docId, userId, rating, reviewText} = placeData;
+  const {collectionName, docId, userId, nickName, rating, reviewText} = placeData;
   try{
     const reviewsCollectionRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');
     const duplicateReview = query(reviewsCollectionRef, where('authorID', '==', userId)); // 유저 아이디 체크
@@ -68,11 +69,12 @@ const placeReviewAddDoc = async(placeData:PlaceReviewType) =>{
     const review = 1;
     const reviewData = {
       authorID: userId,
+      nickName: nickName,
       id: newReviewDoc.id,
       text: reviewText,
       rating: rating,
       order: review,
-      time: new Date(),
+      time: DateChange('full'),
     }
     // 해당 유저 아이디로 몇번의 글을 썼는지 파악해야함
     if (!querySnapshot.empty) {

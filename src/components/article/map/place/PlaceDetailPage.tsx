@@ -60,9 +60,7 @@ export default function PlaceDetailPage ({placeData, placePopChange}:placePopCha
 }
 
 const StylePlaceDetail = styled.div`
-  position:absolute;
-  top:0;
-  left:0;
+  position:relative;
   width:300px;
   height:100%;
   &::before {
@@ -79,10 +77,15 @@ const StylePlaceDetail = styled.div`
     content:'';
   }
   @keyframes placeOnBGAni {
-    0% {transform:translateX(-100%) scaleX(0.1); opacity:0; background:${props => props.theme.opacityBg};}
-    50% {transform:translateX(0) scaleX(1); opacity:1; }
-    100% {background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
-    ${props => props.theme.shadowLine};}
+    0% {
+      opacity:0;
+      transform:translateX(-100%) scaleX(0.1); 
+      background:${props => props.theme.opacityBg};
+    }
+    50%, 100% {
+      opacity:1;
+      transform:translateX(0) scaleX(1); 
+    }
   }
   .place-inner{
     overflow-y:auto;
@@ -91,6 +94,16 @@ const StylePlaceDetail = styled.div`
     height:100%;
     opacity:0;
     animation:placeFadeIn .5s .3s both;
+    &::-webkit-scrollbar {
+      width:5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ${colors.lineColor};
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: ${colors.baseWhite};
+    }
   }
   @keyframes placeFadeIn {
     0% {opacity:0;}

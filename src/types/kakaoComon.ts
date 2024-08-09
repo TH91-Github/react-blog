@@ -51,15 +51,18 @@ export interface PlaceReviewType {
   docId:string,
   placeName:string,
   userId:string,
+  nickName:string,
   reviewText:string,
-  rating:number
+  rating:number,
 }
 export interface ReviewFirebaseType {
   authorID:string,
   id: string,
   order:number,
+  nickName:string,
   rating:number,
   text:string,
+  like?:number,
   time: any,
 }
 export interface ReviewDataType {

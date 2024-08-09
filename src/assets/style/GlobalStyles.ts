@@ -74,7 +74,7 @@ export const GlobalStyles = createGlobalStyle`
       width: 3px;
       height: 100%;
       border-radius: 3px;
-      background:${colors.baseBlack};
+      background:${props => props.theme.color};
       transform: translate(-50%, -50%) rotate(-45deg);
       content:"";
     }

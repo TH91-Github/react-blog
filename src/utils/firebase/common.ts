@@ -76,17 +76,17 @@ export const removeDoc = async(docName:string, collectionName:string, emailId:st
 
 
 
-const TEST = async (docName: string, collectionName: string, subCollectionName: string, key: string, val: string): Promise<boolean> => {
-  // 문서 내 컬렉션 경로 설정
-  const docRef = doc(fireDB, 'map', docName);
-  const subCollectionRef = collection(docRef, collectionName, subCollectionName);
+// const TEST = async (docName: string, collectionName: string, subCollectionName: string, key: string, val: string): Promise<boolean> => {
+//   // 문서 내 컬렉션 경로 설정
+//   const docRef = doc(fireDB, 'map', docName);
+//   const subCollectionRef = collection(docRef, collectionName, subCollectionName);
   
-  // 쿼리 설정
-  const duplicatResult = query(subCollectionRef, where(key, '==', val));
+//   // 쿼리 설정
+//   const duplicatResult = query(subCollectionRef, where(key, '==', val));
   
-  // 쿼리 실행
-  const querySnapshot = await getDocs(duplicatResult);
+//   // 쿼리 실행
+//   const querySnapshot = await getDocs(duplicatResult);
   
-  // 결과 반환
-  return querySnapshot.empty;
-}
+//   // 결과 반환
+//   return querySnapshot.empty;
+// }

@@ -1,4 +1,4 @@
-import { StringOnly, StringOnlyArr } from "types/baseType";
+import { StringOnlyArr } from "types/baseType";
 import { KakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
 import { isMobileChk } from "utils/common";
 

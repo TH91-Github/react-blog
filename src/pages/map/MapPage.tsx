@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import styled from "styled-components";
 import { MapDataType, MarkerType, PlacePopStateType } from 'types/kakaoComon';
+import { DateChange } from 'utils/common';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
@@ -73,8 +74,7 @@ export default function MapPage() {
         location: useLocation.coords
       }))
     }
-    const d = new Date();
-    console.log(new Date())
+    DateChange();
   },[useLocation])
 
   return (
@@ -190,8 +190,11 @@ const StyleWrap = styled.div`
     }
   }
   .map-side-menu{
+    overflow:hidden;
     position:relative;
     padding:0 10px 0 0;
+    height:100%;
+    box-sizing: unset;
   }
   .kakao-map{
     position:relative;
