@@ -4,6 +4,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import FixedPopup from "components/element/FixedPopup";
+import LoginStatusCheck from "components/element/LoginStatusCheck";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {children}
         {/* alert popup*/}
         <FixedPopup />
+        <LoginStatusCheck />
       </StyleWrap>
     </ThemeProvider>
   );
