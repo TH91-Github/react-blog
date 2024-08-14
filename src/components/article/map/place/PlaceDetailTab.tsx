@@ -106,7 +106,7 @@ const StylePlaceDetailTab = styled.div`
     }
   }
   .tab-cont {
-    padding:20px 10px;
+    padding:20px 0 0;
     border-top:5px solid ${colors.lineColor};
   }
 `;

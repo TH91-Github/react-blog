@@ -43,7 +43,8 @@ export const placeAddDoc = async(placeData:PlaceReviewType) :Promise<boolean>=> 
   try { 
     const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
     const placeDocSnap = await getDoc(placeDocRef);
-    if (!placeDocSnap.exists()) { // 없을 경우 새롭게 추가
+    console.log('동작')
+    if (!placeDocSnap.exists()) { // 기본 필드가 없을 경우 새롭게 추가
       await setDoc(placeDocRef, {
         id: docId,
         name:placeName,
@@ -58,7 +59,7 @@ export const placeAddDoc = async(placeData:PlaceReviewType) :Promise<boolean>=> 
     throw new Error('error 리뷰 문서 에러');
   }
 }
-// 리뷰 등록
+// review 컬렉션 문서 & 필드 등록
 const placeReviewAddDoc = async(placeData:PlaceReviewType) =>{
   const {collectionName, docId, userId, nickName, rating, reviewText} = placeData;
   try{
@@ -71,18 +72,16 @@ const placeReviewAddDoc = async(placeData:PlaceReviewType) =>{
       authorID: userId,
       nickName: nickName,
       id: newReviewDoc.id,
-      text: reviewText,
+      reviewText: reviewText,
       rating: rating,
       order: review,
-      time: DateChange('full'),
+      time: new Date(),
     }
     // 해당 유저 아이디로 몇번의 글을 썼는지 파악해야함
     if (!querySnapshot.empty) {
       reviewData.order = review + querySnapshot.size;
     }
-
     // 유저 정보 리뷰 목록에도 추가 
-
     await setDoc(newReviewDoc, reviewData);
     return true; // 성공적으로 완료
   } catch (error){

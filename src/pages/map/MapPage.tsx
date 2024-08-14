@@ -190,7 +190,6 @@ const StyleWrap = styled.div`
     }
   }
   .map-side-menu{
-    overflow:hidden;
     position:relative;
     padding:0 10px 0 0;
     height:100%;

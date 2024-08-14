@@ -1,22 +1,22 @@
 import { SvgStar } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import styled from "styled-components"
-
 
 interface RatingStarType {
   max?:number;
   bgColor?:string;
 }
 
-export default function RatingStar({max, bgColor}:RatingStarType){
-  const [rating, setRating] = useState(3.3);
+const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ max, bgColor }: RatingStarType, ref) => {
+  const [rating, setRating] = useState(5);
   const ratingMax = max ?? 5;
   const starW = '45px';
 
   const handleRangeChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setRating(parseFloat(e.target.value))
   }
+
   return (
     <StyleRatingStar 
       $num={ratingMax} 
@@ -44,6 +44,7 @@ export default function RatingStar({max, bgColor}:RatingStarType){
             ))
           }
           <input 
+            ref={ref}
             type="range"
             name="input-rating" 
             className="input-rating"
@@ -60,7 +61,9 @@ export default function RatingStar({max, bgColor}:RatingStarType){
       </div>
     </StyleRatingStar>
   )
-}
+});
+
+export default RatingStar;
 
 type StyleRatingStarType = {
   $num: number;

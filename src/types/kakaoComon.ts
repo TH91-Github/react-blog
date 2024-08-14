@@ -61,7 +61,7 @@ export interface ReviewFirebaseType {
   order:number,
   nickName:string,
   rating:number,
-  text:string,
+  reviewText:string,
   like?:number,
   time: any,
 }

@@ -94,7 +94,9 @@ const StyleMyBookmarkList = styled.div`
   display:flex;
   flex-direction:column;
   gap:5px;
-  position:relative;
+  position:absolute;
+  top:0;
+  left:0;
   height:100%;
   .my-bookmark-btn {
     display:flex;
