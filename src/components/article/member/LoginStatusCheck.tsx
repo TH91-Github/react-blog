@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { actionUserLogin } from "store/store";
 import { duplicateGetDoc } from "utils/firebase/common";
-import { auth, onAuthStateChanged, signOut } from "../../firebase";
+import { auth, onAuthStateChanged, signOut } from "../../../firebase";
 import { useDispatch } from "react-redux";
 
 export default function LoginStatusCheck() {

@@ -54,10 +54,32 @@ export default function SignIn() {
     return  (loginValue && idVal.length > 0) ? ( key === 'email' ? idVal : loginValue.email) : false
   },[])
 
+  // 쿠키 만료
+  function setCookie(key: string, value: string, expiredays: number) {
+    const todayDate = new Date();
+    todayDate.setDate(todayDate.getDate() + expiredays);
+    document.cookie = `${key}=${escape(value)}; path=/; expires=${todayDate.toUTCString()};`;
+  }
+
   // firebase 로그인 시도
   const handleLogin = useCallback(async (loginID: string, loginPW: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
+
+      // 유효 시간과 accessToken을 로컬 스토리지에 저장
+      const accessToken = await userCredential.user.getIdToken();
+      const expirationTime = new Date().getTime() + (2 * 60 * 1000); // 예시: 2분 유효시간
+      
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('expirationTime', expirationTime.toString());
+      
+      // 쿠키에도 저장 (이후 만료 시간은 브라우저의 기능에 따라 관리됨)
+      setCookie('accessToken', accessToken, 1); // 1일 쿠키 유효 기간
+
+
+
+
+
       const userData = await duplicateGetDoc('userData','users', 'email' , loginID);
       const userLoginData = {
         loginState: userCredential.operationType === 'signIn'? true : false,
@@ -65,7 +87,7 @@ export default function SignIn() {
       }
       dispatch(actionUserLogin(userLoginData));
       navigate('/');
-      console.log('성공')
+      console.log('성공');
     } catch (error) {
       console.log(error)
       setValidationError({ id:true, pw: true });
