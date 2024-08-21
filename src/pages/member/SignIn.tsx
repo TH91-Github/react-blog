@@ -48,38 +48,16 @@ export default function SignIn() {
   const validationID = useCallback(async (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
     const loginValue = await duplicateGetDoc('userData','users', key , idVal);
-
     // email 인지 id 인지 판단 후 email일 경우 진행 
     // id일경우 id 조회 후 email 가져오기
     return  (loginValue && idVal.length > 0) ? ( key === 'email' ? idVal : loginValue.email) : false
   },[])
 
-  // 쿠키 만료
-  function setCookie(key: string, value: string, expiredays: number) {
-    const todayDate = new Date();
-    todayDate.setDate(todayDate.getDate() + expiredays);
-    document.cookie = `${key}=${escape(value)}; path=/; expires=${todayDate.toUTCString()};`;
-  }
 
   // firebase 로그인 시도
   const handleLogin = useCallback(async (loginID: string, loginPW: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
-
-      // 유효 시간과 accessToken을 로컬 스토리지에 저장
-      const accessToken = await userCredential.user.getIdToken();
-      const expirationTime = new Date().getTime() + (2 * 60 * 1000); // 예시: 2분 유효시간
-      
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('expirationTime', expirationTime.toString());
-      
-      // 쿠키에도 저장 (이후 만료 시간은 브라우저의 기능에 따라 관리됨)
-      setCookie('accessToken', accessToken, 1); // 1일 쿠키 유효 기간
-
-
-
-
-
       const userData = await duplicateGetDoc('userData','users', 'email' , loginID);
       const userLoginData = {
         loginState: userCredential.operationType === 'signIn'? true : false,

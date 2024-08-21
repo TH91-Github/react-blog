@@ -193,8 +193,6 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
         content:'';
       }
     `}
-
-    
   }
   .title {
     font-size:18px;
