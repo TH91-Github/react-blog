@@ -21,11 +21,12 @@ import Header from 'components/layout/Header';
 import AppLayout from "components/layout/AppLayout";
 import './App.css';
 import CurrentLocation from "components/article/map/CurrentLocation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() : JSX.Element {
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const queryClient = new QueryClient();
   // Resize - ✏️ 컴포넌트 분리
   const handleResize = useCallback(() => {
     const isMobile = isMobileChk();
@@ -41,15 +42,17 @@ function App() : JSX.Element {
   }, [handleResize]);
 
   return (
-    <AppLayout>
-      <GlobalStyles />
-      <CurrentLocation />
-      <div className="container">
-        <Header location={location} />
-        <Outlet />
-        {/* 현재위치 store */}
-      </div>
-    </AppLayout>
+    <QueryClientProvider client={queryClient}>
+      <AppLayout>
+        <GlobalStyles />
+        <CurrentLocation />
+        <div className="container">
+          <Header location={location} />
+          <Outlet />
+          {/* 현재위치 store */}
+        </div>
+      </AppLayout>
+    </QueryClientProvider>
   );
 }
 export default App;

@@ -1,6 +1,5 @@
 import { SvgHeart } from "assets/style/SVGIcon";
 import { transitions } from "assets/style/Variable";
-import { useState } from "react";
 import styled from "styled-components";
 
 interface HeartAnimationType {
