@@ -14,20 +14,20 @@ export default function LoginStatusCheck() {
   const extensionTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
   const [extensionPop, setExtensionPop] = useState(false); 
   const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoCloseSecond = 3000;
+  const autoCloseSecond = 4000;
 
   // 📍 쿠키 추가 - 토큰, 만료 지정
   const setCookie = (key: string, token: string) => {
     const cookieDate = new Date();
-    switch (expireType) {
+    switch(expireType) {
       case 'minutes':
-        cookieDate.setTime(cookieDate.getTime() + cutTime * 60 * 1000);
+        cookieDate.setTime(cookieDate.getTime() + (cutTime * 60 * 1000));
         break;
       case 'hours':
-        cookieDate.setTime(cookieDate.getTime() + cutTime * 60 * 60 * 1000);
+        cookieDate.setTime(cookieDate.getTime() + (cutTime * 60 * 60 * 1000));
         break;
       default:
-        cookieDate.setDate(cookieDate.getDate() + cutTime); // 기본 일 단위 (최대 14일)
+        cookieDate.setDate(cookieDate.getDate() + cutTime); // firebase token 최대 14일 
     }
     document.cookie = `${key}=${encodeURIComponent(token)}; path=/; expires=${cookieDate.toUTCString()};`;
   }
@@ -47,7 +47,7 @@ export default function LoginStatusCheck() {
     extensionTimeRef.current = setTimeout(() => {
       setExtensionPop(true);
     }, chkPopupTime);
-  },[autoCloseSecond]);
+  },[]);
 
   // ✅ 로그인 초기화 dispatch
   const userLoginInit = useCallback(() => { 
@@ -66,7 +66,6 @@ export default function LoginStatusCheck() {
     setExtensionPop(false);
   },[dispatch])
 
-
   // fireDB 체크 및 store 업데이트
   const loginUpdate = useCallback(async(userId: string) => {
     try { 
@@ -78,7 +77,6 @@ export default function LoginStatusCheck() {
       await signOut(auth);
     }
   },[dispatch]);
-
 
   // ✅ 로그인 관련 저장
   const loginSave = useCallback((token: string) =>{
@@ -102,6 +100,7 @@ export default function LoginStatusCheck() {
   },[loginExtensionChk]);
 
   const loginStatus = useCallback(async(user: User | null) => {
+    console.log(user)
     if (user) {
       const accessToken = localStorage.getItem(`${loginChkKey}accessToken`);
       const expirationTime = localStorage.getItem(`${loginChkKey}expirationTime`);
@@ -113,18 +112,22 @@ export default function LoginStatusCheck() {
             loginUpdate(user.email || '');
             // 새로고침, 재접속 후 남은 시간 팝업 노출
             loginExtensionChk(parseFloat(expirationTime) - currentAccessTime); 
+            console.log('재접속')
           }else{
             await signOut(auth);
+            console.log('재접속 후 로그아웃')
           }
         }else{ // 시간이 오버된 경우 로그아웃 
           console.log('만료')
           await signOut(auth);
         }
       }else{ // 값이 없다면 추가 - 로그인 시도
+        console.log('로그인 시도')
         const userToken = await user.getIdToken(); // 새로운 토큰 가져오기
         loginSave(userToken);
       }
     }else { // 로그아웃
+      console.log('로그아웃')
       await signOut(auth);
       userLoginInit(); // 상태 초기화
     }
@@ -132,16 +135,20 @@ export default function LoginStatusCheck() {
   
   // ✅ 로그인 연장 
   const handleConfirmation = useCallback(async () => {
-    setExtensionPop(false);
     try {
       const user = auth.currentUser;
       if (user) {
         const newToken = await user.getIdToken(true); // 토큰 갱신
         loginSave(newToken);
+        console.log('로그인 연장')
       }
     }catch (error) {
       console.log('로그인 연장 오류');
     }
+    if(autoCloseTimeRef.current){
+      clearTimeout(autoCloseTimeRef.current);
+    }
+    setExtensionPop(false);
   },[loginSave])
 
   // ✅ 로그인 연장 취소
@@ -197,7 +204,6 @@ export default function LoginStatusCheck() {
     }
   </>
 }
-
 
 type StyleLoginStatusType = {
   $autoClose : number
