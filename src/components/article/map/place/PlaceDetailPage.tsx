@@ -1,10 +1,13 @@
 import { colors } from "assets/style/Variable";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import styled from "styled-components";
-import { MarkerType, PlacePopStateType } from "types/kakaoComon";
+import { MarkerType, PlacePopStateType, ReviewDataType } from "types/kakaoComon";
+import { locationCategory } from "utils/kakaomap/common";
 import Bookmark from "../Bookmark";
 import PlaceDetailTab from "./PlaceDetailTab";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { collection, fireDB, getDocs } from "../../../../firebase";
+import { placeGetDoc } from "utils/firebase/place";
+import { useEffect } from "react";
 
 interface placePopChangeType {
   placeData: PlacePopStateType;
@@ -15,17 +18,35 @@ export interface PlaceType {
 }
 export default function PlaceDetailPage ({placeData, placePopChange}:placePopChangeType) {
   const { place } = placeData;
-  const {address, road_address} = place!.address;
-  const { user } = useSelector((state: RootState) => state.storeUserLogin);
+  const {id} = place!;
+  const placeCategory = locationCategory(place!.address.address.region_1depth_name);
+
+  const { data: review, error, isLoading }: UseQueryResult<ReviewDataType | null> = useQuery({
+    queryKey: ['placeStore', placeCategory, id], // Query key
+    queryFn: () => placeGetDoc(placeCategory, id), // Query function
+    staleTime: 1000 * 60 * 3, // 3분 동안 데이터를 신선하게 유지
+   // 불러 오는지 다시 확인해봐야함 신 버전에서는 어떻게 사용하고 있는지 체크 필요.
+  });
+
+  useEffect(() => {
+    if (review) {
+      console.log(review)
+      console.log('Detail 캐싱 확인용', review);
+    }
+  }, [review]);
+
   
+
   const handleCloseClick = () =>{ 
     placePopChange(null);
   }
-
-  const categoryTxt = (string?:string|null|undefined) => {
+  
+  const categoryTxt = (string?:string|null|undefined) =>  {
     const text = string ? string.split(' ') : ' ';
     return text[text.length - 1];
   }
+
+
   return (
     <StylePlaceDetail className="place-detail">
       <div className="place-inner">

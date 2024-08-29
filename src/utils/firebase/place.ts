@@ -89,3 +89,18 @@ const placeReviewAddDoc = async(placeData:PlaceReviewType) =>{
     throw new Error('error 리뷰 등록 에러');
   }
 }
+
+// 전체 리뷰 목록 - 추가
+export const allReviewAddDoc = async(placeData:PlaceReviewType) =>{
+  try{
+    const allReviewListRef = collection(fireDB, 'map', 'reviewAll', 'reviewList');
+    const newAllReviewDoc = doc(allReviewListRef);
+    const newAllReviewDocID = newAllReviewDoc.id;
+    placeData.id = newAllReviewDocID; // doc 랜덤 id 추가
+    await setDoc(newAllReviewDoc, placeData);
+  } catch (error){
+    console.log(error)
+    throw new Error('error 전체 리스트에 리뷰 등록 에러');
+  }
+}
+// 전체 리뷰 목록 - 삭제

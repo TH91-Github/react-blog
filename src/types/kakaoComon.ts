@@ -47,6 +47,7 @@ export interface PlacePopStateType {
 }
 
 export interface PlaceReviewType {
+  id?:string,
   collectionName: string,
   docId:string,
   placeName:string,

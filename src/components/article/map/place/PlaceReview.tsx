@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { PlaceReviewType, ReviewDataType } from "types/kakaoComon";
 import { DateChange } from "utils/common";
-import { placeAddDoc, placeGetDoc } from "utils/firebase/place";
+import { allReviewAddDoc, placeAddDoc, placeGetDoc } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import { PlaceType } from "./PlaceDetailPage";
 import ReviewCreate from "./ReviewCreate";
@@ -19,7 +19,6 @@ export default function PlaceReview({place}:PlaceType) {
   const [loading, setLoading] = useState(true);
   const [review, setReview] = useState<ReviewDataType | null>(null);
   const placeCategory = locationCategory(address.address.region_1depth_name);
-  
   const fetchPlace = useCallback(async () => {
     try {
       const placeData = await placeGetDoc(placeCategory, id);
@@ -55,6 +54,8 @@ export default function PlaceReview({place}:PlaceType) {
           rating: rating,
         };
         await placeAddDoc(placeInfo);
+        await allReviewAddDoc(placeInfo); // 리뷰 검수를 위함.
+        // 전체
         fetchPlace();
       } catch (error) {
         console.error("리뷰 등록에 실패하였습니다.", error);
@@ -66,7 +67,6 @@ export default function PlaceReview({place}:PlaceType) {
     }
   },[dispatch, id, placeCategory, place_name, user, fetchPlace])
 
-  
   /*
     위치, 장소, 데이터 위치 특정,
     장소 id로 된 필드 검색 > 컬렉션 review > 필드 수 체크 있는지 없는지

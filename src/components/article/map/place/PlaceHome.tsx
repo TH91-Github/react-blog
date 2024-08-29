@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { PlaceType } from "./PlaceDetailPage";
 
 export default function PlaceHome({place}:PlaceType) {
-  console.log(place)
 
   const urlHttps = (url:string) => { // kakako link 
     return url.replace('http:','https:')

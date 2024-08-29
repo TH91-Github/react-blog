@@ -9,12 +9,18 @@ import { User } from "firebase/auth";
 export default function LoginStatusCheck() {
   const dispatch = useDispatch();
   const loginChkKey = "th-logoutTime"; // 로컬 스토리지와 쿠키에 사용될 key 
-  const cutTime = 1; // 만료 시간
+  const cutTime = 40; // 만료 시간
   const expireType:string = 'minutes';// 분으로 설정 minutes, hours 그 외  day
   const extensionTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
   const [extensionPop, setExtensionPop] = useState(false); 
   const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoCloseSecond = 4000;
+
+  // clearTime
+  const clearAllTimeouts = useCallback(() => {
+    if (extensionTimeRef.current) clearTimeout(extensionTimeRef.current);
+    if (autoCloseTimeRef.current) clearTimeout(autoCloseTimeRef.current);
+  }, []);
 
   // 📍 쿠키 추가 - 토큰, 만료 지정
   const setCookie = (key: string, token: string) => {
@@ -40,14 +46,12 @@ export default function LoginStatusCheck() {
 
   // 유효 시간 전 유지 질문
   const loginExtensionChk = useCallback((remainingTime :number) => {
-    const chkPopupTime =  remainingTime - autoCloseSecond + 500; // 자동 닫기(로그아웃) 팝업 시간 뺀 시간
-    if (extensionTimeRef.current) { 
-      clearTimeout(extensionTimeRef.current);
-    }
+    clearAllTimeouts();
     extensionTimeRef.current = setTimeout(() => {
       setExtensionPop(true);
-    }, chkPopupTime);
-  },[]);
+     
+    }, remainingTime - autoCloseSecond + 500); // 자동 닫기(로그아웃) 팝업 시간 뺀 시간
+  },[clearAllTimeouts]);
 
   // ✅ 로그인 초기화 dispatch
   const userLoginInit = useCallback(() => { 
@@ -60,11 +64,9 @@ export default function LoginStatusCheck() {
     localStorage.removeItem(`${loginChkKey}expirationTime`);
     // 쿠키 초기화 - 만료
     document.cookie = `${loginChkKey}accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-    if (extensionTimeRef.current) {
-      clearTimeout(extensionTimeRef.current);
-    }
+    clearAllTimeouts();
     setExtensionPop(false);
-  },[dispatch])
+  },[dispatch, clearAllTimeouts])
 
   // fireDB 체크 및 store 업데이트
   const loginUpdate = useCallback(async(userId: string) => {
@@ -135,40 +137,27 @@ export default function LoginStatusCheck() {
   
   // ✅ 로그인 연장 
   const handleConfirmation = useCallback(async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const newToken = await user.getIdToken(true); // 토큰 갱신
-        loginSave(newToken);
-        console.log('로그인 연장')
-      }
-    }catch (error) {
-      console.log('로그인 연장 오류');
-    }
-    if(autoCloseTimeRef.current){
-      clearTimeout(autoCloseTimeRef.current);
-    }
+    clearAllTimeouts();
     setExtensionPop(false);
-  },[loginSave])
+    const user = auth.currentUser;
+    if (user) {
+      const newToken = await user.getIdToken(true);  // 토큰 갱신
+      loginSave(newToken);
+      console.log('로그인 연장')
+    }
+  },[loginSave, clearAllTimeouts])
 
   // ✅ 로그인 연장 취소
   const handleCancel = useCallback(async() => {
-    if(autoCloseTimeRef.current){
-      clearTimeout(autoCloseTimeRef.current);
-    }
+    clearAllTimeouts();
     setExtensionPop(false)
     await signOut(auth); // 로그아웃
-  },[])
+  },[clearAllTimeouts])
 
   // ✅ 로그인 연장 팝업 자동 닫기
   useEffect(()=>{
-    if(extensionPop) {
-      if(autoCloseTimeRef.current){
-        clearTimeout(autoCloseTimeRef.current);
-      }
-      autoCloseTimeRef.current = setTimeout(() =>{
-        handleCancel(); // 닫기
-      }, autoCloseSecond);
+    if (extensionPop) {
+      autoCloseTimeRef.current = setTimeout(handleCancel, autoCloseSecond);
     }
   },[extensionPop, handleCancel]);
 
@@ -178,11 +167,9 @@ export default function LoginStatusCheck() {
     // clean up
     return () => {
       cleanupAuth();
-      if(extensionTimeRef.current){
-        clearTimeout(extensionTimeRef.current);
-      }
+      clearAllTimeouts();
     }
-  },[loginStatus])
+  },[loginStatus,clearAllTimeouts])
 
   return <>
      {
