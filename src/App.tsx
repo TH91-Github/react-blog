@@ -27,7 +27,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 function App() : JSX.Element {
   const location = useLocation();
   const dispatch = useDispatch();
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // ✅ globally default 1분 동안
+        staleTime: 1000 * 60 * 1,
+      },
+    },
+  })
+
   // Resize - ✏️ 컴포넌트 분리
   const handleResize = useCallback(() => {
     const isMobile = isMobileChk();

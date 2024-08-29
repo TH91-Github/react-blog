@@ -1,44 +1,43 @@
 import { colors } from "assets/style/Variable";
 
+import { useQueryClient } from "@tanstack/react-query";
+import { SvgStar } from "assets/style/SVGIcon";
 import HeartAnimationButton from "components/effect/HeartAnimationButton";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { PlaceReviewType, ReviewDataType } from "types/kakaoComon";
+import { AllReviewDocType, PlaceReviewType, ReviewDataType } from "types/kakaoComon";
 import { DateChange } from "utils/common";
-import { allReviewAddDoc, placeAddDoc, placeGetDoc } from "utils/firebase/place";
+import { allReviewAddDoc, placeAddDoc, placeReviewRemoveDoc } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import { PlaceType } from "./PlaceDetailPage";
 import ReviewCreate from "./ReviewCreate";
-import { actionAlert, AppDispatch, RootState } from "store/store";
-import { useDispatch, useSelector } from "react-redux";
 
-export default function PlaceReview({place}:PlaceType) {
+interface PlaceReviewPropsType extends PlaceType {
+  placeReview: ReviewDataType | undefined
+}
+
+export default function PlaceReview({place,placeReview}:PlaceReviewPropsType) {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const {id, place_name, address} = place;
   const [loading, setLoading] = useState(true);
-  const [review, setReview] = useState<ReviewDataType | null>(null);
   const placeCategory = locationCategory(address.address.region_1depth_name);
-  const fetchPlace = useCallback(async () => {
-    try {
-      const placeData = await placeGetDoc(placeCategory, id);
-      setReview(placeData);
-    } catch (error) {
-      console.error("Error fetching place data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [placeCategory, id]);
+  const queryClient = useQueryClient();
 
-  // ✅ place 정보 가져오기
-  useEffect(() => {
-    fetchPlace();
-  }, [fetchPlace]);
+  useEffect(()=>{
+    setLoading(placeReview ? false : true);
+  },[placeReview])
 
   const handlelikeClick = () => {
     console.log('좋아요/공감')
   }
+  console.log(placeReview)
+  console.log(user)
 
+  // authorID
+  
   const reviewAdd = useCallback(async(value:string, rating:number) =>{
     if (user) {
       try {
@@ -48,15 +47,13 @@ export default function PlaceReview({place}:PlaceType) {
           collectionName: placeCategory,
           docId: id,
           placeName: place_name,
-          userId: user.loginId,
+          authorId: user.uid,
           nickName: user.nickName ?? "아무개",
           reviewText: value,
           rating: rating,
         };
         await placeAddDoc(placeInfo);
-        await allReviewAddDoc(placeInfo); // 리뷰 검수를 위함.
-        // 전체
-        fetchPlace();
+        queryClient.invalidateQueries({ queryKey: ['placeReview'] });
       } catch (error) {
         console.error("리뷰 등록에 실패하였습니다.", error);
       } finally {
@@ -65,8 +62,27 @@ export default function PlaceReview({place}:PlaceType) {
     }else{
       dispatch(actionAlert({titMessage:'로그인 정보를 확인해주세요! 🫢',isPopup:true,ref:null}))
     }
-  },[dispatch, id, placeCategory, place_name, user, fetchPlace])
+  },[dispatch, id, placeCategory, place_name, user, queryClient])
 
+  const handleRemove = async (removeData:AllReviewDocType) => {
+    const {id:removeID, authorID} = removeData;
+    if (user && removeID && authorID) {
+      try {
+        await placeReviewRemoveDoc({ 
+          collectionName: placeCategory,
+          docId: id,
+          removeId: removeID,
+          authorId: authorID,
+        });
+        queryClient.invalidateQueries({ queryKey: ['placeReview'] });
+        console.log("리뷰가 성공적으로 삭제되었습니다.👍");
+      } catch (error) {
+        console.log("리뷰 삭제 중 오류 발생했어요.😲");
+      }
+    } else {
+      console.log('user 정보를 확인해 주세요 🥹');
+    }
+  }
   /*
     위치, 장소, 데이터 위치 특정,
     장소 id로 된 필드 검색 > 컬렉션 review > 필드 수 체크 있는지 없는지
@@ -81,14 +97,13 @@ export default function PlaceReview({place}:PlaceType) {
     thData > userData > users > 필드 > review(컬렉션) > 필드명(uID-시간) > id:필드명(uID-시간), 지역, 장소ID desc 시간, <- 정보를 가지고 map에 등록된 DB 데이터 삭제 (my페이지에서 내 리뷰 보기에서 리스트 보여질 예정.)
   */
 
-
   return (
     <StylePlaceReview className="review">
       {
-        review
+        placeReview
         ?
           <div className="review-inner">
-            <p className="title">리뷰 <span>{review.data?.length}</span></p>
+            <p className="title">리뷰 <span>{placeReview.data?.length}</span></p>
             {
               loading
               ? 
@@ -97,7 +112,7 @@ export default function PlaceReview({place}:PlaceType) {
               <div className="review-list">
                 {
                   // .sort() 시간 정렬
-                  review.data
+                  placeReview.data
                   ?.sort((a, b) => b.time - a.time) // time.seconds를 기준으로 내림차순 정렬
                   .map((reviewItem, idx) => (
                     <div className="review-item" key={idx}>
@@ -112,10 +127,21 @@ export default function PlaceReview({place}:PlaceType) {
                             clickEvent={handlelikeClick} />
                           <span className="num">{reviewItem.like ?? 0}</span>
                         </div>
+                        <span className="rating">
+                          <i className="icon-rating"><SvgStar $fillColor={colors.navy} /></i>
+                          <span className="num">{reviewItem.rating}</span>
+                        </span>
                         <span className="date">
                           {DateChange('y2mdwhm', reviewItem.time)}
                         </span>
                       </div>
+                      {
+                        (user && reviewItem.authorID === user.uid) && (
+                          <button className="btn-remove" onClick={ ()=> handleRemove(reviewItem)} title="리뷰 삭제">
+                            <span>삭제</span>
+                          </button>
+                        )
+                      }
                     </div>
                   ))
                 }
@@ -163,6 +189,7 @@ const StylePlaceReview = styled.div`
     }
   }
   .review-item {
+    position:relative;
     margin-top:15px;
     padding:15px 0 0;
     border-top:1px solid ${colors.lineColor};
@@ -195,9 +222,46 @@ const StylePlaceReview = styled.div`
         font-size:14px;
       }
     }
+    .rating {
+      display:flex;
+      gap:5px;
+      align-items:center;
+      .icon-rating {
+        width:25px;
+      }
+      .num {
+        font-size:14px;
+      }
+    }
     .date{
       font-size:12px;
       color:${colors.subTextColor};
+    }
+  }
+  .btn-remove {
+    position:absolute;
+    top:15px; 
+    right:0px;
+    width:15px;
+    height:15px;
+    &::before, &::after {
+      position:absolute;
+      top: 50%;
+      left:50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 2px;
+      background:${colors.baseBlack};
+      transform: translate(-50%, -50%) rotate(-45deg);
+      content:"";
+    }
+    &::after{ 
+      transform: translate(-50%, -50%) rotate(-135deg);
+    }
+    & > span {
+      display:inline-block;
+      text-indent:-9999px;
+      opacity:0;
     }
   }
 `;

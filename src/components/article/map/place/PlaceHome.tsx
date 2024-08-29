@@ -2,15 +2,27 @@ import { SvgCall, SvgInternet, SvgPoint } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
 import styled from "styled-components";
 import { PlaceType } from "./PlaceDetailPage";
+import { ReviewDataType } from "types/kakaoComon";
+import RatingStar from "components/element/RatingStar";
 
-export default function PlaceHome({place}:PlaceType) {
+interface PlaceHomeType extends PlaceType {
+  placeReview: ReviewDataType | undefined
+}
 
+export default function PlaceHome({place, placeReview}:PlaceHomeType) {
   const urlHttps = (url:string) => { // kakako link 
     return url.replace('http:','https:')
   }
-
   return (
     <StylePlaceHome className="place-home">
+      <div className="rating-wrap">
+        <RatingStar 
+          initNum={placeReview?.rating ?? 0}
+          onlyView={true}
+          starWidth="30px"
+          max={5} 
+          bgColor={colors.yellow} />
+      </div>
       <div className="address-info">
         <i className="icon-address"><SvgPoint $fillColor={colors.yellow} /></i>
         <p><span>도로명</span><span>{place.address.road_address.address_name}</span></p>
@@ -25,6 +37,7 @@ export default function PlaceHome({place}:PlaceType) {
         <i className="icon-internet"><SvgInternet $fillColor={colors.yellow} /></i>
         <p><a href={urlHttps(place.url)} target="_blank" rel="noopener noreferrer" title={`${place.place_name} | 카카오맵 새 창`}>{urlHttps(place.url)}</a></p>
       </div>
+      
       {/* 
         주소
         영업시간
@@ -45,7 +58,21 @@ const StylePlaceHome = styled.div`
     position:relative;
     padding-left:25px;
   }
-  p {
+  .rating-wrap {
+    position:relative;
+    padding:0;
+    .icon-rating {
+      top:50%;
+      transform:translateY(-50%);
+    }
+    .rating-select {
+      padding:0;
+    } 
+    .max{
+      color:${colors.subTextColor};
+    }
+  }
+  p(not:.rating-result) {
     display:flex;
     gap:5px;
     font-size:14px;
@@ -74,7 +101,7 @@ const StylePlaceHome = styled.div`
     flex-direction: column;
     gap:5px;
   }
-  [class*="icon-"]{
+  i[class*="icon-"]{
     display:block;
     position:absolute;
     top:0;
@@ -104,10 +131,10 @@ const StylePlaceHome = styled.div`
   }
   .link { 
     a {
+      display:block;
       white-space: nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
   }
-  
 `;

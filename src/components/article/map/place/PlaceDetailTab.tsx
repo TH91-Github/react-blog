@@ -1,15 +1,15 @@
-import { SvgPoint } from "assets/style/SVGIcon";
 import { colors, transitions } from "assets/style/Variable";
 import { useState } from "react";
-import styled from "styled-components"
-import { MarkerType } from "types/kakaoComon";
+import styled from "styled-components";
+import { MarkerType, ReviewDataType } from "types/kakaoComon";
 import PlaceHome from "./PlaceHome";
 import PlaceReview from "./PlaceReview";
 
-export interface PlaceDetailTab {
-  place : MarkerType | null
+export interface PlaceDetailTabType {
+  place : MarkerType | null,
+  placeReview: ReviewDataType | undefined
 }
-export default function PlaceDetailTab ({place}:PlaceDetailTab) {
+export default function PlaceDetailTab ({place, placeReview}:PlaceDetailTabType) {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [
     { id: 0, tit: '홈', desc: '홈 상세 내용입니다.' },
@@ -42,8 +42,8 @@ export default function PlaceDetailTab ({place}:PlaceDetailTab) {
       <div className="tab-cont">
         <div className="tab-cont-inner">
           <p className="blind">{tabs[activeTab].desc}</p>
-          { activeTab === 0 && <PlaceHome place={place} /> }
-          { activeTab === 1 && <PlaceReview place={place} />}
+          { activeTab === 0 && <PlaceHome place={place} placeReview={placeReview} /> }
+          { activeTab === 1 && <PlaceReview place={place} placeReview={placeReview} />}
         </div>
       </div>
 
@@ -102,7 +102,7 @@ const StylePlaceDetailTab = styled.div`
     }
     &.active {
       font-weight:700;
-      color:${colors.purple};
+      color:${colors.navy};
     }
   }
   .tab-cont {

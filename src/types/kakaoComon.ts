@@ -51,11 +51,29 @@ export interface PlaceReviewType {
   collectionName: string,
   docId:string,
   placeName:string,
-  userId:string,
+  authorId:string,
   nickName:string,
   reviewText:string,
   rating:number,
 }
+export interface AllReviewDocType {
+  id:string,
+  authorID: string,
+  nickName: string,
+  reviewText:string,
+  rating:number,
+  order:number,
+  time:Date,
+  allID?:string
+}
+
+export interface PlaceRemoveType {
+  collectionName: string,
+  docId:string,
+  removeId:string,
+  authorId:string,
+}
+
 export interface ReviewFirebaseType {
   authorID:string,
   id: string,

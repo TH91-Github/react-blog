@@ -1,18 +1,27 @@
 import { SvgStar } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import styled from "styled-components"
 
 interface RatingStarType {
+  initNum?: number;
+  onlyView?:boolean;
   max?:number;
+  starWidth?:string;
   bgColor?:string;
 }
 
-const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ max, bgColor }: RatingStarType, ref) => {
-  const [rating, setRating] = useState(5);
+const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, onlyView, max, starWidth, bgColor }: RatingStarType, ref) => {
+  const [rating, setRating] = useState(initNum ?? 5);
   const ratingMax = max ?? 5;
-  const starW = '45px';
+  const starW = starWidth ?? '45px';
 
+  useEffect(() => {
+    if (initNum !== undefined) {
+      setRating(initNum);
+    }
+  },[initNum]);
+  
   const handleRangeChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setRating(parseFloat(e.target.value))
   }
@@ -43,16 +52,21 @@ const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ max, bgColor 
               </span>
             ))
           }
-          <input 
-            ref={ref}
-            type="range"
-            name="input-rating" 
-            className="input-rating"
-            min="0.1"
-            max="5"
-            step="0.1"
-            value={rating}
-            onChange={handleRangeChange}/>
+          {
+            !onlyView && (
+              <input 
+                ref={ref}
+                type="range"
+                name="input-rating" 
+                className="input-rating"
+                min="0.1"
+                max="5"
+                step="0.1"
+                value={rating}
+                onChange={handleRangeChange}/>
+            )
+          }
+          
         </div>
         <p className="rating-result">
           <span className="give">{ rating.toFixed(1) }</span> 
