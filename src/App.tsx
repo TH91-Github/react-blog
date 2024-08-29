@@ -11,17 +11,18 @@ styled-components (styled)
 타입 정의 (StringOnly)
 */ 
 
-import React, { useCallback, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GlobalStyles } from 'assets/style/GlobalStyles';
+import CurrentLocation from "components/article/map/CurrentLocation";
+import AppLayout from "components/layout/AppLayout";
+import Header from 'components/layout/Header';
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Outlet, useLocation } from "react-router-dom";
 import { actionMobileChk } from "store/store";
 import { isMobileChk } from "utils/common";
-import { GlobalStyles } from 'assets/style/GlobalStyles';
-import Header from 'components/layout/Header';
-import AppLayout from "components/layout/AppLayout";
 import './App.css';
-import CurrentLocation from "components/article/map/CurrentLocation";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() : JSX.Element {
   const location = useLocation();
@@ -52,6 +53,7 @@ function App() : JSX.Element {
           {/* 현재위치 store */}
         </div>
       </AppLayout>
+      <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );
 }
