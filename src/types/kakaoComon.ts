@@ -81,7 +81,7 @@ export interface ReviewFirebaseType {
   nickName:string,
   rating:number,
   reviewText:string,
-  like?:number,
+  like?:string[],
   time: any,
 }
 export interface ReviewDataType {

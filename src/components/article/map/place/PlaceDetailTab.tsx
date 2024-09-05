@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { MarkerType, ReviewDataType } from "types/kakaoComon";
 import PlaceHome from "./PlaceHome";
-import PlaceReview from "./PlaceReview";
+import PlaceReview from "./PlaceReviewList";
 
 export interface PlaceDetailTabType {
   place : MarkerType | null,

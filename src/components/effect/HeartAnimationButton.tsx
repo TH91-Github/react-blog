@@ -4,9 +4,10 @@ import { useRef, useState } from "react";
 
 interface HeartAnimationButtonType{
   title: string;
-  clickEvent: () => void;
+  activeColor?: string;
+  clickEvent?: () => void;
 }
-export default function HeartAnimationButton({title, clickEvent}:HeartAnimationButtonType){ 
+export default function HeartAnimationButton({title, activeColor, clickEvent}:HeartAnimationButtonType){ 
   const [action, setAction] = useState(false); // 이용자가 좋아요한 댓글이면 true
   const actionTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const actionTime = 1000;
@@ -14,7 +15,7 @@ export default function HeartAnimationButton({title, clickEvent}:HeartAnimationB
   const handleClick = () => {
     console.log('click');
     setAction(true);
-    // clickEvent();
+    clickEvent && clickEvent();
     if (actionTimeRef.current) {
       clearTimeout(actionTimeRef.current);
     }
@@ -32,7 +33,7 @@ export default function HeartAnimationButton({title, clickEvent}:HeartAnimationB
           <HeartAnimation 
             action={action}
             animationType={'heart-up'}
-            bgColor={colors.lineColor}/>
+            bgColor={activeColor ? activeColor : colors.lineColor}/>
         </span>
     </button>
 
