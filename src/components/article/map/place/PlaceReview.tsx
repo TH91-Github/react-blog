@@ -62,6 +62,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   };
 
   useEffect(() => {
+    setLike(reviewData.like || [])
     // 3초 전에 컴포넌트를 벗어난 경우 바로 요청하기 위함.
     return () => {
       if (actionTimeRef.current) {
@@ -71,11 +72,12 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
         queryClient.invalidateQueries({ queryKey: ['placeReview'] }); 
       }
     };
-  }, [placeCategory, placeDocId, reviewData.id, user, queryClient, createPlaceUpdateInfo]);
+  }, [placeCategory, placeDocId, reviewData, user, queryClient, createPlaceUpdateInfo]);
 
   const handleRemoveClick = (e:AllReviewDocType) =>{
     eventRemove(e);
   }
+
   return (
     <StylePlaceReview className="review">
       <div className="review-item">
@@ -90,7 +92,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
               isActive={user ? like.includes(user.uid) : false}
               activeColor={colors.navy}
               clickEvent={handlelikeClick} />
-            <span className="num">{like.length ?? 0}</span>
+            <span className="num">{like.length ? like.length > 99 ? '99+' : like.length : 0}</span>
           </div>
           <span className="rating">
             <i className="icon-rating"><SvgStar $fillColor={colors.navy} /></i>
@@ -144,6 +146,8 @@ const StylePlaceReview = styled.div`
         height:25px;
       }
       .num {
+        display:inline-block;
+        width:20px;
         font-size:14px;
       }
     }

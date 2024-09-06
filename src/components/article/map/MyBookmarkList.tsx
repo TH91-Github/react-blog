@@ -36,10 +36,11 @@ export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
   const handleMyBookmarkClick = (e:any) =>{
     placePopChange(null)
   }
+  console.log(user)
   return (
     <>
       {
-        user 
+        (user && (user.kakaoMapData?.length ?? false))
           ? <StyleMyBookmarkList className={`my-bookmark-list ${isListOpen ? 'active':''}`}>
             <button 
               className="my-bookmark-btn"

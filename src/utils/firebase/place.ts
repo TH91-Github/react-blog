@@ -174,14 +174,9 @@ export const placeReviewUpdateDoc = async(updateData:PlaceUpdateType) => {
     const placeUpdateSnapshot = await getDoc(placeUpdateDoc); 
 
     if(placeUpdateSnapshot.exists()){
-      const docData = placeUpdateSnapshot.data(); 
-      if (docData.authorID === authorId) { // 사용자 확인
-        await updateDoc(placeUpdateDoc, {
-          [updateKey]: likeList 
-        });
-      } else {
-        console.log("사용자 권한이 없습니다.");
-      }
+      await updateDoc(placeUpdateDoc, {
+        [updateKey]: likeList 
+      });
     }else{
       console.log("⚠️ 리뷰가 없습니다!!");
     }

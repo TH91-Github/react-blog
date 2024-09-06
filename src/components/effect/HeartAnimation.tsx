@@ -13,7 +13,7 @@ interface HeartAnimationType {
 export default function HeartAnimation({action, animationType, time, repeat, bgColor}:HeartAnimationType) {
 
   return (
-    <StyleHeart className="heart" $duration={time ?? 1} $repeat={repeat ?? '1'}>
+    <StyleHeart className="heart" $transition={action ?? false} $duration={time ?? 1} $repeat={repeat ?? '1'}>
       {
         (animationType === 'heart-up' && action) &&
         <span className="animation-up">
@@ -22,13 +22,13 @@ export default function HeartAnimation({action, animationType, time, repeat, bgC
           <i className="boom"><SvgHeart $fillColor={bgColor} /></i>
         </span>
       }
-      
       <SvgHeart $fillColor={bgColor} />
     </StyleHeart>
   )
 }
 
 export type StyleHeartType = { // default
+  $transition:boolean,
   $duration: number,
   $repeat: string,
 }
@@ -37,7 +37,7 @@ const StyleHeart = styled.div<StyleHeartType>`
   width:100%;
   height:100%;
   svg {
-    transition:${transitions.base};
+    ${props => props.$transition &&` transition:${transitions.base};`}
   }
   .animation-up {
     & > i {
