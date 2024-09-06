@@ -1,28 +1,15 @@
 import { colors } from "assets/style/Variable";
 import HeartAnimation from "./HeartAnimation";
-import { useRef, useState } from "react";
 
 interface HeartAnimationButtonType{
+  isActive:boolean;
   title: string;
   activeColor?: string;
   clickEvent?: () => void;
 }
-export default function HeartAnimationButton({title, activeColor, clickEvent}:HeartAnimationButtonType){ 
-  const [action, setAction] = useState(false); // 이용자가 좋아요한 댓글이면 true
-  const actionTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const actionTime = 1000;
-
+export default function HeartAnimationButton({isActive, title, activeColor, clickEvent}:HeartAnimationButtonType){ 
   const handleClick = () => {
-    console.log('click');
-    setAction(true);
     clickEvent && clickEvent();
-    if (actionTimeRef.current) {
-      clearTimeout(actionTimeRef.current);
-    }
-    actionTimeRef.current = setTimeout(() => {
-      setAction(false)
-    }, actionTime + 50);
-
   }
   return (
     <button 
@@ -31,9 +18,9 @@ export default function HeartAnimationButton({title, activeColor, clickEvent}:He
       onClick={handleClick}>
         <span className="icon">
           <HeartAnimation 
-            action={action}
+            action={isActive}
             animationType={'heart-up'}
-            bgColor={activeColor ? activeColor : colors.lineColor}/>
+            bgColor={isActive ? activeColor : colors.lineColor}/>
         </span>
     </button>
 

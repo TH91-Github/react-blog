@@ -6,7 +6,6 @@ import { placeGetDoc } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import Bookmark from "../Bookmark";
 import PlaceDetailTab from "./PlaceDetailTab";
-
 interface placePopChangeType {
   placeData: PlacePopStateType;
   placePopChange: (e:MarkerType | null) => void; 

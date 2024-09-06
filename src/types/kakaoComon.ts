@@ -19,8 +19,8 @@ export interface MarkerType {
   address?:any,
 }
 export interface ListType extends MarkerType {
-  detailOpen?: boolean;
-  isBookmark?: boolean;
+  detailOpen?: boolean,
+  isBookmark?: boolean,
 } 
 export interface MapDataType {
   mapRef: kakao.maps.Map | null,
@@ -39,11 +39,11 @@ export interface KakaoMapBasicType {
   kakaoUpdate: (e:MapDataType) => void;
 }
 export interface KeyObjectAnyType {
-  [key:string]: any;
+  [key:string]: any,
 }
 export interface PlacePopStateType {
-  show: boolean;
-  place: MarkerType | null;
+  show: boolean,
+  place: MarkerType | null,
 }
 
 export interface PlaceReviewType {
@@ -72,6 +72,15 @@ export interface PlaceRemoveType {
   docId:string,
   removeId:string,
   authorId:string,
+}
+
+export interface PlaceUpdateType {
+  collectionName: string,
+  docId:string,
+  updateDocId:string,
+  authorId:string,
+  updateKey:string,
+  likeList?:string[]
 }
 
 export interface ReviewFirebaseType {

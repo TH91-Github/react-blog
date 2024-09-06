@@ -46,22 +46,6 @@ export default function PlaceDetailTab ({place, placeReview}:PlaceDetailTabType)
           { activeTab === 1 && <PlaceReview place={place} placeReview={placeReview} />}
         </div>
       </div>
-
-      {/* 
-          타이틀
-
-          카테고리  category_name
-          주소
-          전화번호
-          url
-
-          데이터 불러온 추가 정보
-          후기  
-          리뷰
-
-        */}
-
-
     </StylePlaceDetailTab>
   )
 }

@@ -1,6 +1,5 @@
-import { AllReviewDocType, PlaceRemoveType, PlaceReviewType, ReviewDataType } from "types/kakaoComon";
+import { AllReviewDocType, PlaceRemoveType, PlaceReviewType, PlaceUpdateType, ReviewDataType } from "types/kakaoComon";
 import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
-import { DateChange } from "utils/common";
 
 // ✅ Map Place
 // place 정보 가져오기 
@@ -140,7 +139,7 @@ export const placeReviewRemoveDoc = async(removeData:PlaceRemoveType) => {
       throw new Error("⚠️ 리뷰가 없어요!!");
     }
   }catch(error){
-    console.log('⚠️오류가 발생하여 리뷰 삭제했어요 😲')
+    throw new Error('error')
   }
 }
 
@@ -164,4 +163,29 @@ export const allReviewRemoveDoc = async(removeData:PlaceRemoveType) => {
   // 문서 삭제
   const allPlaceRemoveDoc = doc(allReviewListRemoveRef, reviewDocId);
   await deleteDoc(allPlaceRemoveDoc);
+}
+
+// 특정 place 업데이트
+export const placeReviewUpdateDoc = async(updateData:PlaceUpdateType) => {
+  const { collectionName, docId, updateDocId, authorId, updateKey, likeList} = updateData;
+  try{
+    const placeUpdateRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');
+    const placeUpdateDoc = doc(placeUpdateRef, updateDocId);
+    const placeUpdateSnapshot = await getDoc(placeUpdateDoc); 
+
+    if(placeUpdateSnapshot.exists()){
+      const docData = placeUpdateSnapshot.data(); 
+      if (docData.authorID === authorId) { // 사용자 확인
+        await updateDoc(placeUpdateDoc, {
+          [updateKey]: likeList 
+        });
+      } else {
+        console.log("사용자 권한이 없습니다.");
+      }
+    }else{
+      console.log("⚠️ 리뷰가 없습니다!!");
+    }
+  }catch(error){
+    console.log("⚠️ 업데이트 실패");
+  }
 }
