@@ -14,7 +14,7 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
     setDuplicate(false);
   },[])
 
-  // 중복 검사 
+  // 중복 검사 체크
   const checkDuplicateEmail = useCallback(async(name:string|null, emailVal:string)=>{
     const duplicateEmail = await duplicateDoc('userData','users', name ?? 'email', emailVal);
     if(!duplicateEmail){
@@ -33,9 +33,13 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
     const inputVal = e.target.value.trim();
     const inputName = e.target.getAttribute('name');
     // 유효성 검사
-    inputVal.length>0
-    ? setValError(emailCheck(inputVal))
-    : setValError(false)
+    inputVal.length > 0
+      ? setValError(emailCheck(inputVal))
+      : setValError(false)
+
+    // email 유효성 체크 gmail 일 경우 로그인 추천
+    
+    
     // 중복 검사
     if(inputVal.length>0 && !emailCheck(inputVal)){
       checkDuplicateEmail(inputName, inputVal); // email, val

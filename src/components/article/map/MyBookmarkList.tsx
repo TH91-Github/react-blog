@@ -4,14 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { ListType, MarkerType } from "types/kakaoComon";
+import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
 import Bookmark from "./Bookmark";
 
 type placePopChangeType = {
-  placePopChange: (e:MarkerType | null) => void; 
+  kakaoData: MapDataType,
+  updateClick: (e:MapDataType) => void,
 };
 
-export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
+export default function MyBookmarkList ({kakaoData, updateClick}:placePopChangeType) {
   const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const listRef = useRef<HTMLDivElement| null>(null)
   const [isListOpen, setIsListOpen] = useState(false);
@@ -33,10 +34,13 @@ export default function MyBookmarkList ({placePopChange}:placePopChangeType) {
     };
   }, []);
 
-  const handleMyBookmarkClick = (e:any) =>{
-    placePopChange(null)
+  const handleMyBookmarkClick = (e:any) =>{ // ✅ 선택 My Place 
+    const bookmarkClickData = {
+      ...kakaoData,
+      markerList: [e.bookmark],
+    }
+    updateClick(bookmarkClickData);
   }
-  console.log(user)
   return (
     <>
       {

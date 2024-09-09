@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
+import { mapCenterSetting } from "utils/kakaomap/common";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
-import { mapCenterSetting } from "utils/kakaomap/common";
 interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
@@ -33,7 +33,8 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   useEffect(()=>{ // ✅ 리스트 클릭 전달 받은 id
     if(!map) return
     if(activePoint) {
-      const pick = kakaoData.markerList.find(item => item.id === activePoint) ?? null;
+      let pickList = [...kakaoData.markerList];
+      const pick = pickList.find(item => item.id === activePoint) ?? null; 
       if(pick){
         const {lat, lng} = pick.position;
         const pointer = new kakao.maps.LatLng(lat, lng)
@@ -43,7 +44,6 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
         // PC 사이드 리스트 -> 센터 보정
         mapCenterSetting(map,-135);
       }
-      console.log(pick)
       setPointPop(pick);
     }
   },[map, activePoint, kakaoData.markerList, isMobile])

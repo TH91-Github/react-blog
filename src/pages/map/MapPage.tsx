@@ -36,6 +36,7 @@ export default function MapPage() {
   const kakaoUpdate = useCallback((data: MapDataType) => {
     setActivePoint(null)
     setKakaoData(data);
+    setActivePoint(data.markerList[0].id) // 목록 첫 번째 활성화
   },[]);
 
   // 검색 결과
@@ -57,7 +58,7 @@ export default function MapPage() {
     setActivePoint(null)
   }
 
-  // ⭐ 맵에 활성화된 장소 상세 정보
+  // ⭐ 맵에 활성화된 장소 상세 정보 팝업
   const placePopChange = (ePlace:MarkerType | null) => {
     setPlacePop( ePlace ? { place:{...ePlace}, show: true } : {place:null, show:false});
   };
@@ -95,7 +96,8 @@ export default function MapPage() {
           <div className="map-side-menu">
             {/* 회원 - 즐겨찾기 */}
             <MyBookmarkList 
-              placePopChange={placePopChange} />
+              kakaoData={kakaoData}
+              updateClick={kakaoUpdate} />
             {
               placePop.show && 
               <PlaceDetailPage 
