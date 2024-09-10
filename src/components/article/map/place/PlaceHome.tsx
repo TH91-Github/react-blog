@@ -25,9 +25,17 @@ export default function PlaceHome({place, placeReview}:PlaceHomeType) {
       </div>
       <div className="address-info">
         <i className="icon-address"><SvgPoint $fillColor={colors.yellow} /></i>
-        <p><span>도로명</span><span>{place.address.road_address.address_name}</span></p>
-        <p><span>지번</span><span>{`${place.address.address.region_3depth_name} ${place.address.address.main_address_no}`}</span></p>
-        <p><span>(우)</span><span>{place.address.road_address.zone_no}</span></p>
+        <p>
+          <span>도로명</span>
+          <span>{place.address?.road_address?.address_name || ''}</span>
+        </p>
+        <p>
+          <span>지번</span>
+          <span>{`${place.address?.address?.region_3depth_name || ''} ${place.address?.address?.main_address_no || ''}`}</span>
+        </p>
+        <p>
+          <span>{place.address?.road_address?.zone_no || ''}</span>
+        </p>
       </div>
       <div className="phone">
         <i className="icon-call"><SvgCall $fillColor={colors.yellow} /></i>

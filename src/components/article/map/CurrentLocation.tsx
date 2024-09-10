@@ -11,7 +11,7 @@ export default function CurrentLocation() {
       const address = JSON.parse(position)[0];
       dispatch(actionUserLocationUpdate({...address, coords:{lat:coords.getLat(), lng:coords.getLng()} }));
     } catch (error) {
-      console.log(error);
+      console.log("현재 위치 가져오기 에러.. 😢 "+error);
     }
   },[dispatch]);
   useEffect(() => {

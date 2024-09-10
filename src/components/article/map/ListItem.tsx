@@ -35,7 +35,8 @@ export default React.memo(ListItem, (prevProps, nextProps) => {
   return (
     prevProps.item.detailOpen === nextProps.item.detailOpen &&
     prevProps.item.place_name === nextProps.item.place_name && 
-    prevProps.item.isBookmark === nextProps.item.isBookmark 
+    prevProps.item.isBookmark === nextProps.item.isBookmark &&
+    prevProps.clickEvent === nextProps.clickEvent
   );
 });
 

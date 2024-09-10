@@ -120,6 +120,8 @@ const StyledHeader = styled.header`
     height:100%;
   }
   .header-logo {
+    position:relative;
+    z-index:1;
     padding-right:50px;
     .logo-btn {
       vertical-align:top;
@@ -167,12 +169,12 @@ const StyledHeader = styled.header`
     .header-logo{
       padding:0px;
     }
-    &:not(.is-fixed):not(.gnb-on){
-      .header-wrap{
-        padding:0 15px;
-      }
-    }
     &.main-header{
+      &:not(.is-fixed):not(.gnb-on){
+        .header-wrap{
+          padding:0 15px;
+        }
+      }
       .header-inner{
         width:100%;
         padding:0 15px;

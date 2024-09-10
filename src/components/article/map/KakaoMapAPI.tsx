@@ -49,7 +49,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   },[map, activePoint, kakaoData.markerList, isMobile])
 
   const pointActiveEvent = (marker:MarkerType | null) => { // ✅ 마커 클릭
-    if(marker === null){
+    if(marker === null){ // 활성 Place 닫기 누를 경우
       activeChange()
       placePopChange(null);
     }

@@ -3,9 +3,7 @@ import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
 import PlaceDetailPage from 'components/article/map/place/PlaceDetailPage';
-
 import SearchList from 'components/article/map/SearchList';
-
 import SearchMap from 'components/article/map/SearchMap';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -35,8 +33,11 @@ export default function MapPage() {
   // 카카오맵 업데이트
   const kakaoUpdate = useCallback((data: MapDataType) => {
     setActivePoint(null)
+    setPlacePop({place:null, show:false});
     setKakaoData(data);
-    setActivePoint(data.markerList[0].id) // 목록 첫 번째 활성화
+    if(data.markerList.length === 1) { // 목록 하나만 있을 경우 첫 번째 활성화
+      setActivePoint(data.markerList[0].id) 
+    }
   },[]);
 
   // 검색 결과
@@ -50,18 +51,22 @@ export default function MapPage() {
     }
   },[kakaoData, kakaoUpdate]);
 
-  // 검색 리스트 place 선택 좌표
-  const listClick = (selectID:string) => { 
-    setActivePoint(selectID)
-  }
-  const activeChange = () => {
-    setActivePoint(null)
-  }
-
   // ⭐ 맵에 활성화된 장소 상세 정보 팝업
   const placePopChange = (ePlace:MarkerType | null) => {
     setPlacePop( ePlace ? { place:{...ePlace}, show: true } : {place:null, show:false});
   };
+
+  // 검색 리스트 place 선택 좌표
+  const listClick = useCallback((selectID:string) => {
+    if(selectID !== placePop.place?.id){ // 다른 place를 클릭 시 팝업 off
+      setPlacePop({place:null, show:false});
+    }
+    setActivePoint(selectID)
+  },[placePop]);
+
+  const activeChange = () => { // 활성 마커 닫기 누를 경우 or 마커 비활성하기
+    setActivePoint(null)
+  }
 
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
     // console.log(pos)// 중심 좌표
@@ -112,7 +117,7 @@ export default function MapPage() {
           <KakaoMapAPI 
             kakaoData={kakaoData} 
             kakaoUpdate={kakaoUpdate} 
-            activePoint={activePoint} 
+            activePoint={activePoint}
             activeChange={activeChange}
             placePopChange={placePopChange} />
           {/* 맵 가운데 주소 */}

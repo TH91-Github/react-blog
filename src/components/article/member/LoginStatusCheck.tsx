@@ -102,7 +102,6 @@ export default function LoginStatusCheck() {
   },[loginExtensionChk]);
 
   const loginStatus = useCallback(async(user: User | null) => {
-    console.log(user)
     if (user) {
       const accessToken = localStorage.getItem(`${loginChkKey}accessToken`);
       const expirationTime = localStorage.getItem(`${loginChkKey}expirationTime`);
