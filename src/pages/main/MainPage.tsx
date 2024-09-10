@@ -16,9 +16,9 @@ export default function MainPage() : JSX.Element{
               <p className="desc">sub text</p>
             </div>
           </div>
-          
         </div>
         <div className="content">
+          {/* content */}
         </div>
       </StyleWrap>
   )
@@ -80,8 +80,7 @@ const StyleWrap = styled.div`
       padding:0 15px;
       &-bord {
         width: 100%;
-        height:80%;
-        min-height:400px;
+        height:clamp(${rem(400)}, 80%, ${rem(600)});
       }
       .visual-text {
         right:25px;

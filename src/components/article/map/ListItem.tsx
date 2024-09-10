@@ -1,5 +1,5 @@
 import React from "react";
-import { colors, ellipsisStyle, transitions } from "assets/style/Variable";
+import { colors, ellipsisStyle, media, transitions } from "assets/style/Variable";
 import styled from "styled-components";
 import AddressInfoBtn from "./AddressInfoBtn";
 import Bookmark from "./Bookmark";
@@ -26,8 +26,7 @@ const ListItem = ({ item,  number, clickEvent,addressInfoEvent }:ListItemType) =
       <AddressInfoBtn 
         data={item} 
         clickEvent={addressInfoEvent} />
-      <Bookmark
-        bookmarkItem={item} />
+      <Bookmark bookmarkItem={item} />
     </StyleItem>
   )
 }
@@ -98,5 +97,12 @@ const StyleItem = styled.li`
     top:15px;
     right:10px;
     width:15px;
+  }
+  ${media.mo}{
+    padding:15px 25px 15px 0px;
+
+    .bookmark-btn {
+      width:20px;
+    }
   }
 `;

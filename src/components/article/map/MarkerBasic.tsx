@@ -1,5 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
 import { MarkerType } from "types/kakaoComon";
 

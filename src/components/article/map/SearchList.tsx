@@ -1,5 +1,5 @@
 // SearchList
-import { colors } from "assets/style/Variable";
+import { colors, media, transitions } from "assets/style/Variable";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
@@ -8,10 +8,13 @@ import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
 import ListItem from "./ListItem";
 
 interface SearchListType {
-  searchData: MapDataType;
-  listClick: (e:string) => void;
+  searchData: MapDataType,
+  listClick: (e:string) => void,
+  isMoList:boolean,
+  moListClick: () => void,
 }
-export default function SearchList({searchData, listClick}:SearchListType) {
+export default function SearchList({searchData, listClick, isMoList, moListClick}:SearchListType) {
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [markerList, setMarkerList] = useState<ListType[]>([]);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(1, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
@@ -38,10 +41,13 @@ export default function SearchList({searchData, listClick}:SearchListType) {
       )
     )
   },[])
-  
+
+  const handleSearchListClose = () => {
+    moListClick();
+  }
 
   return (
-    <StyleSearchList>
+    <StyleSearchList className={isMoList ? 'active':''}>
       <div className="location">
         <p className="tit">
           📌 <span className="blind">현재 위치</span> 
@@ -54,19 +60,38 @@ export default function SearchList({searchData, listClick}:SearchListType) {
         </span>
       </div>
       <div className="search-list">
-        <ul>
+        <div className="search-list-inner">
           {
-            markerList?.map((item,idx) => (
-              <ListItem
-                item={item}
-                number={idx+1}
-                clickEvent={handleItemClick}
-                addressInfoEvent={handleAddressDetailPopup}
-                key={idx} />
-            ))
+            (markerList && markerList.length > 0) 
+            ? (
+              <ul>
+                {
+                  markerList?.map((item,idx) => (
+                    <ListItem
+                      item={item}
+                      number={idx+1}
+                      clickEvent={handleItemClick}
+                      addressInfoEvent={handleAddressDetailPopup}
+                      key={idx} />
+                  ))
+                }
+              </ul>
+            )
+            : (
+              <p className="center-text">
+                검색된 목록이 없어요. 🤔
+              </p>
+            )
           }
-        </ul>
+        </div>
       </div>
+      {
+        isMobile && ( 
+          <button className="close-btn" onClick={handleSearchListClose}>
+            <span className="blind">검색 목록 닫기</span>
+          </button>
+        )
+      }
     </StyleSearchList>
   )
 }
@@ -91,10 +116,26 @@ const StyleSearchList = styled.div`
       color:${colors.subTextColor};
     }
   }
-  .search-list{
-    flex-grow:1;
+  .search-list {
     overflow:hidden;
+    flex-grow:1;
+    position:relative;
+    padding-top:5px;
+    &::before{
+      display:block;
+      position:absolute;
+      z-index:100;
+      top:0;
+      left:0;
+      width:calc(100% - 5px);
+      height:1px;
+      ${props => props.theme.shadowLine};
+      content:'';
+    }
+  }
+  .search-list-inner{
     overflow-y: auto;
+    height:100%;
     & > ul > li{
       position:relative;
     }
@@ -107,6 +148,45 @@ const StyleSearchList = styled.div`
     }
     &::-webkit-scrollbar-track {
       background: ${colors.baseWhite};
+    }
+  }
+  ${media.mo}{
+    gap:0;
+    position:absolute;
+    z-index:104;
+    top:0;
+    left:0;
+    width:100%;
+    height:calc(100vh - 60px - 49px);
+    margin-top:49px;
+    padding:0;
+    transform:translateX(-110%);
+    transition: ${transitions.base};
+    .location{
+      padding:15px;
+      background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
+      ${props => props.theme.shadowLine};
+    }
+    .search-list {
+      padding:0 15px;
+      background:${props => props.theme.opacityBg};
+      backdrop-filter:blur(2px);
+      &::before {
+        top:-1px;
+        width:calc(100%);
+      }
+    }
+    .center-text {
+      position:absolute;
+      top:50%;
+      left:50%;
+      padding:4px 8px 5px;
+      border-radius:5px;
+      background:${props => props.theme.bgColor};
+      transform: translate(-50%, -50%);
+    }
+    &.active {
+      transform:translateX(0%);
     }
   }
 `;

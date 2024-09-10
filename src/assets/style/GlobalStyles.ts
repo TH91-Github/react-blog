@@ -59,7 +59,7 @@ export const GlobalStyles = createGlobalStyle`
       }
     }
   }
-  .close-arrow {
+  .close-btn {
     position:absolute;
     top:10px;
     right:10px;

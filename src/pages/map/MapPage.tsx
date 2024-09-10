@@ -1,4 +1,4 @@
-import { breakpoints, colors } from 'assets/style/Variable';
+import { breakpoints, colors, media } from 'assets/style/Variable';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
@@ -14,6 +14,7 @@ import { DateChange } from 'utils/common';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
   const mapPageRef = useRef<HTMLDivElement | null>(null);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [kakaoData, setKakaoData] = useState<MapDataType>({
@@ -24,11 +25,12 @@ export default function MapPage() {
     markerList: [],
     pagination: null,
   });
-  const [activePoint, setActivePoint] = useState<string | null>(null);
   const [placePop , setPlacePop] = useState<PlacePopStateType>({
     show: false,
     place:null,
   })
+  const [activePoint, setActivePoint] = useState<string | null>(null);
+  const [isMoList, setIsMoList] = useState(false);
 
   // 카카오맵 업데이트
   const kakaoUpdate = useCallback((data: MapDataType) => {
@@ -83,6 +85,12 @@ export default function MapPage() {
     DateChange();
   },[useLocation])
 
+  const moListClick = () =>{
+    setIsMoList(prev => !prev);
+  }
+  useEffect(()=>{
+    setIsMoList(false)
+  },[isMobile])
   return (
     <StyleWrap 
       ref={mapPageRef}
@@ -91,11 +99,16 @@ export default function MapPage() {
         <div className="map-content">
           <div className="content">
             {/* 검색 */}
-            <SearchMap searchResult={searchResult}/>
+            <SearchMap 
+              searchResult={searchResult}
+              isMoList={isMoList}
+              moListClick={moListClick} />
             {/* 리스트 */}
             <SearchList 
               searchData={kakaoData}
               listClick={listClick}
+              isMoList={isMoList}
+              moListClick={moListClick}
             />
           </div>
           <div className="map-side-menu">
@@ -168,33 +181,11 @@ const StyleWrap = styled.div`
     }
   }
   .map-content{
-    display:flex;
-    gap:5px;
     position:absolute;
     z-index:100;
-    top:80px;
-    left:30px;
-    height:calc(90% - 40px);
   }
   .content {
-    display:flex;
-    flex-direction:column;
     position:relative;
-    width:clamp(150px, 100%, 270px);
-    height:100%;
-    min-height:300px;
-    &::after {
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:${props => props.theme.opacityBg};
-      ${props => props.theme.shadowLine};
-      backdrop-filter:blur(4px);
-      pointer-events:none;
-      content:'';
-    }
   }
   .map-side-menu{
     position:relative;
@@ -207,6 +198,34 @@ const StyleWrap = styled.div`
     width: 100%;
     height: 100%;
   }
+  ${media.pc}{
+    .map-content{
+      display:flex;
+      gap:5px;
+      top:80px;
+      left:30px;
+      height:calc(90% - 40px);
+    }
+    .content {
+      display:flex;
+      flex-direction:column;
+      width:clamp(150px, 100%, 270px);
+      height:100%;
+      min-height:300px;
+      &::after {
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:${props => props.theme.opacityBg};
+        ${props => props.theme.shadowLine};
+        backdrop-filter:blur(4px);
+        pointer-events:none;
+        content:'';
+      }
+    }
+  }
   @keyframes activePointAni {
     0% {
       transform: translateX(-50%) scale(0);
@@ -217,4 +236,25 @@ const StyleWrap = styled.div`
       opacity:0;
     }
   }
+  ${media.mo}{
+    .map-inner {
+      padding-top:60px;
+      &::before{
+        z-index:100;
+        top:59px;
+      }
+    }
+    .map-content {
+      display:block;
+      top:60px;
+      left:0;
+      width:100%;
+      padding:0;
+    }
+    .map-side-menu {
+      height:auto;
+      padding:0;
+    }
+  }
+
 `;

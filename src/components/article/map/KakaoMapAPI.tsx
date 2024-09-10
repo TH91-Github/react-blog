@@ -1,3 +1,4 @@
+import { media } from "assets/style/Variable";
 import React, { useEffect, useState } from "react";
 import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
@@ -17,6 +18,16 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
+
+
+  const MapControlClass = () => {
+    const mapDOM = document.querySelector('#__react-kakao-maps-sdk___Map');
+    if(mapDOM){
+      const controlWrap = mapDOM.querySelector('button[title="지도"]')?.parentElement;
+      controlWrap?.classList.add('map-control');
+    }
+  }
+
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
       console.log("카카오맵이 로드되지 않았습니다.");
@@ -27,6 +38,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
         const initMapData = { ...kakaoData, mapRef: map };
         kakaoUpdate(initMapData);
       }
+      MapControlClass();
     }
   }, [map, kakaoData, kakaoUpdate]);
   
@@ -59,6 +71,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
     placePopChange(pointPop);
   }
   // console.log('kakao map')
+  
   return (
     <StyleKakaoMap>
       <Map
@@ -81,12 +94,10 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
           ))
         }
         {/* ⭐ 즐겨 찾기 */}
-        <MyBookMarker 
-          map={map}
-          clickEvent={() => console.log('')} />
+        <MyBookMarker map={map} clickEvent={() => console.log('')} />
         {/* 지도 컨트롤 */}
-        <MapTypeControl position={"TOPRIGHT"} /> 
-        <ZoomControl position={"RIGHT"} />
+        <MapTypeControl />
+        { !isMobile && <ZoomControl position={"RIGHT"} />  }
       </Map>
     </StyleKakaoMap>
   );
@@ -106,6 +117,15 @@ const StyleKakaoMap = styled.div`
     border-radius: 5px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
     background:red;
+  }
+  .map-control{
+    top:5px !important;
+  }
+  ${media.mo}{
+    .map-control{
+      display:none;
+      opacity:0;
+    }
   }
 `;
 

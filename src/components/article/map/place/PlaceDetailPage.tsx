@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import styled from "styled-components";
 import { MarkerType, PlacePopStateType, ReviewDataType } from "types/kakaoComon";
 import { placeGetDoc } from "utils/firebase/place";
@@ -52,14 +52,14 @@ export default function PlaceDetailPage ({placeData, placePopChange}:placePopCha
         <div className="place-cont">
           <PlaceDetailTab place={place} placeReview={placeReview} />
         </div>
+        <button 
+          type="button"
+          title="상세 닫기"
+          className="close-btn"
+          onClick={handleCloseClick} >
+          <span className="text">닫기</span>
+        </button>
       </div>
-      <button 
-        type="button"
-        title="상세 닫기"
-        className="close-arrow"
-        onClick={handleCloseClick} >
-        <span className="text">닫기</span>
-      </button>
     </StylePlaceDetail>
   )
 }
@@ -190,5 +190,10 @@ const StylePlaceDetail = styled.div`
     margin-top:15px;
     padding-bottom:10px;
     border-top:5px solid ${colors.lineColor};
+  }
+  ${media.mo} {
+    width:100%;
+    height: calc(100vh - 60px - 49px);
+    margin-top:5px;
   }
 `;

@@ -57,7 +57,7 @@ export default function Header({location}:PropsLocation){
     mobileScrollOff(false);
     headerTopChk();
   }, [location, isMobile, headerTopChk]);  
-
+  
   function gnbMoreClick() {
     mobileScrollOff(!isMoGnb);
     setIsMoGnb(!isMoGnb);
@@ -169,7 +169,9 @@ const StyledHeader = styled.header`
     .header-logo{
       padding:0px;
     }
+    
     &.main-header{
+      top: calc((100% - clamp(${rem(400)}, 80%, ${rem(600)})) / 2);
       &:not(.is-fixed):not(.gnb-on){
         .header-wrap{
           padding:0 15px;
@@ -187,6 +189,7 @@ const StyledHeader = styled.header`
       border-bottom:1px solid ${colors.yellow};
     }
     &.is-fixed{
+      top:0;
       .header-inner{
         padding:0 15px;
       }

@@ -1,16 +1,18 @@
 import { SvgSearch } from "assets/style/SVGIcon";
-import { colors, transitions } from "assets/style/Variable";
+import { colors, media, transitions } from "assets/style/Variable";
 import InputElement, { InputElementRef } from "components/element/InputElement";
-import LayerPopup from "components/element/LayerPopup";
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { actionAlert, AppDispatch } from "store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 
 interface SearchMapType {
-  searchResult: (e: string) => void;
+  searchResult: (e: string) => void,
+  isMoList: boolean,
+  moListClick: () => void,
 }
-export default function SearchMap({searchResult}:SearchMapType){
+export default function SearchMap({searchResult, isMoList, moListClick}:SearchMapType){
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
   const dispatch = useDispatch<AppDispatch>();
   const refInput = useRef<InputElementRef>(null);
   const [onVal, setOnVal] = useState(false); 
@@ -34,25 +36,41 @@ export default function SearchMap({searchResult}:SearchMapType){
   const handleEnter = () => {
     handleClick();
   }
+
+  const handleMoreClick = () => {
+    moListClick();
+  }
+
   return (
-    <StyleSearch>
+    <StyleSearch className={isMoList ? 'active':''}>
       <span className={`map-search ${onVal ? 'on':''}`}>
         <InputElement 
           ref={refInput}
           name={'map-search'}
-          placeholder={'장소 검색'} 
+          placeholder={'📍 장소를 검색해보세요! 😁'} 
           blurEvent={blurEvent}
-          keyEnter={handleEnter} />
+          keyEnter={handleEnter} 
+          focusColor={colors.yellow} />
       </span>
       <button 
         type="button"
-        className="btn"
+        className="search-btn"
         onClick={handleClick}>
         <span className="search-icon">
-          <SvgSearch $fillColor={colors.blue}/>  
+          <SvgSearch $fillColor={isMobile ? colors.baseWhite : colors.yellow }/>  
         </span>
         <span className="blind">검색</span>
       </button>
+      {
+        isMobile && (
+          <button
+          type="button"
+          className="more-btn"
+          onClick={handleMoreClick} >
+            <span>{isMoList ? '상세 메뉴 닫기':'상세 메뉴 펼치기'}</span>
+          </button>
+        )
+      }
     </StyleSearch>
   )
 }
@@ -65,14 +83,8 @@ const StyleSearch = styled.div`
   padding:10px 10px 0;
   border-top-left-radius:10px;
   background: ${props => props.theme.type === 'dark' ? colors.baseBlack : colors.originWhite};
-  .map-search {
-    transition:${transitions.base};
-    border-bottom:1px solid ${colors.lineColor};
-    &.on {
-      border-color:${colors.yellow};
-    }
-  }
-  & >.btn {
+  .search-btn {
+    flex-shrink: 0;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -83,5 +95,83 @@ const StyleSearch = styled.div`
     display:inline-block;
     width:25px;
     height:25px;
+  }
+  ${media.pc}{
+    .map-search {
+      border-bottom:1px solid ${colors.lineColor};
+      &.on {
+        border-color:${colors.yellow};
+      }
+    }
+  }
+  ${media.mo}{
+    padding:5px 15px 5px 45px;
+    border-radius:5px;
+    ${(props)=> props.theme.shadow};
+    .map-search {
+      flex-grow:1;
+      transition:${transitions.base};
+    }
+    .search-btn {
+      width:34px;
+      height:34px;
+    }
+    .search-icon {
+      width:100%;
+      height:100%;
+      padding:6px;
+      border-radius:5px;
+      background:${colors.yellow};
+    }
+    .more-btn {
+      position:absolute;
+      top:50%;
+      left:15px;
+      width:30px;
+      height:30px;
+      text-indent:-9999px;
+      transform: translateY(-50%);
+      &::before, &::after {
+        position:absolute;
+        top:7px;
+        left:50%;
+        width:70%;
+        height:2px;
+        border-radius:20px;
+        background:${(props)=> props.theme.color};
+        transition: ${transitions.base};
+        transform: translateX(-50%);
+        content:'';
+      }
+      &::after {
+        top:calc(100% - 7px);
+      }
+      & > span{
+        display:block;
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:70%;
+        height:2px;
+        margin-top:0px;
+        border-radius:20px;
+        background:${(props)=> props.theme.color};
+        transition: ${transitions.base};
+        transform: translateX(-50%);
+      }
+    }
+    &.active {
+      .more-btn {
+        &::before, &::after {
+          top:50%;
+          transform: translate(-50%, -50%);
+          opacity:0;
+        }
+        & > span {
+          background:${colors.yellow};
+        }
+      }
+      
+    }
   }
 `;
