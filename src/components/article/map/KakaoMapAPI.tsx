@@ -52,7 +52,6 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
         const pointer = new kakao.maps.LatLng(lat, lng)
         map.setLevel(4); // 확대 후 센터 이동 -> 센터 이동 후 확대 시 위치를 제대로 못 잡을 경우 발생.
         map.setCenter(pointer);
-
         // PC 사이드 리스트 -> 센터 보정
         mapCenterSetting(map,-135);
       }
@@ -70,8 +69,6 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   const detailPopEvent = () => {
     placePopChange(pointPop);
   }
-  // console.log('kakao map')
-  
   return (
     <StyleKakaoMap>
       <Map

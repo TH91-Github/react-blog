@@ -157,8 +157,7 @@ const StyleSearchList = styled.div`
     top:0;
     left:0;
     width:100%;
-    height:calc(100vh - 60px - 49px);
-    margin-top:49px;
+    height:calc(100vh - 60px);
     padding:0;
     transform:translateX(-110%);
     transition: ${transitions.base};

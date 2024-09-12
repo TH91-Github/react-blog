@@ -192,8 +192,13 @@ const StylePlaceDetail = styled.div`
     border-top:5px solid ${colors.lineColor};
   }
   ${media.mo} {
-    width:100%;
-    height: calc(100vh - 60px - 49px);
-    margin-top:5px;
+    z-index:104;
+    width:100vw;
+    height: calc(100vh - 60px);
+    &::before{
+      border-radius:0;
+      border-bottom:0;
+      box-shadow:unset;
+    }
   }
 `;

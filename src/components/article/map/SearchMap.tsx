@@ -105,7 +105,7 @@ const StyleSearch = styled.div`
     }
   }
   ${media.mo}{
-    padding:5px 15px 5px 45px;
+    padding:5px 15px 5px 50px;
     border-radius:5px;
     ${(props)=> props.theme.shadow};
     .map-search {
@@ -129,6 +129,7 @@ const StyleSearch = styled.div`
       left:15px;
       width:30px;
       height:30px;
+      margin-top:-1px;
       text-indent:-9999px;
       transform: translateY(-50%);
       &::before, &::after {

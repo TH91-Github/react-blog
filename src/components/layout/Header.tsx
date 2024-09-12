@@ -161,6 +161,7 @@ const StyledHeader = styled.header`
     }
   }
   ${media.mo}{
+    z-index:105;
     .header-inner {
       justify-content: space-between;
       height:60px;

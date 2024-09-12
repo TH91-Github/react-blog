@@ -63,11 +63,20 @@ export default function MapPage() {
     if(selectID !== placePop.place?.id){ // 다른 place를 클릭 시 팝업 off
       setPlacePop({place:null, show:false});
     }
+    if(isMobile){ // MO 
+      setIsMoList(prev => !prev);
+    }
     setActivePoint(selectID)
   },[placePop]);
 
   const activeChange = () => { // 활성 마커 닫기 누를 경우 or 마커 비활성하기
     setActivePoint(null)
+  }
+
+  const moListClick = () =>{ // Mo 팝업 리스트 창
+    if(isMobile){ 
+      setIsMoList(prev => !prev);
+    }
   }
 
   const mapCenterUpdate = useCallback((pos:kakao.maps.LatLng) => {
@@ -85,9 +94,6 @@ export default function MapPage() {
     DateChange();
   },[useLocation])
 
-  const moListClick = () =>{
-    setIsMoList(prev => !prev);
-  }
   useEffect(()=>{
     setIsMoList(false)
   },[isMobile])
@@ -252,7 +258,9 @@ const StyleWrap = styled.div`
       padding:0;
     }
     .map-side-menu {
-      height:auto;
+      position:absolute;
+      top:0;
+      left:0;
       padding:0;
     }
   }
