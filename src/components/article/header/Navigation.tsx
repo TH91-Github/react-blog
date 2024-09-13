@@ -17,9 +17,10 @@ export default function Navigation({menuOn}:NavigationType){
           {routerList
             .filter((routerItem, idx) => {
                 const hostname = window.location.hostname;
-                return idx > 0 && (
-                  !Array.isArray(routerItem.view) || 
-                  routerItem.view.includes(hostname)
+                return (
+                  idx > 0 &&
+                  routerItem.view !== false &&  // view가 false가 아닌 경우
+                  (!Array.isArray(routerItem.view) || routerItem.view.includes(hostname))  // view가 배열인 경우 hostname이 포함되는지 확인
                 );
               }
             )
