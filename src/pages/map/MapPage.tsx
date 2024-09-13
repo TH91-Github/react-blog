@@ -67,7 +67,7 @@ export default function MapPage() {
       setIsMoList(prev => !prev);
     }
     setActivePoint(selectID)
-  },[placePop]);
+  },[placePop, isMobile]);
 
   const activeChange = () => { // 활성 마커 닫기 누를 경우 or 마커 비활성하기
     setActivePoint(null)

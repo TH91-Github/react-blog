@@ -1,6 +1,7 @@
 // 특수문자 & 띄어쓰기 감지
 export function specialCharactersSpacesCheck(text: string): boolean {
-  const regex = /^[^\s\p{P}]+$/u;
+  // const regex = /^[^\s\p{P}]+$/u;
+  const regex = /^[a-zA-Z가-힣0-9\s]+$/;
   return !regex.test(text);
 }
 
@@ -20,7 +21,7 @@ export function enNumberCheck(text: string): boolean {
 }
 
 // email 체크 : 한글 @ 포함 확인 / .포함 / id 4글자:{4,} .이후 2글자:{2,} 
-export function emailCheck (email:string):boolean{
+export function isValidEmail (email:string):boolean{
   const regex = /^[A-Za-z0-9._%+-]{4,}@[A-Za-z0-9-]+\.[A-Za-z]{2,}$/;
   return !regex.test(email)
 }
