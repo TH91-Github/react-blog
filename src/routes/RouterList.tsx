@@ -19,6 +19,7 @@ export const routerList = [
     id: "Resume",
     path: "resume",
     title: "준비",
+    view:['main-th-blog','localhost'],
     element: <ResumePage />,
   },
   {

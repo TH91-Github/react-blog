@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { colors, media, shadow } from "assets/style/Variable";
 import { NavLink } from "react-router-dom";
 import { routerList } from "routes/RouterList";
 import styled from "styled-components";
 import { rem } from "utils/common";
+import { LocationType } from 'types/baseType';
+
 interface NavigationType {
   menuOn: boolean
 }
 export default function Navigation({menuOn}:NavigationType){
+  const zzz = window.location.hostname
+  console.log(zzz)
+  useEffect(()=>{
+    const test = routerList.map((item) => {
+      if(Array.isArray(item.view)){
+        const test = ['main-th-blog','localhost']
+        const urlViewChk = item.view.filter(item => test.includes(item))
+      }
+    })
+  },[])
+
   return (
     <StyledNav className={`gnb ${menuOn ? 'open' : ''}`}>
       <div className="gnb-inner">

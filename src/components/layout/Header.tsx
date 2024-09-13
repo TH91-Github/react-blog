@@ -11,10 +11,10 @@ import styled from "styled-components";
 import { LocationType } from "types/baseType";
 import { rem } from "utils/common";
 
-type PropsLocation= {
+type HeaderType= {
   location : LocationType
 }
-export default function Header({location}:PropsLocation){
+export default function Header({location}:HeaderType){
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [isMoGnb, setIsMoGnb] = useState(false);
   const [isFixed, setIsFixed] = useState(false);

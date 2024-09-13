@@ -78,8 +78,8 @@ export default function SearchList({searchData, listClick, isMoList, moListClick
               </ul>
             )
             : (
-              <p className="center-text">
-                검색된 목록이 없어요. 🤔
+              <p className="no-results">
+                검색된 목록이 없어요.. 🤔
               </p>
             )
           }
@@ -150,6 +150,9 @@ const StyleSearchList = styled.div`
       background: ${colors.baseWhite};
     }
   }
+  .no-results {
+    padding-top:15px;
+  }
   ${media.mo}{
     gap:0;
     position:absolute;
@@ -175,7 +178,7 @@ const StyleSearchList = styled.div`
         width:calc(100%);
       }
     }
-    .center-text {
+    .no-results {
       position:absolute;
       top:50%;
       left:50%;
