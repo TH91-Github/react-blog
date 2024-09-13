@@ -65,7 +65,7 @@ export default function SignIn() {
       }
       dispatch(actionUserLogin(userLoginData));
       navigate('/');
-      console.log('성공');
+      console.log('google login');
     } catch (error) {
       console.log(error)
       setValidationError({ id:true, pw: true });
@@ -83,7 +83,7 @@ export default function SignIn() {
 
       if(!querySnapshot.empty){ // 이미 계정에 대한 정보가 있을 경우 
         isUserData = querySnapshot.docs[0].data() as UserDataType // 타입 명시적 변환
-      }else{
+      }else{ // 신규 구글 계정 등록
         const date = currentTime();
         const resultData = {
           id:'',
@@ -98,10 +98,9 @@ export default function SignIn() {
           kakaoMapData:[],
         }
         isUserData = resultData
+        // 📍 firebase에 user 정보 저장
+        pushDataDoc('userData','users', isUserData)
       }
-
-      // 📍 firebase에 user 정보 저장
-      pushDataDoc('userData','users', isUserData)
       const googleLoginData = {
         loginState: true,
         user: isUserData // 최종 데이터
@@ -109,7 +108,7 @@ export default function SignIn() {
       dispatch(actionUserLogin(googleLoginData));
       navigate('/');
      } catch (error) {
-      console.log("error:", error);
+      console.log("구글 로그인 에러 😲", error);
     }
   },[dispatch, navigate])
 

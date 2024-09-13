@@ -33,7 +33,7 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
     const inputVal = e.target.value.trim();
     const inputName = e.target.getAttribute('name');
 
-     // 유효성 검사
+    // 유효성 검사
     if (inputVal.length === 0) return;
     const isValid = isValidEmail(inputVal);
     const isEmailExists = checkEmailExists(inputVal);
@@ -41,12 +41,10 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
       // 이메일 유효성 체크
       setValError(true)
       setDuplicate('유효하지 않은 이메일 형식입니다.')
-      console.log('야호')
     }else if(isEmailExists.length > 0){
       // 이메일 허용 주소 체크 
       setValError(true)
       setDuplicate(isEmailExists)
-      console.log('야호')
     }else{
       // 중복 검사
       checkDuplicateEmail(inputName, inputVal); // email, val
