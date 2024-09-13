@@ -10,23 +10,19 @@ interface NavigationType {
   menuOn: boolean
 }
 export default function Navigation({menuOn}:NavigationType){
-  const zzz = window.location.hostname
-  console.log(zzz)
-  useEffect(()=>{
-    const test = routerList.map((item) => {
-      if(Array.isArray(item.view)){
-        const test = ['main-th-blog','localhost']
-        const urlViewChk = item.view.filter(item => test.includes(item))
-      }
-    })
-  },[])
-
   return (
     <StyledNav className={`gnb ${menuOn ? 'open' : ''}`}>
       <div className="gnb-inner">
         <ul className="gnb-lists">
           {routerList
-            .filter((routerItem, idx) => idx > 0 && (routerItem.view === undefined || routerItem.view))
+            .filter((routerItem, idx) => {
+                const hostname = window.location.hostname;
+                return idx > 0 && (
+                  !Array.isArray(routerItem.view) || 
+                  routerItem.view.includes(hostname)
+                );
+              }
+            )
             .map((routerItem) => (
               <li key={routerItem.id}>
                 <NavLink to={routerItem.path ?? '/'} title={routerItem.id} className="gnb-link">
