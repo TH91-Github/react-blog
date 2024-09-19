@@ -21,10 +21,18 @@ const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, only
       setRating(initNum);
     }
   },[initNum]);
-  
-  const handleRangeChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setRating(parseFloat(e.target.value))
-  }
+
+  const handleRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRating(parseFloat(e.target.value));
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLInputElement>) => {
+    e.preventDefault(); // 스크롤 방지
+    const ratingTouch = e.touches[0];
+    const ratingRect = (e.target as HTMLInputElement).getBoundingClientRect();
+    const ratingValue = ((ratingTouch.clientX - ratingRect.left) / ratingRect.width) * (ratingMax - 0.1) + 0.1;
+    setRating(Math.max(0.1, Math.min(ratingMax, ratingValue)));
+  };
 
   return (
     <StyleRatingStar 
@@ -63,7 +71,8 @@ const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, only
                 max="5"
                 step="0.1"
                 value={rating}
-                onChange={handleRangeChange}/>
+                onChange={handleRangeChange}
+                onTouchMove={handleTouchMove} />
             )
           }
           

@@ -85,6 +85,9 @@ export const GlobalStyles = createGlobalStyle`
       transform: rotate(180deg);
     }
   }
+  input, textarea { /* input textarea 요소 확대 방지 */
+    -webkit-text-size-adjust: 100%;
+  }
   /* 스크롤바 전체 */
   body::-webkit-scrollbar {
     width:8px;
@@ -101,5 +104,6 @@ export const GlobalStyles = createGlobalStyle`
   :root {
     
   }
+  
 `;
 

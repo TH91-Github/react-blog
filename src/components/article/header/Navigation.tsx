@@ -19,8 +19,9 @@ export default function Navigation({menuOn}:NavigationType){
                 const hostname = window.location.hostname;
                 return (
                   idx > 0 &&
-                  routerItem.view !== false &&  // view가 false가 아닌 경우
-                  (!Array.isArray(routerItem.view) || routerItem.view.includes(hostname))  // view가 배열인 경우 hostname이 포함되는지 확인
+                  routerItem.view !== false &&  
+                  (!Array.isArray(routerItem.view) || routerItem.view.includes(hostname)) 
+                  // view가 배열이면서 조건에 맞는 도메인일 경우 노출
                 );
               }
             )
