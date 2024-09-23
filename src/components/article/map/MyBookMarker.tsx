@@ -7,11 +7,11 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import { MarkerType } from "types/kakaoComon";
 
-interface BookMarkerType {
-  map: kakao.maps.Map | null;
-  clickEvent: (e:MarkerType | null) => void;
+interface MyBookMarkerType {
+  map: kakao.maps.Map | null,
+  clickEvent: (e:MarkerType | null) => void,
 }
-export default function BookMarker({map, clickEvent}:BookMarkerType) {
+export default function MyBookMarker({map, clickEvent}:MyBookMarkerType) {
   const {user} = useSelector((state: RootState) => state.storeUserLogin);
   const [isPopup, setIsPopup] = useState(false);
   const [zoom, setZoom] = useState(0);
@@ -27,8 +27,8 @@ export default function BookMarker({map, clickEvent}:BookMarkerType) {
     };
   },[map, handleZoomChange])
 
-  const handlePopClick = () =>{ // 상세 페이지
-    // clickEvent(marker)
+  const handlePopClick = (marker:MarkerType | null) =>{ // 상세 페이지
+    clickEvent(marker)
     console.log('내 즐겨찾기 - 상세 페이지 오픈')
   }
   return (
@@ -40,15 +40,18 @@ export default function BookMarker({map, clickEvent}:BookMarkerType) {
           ? <CustomOverlayMap 
               key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
               position={marker.position}>
-                <StyleMarker 
+                <StyleBookMarker 
                   $bgColor={colors.blue}
                   className={`marker ${isPopup ? 'active' :''}`}>
                   <span className="point-bar"></span>
-                  <button type="button" className="marker-btn" onClick={handlePopClick}>
+                  <button 
+                    type="button" 
+                    className="bookmarker-btn" 
+                    onClick={() => handlePopClick(myMarker.bookmark)}>
                       <span className="icon"><SvgStar $fillColor={colors.green} /></span>
                       { zoom < 6 && <span className="title">{marker.place_name}</span>} 
                   </button>
-                </StyleMarker>
+                </StyleBookMarker>
             </CustomOverlayMap> 
           : <div className="blind">⚠️ 잘못된 즐겨찾기 정보 </div>
         })
@@ -59,18 +62,18 @@ export default function BookMarker({map, clickEvent}:BookMarkerType) {
   )
 }
 
-type StyleMarkerType = { 
+type StyleBookMarkerType = { 
   $bgColor: string,
 }
 
-const StyleMarker = styled.div<StyleMarkerType>`
+const StyleBookMarker = styled.div<StyleBookMarkerType>`
   position:relative;
   display:flex;
   justify-content:center;
   align-items:flex-end;
   width:30px;
   height:30px;
-  .marker-btn{
+  .bookmarker-btn{
     position:relative;
     width:20px;
     height:20px;

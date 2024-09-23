@@ -66,8 +66,13 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
     }
     setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker)
   }
-  const detailPopEvent = () => {
-    placePopChange(pointPop);
+  const detailPopEvent = (marker:MarkerType | null) => {
+    if(marker === null){
+      placePopChange(pointPop);
+    }else{
+      setPointPop(null);
+      placePopChange(marker);
+    } 
   }
   return (
     <StyleKakaoMap>
@@ -91,7 +96,9 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
           ))
         }
         {/* ⭐ 즐겨 찾기 */}
-        <MyBookMarker map={map} clickEvent={() => console.log('')} />
+        <MyBookMarker 
+          map={map} 
+          clickEvent={detailPopEvent} />
         {/* 지도 컨트롤 */}
         <MapTypeControl />
         { !isMobile && <ZoomControl position={"RIGHT"} />  }

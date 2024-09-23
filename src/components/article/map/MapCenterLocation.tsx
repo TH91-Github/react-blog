@@ -1,3 +1,4 @@
+import { media } from "assets/style/Variable";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { kakaomapAddressFromCoords } from "utils/kakaomap/common";
@@ -45,9 +46,19 @@ export default function MapCenterLocation({ map, mapCenterUpdate }: MapCenterLoc
     }
   }, [map, getAddressFromCoords, mapCenterUpdate]);
   return (
-    <StyleMapCenterAddress className="map-center-address">
-      <span>{mapAddress}</span>
-    </StyleMapCenterAddress>
+    <>
+      {
+        mapAddress 
+        ? (
+          <StyleMapCenterAddress className="map-center-address">
+            <span className="blind">지도 중심 위치</span>
+            <span className="text">{mapAddress}</span>
+          </StyleMapCenterAddress>
+        )
+        : null
+      }
+    </>
+    
   );
 }
 const StyleMapCenterAddress = styled.div`
@@ -56,12 +67,23 @@ const StyleMapCenterAddress = styled.div`
   top:15px;
   left:50%;
   transform: translateX(-50%);
-  & > span {
+  pointer-events:none;
+  .text {
     display:inline-block;
     padding: 10px;
     background:${props => props.theme.opacityBg};
     ${props => props.theme.shadowLine};
     backdrop-filter:blur(4px);
     border-radius: 5px;
+  }
+  ${media.mo}{
+    top:50px;
+    width:100%;
+    text-align:center;
+    .text {
+      padding: 5px 8px;
+      font-size:12px;
+      color
+    }
   }
 `;

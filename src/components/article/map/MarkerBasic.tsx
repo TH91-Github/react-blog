@@ -8,16 +8,16 @@ interface MarkerBasicType {
   marker: MarkerType;
   active: boolean;
   pointActiveEvent : (eId:MarkerType | null) => void;
-  detailPopEvent : () => void;
+  detailPopEvent : (marker:MarkerType | null) => void;
 }
 export default function MarkerBasic({number, marker, active, pointActiveEvent, detailPopEvent}:MarkerBasicType) {
   const markerRef = useRef<HTMLDivElement | null>(null);
 
-  const handlePopClick = () =>{ 
+  const handlePopClick = () =>{
     pointActiveEvent(marker)
   }
   const handleDetaileClick = () => {
-    detailPopEvent();
+    detailPopEvent(null);
   }
   const handleCloseClick = () => {
     pointActiveEvent(null)
