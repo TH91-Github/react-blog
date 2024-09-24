@@ -19,12 +19,6 @@ export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   }
   return (
     <StyleUtilNav className="util">
-      {/* 
-        1. 회원 아이콘 - 로그인 / 로그아웃
-        2. 다크모드
-        3. 검색 
-        4. 더보기 메뉴
-      */}
       <div className="util-inner">
         <div className="util-item">
           <UserLogin />
@@ -32,9 +26,9 @@ export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
         <div className="util-item">
           <ThemeBtn />
         </div>
-        <div className="util-item">
+        {/* <div className="util-item">
           <HeaderSearch />
-        </div>
+        </div> */}
         {
           isMobile && <div className="util-item">
             <button 
