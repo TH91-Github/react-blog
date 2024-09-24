@@ -16,35 +16,31 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
   const inputRef = useRef<InputElementRef>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isReview, setIsReview] = useState(false);
-  const [inputElement, setInputElement] = useState<HTMLInputElement | null>(null);
   const ratingStarRef = useRef<HTMLInputElement>(null);
 
-  useEffect(()=>{
-    const input = inputRef.current?.getInputElement();
-    if(input){
-      setInputElement(input)
-    }
-  },[])
   const handleReview = () => {
     if(user){
+      const input = inputRef.current?.getInputElement();
       setIsReview(true);
       setTimeout(()=>{
-        inputElement?.focus()
+        input?.focus();
       },100)
     }else{
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
     }
   }
   const handleCompletion = () => { // 최종 전달
-    if(inputElement){
-      const reviewVal = inputElement.value;
+    if(!inputRef.current) return
+    const input = inputRef.current.getInputElement();
+    if(input){
+      const reviewVal = input.value;
       if(reviewVal.trim()){
         const ratingVal = parseFloat(ratingStarRef.current!.value ?? 5);
-        inputRef.current?.resetValue();
+        inputRef.current.resetValue();
         setIsReview(false);
         reviewAdd(reviewVal, ratingVal);
       }else{
-        inputRef.current?.resetValue();
+        inputRef.current.resetValue();
         dispatch(actionAlert({titMessage:'입력된 리뷰가 없어요!! 😲',isPopup:true, ref:null, autoClose:2000}))
       }
     }
@@ -132,7 +128,6 @@ const StyleReviewCreate = styled.div`
     left:0;
     bottom:0;
     width:100%;
-    height:100%;
     padding:10px 10px 0;
     border-radius:10px;
     background:${props => props.theme.bgOrigin};
