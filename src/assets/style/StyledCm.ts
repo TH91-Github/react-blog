@@ -15,6 +15,22 @@ export const notice = css`
   }
 `;
 
+export const ListBar = styled.ul` 
+  & > li {
+    position:relative;
+    padding-left:10px;
+    &::before{
+      position:absolute;
+      top:7px;
+      left:0;
+      width:4px;
+      height:1px;
+      background:${colors.subTextColor};
+      content:'';
+    }
+  }
+`;
+
 export const Button = styled.button.attrs({
   type:'button',
 })<StyleProps>`

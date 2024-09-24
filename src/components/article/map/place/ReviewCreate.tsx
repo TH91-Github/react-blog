@@ -1,4 +1,5 @@
 import { colors, transitions } from "assets/style/Variable";
+import { ImgUpload } from "components/element/ImgUpload";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import RatingStar from "components/element/RatingStar";
 import { useEffect, useRef, useState } from "react";
@@ -64,40 +65,47 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
           <span>리뷰쓰기</span>
         </button>
       </div> 
-      <div className={`review-add ${isReview ? 'active': ''}`}>
-        <div className="review-rating">
-          <RatingStar 
-            ref={ratingStarRef}
-            max={5} 
-            bgColor={colors.navy} />
-        </div>
-        <form className="form" onSubmit={(e) => e.preventDefault()}>
-          <InputElement
-            ref={inputRef}
-            name={'review'}
-            className={'review-input'}
-            placeholder={'리뷰를 남겨주세요. 🖊️'}
-          />
-        </form>
-        <div className="btn-article">
-          <button 
-            type="button"
-            className="cancel"
-            onClick={handleCancel}>
-            <span>취소</span>
-          </button>
-          <button 
-            type="button"
-            className="completion"
-            onClick={handleCompletion}>
-            <span>확인</span>
-          </button>
-        </div>
-      </div>
+      {
+        isReview && (
+          <div className="review-add">
+            <div className="review-img-upload">
+              <ImgUpload />
+            </div>
+            <div className="review-rating">
+              <RatingStar 
+                ref={ratingStarRef}
+                max={5} 
+                bgColor={colors.navy} />
+            </div>
+            <form className="form" onSubmit={(e) => e.preventDefault()}>
+              <InputElement
+                ref={inputRef}
+                name={'review'}
+                className={'review-input'}
+                placeholder={'리뷰를 남겨주세요. 🖊️'}
+              />
+            </form>
+            <div className="btn-article">
+              <button 
+                type="button"
+                className="cancel"
+                onClick={handleCancel}>
+                <span>취소</span>
+              </button>
+              <button 
+                type="button"
+                className="completion"
+                onClick={handleCompletion}>
+                <span>확인</span>
+              </button>
+            </div>
+          </div>
+        )
+      }
+      
     </StyleReviewCreate>
   )
 }
-
 
 const StyleReviewCreate = styled.div`
   position:relative;
@@ -118,12 +126,13 @@ const StyleReviewCreate = styled.div`
     }
   }
   .review-add{
-    display:none;
+    display:flex;
     flex-direction:column; 
     position:absolute;
     left:0;
     bottom:0;
     width:100%;
+    height:100%;
     padding:10px 10px 0;
     border-radius:10px;
     background:${props => props.theme.bgOrigin};
@@ -137,13 +146,13 @@ const StyleReviewCreate = styled.div`
       pointer-events:none;
       content:'';
     }
-    &.active {
-      display:flex;
-    }
     .form{
       flex-grow:1;
       margin-top:10px;
     }
+  }
+  .review-img-upload {
+    padding:10px 0;
   }
   .review-rating {
     padding:10px 0;

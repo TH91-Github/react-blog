@@ -66,13 +66,9 @@ export default function MyBookmarkList ({kakaoData, updateClick}:placePopChangeT
                           <StyleMyBookMarkItem 
                             className="item" 
                             key={`${idx}-${bookmarkItem.id}`}>
-                            {/* 
-                              맵 해당 위치로 이동
-                              상세 페이지 즐겨찾기 위로 디테일 페이지 올라오기
-                              즐겨찾기 삭제
-                            */}
                             <button
                               type="button"
+                              className="item-btn"
                               title={`${bookmarkItem.title} 자세히 보기`}
                               onClick={() => handleMyBookmarkClick(bookmarkItem)}>
                               <span>{bookmarkItem.title}</span>
@@ -216,13 +212,17 @@ const StyleMyBookMarkItem = styled.li`
   justify-content: space-between;
   align-items:center;
   position:relative;
-  padding:10px;
   transition: ${transitions.base};
   &:first-child{
     margin-top:0;
   }
   &:hover, &:focus {
     ${props => props.theme.shadow};
+  }
+  .item-btn{
+    width:100%;
+    padding:10px;
+    text-align:left;
   }
   .bookmark-btn {
     display:block;
