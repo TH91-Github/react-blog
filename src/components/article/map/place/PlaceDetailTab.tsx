@@ -1,15 +1,15 @@
 import { colors, transitions } from "assets/style/Variable";
 import { useState } from "react";
 import styled from "styled-components";
-import { MarkerType, ReviewDataType } from "types/kakaoComon";
+import { MarkerType, PlaceDataTypeC, ReviewDataType } from "types/kakaoComon";
 import PlaceHome from "./PlaceHome";
-import PlaceReview from "./PlaceReviewList";
+import PlaceReviewList from "./PlaceReviewList";
 
 export interface PlaceDetailTabType {
-  place : MarkerType | null,
-  placeReview: ReviewDataType | undefined
+  kakaoPlace : MarkerType,
+  placeData: PlaceDataTypeC | undefined
 }
-export default function PlaceDetailTab ({place, placeReview}:PlaceDetailTabType) {
+export default function PlaceDetailTab ({kakaoPlace, placeData}:PlaceDetailTabType) {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [
     { id: 0, tit: '홈', desc: '홈 상세 내용입니다.' },
@@ -19,7 +19,6 @@ export default function PlaceDetailTab ({place, placeReview}:PlaceDetailTabType)
   const handleTabClick = (e:number) => {
     setActiveTab(e)
   }
-  if(!place) return null
   return (
     <StylePlaceDetailTab className="tab-wrap">
       <div className="tab-nav">
@@ -42,8 +41,8 @@ export default function PlaceDetailTab ({place, placeReview}:PlaceDetailTabType)
       <div className="tab-cont">
         <div className="tab-cont-inner">
           <p className="blind">{tabs[activeTab].desc}</p>
-          { activeTab === 0 && <PlaceHome place={place} placeReview={placeReview} /> }
-          { activeTab === 1 && <PlaceReview place={place} placeReview={placeReview} />}
+          { activeTab === 0 && <PlaceHome kakaoPlace={kakaoPlace} placeData={placeData} /> }
+          { activeTab === 1 && <PlaceReviewList kakaoPlace={kakaoPlace} placeData={placeData} />}
         </div>
       </div>
     </StylePlaceDetailTab>

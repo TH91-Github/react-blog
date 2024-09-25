@@ -1,5 +1,5 @@
 import { UserBookmarkType, UserDataType } from "types/baseType";
-import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, query, setDoc, updateDoc, where } from "../../firebase";
+import { collection, deleteDoc, doc, firebaseStorage, fireDB, getDoc, getDocs, getDownloadURL, query, ref, setDoc, updateDoc, uploadBytes, where } from "../../firebase";
 
 // ✅ thData 기본
 // 추가
@@ -72,21 +72,25 @@ export const removeDoc = async(docName:string, collectionName:string, emailId:st
   }
 }
 
+// 🖼️ 이미지 업로드 경로 반환
+export const ImguploadStorage = async (file: File, folder:string = 'images') => {
+  const storageRef = ref(firebaseStorage, `${folder}/${file.name}`);
+  try {
+    await uploadBytes(storageRef, file);
+    return storageRef.fullPath; // 업로드된 이미지 경로 반환
+  } catch (error) {
+    console.error("firebase storage 이미지 업로드 실패");
+    throw error;
+  }
+};
 
-
-
-
-// const TEST = async (docName: string, collectionName: string, subCollectionName: string, key: string, val: string): Promise<boolean> => {
-//   // 문서 내 컬렉션 경로 설정
-//   const docRef = doc(fireDB, 'map', docName);
-//   const subCollectionRef = collection(docRef, collectionName, subCollectionName);
-  
-//   // 쿼리 설정
-//   const duplicatResult = query(subCollectionRef, where(key, '==', val));
-  
-//   // 쿼리 실행
-//   const querySnapshot = await getDocs(duplicatResult);
-  
-//   // 결과 반환
-//   return querySnapshot.empty;
-// }
+export const getStorageImgUrl = async (fullPath: string) => {
+  try {
+    const storageRef = ref(firebaseStorage, fullPath);
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error) {
+    console.error("firebase storage 이미지 URL 가져오기 실패..");
+    throw error;
+  }
+};

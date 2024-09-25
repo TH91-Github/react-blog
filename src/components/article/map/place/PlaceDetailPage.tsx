@@ -1,26 +1,25 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { colors, media } from "assets/style/Variable";
 import styled from "styled-components";
-import { MarkerType, PlacePopStateType, ReviewDataType } from "types/kakaoComon";
-import { placeGetDoc } from "utils/firebase/place";
+import { MarkerType, PlaceDataTypeC } from "types/kakaoComon";
+import { getDocPlace } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import Bookmark from "../Bookmark";
 import PlaceDetailTab from "./PlaceDetailTab";
 interface placePopChangeType {
-  placeData: PlacePopStateType;
+  kakaoPlace: MarkerType;
   placePopChange: (e:MarkerType | null) => void; 
 }
-export interface PlaceType {
-  place : MarkerType
-}
-export default function PlaceDetailPage ({placeData, placePopChange}:placePopChangeType) {
-  const { place } = placeData;
-  const {id} = place!;
-  const placeCategory = locationCategory(place!.address.address.region_1depth_name);
 
-  const { data: placeReview, error, isLoading }: UseQueryResult<ReviewDataType> = useQuery({
-    queryKey: ['placeReview', id], // queryKey에 id를 포함시켜 place가 변경 될 때 다시
-    queryFn: () => placeGetDoc(placeCategory, id),
+export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopChangeType) {
+  const {id} = kakaoPlace;
+  const placeCategory = locationCategory(kakaoPlace.address.address.region_1depth_name) ?? 'ETC';
+  console.log(id)
+  console.log(placeCategory)
+  // ✅ place 정보 가져오기. 
+  const { data: placeData, error, isLoading }: UseQueryResult<PlaceDataTypeC> = useQuery({
+    queryKey: ['placeDataQuery', id], // queryKey에 id를 포함시켜 place가 변경 될 때 다시
+    queryFn: () => getDocPlace(placeCategory, id),
   });
 
   const handleCloseClick = () =>{ 
@@ -40,17 +39,17 @@ export default function PlaceDetailPage ({placeData, placePopChange}:placePopCha
             <p className="desc">😅<br />등록된 이미지가 없어요.<br /> 준비중...</p>
           </div>
           <div className="place-tit">
-            <p className="tit">{place!.place_name}</p>
+            <p className="tit">{kakaoPlace.place_name}</p>
             <p className="category-desc">
-              { categoryTxt(place!.category_name)} 
+              { categoryTxt(kakaoPlace.category_name)} 
             </p>
           </div>
           <div className="place-bookmark">
-            <Bookmark bookmarkItem={place!} />
+            <Bookmark bookmarkItem={kakaoPlace} />
           </div>
         </div>
         <div className="place-cont">
-          <PlaceDetailTab place={place} placeReview={placeReview} />
+          <PlaceDetailTab kakaoPlace={kakaoPlace} placeData={placeData} />
         </div>
         <button 
           type="button"

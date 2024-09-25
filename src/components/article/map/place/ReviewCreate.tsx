@@ -1,24 +1,26 @@
 import { colors, transitions } from "assets/style/Variable";
-import { ImgUpload } from "components/element/ImgUpload";
+import { ImgFileType, ImgUpload } from "components/element/ImgUpload";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import RatingStar from "components/element/RatingStar";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
+import { getStorageImgUrl, ImguploadStorage } from "utils/firebase/common";
 
 interface ReviewCreateType {
-  reviewAdd: (v:string, n:number) => void;
+  reviewAdd: (val:string, num:number, img:string[]) => void;
 }
 export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const inputRef = useRef<InputElementRef>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const imgArrRef = useRef<ImgFileType[] | null>(null);
   const [isReview, setIsReview] = useState(false);
   const ratingStarRef = useRef<HTMLInputElement>(null);
 
-  const handleReview = () => {
+  const handleReview = () => { // 리뷰 쓰기
     if(user){
       const input = inputRef.current?.getInputElement();
       setIsReview(true);
@@ -29,23 +31,36 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
     }
   }
-  const handleCompletion = () => { // 최종 전달
+  const imgUpdate = (imgData:ImgFileType[]) => {
+    imgArrRef.current = imgData; // 리렌더링 없이 ref로 값만 변경하도록 지정.
+  }
+  const handleCompletion = async() => { // 리뷰 등록 - 확인
     if(!inputRef.current) return
     const input = inputRef.current.getInputElement();
     if(input){
       const reviewVal = input.value;
       if(reviewVal.trim()){
         const ratingVal = parseFloat(ratingStarRef.current!.value ?? 5);
+        let imgUrl:string[] = [];
+
+        if(imgArrRef.current && imgArrRef.current.length > 0){ // 이미지가 있을 경우
+          // 이미지 스토리지 업로드
+          const imgPromises = imgArrRef.current.map((imgFile) => ImguploadStorage(imgFile.file, 'map/place'));
+          const imgFullPaths = await Promise.all(imgPromises);
+          // 업로드 된 스토리지 url 가져오기
+          const imgUrlPromises = imgFullPaths.map((pathItem) => getStorageImgUrl(pathItem));
+          imgUrl = await Promise.all(imgUrlPromises);
+        }
         inputRef.current.resetValue();
         setIsReview(false);
-        reviewAdd(reviewVal, ratingVal);
+        reviewAdd(reviewVal, ratingVal, imgUrl);
       }else{
         inputRef.current.resetValue();
         dispatch(actionAlert({titMessage:'입력된 리뷰가 없어요!! 😲',isPopup:true, ref:null, autoClose:2000}))
       }
     }
   }
-  const handleCancel = () => {
+  const handleCancel = () => { // 리뷰 쓰기 취소
     setIsReview(false);
     if(buttonRef.current){
       buttonRef.current.focus();
@@ -65,7 +80,7 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
         isReview && (
           <div className="review-add">
             <div className="review-img-upload">
-              <ImgUpload />
+              <ImgUpload imgUpdate={imgUpdate} />
             </div>
             <div className="review-rating">
               <RatingStar 
@@ -98,7 +113,6 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
           </div>
         )
       }
-      
     </StyleReviewCreate>
   )
 }

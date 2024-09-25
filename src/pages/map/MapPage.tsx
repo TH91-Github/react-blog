@@ -53,7 +53,7 @@ export default function MapPage() {
     }
   },[kakaoData, kakaoUpdate]);
 
-  // ⭐ 맵에 활성화된 장소 상세 정보 팝업
+  // ✅ 클릭한 장소 상세 정보
   const placePopChange = (ePlace:MarkerType | null) => {
     setPlacePop( ePlace ? { place:{...ePlace}, show: true } : {place:null, show:false});
   };
@@ -121,11 +121,13 @@ export default function MapPage() {
             {/* 회원 - 즐겨찾기 */}
             <MyBookmarkList 
               kakaoData={kakaoData}
-              updateClick={kakaoUpdate} />
+              updateClick={kakaoUpdate} 
+            />
             {
-              placePop.show && 
+              /* place 정보 */
+              (placePop.show && placePop.place) && 
               <PlaceDetailPage 
-                placeData={placePop}
+                kakaoPlace={placePop.place}
                 placePopChange={placePopChange}
               />
             }

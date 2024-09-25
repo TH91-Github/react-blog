@@ -1,3 +1,5 @@
+import { StringOnly } from "./baseType";
+
 export interface MarkerPositionType {
   lat: number,
   lng: number,
@@ -55,6 +57,7 @@ export interface PlaceReviewType {
   nickName:string,
   reviewText:string,
   rating:number,
+  imgUrl:string[]
 }
 export interface AllReviewDocType {
   id:string,
@@ -96,4 +99,14 @@ export interface ReviewFirebaseType {
 export interface ReviewDataType {
   rating: number,
   data: null | ReviewFirebaseType[]
+}
+
+//////////////////// 🔽 개선 코드 
+// 마지막에 C : kakaoComon.ts 파일에 있다는 것을 나타냄.
+export interface PlaceDataTypeC { 
+  id: string,
+  name: string,
+  rating: number,
+  reviewArr: StringOnly[], // 리뷰 간략정보 : 리뷰 문서 id, user 정보
+  updateTime: Date,
 }

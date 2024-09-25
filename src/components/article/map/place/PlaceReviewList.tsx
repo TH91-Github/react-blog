@@ -1,37 +1,62 @@
 import { colors } from "assets/style/Variable";
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { AllReviewDocType, PlaceReviewType, ReviewDataType } from "types/kakaoComon";
-import { placeAddDoc, placeReviewRemoveDoc } from "utils/firebase/place";
+import { AllReviewDocType, PlaceReviewType } from "types/kakaoComon";
+import { getDocReview, placeReviewRemoveDoc } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
-import { PlaceType } from "./PlaceDetailPage";
-import PlaceReview from "./PlaceReview";
+import { PlaceDetailTabType } from "./PlaceDetailTab";
 import ReviewCreate from "./ReviewCreate";
+import { DocumentData } from "firebase/firestore";
 
-interface PlaceReviewListType extends PlaceType {
-  placeReview: ReviewDataType | undefined
-}
-
-export default function PlaceReviewList({place,placeReview}:PlaceReviewListType) {
+export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabType) {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
-  const {id, place_name, address} = place;
-  const [loading, setLoading] = useState(true);
+  const {id, place_name, address} = kakaoPlace;
   const placeCategory = locationCategory(address.address.region_1depth_name);
   const queryClient = useQueryClient();
 
-  useEffect(()=>{
-    setLoading(placeReview ? false : true);
-  },[placeReview])
+  
 
-  const reviewAdd = useCallback(async(value:string, rating:number) =>{
+  const [lastVisibleDoc, setLastVisibleDoc] = useState<DocumentData | null>(null);
+ 
+  // ✅ place 정보 가져오기.
+  const queryOptions = {
+    queryKey: ['reviewDataQuery', id], 
+    queryFn: () => getDocReview(placeCategory, id, null, 10),
+    keepPreviousData: true, // 이전 데이터를 유지하여 UX 개선
+    onSuccess: (data: any) => {
+      setLastVisibleDoc(data.lastDoc); // 가져온 데이터의 마지막 문서 저장
+    }
+  };
+  const { data: reviewData, error, isLoading }: UseQueryResult<any> = useQuery(queryOptions);
+  
+  
+  const handleReviewMore = async () => {
+    if (!lastVisibleDoc) return; // 마지막 문서가 없으면 더 이상 데이터가 없음
+
+    const newReviewData = await getDocReview(placeCategory, id, lastVisibleDoc, 10);
+    if (newReviewData.reviews.length > 0) {
+      // 기존 데이터에 새로운 데이터 추가
+      queryClient.setQueryData(['reviewDataQuery', id], (oldData: any) => ({
+        reviews: [...oldData.reviews, ...newReviewData.reviews],
+        lastDoc: newReviewData.lastDoc
+      }));
+      
+      setLastVisibleDoc(newReviewData.lastDoc); // 마지막 문서 업데이트
+    }
+  };
+
+
+  console.log(reviewData)
+
+  // ✅ 리뷰 등록
+  const reviewAdd = useCallback(async(value:string, rating:number, imgUrl:string[]) =>{
     if (user) {
       try {
-        setLoading(true);
         // 리뷰 추가 데이터
         const placeInfo: PlaceReviewType = {
           collectionName: placeCategory,
@@ -41,19 +66,23 @@ export default function PlaceReviewList({place,placeReview}:PlaceReviewListType)
           nickName: user.nickName ?? "아무개",
           reviewText: value,
           rating: rating,
+          imgUrl:imgUrl ?? [],
         };
-        await placeAddDoc(placeInfo);
-        queryClient.invalidateQueries({ queryKey: ['placeReview'] });
+
+        // await placeAddDoc(placeInfo);
+        // queryClient.invalidateQueries({ queryKey: ['placeDataQuery'] });
+
       } catch (error) {
         console.error("리뷰 등록에 실패하였습니다.", error);
-      } finally {
-        setLoading(false);
       }
     }else{
       dispatch(actionAlert({titMessage:'로그인 정보를 확인해주세요! 🫢',isPopup:true,ref:null}))
     }
   },[dispatch, id, placeCategory, place_name, user, queryClient])
 
+
+
+  // ✅ 리뷰 삭제
   const handleRemove = async (removeData:AllReviewDocType) => {
     const {id:removeID, authorID} = removeData;
     if (user && removeID && authorID) {
@@ -76,17 +105,17 @@ export default function PlaceReviewList({place,placeReview}:PlaceReviewListType)
   return (
     <StylePlaceReviewList className="review">
       {
-        placeReview
+        placeData
         ?
           <div className="review-inner">
-            <p className="title">리뷰 <span>{placeReview.data?.length}</span></p>
+            <p className="title">리뷰 <span>{reviewData.length ?? 0}</span></p>
             {
-              loading
+              isLoading
               ? 
               <div>로딩중...</div>
               : 
               <div className="review-list">
-                {
+                {/* {
                   placeReview.data
                   ?.sort((a, b) => b.time - a.time)
                   .map((reviewItem, idx) => (
@@ -97,7 +126,7 @@ export default function PlaceReviewList({place,placeReview}:PlaceReviewListType)
                       eventRemove={(e)=>handleRemove(e)}
                       key={idx}/>
                   ))
-                }
+                } */}
               </div>
             }
           </div>

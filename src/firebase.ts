@@ -1,7 +1,8 @@
 // 🚩 firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc, getDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, getDocs, query, where, limit } from "firebase/firestore";
+import { getFirestore, collection, doc, setDoc, getDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, getDocs, query, where, limit, orderBy, startAfter } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const firebaseConfig = {
     // firebase 설정과 관련된 개인 정보
@@ -18,6 +19,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const fireDB = getFirestore(app);
 const provider = new GoogleAuthProvider();
+const firebaseStorage = getStorage(app);
 
-export { fireDB, auth, provider, signInWithPopup, signInWithRedirect, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser, collection, doc, setDoc, deleteDoc, getDoc, getDocs, updateDoc,arrayUnion, arrayRemove, query, where, onAuthStateChanged, limit
+export { fireDB, auth, provider, firebaseStorage, signInWithPopup, signInWithRedirect, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser, collection, doc, setDoc, deleteDoc, getDoc, getDocs, updateDoc,arrayUnion, arrayRemove, query, where, onAuthStateChanged, limit, orderBy, startAfter, ref, uploadBytes, getDownloadURL
 }
+
+

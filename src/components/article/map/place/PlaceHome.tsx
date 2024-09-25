@@ -1,15 +1,10 @@
 import { SvgCall, SvgInternet, SvgPoint } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
-import styled from "styled-components";
-import { PlaceType } from "./PlaceDetailPage";
-import { ReviewDataType } from "types/kakaoComon";
 import RatingStar from "components/element/RatingStar";
+import styled from "styled-components";
+import { PlaceDetailTabType } from "./PlaceDetailTab";
 
-interface PlaceHomeType extends PlaceType {
-  placeReview: ReviewDataType | undefined
-}
-
-export default function PlaceHome({place, placeReview}:PlaceHomeType) {
+export default function PlaceHome({kakaoPlace, placeData}:PlaceDetailTabType) {
   const urlHttps = (url:string) => { // kakako link 
     return url.replace('http:','https:')
   }
@@ -17,7 +12,7 @@ export default function PlaceHome({place, placeReview}:PlaceHomeType) {
     <StylePlaceHome className="place-home">
       <div className="rating-wrap">
         <RatingStar 
-          initNum={placeReview?.rating ?? 0}
+          initNum={placeData?.rating ?? 0}
           onlyView={true}
           starWidth="30px"
           max={5} 
@@ -27,32 +22,24 @@ export default function PlaceHome({place, placeReview}:PlaceHomeType) {
         <i className="icon-address"><SvgPoint $fillColor={colors.yellow} /></i>
         <p>
           <span>도로명</span>
-          <span>{place.address?.road_address?.address_name || ''}</span>
+          <span>{kakaoPlace.address?.road_address?.address_name || ''}</span>
         </p>
         <p>
           <span>지번</span>
-          <span>{`${place.address?.address?.region_3depth_name || ''} ${place.address?.address?.main_address_no || ''}`}</span>
+          <span>{`${kakaoPlace.address?.address?.region_3depth_name || ''} ${kakaoPlace.address?.address?.main_address_no || ''}`}</span>
         </p>
         <p>
-          <span>{place.address?.road_address?.zone_no || ''}</span>
+          <span>{kakaoPlace.address?.road_address?.zone_no || ''}</span>
         </p>
       </div>
       <div className="phone">
         <i className="icon-call"><SvgCall $fillColor={colors.yellow} /></i>
-        <p>{place.phone ? <a href={`tel:${place.phone}`}>{place.phone}</a>: '-'}</p>
+        <p>{kakaoPlace.phone ? <a href={`tel:${kakaoPlace.phone}`}>{kakaoPlace.phone}</a>: '-'}</p>
       </div>
       <div className="link">
         <i className="icon-internet"><SvgInternet $fillColor={colors.yellow} /></i>
-        <p><a href={urlHttps(place.url)} target="_blank" rel="noopener noreferrer" title={`${place.place_name} | 카카오맵 새 창`}>{urlHttps(place.url)}</a></p>
+        <p><a href={urlHttps(kakaoPlace.url)} target="_blank" rel="noopener noreferrer" title={`${kakaoPlace.place_name} | 카카오맵 새 창`}>{urlHttps(kakaoPlace.url)}</a></p>
       </div>
-      
-      {/* 
-        주소
-        영업시간
-        번호
-        카카오맵 링크
-        네이버 블로그 있다면 블로그 링크
-      */}
     </StylePlaceHome>
   )
 }

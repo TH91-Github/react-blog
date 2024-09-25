@@ -1,6 +1,6 @@
 import { ListBar } from "assets/style/StyledCm";
 import { colors } from "assets/style/Variable";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components"
 import { ScrollList } from "./ScrollList";
 
@@ -8,13 +8,14 @@ interface ImgUploadType {
   preview?: boolean,
   imgLength?: number,
   imgSize?: number,
+  imgUpdate: (imgData:ImgFileType[]) => void,
 }
-interface ImgFile {
+export interface ImgFileType {
   file: File;
   url: string;
 }
-export const ImgUpload = ({preview = true, imgLength, imgSize}:ImgUploadType) => {
-  const [imgFileArr, setImgFileArr] = useState<ImgFile[]>([]);
+export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUploadType) => {
+  const [imgFileArr, setImgFileArr] = useState<ImgFileType[]>([]);
   const [isError, setIsError] = useState({state:false, desc:''});
   const imgRef = useRef<HTMLInputElement | null>(null);
   const errorTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -34,10 +35,9 @@ export const ImgUpload = ({preview = true, imgLength, imgSize}:ImgUploadType) =>
     }, 2500);
   },[noticeList])
 
+  // input 이미지 업로드
   const handleUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    console.log('업로드');
-    console.log(e.target.files)
     if (files) {
       if(files.length <= maxLength && (imgFileArr.length + files.length <= maxLength) ){
         const imgFiles = Array.from(files); 
@@ -60,7 +60,7 @@ export const ImgUpload = ({preview = true, imgLength, imgSize}:ImgUploadType) =>
           setImgFileArr((prevFiles) => [...newFiles, ...prevFiles]);
         }
       }else{
-        console.log(`${maxLength}장 만 가능`)
+        // 제한 된 이미지 수 안내
         errorChk(0);
       }
       // ✅ onChange 이벤트 리셋 (같은 이미지 올릴 수 있도록 하기 위함. 에러 발생 이미지 포함)
@@ -70,9 +70,14 @@ export const ImgUpload = ({preview = true, imgLength, imgSize}:ImgUploadType) =>
     }
   }, [imgFileArr, maxLength, maxSize, errorChk]);
 
+  // button 삭제
   const handleImgRemove = useCallback((removeIndex: number) => {
     setImgFileArr((prev) => prev.filter((_, idx) => idx !== removeIndex));
   },[])
+
+  useEffect(()=>{ // 추가 삭제 시 부모에게 전달
+    imgUpdate(imgFileArr)
+  },[imgFileArr])
 
   return (
     <StyleImgUpload className="imgupload">
@@ -152,7 +157,7 @@ export const ImgUpload = ({preview = true, imgLength, imgSize}:ImgUploadType) =>
 // ⭐ 이미지 item
 interface FileItemType {
   preview: boolean,
-  imgData: ImgFile,
+  imgData: ImgFileType,
   index: number,
   handleClickEvent: (e: number) => void,
 }
