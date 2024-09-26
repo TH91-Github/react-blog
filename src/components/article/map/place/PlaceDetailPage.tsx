@@ -14,8 +14,6 @@ interface placePopChangeType {
 export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopChangeType) {
   const {id} = kakaoPlace;
   const placeCategory = locationCategory(kakaoPlace.address.address.region_1depth_name) ?? 'ETC';
-  console.log(id)
-  console.log(placeCategory)
   // ✅ place 정보 가져오기. 
   const { data: placeData, error, isLoading }: UseQueryResult<PlaceDataTypeC> = useQuery({
     queryKey: ['placeDataQuery', id], // queryKey에 id를 포함시켜 place가 변경 될 때 다시

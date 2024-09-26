@@ -33,6 +33,10 @@ export function randomIdChk (listId:any[], name:string) {
   }
   return uniqueId;
 }
+export function getEmailId(email:string){
+  const [id] = email.split('@');
+  return id;
+}
 
 // 현재 시간 반환
 export function currentTime() {

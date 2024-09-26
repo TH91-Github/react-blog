@@ -52,12 +52,12 @@ export interface PlaceReviewType {
   id?:string,
   collectionName: string,
   docId:string,
-  placeName:string,
   authorId:string,
+  placeName:string,
   nickName:string,
   reviewText:string,
   rating:number,
-  imgUrl:string[]
+  imgUrl:string[],
 }
 export interface AllReviewDocType {
   id:string,
@@ -107,6 +107,34 @@ export interface PlaceDataTypeC {
   id: string,
   name: string,
   rating: number,
+  ratingResult:number,
   reviewArr: StringOnly[], // 리뷰 간략정보 : 리뷰 문서 id, user 정보
   updateTime: Date,
+}
+export interface ReviewAddDocTypeC { // place.ts 
+  collectionName: string,
+  docId:string,
+  authorId:string,
+  userId:string,
+  nickName:string,
+  reviewText:string,
+  rating:number,
+  like:string[],
+  imgUrl:string[],
+}
+
+export interface ReviewDataTypeC {
+  authorID:string,
+  id: string,
+  nickName:string,
+  rating:number,
+  reviewText:string,
+  like:string[],
+  userId:string,
+  time: Date,
+}
+
+export interface QueryReviewDataTypeC {
+  docs: ReviewDataTypeC[],
+  lastDoc: boolean | number | undefined,
 }
