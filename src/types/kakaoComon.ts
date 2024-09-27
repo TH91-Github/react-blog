@@ -113,9 +113,9 @@ export interface PlaceDataTypeC {
 }
 export interface ReviewAddDocTypeC { // place.ts 
   collectionName: string,
-  docId:string,
-  authorId:string,
-  userId:string,
+  docID:string,
+  authorID:string,
+  userID:string,
   nickName:string,
   reviewText:string,
   rating:number,
@@ -126,15 +126,23 @@ export interface ReviewAddDocTypeC { // place.ts
 export interface ReviewDataTypeC {
   authorID:string,
   id: string,
+  userID:string,
   nickName:string,
   rating:number,
   reviewText:string,
   like:string[],
-  userId:string,
   time: Date,
 }
 
 export interface QueryReviewDataTypeC {
   docs: ReviewDataTypeC[],
-  lastDoc: boolean | number | undefined,
+  lastDoc: ReviewDataTypeC[] | null,
+}
+
+
+export interface ReviewRemoveTypeC {
+  collectionName:string,
+  docID:string,
+  removeID:string,
+  authorID:string,
 }

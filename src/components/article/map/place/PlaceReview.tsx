@@ -7,15 +7,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { AllReviewDocType, PlaceUpdateType, ReviewFirebaseType } from "types/kakaoComon";
+import { AllReviewDocType, PlaceUpdateType, ReviewDataTypeC } from "types/kakaoComon";
 import { DateChange } from "utils/common";
 import { placeReviewUpdateDoc } from "utils/firebase/place";
 
 interface PlaceReviewPropsType {
   placeCategory:string,
   placeDocId: string,
-  reviewData: ReviewFirebaseType,
-  eventRemove: (e:AllReviewDocType) => void,
+  reviewData: ReviewDataTypeC,
+  eventRemove: (e:ReviewDataTypeC) => void,
 }
 
 export default function PlaceReview({placeCategory, placeDocId, reviewData, eventRemove}:PlaceReviewPropsType) {
@@ -74,10 +74,9 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
     };
   }, [placeCategory, placeDocId, reviewData, user, queryClient, createPlaceUpdateInfo]);
 
-  const handleRemoveClick = (e:AllReviewDocType) =>{
+  const handleRemoveClick = (e:ReviewDataTypeC) =>{
     eventRemove(e);
   }
-
   return (
     <StylePlaceReview className="review">
       <div className="review-item">
