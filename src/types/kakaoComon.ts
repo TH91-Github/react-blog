@@ -48,61 +48,8 @@ export interface PlacePopStateType {
   place: MarkerType | null,
 }
 
-export interface PlaceReviewType {
-  id?:string,
-  collectionName: string,
-  docId:string,
-  authorId:string,
-  placeName:string,
-  nickName:string,
-  reviewText:string,
-  rating:number,
-  imgUrl:string[],
-}
-export interface AllReviewDocType {
-  id:string,
-  authorID: string,
-  nickName: string,
-  reviewText:string,
-  rating:number,
-  order:number,
-  time:Date,
-  allID?:string
-}
-
-export interface PlaceRemoveType {
-  collectionName: string,
-  docId:string,
-  removeId:string,
-  authorId:string,
-}
-
-export interface PlaceUpdateType {
-  collectionName: string,
-  docId:string,
-  updateDocId:string,
-  authorId:string,
-  updateKey:string,
-  likeList?:string[]
-}
-
-export interface ReviewFirebaseType {
-  authorID:string,
-  id: string,
-  order:number,
-  nickName:string,
-  rating:number,
-  reviewText:string,
-  like?:string[],
-  time: any,
-}
-export interface ReviewDataType {
-  rating: number,
-  data: null | ReviewFirebaseType[]
-}
-
-//////////////////// 🔽 개선 코드 
 // 마지막에 C : kakaoComon.ts 파일에 있다는 것을 나타냄.
+// 🔽 개선 작업 중 : place 및 review type
 export interface PlaceDataTypeC { 
   id: string,
   name: string,
@@ -113,9 +60,9 @@ export interface PlaceDataTypeC {
 }
 export interface ReviewAddDocTypeC { // place.ts 
   collectionName: string,
-  docID:string,
-  authorID:string,
-  userID:string,
+  docId:string,
+  authorId:string,
+  userId:string,
   nickName:string,
   reviewText:string,
   rating:number,
@@ -124,13 +71,14 @@ export interface ReviewAddDocTypeC { // place.ts
 }
 
 export interface ReviewDataTypeC {
-  authorID:string,
+  authorId:string,
   id: string,
-  userID:string,
+  userId:string,
   nickName:string,
   rating:number,
   reviewText:string,
   like:string[],
+  imgUrl:string[],
   time: Date,
 }
 
@@ -139,10 +87,10 @@ export interface QueryReviewDataTypeC {
   lastDoc: ReviewDataTypeC[] | null,
 }
 
-
 export interface ReviewRemoveTypeC {
   collectionName:string,
-  docID:string,
-  removeID:string,
-  authorID:string,
+  docId:string,
+  removeId:string,
+  authorId:string,
+  rating:number,
 }

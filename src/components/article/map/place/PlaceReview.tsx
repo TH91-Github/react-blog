@@ -7,9 +7,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { AllReviewDocType, PlaceUpdateType, ReviewDataTypeC } from "types/kakaoComon";
+import { ReviewDataTypeC } from "types/kakaoComon";
 import { DateChange } from "utils/common";
 import { placeReviewUpdateDoc } from "utils/firebase/place";
+import { ScrollList } from "components/element/ScrollList";
 
 interface PlaceReviewPropsType {
   placeCategory:string,
@@ -26,7 +27,8 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   const queryClient = useQueryClient();
   const lastLikeRef = useRef<string[]>(like); // clean up에서 의존성 like를 대신하기 위해
 
-  const createPlaceUpdateInfo = useCallback((updateLike: string[]): PlaceUpdateType => ({
+  // 잔업 > 하트 > 타입
+  const createPlaceUpdateInfo = useCallback((updateLike: string[]): any => ({
     collectionName: placeCategory,
     docId: placeDocId,
     updateDocId: reviewData.id,
@@ -77,11 +79,27 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   const handleRemoveClick = (e:ReviewDataTypeC) =>{
     eventRemove(e);
   }
+  console.log(reviewData.imgUrl)
   return (
     <StylePlaceReview className="review">
       <div className="review-item">
         <div className="review-user">
           <p className="name">{reviewData.nickName}</p>
+        </div>
+        <div className="review-gallery">
+          <ScrollList
+            isScroll={reviewData.imgUrl?.length > 1 ? true : false} 
+            flexType={'x'}>
+            <ul className="review-gallery-lists">
+              {
+                reviewData.imgUrl.map((imgItem, index) => (
+                  <li key={index}>
+                    <img src={imgItem} alt={`${reviewData.nickName}님 리뷰 사진-${index+1}`} />
+                  </li>
+                ))
+              }
+            </ul>
+          </ScrollList>
         </div>
         <p className="desc">{reviewData.reviewText}</p>
         <div className="review-bottom">
@@ -102,7 +120,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
           </span>
         </div>
         {
-          (user && reviewData.authorID === user.uid) && (
+          (user && reviewData.authorId === user.uid) && (
             <button className="btn-remove" onClick={()=> handleRemoveClick(reviewData)} title="리뷰 삭제">
               <span>삭제</span>
             </button>
@@ -128,6 +146,16 @@ const StylePlaceReview = styled.div`
     .desc {
       margin-top:10px;
       font-size:14px;
+    }
+  }
+  .review-gallery {
+    margin-top:10px;
+    &-lists {
+      gap:5px;
+      & > li {
+        overflow:hidden;
+        position:relative;
+      }
     }
   }
   .review-bottom{

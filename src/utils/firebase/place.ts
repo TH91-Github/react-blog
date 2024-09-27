@@ -1,13 +1,14 @@
 import { runTransaction } from "firebase/firestore";
-import { AllReviewDocType, PlaceDataTypeC, PlaceRemoveType, PlaceUpdateType, QueryReviewDataTypeC, ReviewAddDocTypeC, ReviewDataTypeC, ReviewRemoveTypeC } from "types/kakaoComon";
+import { StringOnly } from "types/baseType";
+import { PlaceDataTypeC, QueryReviewDataTypeC, ReviewAddDocTypeC, ReviewDataTypeC, ReviewRemoveTypeC } from "types/kakaoComon";
 import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, limit, orderBy, query, setDoc, startAfter, updateDoc, where } from "../../firebase";
 
 // ✅ Map Place
 // ✒️ place 정보 등록
-export const addDocPlace = async (collectionName:string, docID:string, place_name:string) => {
-  const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docID);
+export const addDocPlace = async (collectionName:string, docId:string, place_name:string) => {
+  const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
   const placeInitInfo: PlaceDataTypeC = {
-    id: docID,
+    id: docId,
     name: place_name,
     rating: 0,
     ratingResult:0,
@@ -21,9 +22,9 @@ export const addDocPlace = async (collectionName:string, docID:string, place_nam
   }
 }
 
-// ✅ 1. place 정보 가져오기 - 카카오 api 외 추가된 정보
-export const getDocPlace = async (collectionName: string, docID: string): Promise<null | PlaceDataTypeC> => {
-  const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docID);
+// ✅ place 정보 가져오기 - 카카오 api 외 추가된 정보
+export const getDocPlace = async (collectionName: string, docId: string): Promise<null | PlaceDataTypeC> => {
+  const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
   const placeDocSnap = await getDoc(placeDocRef);
   if (placeDocSnap.exists()) { // 📰 카카오 기본 정보 외 추가 정보
     return placeDocSnap.data() as PlaceDataTypeC;
@@ -35,11 +36,11 @@ export const getDocPlace = async (collectionName: string, docID: string): Promis
 // ✅ review 정보 가져오기
 export const getDocReview = async ( 
   collectionName: string, 
-  docID: string, 
+  docId: string, 
   lastDoc: ReviewDataTypeC[] | null = null, 
   getPageNum: number = 5
 ): Promise<QueryReviewDataTypeC> => {
-  const reviewcollectionRef = collection(fireDB, 'map', 'mapData', collectionName, docID, 'review');
+  const reviewcollectionRef = collection(fireDB, 'map', 'mapData', collectionName, docId, 'review');
   const querySort = lastDoc
     ? query( 
         reviewcollectionRef,
@@ -71,28 +72,30 @@ export const getDocReview = async (
 
 // ✅ review 등록
 export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
-  const {collectionName, docID, authorID, userID, nickName, rating, reviewText} = reviewData;
-  const reviewsCollectionRef = collection(fireDB, 'map', 'mapData', collectionName, docID, 'review');
+  const {collectionName, docId, authorId, userId, nickName, rating, reviewText, imgUrl} = reviewData;
+  const reviewsCollectionRef = collection(fireDB, 'map', 'mapData', collectionName, docId, 'review');
   const newReviewDoc = doc(reviewsCollectionRef);
   const newReviewData = {
     id: newReviewDoc.id,
-    authorID: authorID,
-    userID:userID,
+    authorId: authorId,
+    userId:userId,
     nickName: nickName,
     reviewText: reviewText,
     rating: rating,
+    like: [],
+    imgUrl: imgUrl,
     time: new Date(),
   }
   try{
     await runTransaction(fireDB, async (transaction) => {
       // 트랜잭션 - place 업데이트 할 문서 가져오기
-      const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docID);
+      const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
       const placeDocSnapshot = await transaction.get(placeDocRef);
       if (placeDocSnapshot.exists()) {
         const getPlaceData = placeDocSnapshot.data();
         const newReviewArr = [ // place 정보 필드에 리뷰 간략 정보 추가
           ...getPlaceData.reviewArr,
-          { docID: newReviewDoc.id, userID: userID }
+          { docId: newReviewDoc.id, userId: userId }
         ];
 
         const newRatingResult = (getPlaceData.ratingResult || 0) + rating;
@@ -119,21 +122,20 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
 }
 
 // ✅ 전체 리뷰 목록 - 추가
-export const allReviewAddDoc = async(reviewData:ReviewAddDocTypeC, reviewDocID:string) =>{
-  const {collectionName, docID, authorID, userID, nickName, reviewText} = reviewData;
+export const allReviewAddDoc = async(reviewData:ReviewAddDocTypeC, reviewDocId:string) =>{
+  const {collectionName, docId, authorId, userId, nickName, reviewText} = reviewData;
   const reviewsCollectionRef = collection(fireDB, 'map', 'reviewAll', 'reviewList');
   const newAllReviewDoc = doc(reviewsCollectionRef);
   const newAllReviewData = {
     id: newAllReviewDoc.id, // all doc id
     collectionName:collectionName, // place 지역
-    docID:docID, // place ID
-    reviewDocID: reviewDocID, // place review id
-    authorID: authorID,
-    userID:userID,
+    docId:docId, // place ID
+    reviewDocId: reviewDocId, // place review id
+    authorId: authorId,
+    userId:userId,
     nickName: nickName,
     reviewText: reviewText,
   }
-  console.log(newAllReviewData)
   try{
     await setDoc(newAllReviewDoc, newAllReviewData);
   }catch(error){
@@ -142,70 +144,69 @@ export const allReviewAddDoc = async(reviewData:ReviewAddDocTypeC, reviewDocID:s
 }
 
 // ✅ review 컬렉션 문서 & 필드 삭제
-export const reviewRemoveDoc = async(removeData:ReviewRemoveTypeC) => {
-  const {collectionName, docID, removeID, authorID} = removeData;
+export const reviewRemove = async(removeData:ReviewRemoveTypeC) => {
+  const {collectionName, docId, removeId, authorId,rating} = removeData;
+  const reviewRemoveRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');
+  const reviewRemoveDoc = doc(reviewRemoveRef,removeId);
+
   try{
-    const placeRemoveRef = collection(fireDB, 'map', 'mapData', collectionName, docID,'review');
-    const placeRemoveDoc = doc(placeRemoveRef,removeID);
-    const placeRemoveSnapshot = await getDoc(placeRemoveDoc); 
-    if(placeRemoveSnapshot.exists()){
-      const docData = placeRemoveSnapshot.data(); 
-      if (docData.authorID === authorID) { // user 확인 한번 더
-        // allReviewRemoveDoc(removeData)
-        await deleteDoc(placeRemoveDoc);
+    await runTransaction(fireDB, async (transaction) => {
+      // 트랜잭션 - place 업데이트 할 문서 가져오기
+      const placeDocRef2 = doc(fireDB, 'map', 'mapData', collectionName, docId);
+      const placeDocSnapshot2 = await transaction.get(placeDocRef2);
+
+      if (placeDocSnapshot2.exists()) {
+        const getPlaceData2 = placeDocSnapshot2.data();
+
+        const removeReviewArr = getPlaceData2.reviewArr.filter((removeReviewArrItem:StringOnly) => removeReviewArrItem.docId !== removeId)
+        const updateRatingResult = parseFloat(((getPlaceData2.ratingResult || 0) - rating).toFixed(1));
+        const newRating2 = removeReviewArr.length > 0 
+          ? parseFloat((updateRatingResult / removeReviewArr.length).toFixed(1)) 
+          : 0;
+        
+        // place 문서 업데이트
+        transaction.update(placeDocRef2, {
+          reviewArr: removeReviewArr,
+          ratingResult: updateRatingResult,
+          rating: newRating2,
+          updateTime : new Date(),
+        });
+        // // 최종 리뷰 등록 
+        transaction.delete(reviewRemoveDoc);
+      }else{
+        throw new Error('❌ 문서가 존재하지 않습니다');
       }
-    }else{
-      throw new Error("⚠️ 리뷰가 없어요!!");
-    }
+    });
+    await allReviewRemove(removeData); // 전체 리뷰 삭제
+    console.log('✅ 리뷰 등록 성공!');
   }catch(error){
-    throw new Error('error')
+    console.log('❌ 리뷰 삭제 실패!');
   }
 }
 
-// export const reviewRemoveDoc = async(removeData:PlaceRemoveType) => {
-//   const {collectionName, docID, removeID, authorID} = removeData;
-//   try{
-//     const placeRemoveRef = collection(fireDB, 'map', 'mapData', collectionName, docID,'review');
-//     const placeRemoveDoc = doc(placeRemoveRef,removeID);
-//     const placeRemoveSnapshot = await getDoc(placeRemoveDoc); 
-//     if(placeRemoveSnapshot.exists()){
-//       const docData = placeRemoveSnapshot.data(); 
-//       if (docData.authorID === authorID) { // user 확인 한번 더
-//         allReviewRemoveDoc(removeData)
-//         await deleteDoc(placeRemoveDoc);
-//       }
-//     }else{
-//       throw new Error("⚠️ 리뷰가 없어요!!");
-//     }
-//   }catch(error){
-//     throw new Error('error')
-//   }
-// }
-
-// 전체 리뷰 목록 - 삭제
-export const allReviewRemoveDoc = async(removeData:PlaceRemoveType) => {
+// ✅ 전체 리뷰 목록 - 삭제
+export const allReviewRemove = async(removeData:ReviewRemoveTypeC) => {
   const { removeId, authorId} = removeData;
   const allReviewListRemoveRef = collection(fireDB, 'map', 'reviewAll', 'reviewList');
-  const findRemoveDoc = query(allReviewListRemoveRef, where('id', '==', removeId));
+  const findRemoveDoc = query(allReviewListRemoveRef, where('reviewDocId', '==', removeId));
   const querySnapshot = await getDocs(findRemoveDoc);
-  
+
   if (querySnapshot.empty) {
-    throw new Error("⚠️ 리뷰가 없어요!!");
+    throw new Error("⚠️ 전체 리뷰가 없어요!!");
   }
   const reviewDoc = querySnapshot.docs[0];
   const reviewData = reviewDoc.data();
-  const reviewDocId = reviewData.allID;
-
-  if (reviewData.authorID !== authorId) {
-    throw new Error("⚠️ 권한이 없어요!!");
+  const reviewDocId = reviewData.id;
+  if (reviewData.authorId !== authorId) {
+    throw new Error("⚠️ 전체 리뷰 삭제 권한이 없어요!!");
   }
   // 문서 삭제
-  const allPlaceRemoveDoc = doc(allReviewListRemoveRef, reviewDocId);
-  await deleteDoc(allPlaceRemoveDoc);
+  const allReviewRemoveDoc = doc(allReviewListRemoveRef, reviewDocId);
+  await deleteDoc(allReviewRemoveDoc);
 }
 
-// 특정 place 업데이트
-export const placeReviewUpdateDoc = async(updateData:PlaceUpdateType) => {
+// 특정 place 업데이트 - 하트 > 잔업
+export const placeReviewUpdateDoc = async(updateData:any) => {
   const { collectionName, docId, updateDocId, authorId, updateKey, likeList} = updateData;
   try{
     const placeUpdateRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');

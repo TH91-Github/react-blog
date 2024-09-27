@@ -137,6 +137,7 @@ const StyledHeader = styled.header`
   }
   &.is-fixed {
     position: fixed;
+    z-index:103;
     top:0;
     left:0;
     width:100%;

@@ -7,7 +7,7 @@ import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 import { ReviewAddDocTypeC, ReviewDataTypeC } from "types/kakaoComon";
 import { getEmailId } from "utils/common";
-import { addDocPlace, getDocReview, reviewAddDoc, reviewRemoveDoc } from "utils/firebase/place";
+import { addDocPlace, getDocReview, reviewAddDoc, reviewRemove } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import { PlaceDetailTabType } from "./PlaceDetailTab";
 import PlaceReview from "./PlaceReview";
@@ -23,7 +23,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   // ✅ place 초기 정보 등록
   const placeAdd = useCallback(async()=>{
     await addDocPlace(placeCategory, id, place_name);
-  },[])
+  },[placeCategory, id, place_name])
 
   // 테스트
   
@@ -37,7 +37,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
     isLoading,
   } = useInfiniteQuery({
     queryKey: ['reviewListQuery', placeCategory, id],
-    queryFn: ({ pageParam = null }) => getDocReview(placeCategory, id, pageParam, 5),
+    queryFn: ({ pageParam = null }) => getDocReview(placeCategory, id, pageParam, 10),
     getNextPageParam: (lastPage:any) => {
       return lastPage.lastDoc ? lastPage.lastDoc : false
     },
@@ -53,61 +53,69 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
 
   // ✅ 리뷰 등록
   const reviewAdd = useCallback(async(value:string, rating:number, imgUrl:string[]) =>{
-    if (user) {
-      try {
-        // 리뷰 등록 전 해당 place에 기본 정보가 없다면 등록.
-        if(!placeData) {
-          placeAdd();
-        }
-        // 리뷰 추가 데이터
-        const reviewInfo: ReviewAddDocTypeC = {
-          collectionName: placeCategory,
-          docID: id,
-          authorID: user.uid,
-          userID:getEmailId(user.email),
-          nickName: user.nickName ?? "아무개",
-          reviewText: value,
-          rating: rating,
-          like:[],
-          imgUrl:imgUrl ?? [],
-        };
-        await reviewAddDoc(reviewInfo);
-        queryClient.invalidateQueries({ queryKey: ['reviewDataQuery'] });
-      } catch (error) {
-        console.error("❌ 리뷰 등록에 실패!!", error);
-      }
-    }else{
-      dispatch(actionAlert({titMessage:'로그인 정보를 확인해주세요! 🫢',isPopup:true,ref:null}))
+    if (!user) {
+      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🫢', isPopup: true, ref: null }));
+      return;
     }
-  },[dispatch, id, placeCategory, place_name, user, queryClient])
+    try {
+      // 리뷰 등록 전 place 데이터 등록 확인
+      if (!placeData) {
+        await placeAdd();
+      }
+
+      // 리뷰 추가 데이터
+      const reviewInfo: ReviewAddDocTypeC = {
+        collectionName: placeCategory,
+        docId: id,
+        authorId: user.uid,
+        userId: getEmailId(user.email),
+        nickName: user.nickName ?? "아무개",
+        reviewText: value,
+        rating: rating,
+        like: [],
+        imgUrl: imgUrl ?? [],
+      };
+
+      await reviewAddDoc(reviewInfo);
+      updateQueryData(); // 데이터 갱신
+    } catch (error) {
+      dispatch(actionAlert({ titMessage: '❌ 리뷰 등록에 실패!!', isPopup: true, ref: null }));
+      console.error(error);
+    }
+  }, [user, dispatch, placeData, placeAdd, placeCategory, id ]);
 
 
   // ✅ 리뷰 삭제
-  const handleRemove = async (removeData:ReviewDataTypeC) => {
-    console.log(removeData)
-    const {id:removeID, authorID} = removeData;
-    if (user && removeID && authorID) {
-      try {
-        await reviewRemoveDoc({ 
-          collectionName: placeCategory,
-          docID: id,
-          removeID: removeID,
-          authorID: authorID,
-        });
-        // queryClient.invalidateQueries({ queryKey: ['placeReview'] });
-        // console.log("리뷰가 성공적으로 삭제되었습니다.👍");
-      } catch (error) {
-        console.log("리뷰 삭제 중 오류 발생했어요.😲");
-      }
-    } else {
-      console.log('user 정보를 확인해 주세요 🥹');
+  const handleRemove = useCallback(async (removeData: ReviewDataTypeC) => {
+    const {id:removeId, authorId,rating} = removeData;
+    if (!user || !removeId || !authorId) {
+      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🥹', isPopup: true, ref: null }));
+      return;
     }
-  }
-  console.log(reviewData)
+    try {
+      await reviewRemove({ 
+        collectionName: placeCategory,
+        docId: id,
+        removeId: removeId,
+        authorId: authorId,
+        rating:rating,
+      });
+      updateQueryData();
+      // console.log("리뷰가 성공적으로 삭제되었습니다.👍");
+    } catch (error) {
+      dispatch(actionAlert({ titMessage: '리뷰 삭제 중 오류 발생했어요. 😲', isPopup: true, ref: null }));
+      console.error(error);
+    }
+  }, [user, placeCategory, id]);
+  
+  const updateQueryData = useCallback(() => { // // 등록, 삭제 이후 갱신
+    queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });
+    queryClient.invalidateQueries({ queryKey: ['placeDataQuery'] });
+  }, [queryClient, placeCategory, id]);
   return (
     <StylePlaceReviewList className="review">
       {
-        placeData
+        (reviewData?.length ?? false) 
         ?
           <div className="review-inner">
             <p className="title">리뷰 <span>{reviewData?.length ?? 0}</span></p>
@@ -137,7 +145,9 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
           </p>
         </div>
       }
-      <ReviewCreate 
+      <ReviewCreate
+        placeCategory={placeCategory}
+        placeId={id}
         reviewAdd={reviewAdd}/>
     </StylePlaceReviewList>
   )

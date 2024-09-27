@@ -6,12 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
+import { MarkerType } from "types/kakaoComon";
 import { getStorageImgUrl, ImguploadStorage } from "utils/firebase/common";
 
 interface ReviewCreateType {
+  placeCategory: string,
+  placeId:string,
   reviewAdd: (val:string, num:number, img:string[]) => void;
 }
-export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
+export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewCreateType) {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const inputRef = useRef<InputElementRef>(null);
@@ -42,10 +45,10 @@ export default function ReviewCreate({reviewAdd}:ReviewCreateType) {
       if(reviewVal.trim()){
         const ratingVal = parseFloat(ratingStarRef.current!.value ?? 5);
         let imgUrl:string[] = [];
-
         if(imgArrRef.current && imgArrRef.current.length > 0){ // 이미지가 있을 경우
           // 이미지 스토리지 업로드
-          const imgPromises = imgArrRef.current.map((imgFile) => ImguploadStorage(imgFile.file, 'map/place'));
+          const imgPromises = imgArrRef.current.map((imgFile) => 
+            ImguploadStorage(imgFile.file, `map/${placeCategory}/${placeId}`, user?.email ?? 'img'));
           const imgFullPaths = await Promise.all(imgPromises);
           // 업로드 된 스토리지 url 가져오기
           const imgUrlPromises = imgFullPaths.map((pathItem) => getStorageImgUrl(pathItem));

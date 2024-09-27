@@ -1,5 +1,6 @@
 import { UserBookmarkType, UserDataType } from "types/baseType";
 import { collection, deleteDoc, doc, firebaseStorage, fireDB, getDoc, getDocs, getDownloadURL, query, ref, setDoc, updateDoc, uploadBytes, where } from "../../firebase";
+import { getEmailId } from "utils/common";
 
 // ✅ thData 기본
 // 추가
@@ -73,8 +74,9 @@ export const removeDoc = async(docName:string, collectionName:string, emailId:st
 }
 
 // 🖼️ 이미지 업로드 경로 반환
-export const ImguploadStorage = async (file: File, folder:string = 'images') => {
-  const storageRef = ref(firebaseStorage, `${folder}/${file.name}`);
+export const ImguploadStorage = async (file: File, folder:string = 'images', email:string) => {
+  const nowTime = new Date().getTime();
+  const storageRef = ref(firebaseStorage, `${folder}/${getEmailId(email)}-${file.name}-${nowTime}`);
   try {
     await uploadBytes(storageRef, file);
     return storageRef.fullPath; // 업로드된 이미지 경로 반환

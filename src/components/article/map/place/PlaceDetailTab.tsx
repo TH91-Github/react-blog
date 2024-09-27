@@ -1,7 +1,7 @@
 import { colors, transitions } from "assets/style/Variable";
 import { useState } from "react";
 import styled from "styled-components";
-import { MarkerType, PlaceDataTypeC, ReviewDataType } from "types/kakaoComon";
+import { MarkerType, PlaceDataTypeC } from "types/kakaoComon";
 import PlaceHome from "./PlaceHome";
 import PlaceReviewList from "./PlaceReviewList";
 

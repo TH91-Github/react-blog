@@ -45,7 +45,7 @@ export default function SignUp() {
   }, []);
   // 필수가 아닌 요소 true 반환
   const essentialChk = (checkTag:HTMLInputElement):boolean =>{
-    const essentialName = ['loginId'];
+    const essentialName = ['loginID'];
     const name = checkTag.getAttribute('name') 
     return name && essentialName.includes(name) ? true : false
   }
