@@ -70,7 +70,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
     }
   }
   return (
-    <StyleReviewCreate className="review-create">
+    <StyleReviewCreate className={isReview? 'is-review':''}>
       <div className="review-btn">
         <button
           type="button"
@@ -79,49 +79,44 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
           <span>리뷰쓰기</span>
         </button>
       </div> 
-      {
-        isReview && (
-          <div className="review-add">
-            <div className="review-img-upload">
-              <ImgUpload imgUpdate={imgUpdate} />
-            </div>
-            <div className="review-rating">
-              <RatingStar 
-                ref={ratingStarRef}
-                max={5} 
-                bgColor={colors.navy} />
-            </div>
-            <form className="form" onSubmit={(e) => e.preventDefault()}>
-              <InputElement
-                ref={inputRef}
-                name={'review'}
-                className={'review-input'}
-                placeholder={'리뷰를 남겨주세요. 🖊️'}
-              />
-            </form>
-            <div className="btn-article">
-              <button 
-                type="button"
-                className="cancel"
-                onClick={handleCancel}>
-                <span>취소</span>
-              </button>
-              <button 
-                type="button"
-                className="completion"
-                onClick={handleCompletion}>
-                <span>확인</span>
-              </button>
-            </div>
-          </div>
-        )
-      }
+      <div className="review-create">
+        <div className="review-img-upload">
+          <ImgUpload imgUpdate={imgUpdate} />
+        </div>
+        <div className="review-rating">
+          <RatingStar 
+            ref={ratingStarRef}
+            max={5} 
+            bgColor={colors.navy} />
+        </div>
+        <form className="form" onSubmit={(e) => e.preventDefault()}>
+          <InputElement
+            ref={inputRef}
+            name={'review'}
+            className={'review-input'}
+            placeholder={'리뷰를 남겨주세요. 🖊️'}
+          />
+        </form>
+        <div className="btn-article">
+          <button 
+            type="button"
+            className="cancel"
+            onClick={handleCancel}>
+            <span>취소</span>
+          </button>
+          <button 
+            type="button"
+            className="completion"
+            onClick={handleCompletion}>
+            <span>확인</span>
+          </button>
+        </div>
+      </div>
     </StyleReviewCreate>
   )
 }
 
 const StyleReviewCreate = styled.div`
-  position:relative;
   padding: 10px;
   .review-btn {
     button {
@@ -138,12 +133,12 @@ const StyleReviewCreate = styled.div`
       }
     }
   }
-  .review-add{
-    display:flex;
+  .review-create{
+    display:none;
     flex-direction:column; 
     position:absolute;
     left:0;
-    bottom:0;
+    top:0;
     width:100%;
     padding:10px 10px 0;
     border-radius:10px;
@@ -195,6 +190,16 @@ const StyleReviewCreate = styled.div`
     &:hover, &:focus {
       background: ${props => props.theme.type === 'dark' ? colors.originWhite : colors.navy};
       color: ${props => props.theme.type === 'dark' ? colors.navy : colors.originWhite};
+    }
+  }
+  &.is-review {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    .review-create{
+      display:flex;
     }
   }
 `;
