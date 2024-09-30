@@ -46,8 +46,9 @@ export const themeSlice = createSlice({
 const alertCommon :alertCommonType = {
   isPopup: false,
   titMessage: '',
-  ref:null,
   txtMessage:'',
+  checkBtn:false,
+  confirmState:false,
   autoClose: undefined,
 };
 export const alertCommonSlice = createSlice({

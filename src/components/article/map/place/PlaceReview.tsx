@@ -47,7 +47,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
       lastLikeRef.current = updatedLike;
       setTimeChkPost(updatedLike);
     }else{
-      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}));
+      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}));
     }
   };
 

@@ -38,7 +38,7 @@ export default function Bookmark({ bookmarkItem }:BookmarkType) {
       dispatch(actionUserLogin({loginState, user: newData}));
       collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
     }else{ // 로그인 해주세요
-      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
+      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}))
     }
   },[user, bookmarkItem, dispatch, loginState])
 

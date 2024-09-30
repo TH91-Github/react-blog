@@ -24,7 +24,7 @@ export default function SearchMap({searchResult, isMoList, moListClick}:SearchMa
       if(val.length > 0){ // 전달
         searchResult && searchResult(val);
       }else{ // 팝업 - 검색어 입력
-        dispatch(actionAlert({titMessage:'검색어를 입력해주세요.',isPopup:true, ref:null, autoClose:2000}))
+        dispatch(actionAlert({titMessage:'검색어를 입력해주세요.',isPopup:true, autoClose:2000}))
       }
       setOnVal(false);
     }

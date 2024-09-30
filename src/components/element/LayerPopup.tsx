@@ -1,42 +1,51 @@
 import { colors, transitions } from "assets/style/Variable";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components"
-
 interface LayerPopupType {
   titMessage: string,
-  descMessage?: string,
+  txtMessage?: string,
   autoCloseSecond?: number, // 1000 : 1초 - 초 입력 시 자동 닫기 적용
   dimmedView?: boolean,
   titleAlign?: string,
   descAlign?: string,
-  checkBtn?: boolean,
-  closeBtn?: boolean,
-  layerPopupClose: () => void
+  confirmBtn?: boolean,
+  confirmEvent?: () => void,
+  layerPopupClose: () => void,
 }
-export default function LayerPopup ({
-  titMessage, descMessage, autoCloseSecond, dimmedView, titleAlign, descAlign, checkBtn, closeBtn, layerPopupClose
-} : LayerPopupType) {
-  const popupRef = useRef<HTMLDivElement | null>(null);
-  const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [isHidden, setIsHidden] = useState(false);
-  const popAniSecond = 500;
-  const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
+
+export interface LayerRefType {
+  getLeyerElement: () => HTMLDivElement | null;
+}
+
+export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
+  {
+    titMessage, txtMessage, autoCloseSecond, dimmedView, titleAlign, descAlign, confirmBtn, confirmEvent, layerPopupClose
+  }: LayerPopupType, ref ) {
+    const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [isHidden, setIsHidden] = useState(false);
+    const popAniSecond = 500;
+    const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
+    const popupRef = useRef<HTMLDivElement | null>(null);
 
   // animation 끝난 후 닫기 
-  const handleTransitionEnd = useCallback(() => {
+  const handleTransitionEnd = useCallback((confirmState: boolean | unknown) => {
     if(aniTimeRef.current) {
       clearTimeout(aniTimeRef.current);
     }
     aniTimeRef.current = setTimeout(() =>{
-      layerPopupClose && layerPopupClose();
+      if(confirmState && confirmEvent){
+        confirmEvent();
+      }else{
+        layerPopupClose && layerPopupClose();
+      }
     }, popAniSecond + 50)
   }, [layerPopupClose]);
 
   // 닫기 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((confirm?:boolean | unknown) => {
     setIsHidden(true);
-    handleTransitionEnd();
+    handleTransitionEnd(confirm);
     if(autoCloseSecond && autoCloseTimeRef.current){
       clearTimeout(autoCloseTimeRef.current);
     }
@@ -87,6 +96,11 @@ export default function LayerPopup ({
     };
   },[]);
 
+  useImperativeHandle(ref, () => ({
+    // layer 반환
+    getLeyerElement: () => popupRef.current,
+  }));
+
 
   return (
     <StyleLayerPopup 
@@ -103,24 +117,23 @@ export default function LayerPopup ({
         <div className="layer-popup-inner">
           <p className="title">{titMessage}</p>
           { 
-            descMessage && <p className="desc">{descMessage}</p>
+            txtMessage && <p className="desc">{txtMessage}</p>
           }
           {
-            (checkBtn || closeBtn) && 
+            confirmBtn && 
             <div className="btn-article">
+              <button
+                type="button"
+                className="btn"
+                onClick={handleClose}>
+                <span>취소</span>
+              </button>
               <button 
                 type="button"
-                className="btn">
+                className="btn"
+                onClick={() => handleClose(true)}>
                 <span>확인</span>  
               </button>
-              {
-                false && 
-                <button
-                  type="button"
-                  className="btn">
-                  <span>취소</span>
-                </button>
-              }
             </div>
           }
           {
@@ -134,7 +147,7 @@ export default function LayerPopup ({
       </div>
     </StyleLayerPopup>
   )
-}
+}));
 
 type StyleLayerPopupType = { 
   $aniSecond?: number,
@@ -171,6 +184,7 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
   .layer-popup-inner {
     overflow:hidden;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items: center;
     position:relative;
@@ -200,36 +214,26 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
   }
   .desc {
     position:relative;
-    margin-bottom:20px;
-    padding-bottom:20px;
+    margin-top:20px;
     font-weight:300;
     color:${colors.subTextColor};
     text-align:${props => props.$descAlign || 'center'};
-    &::before {
-      position:absolute;
-      top:0;
-      left:50%;
-      width:5px;
-      height:5px;
-      border-radius:50%;
-      background:${colors.purple};
-      transform: translateX(-50%);
-      content:'';
-    }
   }
   .btn-article {
     display:flex;
     justify-content:center;
     position:relative;
-    margin-top:15px;
-    padding-top:15px;
+    gap:10px;
+    width:100%;
+    margin-top:20px;
+    padding-top:20px;
     border-top:1px solid #dbdbdb;
     &::before {
       position:absolute;
-      top:0;
+      top:-3px;
       left:50%;
-      width:5px;
-      height:5px;
+      width:6px;
+      height:6px;
       border-radius:50%;
       background:${colors.purple};
       transform: translateX(-50%);
@@ -239,13 +243,14 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
   .btn {
     width:100%;
     max-width:120px;
-    padding:8px 15px;
+    padding:8px 10px;
     border-radius:5px;
-    border:1px solid ${colors.blue};
+    border:1px solid ${colors.navy};
+    font-size:14px;
     font-weight:600;
     transition: ${transitions.base};
     &:hover, &:focus {
-      background:${colors.blue};
+      background:${colors.navy};
       color: ${colors.originWhite};
     }
   }

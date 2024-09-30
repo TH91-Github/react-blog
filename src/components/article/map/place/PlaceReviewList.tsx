@@ -54,7 +54,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   // ✅ 리뷰 등록
   const reviewAdd = useCallback(async(value:string, rating:number, imgUrl:string[]) =>{
     if (!user) {
-      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🫢', isPopup: true, ref: null }));
+      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🫢', isPopup: true}));
       return;
     }
     try {
@@ -79,7 +79,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       await reviewAddDoc(reviewInfo);
       updateQueryData(); // 데이터 갱신
     } catch (error) {
-      dispatch(actionAlert({ titMessage: '❌ 리뷰 등록에 실패!!', isPopup: true, ref: null }));
+      dispatch(actionAlert({ titMessage: '❌ 리뷰 등록에 실패!!', isPopup: true}));
       console.error(error);
     }
   }, [user, dispatch, placeData, placeAdd, placeCategory, id ]);
@@ -89,7 +89,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   const handleRemove = useCallback(async (removeData: ReviewDataTypeC) => {
     const {id:removeId, authorId,rating} = removeData;
     if (!user || !removeId || !authorId) {
-      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🥹', isPopup: true, ref: null }));
+      dispatch(actionAlert({ titMessage: '로그인 정보를 확인해주세요! 🥹', isPopup: true}));
       return;
     }
     try {
@@ -105,7 +105,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       updateQueryData();
       // console.log("리뷰가 성공적으로 삭제되었습니다.👍");
     } catch (error) {
-      dispatch(actionAlert({ titMessage: '리뷰 삭제 중 오류 발생했어요. 😲', isPopup: true, ref: null }));
+      dispatch(actionAlert({ titMessage: '리뷰 삭제 중 오류 발생했어요. 😲', isPopup: true }));
       console.error(error);
     }
   }, [user, placeCategory, id]);

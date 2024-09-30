@@ -31,7 +31,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
         input?.focus();
       },100)
     }else{
-      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true,ref:null}))
+      dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}))
     }
   }
   const imgUpdate = (imgData:ImgFileType[]) => {
@@ -59,7 +59,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
         reviewAdd(reviewVal, ratingVal, imgUrl);
       }else{
         inputRef.current.resetValue();
-        dispatch(actionAlert({titMessage:'입력된 리뷰가 없어요!! 😲',isPopup:true, ref:null, autoClose:2000}))
+        dispatch(actionAlert({titMessage:'입력된 리뷰가 없어요!! 😲',isPopup:true, autoClose:2000}))
       }
     }
   }

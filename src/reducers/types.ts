@@ -1,3 +1,4 @@
+import { LayerRefType } from "components/element/LayerPopup";
 import { StringOnly, UserDataType } from "types/baseType";
 
 export interface ThemeState {
@@ -37,8 +38,9 @@ export interface ResumeState {
 export interface alertCommonType {
   isPopup: boolean;
   titMessage: string;
-  ref: React.RefObject<HTMLDivElement | HTMLInputElement | HTMLButtonElement> | null;
   txtMessage?: string;
+  checkBtn?: boolean,
+  confirmState?:boolean,
   autoClose?: number | undefined;
 }
 
