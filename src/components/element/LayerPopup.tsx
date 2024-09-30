@@ -101,7 +101,6 @@ export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
     getLeyerElement: () => popupRef.current,
   }));
 
-
   return (
     <StyleLayerPopup 
       ref={popupRef}
