@@ -2,6 +2,7 @@ import { runTransaction } from "firebase/firestore";
 import { StringOnly } from "types/baseType";
 import { PlaceDataTypeC, QueryReviewDataTypeC, ReviewAddDocTypeC, ReviewDataTypeC, ReviewRemoveTypeC } from "types/kakaoComon";
 import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, limit, orderBy, query, setDoc, startAfter, updateDoc, where } from "../../firebase";
+import { deleteStorageImg } from "./common";
 
 // ✅ Map Place
 // ✒️ place 정보 등록
@@ -12,7 +13,8 @@ export const addDocPlace = async (collectionName:string, docId:string, place_nam
     name: place_name,
     rating: 0,
     ratingResult:0,
-    reviewArr: [], 
+    reviewArr: [],
+    galleryImgs:[],
     updateTime: new Date(),
   };
   try{
@@ -55,7 +57,7 @@ export const getDocReview = async (
       );
   const reviewSnapshots = await getDocs(querySort);
   if (reviewSnapshots.empty) {
-    console.log('❌ 더 이상 문서가 없어요! ');
+    console.log('❌ 리뷰가 없어요! ');
     return { docs: [], lastDoc: null };
   }
 
@@ -97,13 +99,20 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
           ...getPlaceData.reviewArr,
           { docId: newReviewDoc.id, userId: userId }
         ];
+        // ✔️ 이미지 추가
+        const galleryImg = imgUrl.map( (imgUrlItem:string) => (
+          {userId:userId, imgPath: imgUrlItem}
+        ))
+        const newGalleryArr = galleryImg.length > 0 ? [...getPlaceData.galleryImgs, ...galleryImg]: [...getPlaceData.galleryImgs]
 
+        // ✔️ 별점
         const newRatingResult = (getPlaceData.ratingResult || 0) + rating;
         const newRating = parseFloat((newRatingResult / newReviewArr.length).toFixed(1)); 
         // place 문서 업데이트
         transaction.update(placeDocRef, {
           reviewArr: newReviewArr,
           ratingResult: newRatingResult,
+          galleryImgs: newGalleryArr,
           rating: newRating,
           updateTime : new Date(),
         });
@@ -113,10 +122,9 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
         throw new Error('❌ 문서가 존재하지 않습니다');
       }
     });
-
     await allReviewAddDoc(reviewData, newReviewDoc.id); // 리뷰 검수를 위함.
-    console.log('✅ 리뷰 등록 성공!');
   }catch(error){
+    await deleteStorageImg(imgUrl); // ✔️ 리뷰 실패할 경우 등록한 이미지 다시 삭제
     console.log('❌ 리뷰 등록에 실패!! -' + error)
   }
 }
@@ -145,40 +153,47 @@ export const allReviewAddDoc = async(reviewData:ReviewAddDocTypeC, reviewDocId:s
 
 // ✅ review 컬렉션 문서 & 필드 삭제
 export const reviewRemove = async(removeData:ReviewRemoveTypeC) => {
-  const {collectionName, docId, removeId, authorId,rating} = removeData;
+  const {collectionName, docId, removeId, removeImg, rating} = removeData;
   const reviewRemoveRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');
   const reviewRemoveDoc = doc(reviewRemoveRef,removeId);
-
   try{
     await runTransaction(fireDB, async (transaction) => {
       // 트랜잭션 - place 업데이트 할 문서 가져오기
-      const placeDocRef2 = doc(fireDB, 'map', 'mapData', collectionName, docId);
-      const placeDocSnapshot2 = await transaction.get(placeDocRef2);
+      const removeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
+      const removePlaceDocSnapshot = await transaction.get(removeDocRef);
 
-      if (placeDocSnapshot2.exists()) {
-        const getPlaceData2 = placeDocSnapshot2.data();
-
-        const removeReviewArr = getPlaceData2.reviewArr.filter((removeReviewArrItem:StringOnly) => removeReviewArrItem.docId !== removeId)
-        const updateRatingResult = parseFloat(((getPlaceData2.ratingResult || 0) - rating).toFixed(1));
-        const newRating2 = removeReviewArr.length > 0 
-          ? parseFloat((updateRatingResult / removeReviewArr.length).toFixed(1)) 
+      // 이미지 삭제 - store(데이터) 와 storage(이미지) 다르기에 이미지 요청부터 성공/실패 체크
+      if (removeImg.length > 0) {
+        try {
+          await deleteStorageImg(removeImg);
+        } catch (imgError) {
+          throw new Error('❌ 이미지 삭제 실패로 인해 리뷰 삭제를 진행할 수 없어요... ');
+        }
+      }
+      // firbase store 삭제
+      if (removePlaceDocSnapshot.exists()) {
+        const getRemovePlaceData = removePlaceDocSnapshot.data();
+        const removeReviewArr = getRemovePlaceData.reviewArr.filter((removeReviewArrItem:StringOnly) => removeReviewArrItem.docId !== removeId)
+        const removeGallery = getRemovePlaceData.galleryImgs.filter( (galleryItem:any) => !removeImg.includes(galleryItem.imgPath));
+        const removeRatingResult = parseFloat(((getRemovePlaceData.ratingResult || 0) - rating).toFixed(1));
+        const removeRating = removeReviewArr.length > 0 
+          ? parseFloat((removeRatingResult / removeReviewArr.length).toFixed(1)) 
           : 0;
-        
         // place 문서 업데이트
-        transaction.update(placeDocRef2, {
+        transaction.update(removeDocRef, {
           reviewArr: removeReviewArr,
-          ratingResult: updateRatingResult,
-          rating: newRating2,
+          ratingResult: removeRatingResult,
+          rating: removeRating,
+          galleryImgs: removeGallery,
           updateTime : new Date(),
         });
-        // // 최종 리뷰 등록 
+        // 리뷰 삭제
         transaction.delete(reviewRemoveDoc);
       }else{
         throw new Error('❌ 문서가 존재하지 않습니다');
       }
     });
     await allReviewRemove(removeData); // 전체 리뷰 삭제
-    console.log('✅ 리뷰 등록 성공!');
   }catch(error){
     console.log('❌ 리뷰 삭제 실패!');
   }

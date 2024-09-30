@@ -56,6 +56,7 @@ export interface PlaceDataTypeC {
   rating: number,
   ratingResult:number,
   reviewArr: StringOnly[], // 리뷰 간략정보 : 리뷰 문서 id, user 정보
+  galleryImgs:StringOnly[],
   updateTime: Date,
 }
 export interface ReviewAddDocTypeC { // place.ts 
@@ -66,8 +67,8 @@ export interface ReviewAddDocTypeC { // place.ts
   nickName:string,
   reviewText:string,
   rating:number,
-  like:string[],
   imgUrl:string[],
+  like:string[],
 }
 
 export interface ReviewDataTypeC {
@@ -92,5 +93,6 @@ export interface ReviewRemoveTypeC {
   docId:string,
   removeId:string,
   authorId:string,
+  removeImg:string[],
   rating:number,
 }

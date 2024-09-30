@@ -79,7 +79,6 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   const handleRemoveClick = (e:ReviewDataTypeC) =>{
     eventRemove(e);
   }
-  console.log(reviewData.imgUrl)
   return (
     <StylePlaceReview className="review">
       <div className="review-item">
