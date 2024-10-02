@@ -130,15 +130,18 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   )
 }
 const StylePlaceReview = styled.div`
+  &:first-child{
+    .review-item{
+      margin-top:0;
+      border-top:none;
+    }
+  }
  .review-item {
     overflow:hidden;
     position:relative;
     margin-top:15px;
     padding:15px 0 0;
     border-top:1px solid ${colors.lineColor};
-    &:first-child { 
-      margin-top:0;
-    }
     .name {
       font-weight:600;
     }

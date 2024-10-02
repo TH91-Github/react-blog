@@ -165,17 +165,30 @@ const StylePlaceReviewList = styled.div`
     padding:0 10px;
   }
   .title {
+    position:relative;
     font-size:18px;
     font-weight:600;
-    span {
+    margin-bottom:10px;
+    padding-bottom:20px;
+    &::after{ 
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:2px; 
+      border-radius:5px;
+      background:${colors.navy};
+      content:'';
+    }
+    & > span {
       font-size:16px;
       color:${colors.subTextColor};
     }
   }
   .review-list {
     overflow-y:auto;
+    position:relative;
     max-height:300px;
-    margin-top:20px;
     padding:0 5px 0 0;
     &::-webkit-scrollbar {
       width:5px;
