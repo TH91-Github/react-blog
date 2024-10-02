@@ -71,7 +71,6 @@ export function mapObjectChange(mapList: Map<string, number>): TitleSize[] {
   return newObjects;
 }
 
-
 export function DateChange(type?: string, callDate?: any) { 
   // callDate가 Timestamp 객체일 경우 toDate()로 변환
   const d = callDate && callDate.toDate ? callDate.toDate() : new Date(callDate);

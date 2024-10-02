@@ -1,11 +1,13 @@
 import { SvgStar } from "assets/style/SVGIcon";
-import { colors, transitions } from "assets/style/Variable";
+import { colors, media, transitions } from "assets/style/Variable";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
 import Bookmark from "./Bookmark";
+import { UserBookmarkType } from "types/baseType";
+import { isMobileChk } from "utils/common";
 
 type placePopChangeType = {
   kakaoData: MapDataType,
@@ -17,6 +19,7 @@ export default function MyBookmarkList ({kakaoData, updateClick}:placePopChangeT
   const listRef = useRef<HTMLDivElement| null>(null)
   const [isListOpen, setIsListOpen] = useState(false);
   const [isScroll, setMemuScroll] = useState(false);
+
   const handleListClick = () =>{ 
     setIsListOpen(!isListOpen);
   }
@@ -33,13 +36,17 @@ export default function MyBookmarkList ({kakaoData, updateClick}:placePopChangeT
       listCurrent.removeEventListener("scroll", handleListScroll);
     };
   }, []);
-
-  const handleMyBookmarkClick = (e:any) =>{ // ✅ 선택 My Place 
-    const bookmarkClickData = {
-      ...kakaoData,
-      markerList: [e.bookmark],
+  
+  const handleMyBookmarkClick = (e:UserBookmarkType) =>{ // ✅ 선택 My Place 
+    const isMo = isMobileChk()
+    if(e.bookmark){
+      const bookmarkClickData = {
+        ...kakaoData,
+        markerList: [e.bookmark],
+      }
+      if(isMo) handleListClick(); // MO일 경우 즐겨찾기 목록 off
+      updateClick(bookmarkClickData);
     }
-    updateClick(bookmarkClickData);
   }
   return (
     <>
@@ -204,6 +211,50 @@ const StyleMyBookmarkList = styled.div`
       }
     }
   }
+  ${media.mo}{
+    .my-bookmark-btn {
+      position:absolute;
+      top:50px;
+      left:15px;
+      width:30px;
+      height:30px;
+    }
+    .my-list{
+      position:absolute;
+      width:100vw;
+      height:calc(100vh - 60px);
+      &-head {
+        padding:15px 50px 15px 15px;
+      }
+      &-inner {
+        position:relative;
+        padding:15px;
+        &::before {
+          position:absolute;
+          top:0;
+          left:50%;
+          width:calc(100% - 30px);
+          height:2px;
+          background:${colors.navy};
+          transform: translateX(-50%);
+          content:'';
+        }
+      }
+    }
+    &.active {
+      z-index:104;
+      width:100vw;
+      .my-bookmark-btn {
+        z-index:1;
+        top:5px;
+        right:15px;
+        left:auto;
+        border:none;
+        background:none;
+        box-shadow:none;
+      }
+    }
+  }
 `;
 
 const StyleMyBookMarkItem = styled.li`
@@ -227,5 +278,18 @@ const StyleMyBookMarkItem = styled.li`
   .bookmark-btn {
     display:block;
     width:15px;
+  }
+  ${media.mo}{
+    border-top:1px solid ${colors.lineColor};
+    &:first-child {
+      border-top:none;
+    }
+    &:hover, &:focus {
+      box-shadow:none;
+    }
+    .item-btn{
+      padding-left:0;
+    }
+      
   }
 `;

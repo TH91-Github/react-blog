@@ -262,7 +262,7 @@ const StyleWrap = styled.div`
     .map-side-menu {
       position:absolute;
       top:0;
-      left:0;
+      height:auto;
       padding:0;
     }
   }

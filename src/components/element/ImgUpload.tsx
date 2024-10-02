@@ -20,7 +20,7 @@ export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUpl
   const imgRef = useRef<HTMLInputElement | null>(null);
   const errorTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
   const maxLength = imgLength ?? 3;
-  const maxSize = (imgSize ?? 5) * 1024 * 1024; // 기본 5MB
+  const maxSize = (imgSize ?? 6) * 1024 * 1024; // 기본 6MB
   const noticeList = useMemo(() => [
     `최대 ${maxLength}개의 이미지만 등록 가능합니다.`,
     "이미지는 jpg, jpeg, png 형식만 가능합니다.",
@@ -46,7 +46,7 @@ export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUpl
             errorChk(1)
             return true;
           }
-          if (imgItem.size > maxSize) {// EX) 5MB보다 클 경우
+          if (imgItem.size > maxSize) {// EX) 6MB보다 클 경우
             errorChk(2);
             return true;
           }

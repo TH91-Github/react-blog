@@ -20,7 +20,6 @@ export default function SearchMap({searchResult, isMoList, moListClick}:SearchMa
   const handleClick = () =>{
     if (refInput.current) {
       const val = refInput.current.getInputElement()?.value ?? '';
-      refInput.current.resetValue();
       if(val.length > 0){ // 전달
         searchResult && searchResult(val);
       }else{ // 팝업 - 검색어 입력
