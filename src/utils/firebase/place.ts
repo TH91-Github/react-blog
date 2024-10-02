@@ -222,7 +222,7 @@ export const allReviewRemove = async(removeData:ReviewRemoveTypeC) => {
 
 // 특정 place 업데이트 - 하트 > 잔업
 export const placeReviewUpdateDoc = async(updateData:any) => {
-  const { collectionName, docId, updateDocId, authorId, updateKey, likeList} = updateData;
+  const { collectionName, docId, updateDocId, updateKey, likeList} = updateData;
   try{
     const placeUpdateRef = collection(fireDB, 'map', 'mapData', collectionName, docId,'review');
     const placeUpdateDoc = doc(placeUpdateRef, updateDocId);

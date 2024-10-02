@@ -6,6 +6,7 @@ import { getDocPlace } from "utils/firebase/place";
 import { locationCategory } from "utils/kakaomap/common";
 import Bookmark from "../Bookmark";
 import PlaceDetailTab from "./PlaceDetailTab";
+import { PlaceThumbnail } from "./PlaceThumbnail";
 interface placePopChangeType {
   kakaoPlace: MarkerType;
   placePopChange: (e:MarkerType | null) => void; 
@@ -34,7 +35,14 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
         <div className="place-head">
           <div className="thumbnail">
             {/* <img src="" alt="" /> */}
-            <p className="desc">😅<br />등록된 이미지가 없어요.<br /> 준비중...</p>
+            {
+              (placeData && placeData.galleryImgs.length > 0)
+              ? 
+                <PlaceThumbnail placeData={placeData}/>
+              
+              : <p className="desc">😅<br />등록된 이미지가 없어요.<br /> 준비중...</p>
+            }
+            
           </div>
           <div className="place-tit">
             <p className="tit">{kakaoPlace.place_name}</p>
@@ -91,6 +99,8 @@ const StylePlaceDetail = styled.div`
   }
   .place-inner{
     overflow-y:auto;
+    display:flex;
+    flex-direction: column;
     position:absolute;
     width:100%;
     height:100%;
@@ -112,10 +122,11 @@ const StylePlaceDetail = styled.div`
     100% {opacity:1;}
   }
   .place-head {
+    overflow:hidden;
     display:flex;
     flex-wrap: wrap;
     gap:20px;
-    padding:10px 10px 0;
+    padding:10px;
   }
   .thumbnail {
     position:relative;
@@ -183,9 +194,8 @@ const StylePlaceDetail = styled.div`
     padding:5px 0;
   }
   .place-cont {
+    flex-grow:1;
     position:relative;
-    margin-top:15px;
-    padding-bottom:10px;
     border-top:5px solid ${colors.lineColor};
   }
   ${media.mo} {

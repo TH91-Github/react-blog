@@ -1,20 +1,26 @@
 import { ListBar } from "assets/style/StyledCm";
 import { colors } from "assets/style/Variable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import styled from "styled-components"
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
+import styled from "styled-components";
 import { ScrollList } from "./ScrollList";
 
 interface ImgUploadType {
   preview?: boolean,
   imgLength?: number,
   imgSize?: number,
-  imgUpdate: (imgData:ImgFileType[]) => void,
 }
 export interface ImgFileType {
   file: File;
   url: string;
 }
-export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUploadType) => {
+export interface ImgInpuElementRef {
+  getInputElement: () => HTMLInputElement | null;
+  getImgFileArr: () => ImgFileType[]
+  resetFile: () => void;
+}
+
+export const ImgUpload = forwardRef<ImgInpuElementRef, ImgUploadType>(
+  ({preview = true, imgLength, imgSize}, ref) => {
   const [imgFileArr, setImgFileArr] = useState<ImgFileType[]>([]);
   const [isError, setIsError] = useState({state:false, desc:''});
   const imgRef = useRef<HTMLInputElement | null>(null);
@@ -75,9 +81,16 @@ export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUpl
     setImgFileArr((prev) => prev.filter((_, idx) => idx !== removeIndex));
   },[])
 
-  useEffect(()=>{ // 추가 삭제 시 부모에게 전달
-    imgUpdate(imgFileArr)
-  },[imgFileArr])
+  useImperativeHandle(ref, () => ({
+    // input 반환
+    getInputElement: () => imgRef.current,
+    getImgFileArr: () => imgFileArr,
+    // 초기화
+    resetFile: () => {
+      console.log("초기화해줘!")
+      setImgFileArr([]);
+    }
+  }));
 
   return (
     <StyleImgUpload className="imgupload">
@@ -153,7 +166,7 @@ export const ImgUpload = ({preview = true, imgLength, imgSize, imgUpdate}:ImgUpl
     </StyleImgUpload>
   )
 }
-
+);
 // ⭐ 이미지 item
 interface FileItemType {
   preview: boolean,

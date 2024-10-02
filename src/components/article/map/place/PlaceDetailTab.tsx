@@ -50,6 +50,9 @@ export default function PlaceDetailTab ({kakaoPlace, placeData}:PlaceDetailTabTy
 }
 
 const StylePlaceDetailTab = styled.div`
+  height:100%;
+  display:flex;
+  flex-direction: column;
   .tab-nav{
     & > ul {
       display:flex;
@@ -89,7 +92,10 @@ const StylePlaceDetailTab = styled.div`
     }
   }
   .tab-cont {
-    padding:20px 0 0;
+    flex-grow:1;
     border-top:5px solid ${colors.lineColor};
+    &-inner {
+      height:100%;
+    }
   }
 `;

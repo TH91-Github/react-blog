@@ -1,12 +1,11 @@
 import { colors, transitions } from "assets/style/Variable";
-import { ImgFileType, ImgUpload } from "components/element/ImgUpload";
+import { ImgInpuElementRef, ImgUpload } from "components/element/ImgUpload";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import RatingStar from "components/element/RatingStar";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { MarkerType } from "types/kakaoComon";
 import { getStorageImgUrl, ImguploadStorage } from "utils/firebase/common";
 
 interface ReviewCreateType {
@@ -19,7 +18,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const inputRef = useRef<InputElementRef>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const imgArrRef = useRef<ImgFileType[] | null>(null);
+  const imgInputRef = useRef<ImgInpuElementRef | null>(null)
   const [isReview, setIsReview] = useState(false);
   const ratingStarRef = useRef<HTMLInputElement>(null);
 
@@ -34,27 +33,27 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}))
     }
   }
-  const imgUpdate = (imgData:ImgFileType[]) => {
-    imgArrRef.current = imgData; // 리렌더링 없이 ref로 값만 변경하도록 지정.
-  }
   const handleCompletion = async() => { // 리뷰 등록 - 확인
-    if(!inputRef.current) return
+    if(!inputRef.current || !imgInputRef.current) return
     const input = inputRef.current.getInputElement();
     if(input){
       const reviewVal = input.value;
       if(reviewVal.trim()){
         const ratingVal = parseFloat(ratingStarRef.current!.value ?? 5);
+        const imgArr = imgInputRef.current.getImgFileArr();
         let imgUrl:string[] = [];
-        if(imgArrRef.current && imgArrRef.current.length > 0){ // 이미지가 있을 경우
-          // 이미지 스토리지 업로드
-          const imgPromises = imgArrRef.current.map((imgFile) => 
+
+        if(imgArr.length > 0){ // ✅ 이미지 등록
+           // 이미지 - fire 스토리지 업로드 
+          const imgPromises = imgArr.map((imgFile) => 
             ImguploadStorage(imgFile.file, `map/${placeCategory}/${placeId}`, user?.email ?? 'img'));
           const imgFullPaths = await Promise.all(imgPromises);
-          // 업로드 된 스토리지 url 가져오기
           const imgUrlPromises = imgFullPaths.map((pathItem) => getStorageImgUrl(pathItem));
           imgUrl = await Promise.all(imgUrlPromises);
         }
+        // 완료
         inputRef.current.resetValue();
+        imgInputRef.current.resetFile();
         setIsReview(false);
         reviewAdd(reviewVal, ratingVal, imgUrl);
       }else{
@@ -81,7 +80,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
       </div> 
       <div className="review-create">
         <div className="review-img-upload">
-          <ImgUpload imgUpdate={imgUpdate} />
+          <ImgUpload ref={imgInputRef} />
         </div>
         <div className="review-rating">
           <RatingStar 
@@ -134,13 +133,15 @@ const StyleReviewCreate = styled.div`
     }
   }
   .review-create{
+    overflow-y:auto;
     display:none;
     flex-direction:column; 
     position:absolute;
-    left:0;
     top:0;
+    left:0;
     width:100%;
-    padding:10px 10px 0;
+    height:100%;
+    padding:10px;
     border-radius:10px;
     background:${props => props.theme.bgOrigin};
     &::before {
@@ -152,6 +153,16 @@ const StyleReviewCreate = styled.div`
       background: linear-gradient(to bottom,  rgba(127,127,127,0) 0%,rgba(127,127,127,0) 1%,rgba(127,127,127,0.1) 80%);
       pointer-events:none;
       content:'';
+    }
+    &::-webkit-scrollbar {
+      width:5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ${colors.navy};
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: ${colors.baseWhite};
     }
     .form{
       flex-grow:1;

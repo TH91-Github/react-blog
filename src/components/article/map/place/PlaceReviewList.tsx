@@ -20,12 +20,15 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   const {id, place_name, address} = kakaoPlace;
   const placeCategory = locationCategory(address.address.region_1depth_name);
   
+  const updateQueryData = useCallback(() => { // // 등록, 삭제 이후 갱신
+    queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });
+    queryClient.invalidateQueries({ queryKey: ['placeDataQuery'] });
+  }, [queryClient]);
+
   // ✅ place 초기 정보 등록
   const placeAdd = useCallback(async()=>{
     await addDocPlace(placeCategory, id, place_name);
   },[placeCategory, id, place_name])
-
-  // 테스트
   
   // ✅ 리뷰 가져오기
   const {
@@ -82,8 +85,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       dispatch(actionAlert({ titMessage: '❌ 리뷰 등록에 실패!!', isPopup: true}));
       console.error(error);
     }
-  }, [user, dispatch, placeData, placeAdd, placeCategory, id ]);
-
+  }, [user, dispatch, placeData, placeAdd, placeCategory, id, updateQueryData]);
 
   // ✅ 리뷰 삭제
   const handleRemove = useCallback(async (removeData: ReviewDataTypeC) => {
@@ -108,45 +110,43 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       dispatch(actionAlert({ titMessage: '리뷰 삭제 중 오류 발생했어요. 😲', isPopup: true }));
       console.error(error);
     }
-  }, [user, placeCategory, id]);
+  }, [user, placeCategory, id, dispatch, updateQueryData]);
   
-  const updateQueryData = useCallback(() => { // // 등록, 삭제 이후 갱신
-    queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });
-    queryClient.invalidateQueries({ queryKey: ['placeDataQuery'] });
-  }, [queryClient, placeCategory, id]);
   return (
-    <StylePlaceReviewList className="review">
-      {
-        (reviewData?.length ?? false) 
-        ?
-          <div className="review-inner">
-            <p className="title">리뷰 <span>{reviewData?.length ?? 0}</span></p>
-            {
-              isLoading
-              ? 
-              <div>로딩중...</div>
-              : 
-              <div className="review-list">
-                {
-                  reviewData?.map((reviewItem, idx) => (
-                    <PlaceReview 
-                      placeCategory={placeCategory}
-                      placeDocId={id}
-                      reviewData={reviewItem}
-                      eventRemove={handleRemove}
-                      key={idx}/>
-                  ))
-                }
-              </div>
-            }
-          </div>
-        : <div className="review-inner">
-          <p>
-            등록된 리뷰가 없어요..🥹 <br />
-            리뷰를 작성해주세요!! 
-          </p>
-        </div>
-      }
+    <StylePlaceReviewList className="review-wrap">
+      <div className="review-inner">
+      <p className="title">리뷰 <span>{reviewData?.length ?? 0}</span></p>
+        {
+          isLoading
+          ? (
+            <p>로딩중...</p>
+          )
+          : (
+            reviewData?.length ?? false
+              ? (
+                <div className="review-list">
+                  {
+                    reviewData?.map((reviewItem, idx) => (
+                      <PlaceReview 
+                        placeCategory={placeCategory}
+                        placeDocId={id}
+                        reviewData={reviewItem}
+                        eventRemove={handleRemove}
+                        key={idx}/>
+                    ))
+                  }
+                </div>
+              )
+              : (
+                <p className="no-review">
+                  🥹<br />
+                  등록된 리뷰가 없어요..<br />
+                  리뷰를 작성해주세요!! 
+                </p>
+              )
+          )
+        }
+      </div>
       <ReviewCreate
         placeCategory={placeCategory}
         placeId={id}
@@ -155,6 +155,15 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   )
 }
 const StylePlaceReviewList = styled.div`
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  height:100%;
+  padding-top:20px;
+  .review-inner {
+    flex-grow:1;
+    padding:0 10px;
+  }
   .title {
     font-size:18px;
     font-weight:600;
@@ -163,14 +172,11 @@ const StylePlaceReviewList = styled.div`
       color:${colors.subTextColor};
     }
   }
-  .review-inner {
-    padding:0 10px;
-  }
   .review-list {
     overflow-y:auto;
     max-height:300px;
     margin-top:20px;
-    padding:0 5px 20px 0;
+    padding:0 5px 0 0;
     &::-webkit-scrollbar {
       width:5px;
     }
@@ -182,5 +188,9 @@ const StylePlaceReviewList = styled.div`
       background: ${colors.baseWhite};
     }
   }
-  
+  .no-review {
+    padding:15px;
+    text-align:center;
+    line-height:1.5;
+  }
 `;

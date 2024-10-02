@@ -48,7 +48,7 @@ const StylePlaceHome = styled.div`
   display:flex;
   flex-direction: column;
   gap:20px;
-  padding:0 10px;
+  padding:20px 10px 10px;
   & > div {
     position:relative;
     padding-left:25px;
