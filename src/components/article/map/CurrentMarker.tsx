@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 
-
 type MyBookMarkerType = {
   map: kakao.maps.Map | null,
 }
@@ -23,7 +22,26 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
         setCurrentDirection(event.alpha);
       }
     };
-    window.addEventListener("deviceorientation", handleOrientation);
+  
+    const requestPermission = async () => {
+      // iOS의 경우 권한 요청이 필요합니다.
+      if (typeof DeviceMotionEvent !== 'undefined' && (DeviceMotionEvent as any).requestPermission) {
+        try {
+          const response = await (DeviceMotionEvent as any).requestPermission();
+          if (response === 'granted') {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        } catch (error) {
+          console.error("Device orientation permission error: ", error);
+        }
+      } else {
+        // iOS가 아닌 경우 바로 이벤트 리스너를 추가합니다.
+        window.addEventListener("deviceorientation", handleOrientation);
+      }
+    };
+  
+    requestPermission();
+  
     return () => {
       window.removeEventListener("deviceorientation", handleOrientation);
     };
@@ -62,7 +80,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
             {closeTime}
           </span>
         </StyleCurrentPoint>
-       
+        <span>       방향 값 : {currentDirection}</span>
       </CustomOverlayMap>
     </>
   )
