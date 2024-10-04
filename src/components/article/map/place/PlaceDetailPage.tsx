@@ -214,6 +214,9 @@ const StylePlaceDetail = styled.div`
     top:50%;
     right:50%;
     transform:translate(50%,-50%);
+    &:focus,  &:hover {
+      transform: translate(50%,-50%) rotate(180deg);
+    }
   }
   ${media.mo} {
     z-index:104;
