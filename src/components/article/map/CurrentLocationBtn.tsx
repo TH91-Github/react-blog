@@ -24,7 +24,7 @@ export const CurrentLocationBtn = ({map}:CurrentLocationBtnType) => {
         type="button" 
         className="current-btn"
         onClick={handleCurrentClick}>
-        <SvgMapCurrentIcon $fillColor={colors.navy} />
+        <SvgMapCurrentIcon $fillColor={colors.blue} />
         <span className="blind">접속(현)-위치</span>
       </button>
     </StyleCurrentLocationBtn>
@@ -37,7 +37,7 @@ const StyleCurrentLocationBtn = styled.div`
   width:35px;
   height:35px;
   border-radius:5px;
-  border:1px solid ${colors.navy};
+  border:1px solid ${colors.blue};
   background:${colors.baseWhite};
   .current-btn{
   }

@@ -82,9 +82,12 @@ export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum
     });
   });
 }
-
 // 브라우저 제공 API를 통해 현재 위치 가져오기
-export const getCurrentLocation = (initCenterPos?:MarkerPositionType):Promise<MarkerPositionType> =>{
+export const getCurrentLocation = (
+  initCenterPos?:MarkerPositionType, 
+  retryCount = 0, // 재시도 수
+  maxRetries = 2 // 총 재시도
+):Promise<MarkerPositionType> =>{
   const defaultPos = initCenterPos ?? { lat: 37.56682420267543, lng: 126.978652258823 }; // 초기 지정 값 없다면 서울 시청 좌표
   return new Promise((resolve) => {
     // 🗺️ 현재 주소 받아오기
@@ -99,8 +102,15 @@ export const getCurrentLocation = (initCenterPos?:MarkerPositionType):Promise<Ma
           resolve(location);
         },
         (error) => {
-          console.log('⚠️error '+error);
-          resolve(defaultPos);
+          console.log('⚠️ 다시 시도 ' + error);
+          if (retryCount < maxRetries) { // 재시도 / 최대 재도전
+            console.log(`재시도 중... (${retryCount + 1}/${maxRetries})`);
+            // 실패 시 재시도
+            resolve(getCurrentLocation(initCenterPos, retryCount + 1, maxRetries));
+          } else {
+            console.log('❌ 가져오기 실패');
+            resolve(defaultPos); // 재시도 초과 시 기본 위치 반환
+          }
         },
         { 
           //  enableHighAccuracy : gps, 배터리 소모 증가시킬 수 있다. false 시 저전력 모드의 위치 장치 사용 대신 정확도가 낮다.

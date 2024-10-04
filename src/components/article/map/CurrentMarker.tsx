@@ -11,44 +11,43 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
-  const markerRef = useRef<HTMLDivElement | null>(null);
+  const deviceorientationRef = useRef<HTMLDivElement | null>(null);
 
+  // 방향
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
-      // alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-      if ((event.alpha !== null) && markerRef.current) { 
-        markerRef.current.style.transform = `rotate(${((event.alpha + 180) * -1) - 15}deg)`; // -15 보정 값
+      // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
+      if ((event.alpha !== null) && deviceorientationRef.current) { 
+        deviceorientationRef.current.style.transform = `rotate(${((event.alpha + 180) * -1) - 15}deg)`; // -15 보정 값
       }
     };
-    
-    // deviceorientation 이벤트 리스너 추가
     window.addEventListener('deviceorientation', handleOrientation, true);
     return () => {
-      // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
       window.removeEventListener('deviceorientation', handleOrientation);
     };
   }, []);
 
-  // 현재 위치 갱신
+  // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
-    const geoSuccess = (position: GeolocationPosition) => {
+    const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude } = position.coords;
       setCoords({ lat: latitude, lng: longitude });
     };
-    const geoError = (error: GeolocationPositionError) => {
-      console.error("TEST " + error.code);
+    const geolocationError = (error: GeolocationPositionError) => {
+      console.error("위치 받아오기 실패 " + error.code);
     };
-    // watchPosition 계속 갱신하여 위치 정보를 받아 온다.
-    const watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, {
+    // ✅ watchPosition 계속 갱신하여 위치 정보를 받아 온다.
+    const watchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
       enableHighAccuracy: true,
       maximumAge: 0,
       timeout: 5000,
     });
-    return () => {
+    return () => { // clean up
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
 
+  // pc일 경우 좌표 안내 공지
   useEffect(()=>{
     if (noticeTimeRef.current) {
       clearInterval(noticeTimeRef.current);
@@ -63,7 +62,6 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
         }
       });
     }, 1000);
-  
     return () => {
       if (noticeTimeRef.current) clearInterval(noticeTimeRef.current);
     };
@@ -75,7 +73,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
       <CustomOverlayMap 
         key={`current-${coords.lat},${coords.lng}`}
         position={coords}>
-        <StyleCurrentPoint ref={markerRef}>
+        <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-current">현재 접속 위치 표시</span>
           {
             false && (
