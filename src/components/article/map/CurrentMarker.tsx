@@ -16,8 +16,8 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
       // alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-      if ((event.alpha !== null) && markerRef.current) {
-        markerRef.current.style.transform = `rotate(${(event.alpha + 180) * -1}deg)`;
+      if ((event.alpha !== null) && markerRef.current) { 
+        markerRef.current.style.transform = `rotate(${((event.alpha + 180) * -1) - 15}deg)`; // -15 보정 값
       }
     };
     
