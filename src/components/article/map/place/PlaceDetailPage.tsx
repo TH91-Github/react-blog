@@ -34,12 +34,10 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
       <div className="place-inner">
         <div className="place-head">
           <div className="thumbnail">
-            {/* <img src="" alt="" /> */}
             {
               (placeData && placeData.galleryImgs.length > 0)
               ? 
                 <PlaceThumbnail placeData={placeData}/>
-              
               : <p className="desc">😅<br />등록된 이미지가 없어요.<br /> 준비중...</p>
             }
             
@@ -57,7 +55,7 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
         <div className="place-cont">
           <PlaceDetailTab kakaoPlace={kakaoPlace} placeData={placeData} />
         </div>
-        <span className="close-box">
+        <span className={`close-box ${(placeData && placeData.galleryImgs.length > 0)? 'bg-on':''}`}>
           <button 
             type="button"
             title="상세 닫기"
@@ -208,7 +206,9 @@ const StylePlaceDetail = styled.div`
     width:30px;
     height:30px;
     border-bottom-left-radius:5px;
-    background:rgba(255,255,255,.7);
+    &.bg-on { 
+      background:rgba(255,255,255,.7);
+    }
   }
   .close-btn{
     top:50%;
