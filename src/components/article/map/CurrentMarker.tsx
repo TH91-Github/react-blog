@@ -1,8 +1,6 @@
 import { colors, transitions } from "assets/style/Variable";
 import { useEffect, useRef, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import styled from "styled-components";
 
 type MyBookMarkerType = {
@@ -10,40 +8,45 @@ type MyBookMarkerType = {
 }
 
 export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const {coords} = useSelector((state : RootState) => state.storeLocation);
-  const [currentDirection, setCurrentDirection] = useState<number | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
+  const markerRef = useRef<HTMLDivElement | null>(null);
 
-  // 현재 바라보고 있는 방향
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
-      if (event.alpha !== null) {
-        setCurrentDirection(event.alpha);
+      // alpha는 장치가 회전한 각도 (북쪽 기준 0도)
+      if ((event.alpha !== null) && markerRef.current) {
+        markerRef.current.style.transform = `rotate(${event.alpha * -1}deg)`;
       }
     };
-  
-    const requestPermission = async () => {
-      // iOS의 경우 권한 요청이 필요합니다.
-      if (typeof DeviceMotionEvent !== 'undefined' && (DeviceMotionEvent as any).requestPermission) {
-        try {
-          const response = await (DeviceMotionEvent as any).requestPermission();
-          if (response === 'granted') {
-            window.addEventListener("deviceorientation", handleOrientation);
-          }
-        } catch (error) {
-          console.error("Device orientation permission error: ", error);
-        }
-      } else {
-        // iOS가 아닌 경우 바로 이벤트 리스너를 추가합니다.
-        window.addEventListener("deviceorientation", handleOrientation);
-      }
-    };
-  
-    requestPermission();
-  
+    
+    // deviceorientation 이벤트 리스너 추가
+    window.addEventListener('deviceorientation', handleOrientation, true);
     return () => {
-      window.removeEventListener("deviceorientation", handleOrientation);
+      // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
+
+
+  // 현재 위치 갱신
+  useEffect(() => {
+    const geoSuccess = (position: GeolocationPosition) => {
+      const { latitude, longitude } = position.coords;
+      setCoords({ lat: latitude, lng: longitude });
+    };
+    const geoError = (error: GeolocationPositionError) => {
+      console.error("TEST " + error.code);
+    };
+    // watchPosition 계속 갱신하여 위치 정보를 받아 온다.
+    const watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000,
+    });
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
     };
   }, []);
 
@@ -73,25 +76,25 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
       <CustomOverlayMap 
         key={`current-${coords.lat},${coords.lng}`}
         position={coords}>
-        <StyleCurrentPoint $direction={currentDirection ?? 0}>
+        <StyleCurrentPoint ref={markerRef}>
           <span className="icon-current">현재 접속 위치 표시</span>
-          <span className={`notice-text ${closeTime === 0 ? 'off':''}`}>
-            🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
-            {closeTime}
-          </span>
+          {
+            false && (
+              <span className={`notice-text ${closeTime === 0 ? 'off':''}`}>
+                🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
+                {closeTime}
+              </span>
+            )
+          }
         </StyleCurrentPoint>
-        <span>       방향 값 : {currentDirection}</span>
       </CustomOverlayMap>
     </>
   )
 }
 
 
-type StyleCurrentPointType = {
-  $direction : number
-}
 
-const StyleCurrentPoint = styled.div<StyleCurrentPointType>`
+const StyleCurrentPoint = styled.div`
   position:relative;
   width:20px;
   height:20px;
@@ -119,7 +122,6 @@ const StyleCurrentPoint = styled.div<StyleCurrentPointType>`
     border-radius:50%;
     background:${colors.baseWhite};
     border:1px solid ${colors.blue};
-    transform: rotate(${props => props.$direction}deg);
     text-indent:-9999px;
     &::before {
       position:absolute;
