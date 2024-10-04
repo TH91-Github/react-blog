@@ -17,7 +17,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
       // alpha는 장치가 회전한 각도 (북쪽 기준 0도)
       if ((event.alpha !== null) && markerRef.current) {
-        markerRef.current.style.transform = `rotate(${event.alpha * -1}deg)`;
+        markerRef.current.style.transform = `rotate(${(event.alpha + 180) * -1}deg)`;
       }
     };
     
@@ -28,7 +28,6 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
       window.removeEventListener('deviceorientation', handleOrientation);
     };
   }, []);
-
 
   // 현재 위치 갱신
   useEffect(() => {
