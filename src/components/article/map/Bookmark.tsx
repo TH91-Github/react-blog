@@ -1,5 +1,5 @@
-import { SvgBookmark } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
+import { SvgBookmark } from "assets/svg/map/MapSvg";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";

@@ -1,4 +1,3 @@
-import { SvgStar } from "assets/style/SVGIcon";
 import { colors, media, transitions } from "assets/style/Variable";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
 import Bookmark from "./Bookmark";
 import { UserBookmarkType } from "types/baseType";
 import { isMobileChk } from "utils/common";
+import { SvgStar } from "assets/svg/common/CommonSvg";
 
 type placePopChangeType = {
   kakaoData: MapDataType,

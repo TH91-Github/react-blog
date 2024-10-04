@@ -1,8 +1,7 @@
-import React from 'react';
-import { SvgSearch } from "assets/style/SVGIcon";
+import { SvgSearch } from 'assets/svg/common/CommonSvg';
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import styled from "styled-components"
+import styled from "styled-components";
 
 export default function HeaderSearch(){
   const theme = useSelector((state : RootState) => state.storeTheme);

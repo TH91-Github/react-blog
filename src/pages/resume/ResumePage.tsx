@@ -1,5 +1,4 @@
 import React from 'react';
-import { SvgCode } from 'assets/style/SVGIcon';
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media, transitions } from 'assets/style/Variable';
 import OtherInfo from 'components/article/resume/OtherInfo';
@@ -9,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store/store';
 import styled from 'styled-components';
 import { fetchResumeData } from 'reducers/thunk/asyncThunk';
+import { SvgCode } from 'assets/svg/common/CommonSvg';
 
 // Resume 데이터만 reducers를 통해 가져오기 - 테스트 겸 연습용
 export default function ResumePage() {

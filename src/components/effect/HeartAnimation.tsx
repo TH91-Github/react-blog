@@ -1,5 +1,5 @@
-import { SvgHeart } from "assets/style/SVGIcon";
 import { transitions } from "assets/style/Variable";
+import { SvgHeart } from "assets/svg/map/MapSvg";
 import styled from "styled-components";
 
 interface HeartAnimationType {

@@ -1,7 +1,6 @@
 import { colors } from "assets/style/Variable";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { SvgStar } from "assets/style/SVGIcon";
 import HeartAnimationButton from "components/effect/HeartAnimationButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import { ReviewDataTypeC } from "types/kakaoComon";
 import { DateChange } from "utils/common";
 import { placeReviewUpdateDoc } from "utils/firebase/place";
 import { ScrollList } from "components/element/ScrollList";
+import { SvgStar } from "assets/svg/common/CommonSvg";
 
 interface PlaceReviewPropsType {
   placeCategory:string,

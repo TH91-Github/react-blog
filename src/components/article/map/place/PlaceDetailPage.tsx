@@ -57,13 +57,15 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
         <div className="place-cont">
           <PlaceDetailTab kakaoPlace={kakaoPlace} placeData={placeData} />
         </div>
-        <button 
-          type="button"
-          title="상세 닫기"
-          className="close-btn"
-          onClick={handleCloseClick} >
-          <span className="text">닫기</span>
-        </button>
+        <span className="close-box">
+          <button 
+            type="button"
+            title="상세 닫기"
+            className="close-btn"
+            onClick={handleCloseClick} >
+            <span className="text">닫기</span>
+          </button>
+        </span>
       </div>
     </StylePlaceDetail>
   )
@@ -197,6 +199,21 @@ const StylePlaceDetail = styled.div`
     flex-grow:1;
     position:relative;
     border-top:5px solid ${colors.lineColor};
+  }
+  .close-box {
+    display:block;
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:30px;
+    height:30px;
+    border-bottom-left-radius:5px;
+    background:rgba(255,255,255,.7);
+  }
+  .close-btn{
+    top:50%;
+    right:50%;
+    transform:translate(50%,-50%);
   }
   ${media.mo} {
     z-index:104;

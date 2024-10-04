@@ -1,5 +1,4 @@
 import React from 'react';
-import { SvgCall, SvgEmail, SvgGithub, SvgSkills } from "assets/style/SVGIcon";
 import { StyleArrowLeft } from "assets/style/StyledCm";
 import { colors, media, transitions } from "assets/style/Variable";
 import { useSelector } from "react-redux";
@@ -7,6 +6,7 @@ import { ResumeDocumentType } from "reducers/types";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import SkillsList from "./SkillsList";
+import { SvgCall, SvgEmail, SvgGithub, SvgSkills } from 'assets/svg/common/CommonSvg';
 
 interface OtherInfoType {
   useData: ResumeDocumentType;

@@ -1,5 +1,5 @@
-import { SvgSearch } from "assets/style/SVGIcon";
 import { colors, media, transitions } from "assets/style/Variable";
+import { SvgSearch } from "assets/svg/common/CommonSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

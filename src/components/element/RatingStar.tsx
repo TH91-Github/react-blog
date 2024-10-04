@@ -1,5 +1,5 @@
-import { SvgStar } from "assets/style/SVGIcon";
 import { colors } from "assets/style/Variable";
+import { SvgStar } from "assets/svg/common/CommonSvg";
 import { forwardRef, useEffect, useState } from "react";
 import styled from "styled-components"
 

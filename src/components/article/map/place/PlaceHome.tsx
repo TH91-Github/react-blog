@@ -1,8 +1,10 @@
-import { SvgCall, SvgInternet, SvgPoint } from "assets/style/SVGIcon";
+
 import { colors } from "assets/style/Variable";
 import RatingStar from "components/element/RatingStar";
 import styled from "styled-components";
 import { PlaceDetailTabType } from "./PlaceDetailTab";
+import { SvgCall, SvgPoint } from "assets/svg/common/CommonSvg";
+import { SvgInternet } from "assets/svg/map/MapSvg";
 
 export default function PlaceHome({kakaoPlace, placeData}:PlaceDetailTabType) {
   const urlHttps = (url:string) => { // kakako link 

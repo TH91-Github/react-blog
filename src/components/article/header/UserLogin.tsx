@@ -1,4 +1,4 @@
-import { SvgLogOut, SvgLogin } from "assets/style/SVGIcon";
+
 import { colors, shadow } from "assets/style/Variable";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { removeDoc } from "utils/firebase/common";
 import { auth, deleteUser, signOut } from "../../../firebase";
+import { SvgLogin, SvgLogOut } from "assets/svg/common/CommonSvg";
 
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();

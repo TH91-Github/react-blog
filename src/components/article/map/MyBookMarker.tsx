@@ -1,5 +1,5 @@
-import { SvgStar } from "assets/style/SVGIcon";
 import { colors, shadow, transitions } from "assets/style/Variable";
+import { SvgStar } from "assets/svg/common/CommonSvg";
 import { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
