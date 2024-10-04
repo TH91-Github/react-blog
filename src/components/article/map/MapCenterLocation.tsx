@@ -67,7 +67,6 @@ const StyleMapCenterAddress = styled.div`
   top:15px;
   left:50%;
   transform: translateX(-50%);
-  pointer-events:none;
   .text {
     display:inline-block;
     padding: 10px;

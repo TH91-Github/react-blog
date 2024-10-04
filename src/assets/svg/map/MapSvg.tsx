@@ -10,12 +10,6 @@ export const SvgHeart = React.memo(({$fillColor}:SvgPropsType ) => {
   </StyledSvg>
 })
 
-export const SvgMapCurrentBtn = ({$fillColor}:SvgPropsType ) => {
-  return <StyledSvg $fillColor={$fillColor || _black }  viewBox="0 0 24 24" fill="none">
-   <path d="M12 3V21M3 12H21M12 5C15.866 5 19 8.13401 19 12C19 13.9073 18.2372 15.6364 17 16.899M12 19C8.13401 19 5 15.866 5 12C5 10.0413 5.80447 8.27052 7.10102 7" stroke={_black} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </StyledSvg>
-}
-
 // internet, network 인터넷
 export const SvgInternet = ({$fillColor}:SvgPropsType ) => {
   return <StyledSvg $fillColor={$fillColor || _black }  viewBox="0 0 512 512" fill="none" enableBackground="new 0 0 512 512">
@@ -33,5 +27,12 @@ export const SvgBookmark = ({$fillColor}:SvgPropsType ) => {
             </g>
         </g>
     </g>
+  </StyledSvg>
+}
+
+// 현재 위치
+export const SvgMapCurrentIcon = ({$fillColor}:SvgPropsType ) => {
+  return <StyledSvg viewBox="0 0 24 24" $fillColor="none">
+   <path d="M12 3V21M3 12H21M12 5C15.866 5 19 8.13401 19 12C19 13.9073 18.2372 15.6364 17 16.899M12 19C8.13401 19 5 15.866 5 12C5 10.0413 5.80447 8.27052 7.10102 7" stroke={$fillColor || _black} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </StyledSvg>
 }

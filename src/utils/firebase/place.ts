@@ -93,6 +93,8 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
       // 트랜잭션 - place 업데이트 할 문서 가져오기
       const placeDocRef = doc(fireDB, 'map', 'mapData', collectionName, docId);
       const placeDocSnapshot = await transaction.get(placeDocRef);
+      const newTime = new Date();
+      
       if (placeDocSnapshot.exists()) {
         const getPlaceData = placeDocSnapshot.data();
         const newReviewArr = [ // place 정보 필드에 리뷰 간략 정보 추가
@@ -100,8 +102,8 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
           { docId: newReviewDoc.id, userId: userId }
         ];
         // ✔️ 이미지 추가
-        const galleryImg = imgUrl.map( (imgUrlItem:string) => (
-          {userId:userId, imgPath: imgUrlItem}
+        const galleryImg = imgUrl.map((imgUrlItem:string) => (
+          {userId:userId, imgPath: imgUrlItem, uploadTime: newTime}
         ))
         const newGalleryArr = galleryImg.length > 0 ? [...getPlaceData.galleryImgs, ...galleryImg]: [...getPlaceData.galleryImgs]
 
@@ -114,7 +116,7 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
           ratingResult: newRatingResult,
           galleryImgs: newGalleryArr,
           rating: newRating,
-          updateTime : new Date(),
+          updateTime : newTime,
         });
         // 최종 리뷰 등록 
         transaction.set(newReviewDoc, newReviewData);
