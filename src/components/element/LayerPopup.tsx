@@ -23,10 +23,10 @@ export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
   }: LayerPopupType, ref ) {
     const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const [isHidden, setIsHidden] = useState(false);
-    const popAniSecond = 500;
-    const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
     const popupRef = useRef<HTMLDivElement | null>(null);
+    const [isHidden, setIsHidden] = useState(false);
+    const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
+    const popAniSecond = 500;
 
   // animation 끝난 후 닫기 
   const handleTransitionEnd = useCallback((confirmState: boolean | unknown) => {

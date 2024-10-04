@@ -19,8 +19,8 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
   const inputRef = useRef<InputElementRef>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const imgInputRef = useRef<ImgInpuElementRef | null>(null)
-  const [isReview, setIsReview] = useState(false);
   const ratingStarRef = useRef<HTMLInputElement>(null);
+  const [isReview, setIsReview] = useState(false);
 
   const handleReview = () => { // 리뷰 쓰기
     if(user){

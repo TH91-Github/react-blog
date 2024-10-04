@@ -1,5 +1,5 @@
 import { breakpoints, colors, media } from 'assets/style/Variable';
-import { CurrentLocationPoint } from 'components/article/map/CurrentLocationPoint';
+import { CurrentLocationBtn } from 'components/article/map/CurrentLocationBtn';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
@@ -98,6 +98,7 @@ export default function MapPage() {
   useEffect(()=>{
     setIsMoList(false)
   },[isMobile])
+  
   return (
     <StyleWrap 
       ref={mapPageRef}
@@ -144,8 +145,8 @@ export default function MapPage() {
             placePopChange={placePopChange} />
           {/* 맵 가운데 주소 */}
           <MapCenterLocation map={kakaoData.mapRef} mapCenterUpdate={mapCenterUpdate}/>
-          {/* MO - 내 위치 */}
-          <CurrentLocationPoint map={kakaoData.mapRef} />
+          {/* 내 위치 */}
+          <CurrentLocationBtn map={kakaoData.mapRef} />
         </div>
       </div>
     </StyleWrap>

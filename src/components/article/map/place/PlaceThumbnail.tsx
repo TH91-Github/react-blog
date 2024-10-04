@@ -1,3 +1,4 @@
+import { media } from "assets/style/Variable"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { StringOnly } from "types/baseType"
@@ -38,7 +39,7 @@ export const StylePlaceThumbnail = styled.div`
   display:flex;
   position:relative;
   width:100%;
-  height:150px;
+  height:100%;
   gap:5px;
   &.thumbnail-3 {
     display:grid;

@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components"
 
-interface CurrentLocationPoint {
+interface CurrentLocationBtnType {
   map: kakao.maps.Map | null,
 }
-export const CurrentLocationPoint = ({map}:CurrentLocationPoint) => {
+export const CurrentLocationBtn = ({map}:CurrentLocationBtnType) => {
   const {coords} = useSelector((state : RootState) => state.storeLocation);
 
   const handleCurrentClick = () => {
@@ -19,7 +19,7 @@ export const CurrentLocationPoint = ({map}:CurrentLocationPoint) => {
     }
   }
   return (
-    <StyleCurrentLocationPoint>
+    <StyleCurrentLocationBtn>
       <button 
         type="button" 
         className="current-btn"
@@ -27,11 +27,11 @@ export const CurrentLocationPoint = ({map}:CurrentLocationPoint) => {
         <SvgMapCurrentIcon $fillColor={colors.navy} />
         <span className="blind">접속(현)-위치</span>
       </button>
-    </StyleCurrentLocationPoint>
+    </StyleCurrentLocationBtn>
   )
 }
 
-const StyleCurrentLocationPoint = styled.div`
+const StyleCurrentLocationBtn = styled.div`
   position:absolute;
   z-index:2;
   width:35px;

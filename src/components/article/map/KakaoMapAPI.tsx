@@ -8,6 +8,7 @@ import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
 import { mapCenterSetting } from "utils/kakaomap/common";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
+import { CurrentMarker } from "./CurrentMarker";
 interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
@@ -99,6 +100,8 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
         <MyBookMarker 
           map={map} 
           clickEvent={detailPopEvent} />
+        {/* 🗺️ 접속 위치 marker */}
+        <CurrentMarker map={map} />
         {/* 지도 컨트롤 */}
         <MapTypeControl />
         { !isMobile && <ZoomControl position={"RIGHT"} />  }

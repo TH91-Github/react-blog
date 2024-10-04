@@ -219,13 +219,25 @@ const StylePlaceDetail = styled.div`
     }
   }
   ${media.mo} {
+    position:fixed;
+    top:60px;
     z-index:104;
     width:100vw;
-    height: calc(100vh - 60px);
+    height:calc(100svh - 60px);
     &::before{
       border-radius:0;
       border-bottom:0;
       box-shadow:unset;
+    }
+    .place-inner {
+      display:block;
+      overflow-y:scroll;
+      height:100%;
+    }
+    .thumbnail {
+      overflow:hidden;
+      height:250px;
+      border-radius:5px;
     }
   }
 `;
