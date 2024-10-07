@@ -27,6 +27,7 @@ export const routerList = [
     path: "weather",
     title: '날씨',
     element: <WeatherPage />,
+    view:['localhost'],
   },
   {
     id: "Map",
@@ -46,6 +47,7 @@ export const routerList = [
     path: "study",
     title: '스터디',
     element: <StudyPage />,
+    view:['localhost'],
     children:[
       {
         id:"Study Detail",
