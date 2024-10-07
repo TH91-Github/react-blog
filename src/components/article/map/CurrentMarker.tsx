@@ -7,47 +7,35 @@ type MyBookMarkerType = {
   map: kakao.maps.Map | null,
 }
 
- // 방향
-  // useEffect(() => {
-  //   const handleOrientation = (event: DeviceOrientationEvent) => {
-  //     // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-  //     if ((event.alpha !== null) && deviceorientationRef.current) { 
-  //       deviceorientationRef.current.style.transform = `rotate(${((event.alpha + 180) * -1) - 15}deg)`; // -15 보정 값
-  //     }
-  //   };
-  //   window.addEventListener('deviceorientation', handleOrientation, true);
-  //   return () => {
-  //     window.removeEventListener('deviceorientation', handleOrientation);
-  //   };
-  // }, []);
-
-
 export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const [coords, setCoords] = useState<{ lat: number, lng: number} | null >(null)
-  // const coordsRef = useRef<{ lat: number; lng: number } | null>(null);
-  const markerHeadingRef = useRef<number | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [rotateX, setRrotateX] = useState<any>(0);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
- 
-  const markerRotate = (rotation:number) => {
-    if(deviceorientationRef.current){
-      deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
-    }
-  }
+  const [testt, setTestt] = useState(0)
+  // 방향
+  useEffect(() => {
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
+      if ((event.alpha !== null) && deviceorientationRef.current) { 
+        const adjustedAlpha = (event.alpha * -1) + 15; // -15 보정 값
+        setTestt(adjustedAlpha)
+        deviceorientationRef.current.style.transform = `rotate(${adjustedAlpha}deg)`;
+      }
+    };
+    window.addEventListener('deviceorientation', handleOrientation, true);
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
+
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
-      const { latitude, longitude, heading} = position.coords;
-      // coordsRef.current = { lat: latitude, lng: longitude };
-      setCoords({ lat: latitude, lng: longitude })
-      markerRotate(heading || 0);
-
-      markerHeadingRef.current = heading ?? 0;
-      // 현재 위치 갱신 시 렌더링을 최소화하고 필요 시 ref로 값을 업데이트
-      // if (map) {
-      //   map.panTo(new kakao.maps.LatLng(latitude, longitude));
-      // }
+      const { latitude, longitude, heading } = position.coords;
+      setCoords({ lat: latitude, lng: longitude });
+      setRrotateX(heading || 0);
     };
     const geolocationError = (error: GeolocationPositionError) => {
       console.error("위치 받아오기 실패 " + error.code);
@@ -84,7 +72,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   },[])
   console.log('dd')
 
-  if (!coords) return null;
+  if(!coords) return null;
   return (
     <>
       <CustomOverlayMap 
@@ -101,13 +89,13 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
             )
           }
         </StyleCurrentPoint>
-        <span>{markerHeadingRef.current}</span>
+        {rotateX}
+        <hr />
+        {testt}
       </CustomOverlayMap>
     </>
   )
 }
-
-
 
 const StyleCurrentPoint = styled.div`
   position:relative;
