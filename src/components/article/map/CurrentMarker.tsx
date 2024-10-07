@@ -36,10 +36,10 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading} = position.coords;
-
       coordsRef.current = { lat: latitude, lng: longitude };
       markerRotate(heading || 0);
 
+      markerHeadingRef.current = heading ?? 0;
       // 현재 위치 갱신 시 렌더링을 최소화하고 필요 시 ref로 값을 업데이트
       // if (map) {
       //   map.panTo(new kakao.maps.LatLng(latitude, longitude));
@@ -97,6 +97,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
             )
           }
         </StyleCurrentPoint>
+        <span>{markerHeadingRef.current}</span>
       </CustomOverlayMap>
     </>
   )
