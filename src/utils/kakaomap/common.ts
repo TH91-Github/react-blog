@@ -113,7 +113,7 @@ export const getCurrentLocation = (
           }
         },
         { 
-          //  enableHighAccuracy : gps, 배터리 소모 증가시킬 수 있다. false 시 저전력 모드의 위치 장치 사용 대신 정확도가 낮다.
+          // enableHighAccuracy : gps, 배터리 소모 증가시킬 수 있다. false 시 저전력 모드의 위치 장치 사용 대신 정확도가 낮다.
           enableHighAccuracy: true,
           // 5초 내에 정보를 가져오지 못할 경우 오류로 지정.
           timeout: 5000,
