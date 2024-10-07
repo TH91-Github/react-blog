@@ -8,8 +8,8 @@ type MyBookMarkerType = {
 }
 
 export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
-  const [rotateX, setRrotateX] = useState<any>(0);
+  // const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
+  const coordsRef = useRef<{ lat: number; lng: number } | null>(null);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +39,8 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading } = position.coords;
-      setCoords({ lat: latitude, lng: longitude});
+      // setCoords({ lat: latitude, lng: longitude});
+      coordsRef.current = { lat: latitude, lng: longitude };
       markerRotate(heading ?? 0);
     };
     const geolocationError = (error: GeolocationPositionError) => {
@@ -85,12 +86,12 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   },[])
   console.log('dd')
 
-  if(!coords) return null;
+  if(!coordsRef.current) return null;
   return (
     <>
       <CustomOverlayMap 
-        key={`current-${coords.lat},${coords.lng}`}
-        position={coords}>
+        key={`current-${coordsRef.current.lat},${coordsRef.current.lng}`}
+        position={coordsRef.current}>
         <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-point">현재 접속 위치 표시</span>
           {
