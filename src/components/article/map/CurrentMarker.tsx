@@ -8,38 +8,51 @@ type MyBookMarkerType = {
 }
 
 export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
   const [rotateX, setRrotateX] = useState<any>(0);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
-  const [testt, setTestt] = useState(0)
-  // 방향
-  useEffect(() => {
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-      // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-      if ((event.alpha !== null) && deviceorientationRef.current) { 
-        const adjustedAlpha = (event.alpha * -1) + 15; // -15 보정 값
-        setTestt(adjustedAlpha)
-        deviceorientationRef.current.style.transform = `rotate(${adjustedAlpha}deg)`;
-      }
-    };
-    window.addEventListener('deviceorientation', handleOrientation, true);
-    return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
-    };
-  }, []);
 
+  const markerRotate = (rotation:number) => {
+    if(deviceorientationRef.current){
+      deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
+    }
+  }
+
+  // 방향
+  // useEffect(() => {
+  //   const handleOrientation = (e: DeviceOrientationEvent) => {
+  //     // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
+  //     if ((e.alpha !== null) && deviceorientationRef.current) { 
+  //       const adjustedAlpha = (e.alpha * -1) + 15; // -15 보정 값
+  //       markerRotate(adjustedAlpha)
+  //     }
+  //   };
+  //   window.addEventListener('deviceorientation', handleOrientation, true);
+  //   return () => {
+  //     window.removeEventListener('deviceorientation', handleOrientation);
+  //   };
+  // }, []);
+  
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading } = position.coords;
-      setCoords({ lat: latitude, lng: longitude });
-      setRrotateX(heading || 0);
+      setCoords({ lat: latitude, lng: longitude});
+      markerRotate(heading ?? 0);
     };
     const geolocationError = (error: GeolocationPositionError) => {
       console.error("위치 받아오기 실패 " + error.code);
     };
+
+    // ✅ 초기 위치 가져오기.
+    navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000,
+    });
+
     // ✅ watchPosition 계속 갱신하여 위치 정보를 받아 온다.
     const watchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
       enableHighAccuracy: true,
@@ -89,9 +102,6 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
             )
           }
         </StyleCurrentPoint>
-        {rotateX}
-        <hr />
-        {testt}
       </CustomOverlayMap>
     </>
   )
@@ -101,6 +111,7 @@ const StyleCurrentPoint = styled.div`
   position:relative;
   width:20px;
   height:20px;
+  transition: all .1s;
   &::before, &::after {
     position:absolute;
     top:50%;
