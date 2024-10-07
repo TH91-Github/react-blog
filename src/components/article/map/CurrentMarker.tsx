@@ -13,35 +13,36 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
-
+  const orientationRef = useRef<number>(0);
+  
   const markerRotate = (rotation:number) => {
     if(deviceorientationRef.current){
       deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   }
-
   // 방향
-  // useEffect(() => {
-  //   const handleOrientation = (e: DeviceOrientationEvent) => {
-  //     // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-  //     if ((e.alpha !== null) && deviceorientationRef.current) { 
-  //       const adjustedAlpha = (e.alpha * -1) + 15; // -15 보정 값
-  //       markerRotate(adjustedAlpha)
-  //     }
-  //   };
-  //   window.addEventListener('deviceorientation', handleOrientation, true);
-  //   return () => {
-  //     window.removeEventListener('deviceorientation', handleOrientation);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
+      if ((e.alpha !== null) && deviceorientationRef.current) { 
+        orientationRef.current = (e.alpha * -1) + 15 // -15 보정 값
+      }
+    };
+    window.addEventListener('deviceorientation', handleOrientation, true);
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
   
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
-      const { latitude, longitude, heading } = position.coords;
+      const { latitude, longitude, heading, speed } = position.coords;
       // setCoords({ lat: latitude, lng: longitude});
       coordsRef.current = { lat: latitude, lng: longitude };
-      markerRotate(heading ?? 0);
+      if(speed) {  // heading 값은 speed가 0 dlaus NaN 제공하지 못하면 null 
+        markerRotate(heading ?? orientationRef.current);  
+      }
     };
     const geolocationError = (error: GeolocationPositionError) => {
       console.error("위치 받아오기 실패 " + error.code);
