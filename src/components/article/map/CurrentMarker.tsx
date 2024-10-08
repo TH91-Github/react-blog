@@ -13,7 +13,9 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
   const orientationRef = useRef<number>(0);
-  
+  const [deg, setDeg] = useState(0);
+
+
   // 방향 적용
   const markerRotate = (rotation:number) => {
     if(deviceorientationRef.current){
@@ -40,9 +42,9 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   useEffect(() => {
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading, speed } = position.coords;
-      // setCoords({ lat: latitude, lng: longitude});
       setCoords({ lat: latitude, lng: longitude });
-      if(speed) {  // heading 값은 speed가 0 dlaus NaN 제공하지 못하면 null 
+      if(speed && heading) {  // heading 값은 speed가 0 dlaus NaN 제공하지 못하면 null 
+        heading > 0 && setDeg(heading)
         markerRotate(heading ?? orientationRef.current);  
       }
     };
@@ -105,13 +107,20 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
               </span>
             )
           }
+          <span className="test">TEST: {deg}</span>
         </StyleCurrentPoint>
+        
       </CustomOverlayMap>
     </>
   )
 }
 
 const StyleCurrentPoint = styled.div`
+  .test {
+    position:absolute; 
+    left:200%; 
+  }
+
   position:relative;
   width:20px;
   height:20px;
