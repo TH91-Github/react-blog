@@ -8,29 +8,31 @@ type MyBookMarkerType = {
 }
 
 export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  // const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
-  const coordsRef = useRef<{ lat: number; lng: number } | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
   const noticeTimeRef = useRef<number | null>(null);
   const [closeTime, setCloseTime] = useState(5);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null);
   const orientationRef = useRef<number>(0);
   
+  // 방향 적용
   const markerRotate = (rotation:number) => {
     if(deviceorientationRef.current){
       deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   }
-  // 방향
+
+  // 브라우저 방향 
   useEffect(() => {
     const handleOrientation = (e: DeviceOrientationEvent) => {
-      // ✅ alpha는 장치가 회전한 각도 (북쪽 기준 0도)
-      if ((e.alpha !== null) && deviceorientationRef.current) { 
-        orientationRef.current = (e.alpha * -1) + 15 // -15 보정 값
+      if (e.alpha !== null) {
+        const calculatedOrientation = e.alpha * -1 + 15; // 브라우저 기준 방향 보정
+        orientationRef.current = calculatedOrientation;
+        markerRotate(calculatedOrientation);
       }
     };
-    window.addEventListener('deviceorientation', handleOrientation, true);
+    window.addEventListener("deviceorientation", handleOrientation, true);
     return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener("deviceorientation", handleOrientation);
     };
   }, []);
   
@@ -39,7 +41,7 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading, speed } = position.coords;
       // setCoords({ lat: latitude, lng: longitude});
-      coordsRef.current = { lat: latitude, lng: longitude };
+      setCoords({ lat: latitude, lng: longitude });
       if(speed) {  // heading 값은 speed가 0 dlaus NaN 제공하지 못하면 null 
         markerRotate(heading ?? orientationRef.current);  
       }
@@ -87,12 +89,12 @@ export const CurrentMarker = ( {map}: MyBookMarkerType) => {
   },[])
   console.log('dd')
 
-  if(!coordsRef.current) return null;
+  if(!coords) return null;
   return (
     <>
       <CustomOverlayMap 
-        key={`current-${coordsRef.current.lat},${coordsRef.current.lng}`}
-        position={coordsRef.current}>
+        key={`current-${coords.lat},${coords.lng}`}
+        position={coords}>
         <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-point">현재 접속 위치 표시</span>
           {
