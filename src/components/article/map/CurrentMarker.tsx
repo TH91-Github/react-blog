@@ -15,7 +15,6 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
   const [updateCoords, setUpdateCoords] = useState<{ lat: number; lng: number} | null>(null);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null); 
   const rotationRef = useRef<number>(0); // 회전
-  const [deg, setDeg] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(0); 
 
   /* 테스트 */
@@ -44,23 +43,8 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
   },[])
 
   const handleDeviceOrientation = (e:DeviceOrientationEvent) => {
-    const alpha = e.alpha; // z축 회전 (0 ~ 360)
-    const beta = e.beta;   // x축 회전 (-180 ~ 180)
-    const gamma = e.gamma; // y축 회전 (-90 ~ 90)
-    const absolute = e.absolute; // 방향 정보가 절대적인지 여부
-    console.log(e)
-    markerRotate(Number(alpha));
-    if(deviceorientationRef.current) {
-      const test1 = deviceorientationRef.current.querySelector('.alpha');
-      const test2 = deviceorientationRef.current.querySelector('.beta');
-      const test3 = deviceorientationRef.current.querySelector('.gamma');
-      const test4 = deviceorientationRef.current.querySelector('.absolute');
-      if(test1) test1.innerHTML = `${alpha}`;
-      if(test2) test2.innerHTML = `${beta}`;
-      if(test3) test3.innerHTML = `${gamma}`;
-      if(test4) test4.innerHTML = `${absolute}`;
-    }
-    console.log(`alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`);
+    const alpha = Math.round(e.alpha || 0);  // z축 회전 (0 ~ 360)
+    markerRotate(alpha);
   };
   const handleDeviceOrientationPermission = async () => {
     // requestPermission 메서드가 존재하는지 확인
@@ -82,32 +66,16 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
       window.addEventListener('deviceorientation', handleDeviceOrientation, true);
     }
   };
-
   useEffect(() => {
-    
+    handleDeviceOrientationPermission();
     // 이벤트 리스너 추가
-  }, []); // 빈 배열을 넣으면 컴포넌트가 마운트 및 언마운트될 때만 실행
+  }, []);
   
-
 
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
-    // const geolocationSuccess = (position: GeolocationPosition) => {
-    //   const { latitude, longitude, heading, speed } = position.coords;
-    //   setCoords({ lat: latitude, lng: longitude });
-    // };
-    // const geolocationError = (error: GeolocationPositionError) => {
-    //   console.error("위치 받아오기 실패 " + error.code);
-    // };
 
-    // // ✅ 초기 위치 가져오기.
-    // navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {
-    //   enableHighAccuracy: true,
-    //   maximumAge: 0,
-    //   timeout: 5000,
-    // });
-
-    const stopWatchingPosition = () => {
+    const stopWatchingPosition = () => { // 실시간 위치 멈추기
       if (watchIdRef.current !== null) {
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null; // watchId를 초기화
@@ -115,13 +83,9 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     };
 
     const geolocationSuccess = (position: GeolocationPosition) => {
-      const { latitude, longitude, heading, speed } = position.coords;
-      
+      const { latitude, longitude } = position.coords;
       setUpdateCoords({ lat: latitude, lng:longitude});
 
-      if(speed && heading){
-        markerRotate(heading)
-      }
       if(errorMessage.length > 0){
         setErrorMessage('');
       }
@@ -148,7 +112,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
   }, [currentLocation]);
 
   const handleCurrentLocation =() => {
-    handleDeviceOrientationPermission();
+    
     setCurrentLocation(prev => {
       if(prev >= 2){
         return prev = 0;
@@ -172,22 +136,18 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
         position={!updateCoords ? storeCoords : updateCoords}>
         <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-point">현재 접속 위치 표시</span>
-          
           <span className="test-error">
             {errorMessage}
           </span>
           { currentLocation > 1 && (
             <span className="test-current">실시간 적용중</span>
           )}
-          <span className="text">TEST: {deg}</span>
+          <span className="text"></span>
           <span className="test-box">
             <span className="latitude">{updateCoords?.lat}</span>
             <span className="longitude">{updateCoords?.lng}</span>
             <hr />
             <span className="alpha">0</span>
-            <span className="beta">0</span>
-            <span className="gamma">0</span>
-            <span className="absolute">0</span>
           </span>
         </StyleCurrentPoint>
       </CustomOverlayMap>
