@@ -26,7 +26,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     if(deviceorientationRef.current){
       const testDiv = deviceorientationRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
-      deviceorientationRef.current.style.transform = `rotate(${Number(rotation)}deg)`;
+      deviceorientationRef.current.style.transform = `rotate(${(360 /2) * -1}deg)`;
     }
   },[])
 
@@ -143,12 +143,6 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
             <span className="test-current">실시간 적용중</span>
           )}
           <span className="text"></span>
-          <span className="test-box">
-            <span className="latitude">{updateCoords?.lat}</span>
-            <span className="longitude">{updateCoords?.lng}</span>
-            <hr />
-            <span className="alpha">0</span>
-          </span>
         </StyleCurrentPoint>
       </CustomOverlayMap>
       {/* 내 위치 */}
@@ -167,19 +161,6 @@ const StyleCurrentPoint = styled.div`
   left:-20px;
   top:-250%;
 }
-  .test-box{
-    position:absolute;
-    top:-200px;
-    left:-200px;
-    border:1px solid green;
-    width: 200px;
-    height:200px;
-    background:#fff;
-    &>span{
-      display:block;
-      margin-bottom:20px;
-    }
-  }
   .test-error {
     position:absolute;
     top:-500%;
@@ -195,7 +176,6 @@ const StyleCurrentPoint = styled.div`
   position:relative;
   width:20px;
   height:20px;
-  transition: all .1s;
   &::before, &::after {
     position:absolute;
     top:50%;
