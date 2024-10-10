@@ -109,8 +109,6 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     }else{
       stopWatchingPosition();
     }
-    
-
 
   }, [currentLocation]);
 
@@ -147,10 +145,10 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
           )}
           <span className="text">TEST: {deg}</span>
           <span className="test-box">
-            <span className="latitude"></span>
-            <span className="longitude"></span>
-            <span className="heading"></span>
-            <span className="speed"></span>
+            <span className="latitude">0</span>
+            <span className="longitude">0</span>
+            <span className="heading">0</span>
+            <span className="speed">0</span>
           </span>
         </StyleCurrentPoint>
       </CustomOverlayMap>
@@ -170,6 +168,19 @@ const StyleCurrentPoint = styled.div`
   left:-20px;
   top:-250%;
 }
+  .test-box{
+    position:absolute;
+    top:-200px;
+    left:-200px;
+    border:1px solid green;
+    width: 200px;
+    height:200px;
+    background:#fff;
+    &>span{
+      display:block;
+      margin-bottom:20px;
+    }
+  }
   .test-error {
     position:absolute;
     top:-500%;
