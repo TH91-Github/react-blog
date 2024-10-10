@@ -43,32 +43,49 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     // };
   },[])
 
-  useEffect(() => {
-    const handleDeviceOrientation = (e:DeviceOrientationEvent) => {
-      const alpha = e.alpha; // z축 회전 (0 ~ 360)
-      const beta = e.beta;   // x축 회전 (-180 ~ 180)
-      const gamma = e.gamma; // y축 회전 (-90 ~ 90)
-      const absolute = e.absolute; // 방향 정보가 절대적인지 여부
-      console.log(e)
-      markerRotate(Number(alpha));
-      if(deviceorientationRef.current) {
-        const test1 = deviceorientationRef.current.querySelector('.alpha');
-        const test2 = deviceorientationRef.current.querySelector('.beta');
-        const test3 = deviceorientationRef.current.querySelector('.gamma');
-        const test4 = deviceorientationRef.current.querySelector('.absolute');
-        if(test1) test1.innerHTML = `${alpha}`;
-        if(test2) test2.innerHTML = `${beta}`;
-        if(test3) test3.innerHTML = `${gamma}`;
-        if(test4) test4.innerHTML = `${absolute}`;
+  const handleDeviceOrientation = (e:DeviceOrientationEvent) => {
+    const alpha = e.alpha; // z축 회전 (0 ~ 360)
+    const beta = e.beta;   // x축 회전 (-180 ~ 180)
+    const gamma = e.gamma; // y축 회전 (-90 ~ 90)
+    const absolute = e.absolute; // 방향 정보가 절대적인지 여부
+    console.log(e)
+    markerRotate(Number(alpha));
+    if(deviceorientationRef.current) {
+      const test1 = deviceorientationRef.current.querySelector('.alpha');
+      const test2 = deviceorientationRef.current.querySelector('.beta');
+      const test3 = deviceorientationRef.current.querySelector('.gamma');
+      const test4 = deviceorientationRef.current.querySelector('.absolute');
+      if(test1) test1.innerHTML = `${alpha}`;
+      if(test2) test2.innerHTML = `${beta}`;
+      if(test3) test3.innerHTML = `${gamma}`;
+      if(test4) test4.innerHTML = `${absolute}`;
+    }
+    console.log(`alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`);
+  };
+  const handleDeviceOrientationPermission = async () => {
+    // requestPermission 메서드가 존재하는지 확인
+    if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+      try {
+        const permissionState = await (DeviceOrientationEvent as any).requestPermission();
+        if (permissionState === 'granted') {
+          console.log("DeviceOrientation 권한이 허용되었습니다.");
+          window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+        } else {
+          console.log("DeviceOrientation 권한이 거부되었습니다.");
+        }
+      } catch (error) {
+        console.error("권한 요청 중 오류 발생:", error);
       }
-      console.log(`alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`);
-    };
+    } else {
+      // Android 또는 권한 요청이 필요 없는 브라우저에서는 이벤트 바로 추가
+      console.log("권한 요청 없이 DeviceOrientation 사용 가능합니다.");
+      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+    }
+  };
+
+  useEffect(() => {
+    
     // 이벤트 리스너 추가
-    window.addEventListener('deviceorientation', handleDeviceOrientation, true);
-    // clean up: 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener('deviceorientation', handleDeviceOrientation);
-    };
   }, []); // 빈 배열을 넣으면 컴포넌트가 마운트 및 언마운트될 때만 실행
   
 
@@ -131,6 +148,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
   }, [currentLocation]);
 
   const handleCurrentLocation =() => {
+    handleDeviceOrientationPermission();
     setCurrentLocation(prev => {
       if(prev >= 2){
         return prev = 0;
