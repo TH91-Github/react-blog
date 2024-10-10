@@ -43,6 +43,38 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     // };
   },[])
 
+  useEffect(() => {
+    const handleDeviceOrientation = (e:DeviceOrientationEvent) => {
+      const alpha = e.alpha; // z축 회전 (0 ~ 360)
+      const beta = e.beta;   // x축 회전 (-180 ~ 180)
+      const gamma = e.gamma; // y축 회전 (-90 ~ 90)
+      const absolute = e.absolute; // 방향 정보가 절대적인지 여부
+  
+
+      markerRotate(Number(alpha));
+      if(deviceorientationRef.current) {
+        const test1 = deviceorientationRef.current.querySelector('.alpha');
+        const test2 = deviceorientationRef.current.querySelector('.beta');
+        const test3 = deviceorientationRef.current.querySelector('.gamma');
+        const test4 = deviceorientationRef.current.querySelector('.absolute');
+        if(test1) test1.innerHTML = `${alpha}`;
+        if(test2) test2.innerHTML = `${beta}`;
+        if(test3) test3.innerHTML = `${gamma}`;
+        if(test4) test4.innerHTML = `${absolute}`;
+       
+      }
+
+      console.log(`alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`);
+    };
+    // 이벤트 리스너 추가
+    window.addEventListener('deviceorientation', handleDeviceOrientation);
+    // clean up: 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
+    };
+  }, []); // 빈 배열을 넣으면 컴포넌트가 마운트 및 언마운트될 때만 실행
+  
+
 
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
@@ -70,23 +102,12 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
 
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude, heading, speed } = position.coords;
-      if(deviceorientationRef.current) {
-        const test1 = deviceorientationRef.current.querySelector('.latitude');
-        const test2 = deviceorientationRef.current.querySelector('.longitude');
-        const test3 = deviceorientationRef.current.querySelector('.heading');
-        const test4 = deviceorientationRef.current.querySelector('.speed');
+      
+      setUpdateCoords({ lat: latitude, lng:longitude});
 
-        if(test1) test1.innerHTML = `${latitude}`;
-        if(test2) test2.innerHTML = `${longitude}`;
-        if(test3) test3.innerHTML = `${heading}`;
-        if(test4) test4.innerHTML = `${speed}`;
-        if(speed && heading){
-          markerRotate(heading)
-          
-        }
+      if(speed && heading){
+        markerRotate(heading)
       }
-
-     
       if(errorMessage.length > 0){
         setErrorMessage('');
       }
@@ -145,10 +166,13 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
           )}
           <span className="text">TEST: {deg}</span>
           <span className="test-box">
-            <span className="latitude">0</span>
-            <span className="longitude">0</span>
-            <span className="heading">0</span>
-            <span className="speed">0</span>
+            <span className="latitude">{updateCoords?.lat}</span>
+            <span className="longitude">{updateCoords?.lng}</span>
+            <hr />
+            <span className="alpha">0</span>
+            <span className="beta">0</span>
+            <span className="gamma">0</span>
+            <span className="absolute">0</span>
           </span>
         </StyleCurrentPoint>
       </CustomOverlayMap>
