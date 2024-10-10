@@ -27,7 +27,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     if(deviceorientationRef.current){
       const testDiv = deviceorientationRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
-      deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
+      deviceorientationRef.current.style.transform = `rotate(${Number(rotation)}deg)`;
     }
   },[])
 
@@ -49,8 +49,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
       const beta = e.beta;   // x축 회전 (-180 ~ 180)
       const gamma = e.gamma; // y축 회전 (-90 ~ 90)
       const absolute = e.absolute; // 방향 정보가 절대적인지 여부
-  
-
+      console.log(e)
       markerRotate(Number(alpha));
       if(deviceorientationRef.current) {
         const test1 = deviceorientationRef.current.querySelector('.alpha');
@@ -61,13 +60,11 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
         if(test2) test2.innerHTML = `${beta}`;
         if(test3) test3.innerHTML = `${gamma}`;
         if(test4) test4.innerHTML = `${absolute}`;
-       
       }
-
       console.log(`alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`);
     };
     // 이벤트 리스너 추가
-    window.addEventListener('deviceorientation', handleDeviceOrientation);
+    window.addEventListener('deviceorientation', handleDeviceOrientation, true);
     // clean up: 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       window.removeEventListener('deviceorientation', handleDeviceOrientation);
