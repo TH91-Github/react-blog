@@ -1,30 +1,23 @@
 import { colors, media } from "assets/style/Variable";
 import { SvgMapCurrentIcon } from "assets/svg/map/MapSvg";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
-import styled from "styled-components"
+import styled from "styled-components";
 
 interface CurrentLocationBtnType {
-  map: kakao.maps.Map | null,
+  locationState: number,
+  clickEvent : () => void,
 }
-export const CurrentLocationBtn = ({map}:CurrentLocationBtnType) => {
-  const {coords} = useSelector((state : RootState) => state.storeLocation);
+export const CurrentLocationBtn = ({locationState, clickEvent}:CurrentLocationBtnType) => {
 
   const handleCurrentClick = () => {
-    if (map && coords) {
-      const moveLatLon = new kakao.maps.LatLng(coords.lat, coords.lng);
-      map.panTo(moveLatLon);
-    }else{
-      console.log('map 또는 현재 위치를 찾을 수 없어요.. 😢')
-    }
+    clickEvent && clickEvent();
   }
   return (
-    <StyleCurrentLocationBtn>
+    <StyleCurrentLocationBtn className={locationState > 0 ? 'active' : ''}>
       <button 
         type="button" 
         className="current-btn"
         onClick={handleCurrentClick}>
-        <SvgMapCurrentIcon $fillColor={colors.blue} />
+        <SvgMapCurrentIcon $fillColor={locationState > 0 ? colors.blue : colors.subTextColor} />
         <span className="blind">접속(현)-위치</span>
       </button>
     </StyleCurrentLocationBtn>
@@ -32,13 +25,16 @@ export const CurrentLocationBtn = ({map}:CurrentLocationBtnType) => {
 }
 
 const StyleCurrentLocationBtn = styled.div`
-  position:absolute;
+  position:fixed;
   z-index:2;
   width:35px;
   height:35px;
   border-radius:5px;
-  border:1px solid ${colors.blue};
+  border:1px solid ${colors.subTextColor};
   background:${colors.baseWhite};
+  &.active {
+    border-color:${colors.blue}
+  }
   .current-btn{
   }
   ${media.pc}{

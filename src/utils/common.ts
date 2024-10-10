@@ -73,7 +73,7 @@ export function mapObjectChange(mapList: Map<string, number>): TitleSize[] {
 
 export function DateChange(type?: string, callDate?: any) { 
   // callDate가 Timestamp 객체일 경우 toDate()로 변환
-  const d = callDate && callDate.toDate ? callDate.toDate() : new Date(callDate);
+  const d = callDate ? (callDate ? callDate.toDate() : new Date(callDate)) : new Date();
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const week = weekChange(d.getDay());
@@ -84,9 +84,11 @@ export function DateChange(type?: string, callDate?: any) {
 
   const handlers :{ [key: string]: string | number } = {
     full: d.toLocaleString(), // EX - 2024. 1. 1. 오후 3:32:46
+    ymd:`${year}. ${month}. ${day}`, // EX - 2024.1.1
     ymdw: `${year}. ${month}. ${day}. ${week}`, // EX - 2024.1.1.월
+    y2md: `${year.toString().substring(2)}. ${month}. ${day}`, // EX - 24.1.1
     y2mdw: `${year.toString().substring(2)}. ${month}. ${day}. ${week}`, // EX - 24.1.1.월
-    y2mdwhm: `${year.toString().substring(2)}. ${month}. ${day}. ${week}. ${h}:${m}`, // EX - 24.1.1.월 
+    y2mdwhm: `${year.toString().substring(2)}. ${month}. ${day}. ${week}. ${h}:${m}`, // EX - 24.1.1.월,시,분
     year: year,
     month: month,
     day: week,

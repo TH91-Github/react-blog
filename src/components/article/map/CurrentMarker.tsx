@@ -1,124 +1,185 @@
 import { colors, transitions } from "assets/style/Variable";
-import { useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 import styled from "styled-components";
+import { CurrentLocationBtn } from "./CurrentLocationBtn";
 
 type MyBookMarkerType = {
   map: kakao.maps.Map | null,
 }
 
-export const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const [coords, setCoords] = useState<{ lat: number; lng: number} | null>(null);
-  const noticeTimeRef = useRef<number | null>(null);
-  const [closeTime, setCloseTime] = useState(5);
-  const deviceorientationRef = useRef<HTMLDivElement | null>(null);
-  const orientationRef = useRef<number>(0);
+const CurrentMarker = ( {map}: MyBookMarkerType) => {
+  const {coords} = useSelector((state : RootState) => state.storeLocation);
+  const [updateCoords, setUpdateCoords] = useState<{ lat: number; lng: number} | null>(null);
+  const deviceorientationRef = useRef<HTMLDivElement | null>(null); 
+  const rotationRef = useRef<number>(0); // 회전
   const [deg, setDeg] = useState(0);
+  const [currentLocation, setCurrentLocation] = useState(0); 
 
+  /* 테스트 */
+  const noticeTimeRef = useRef<number | null>(null);
+  const watchIdRef = useRef<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // 방향 적용
-  const markerRotate = (rotation:number) => {
+  const markerRotate = useCallback((rotation:number) => {
     if(deviceorientationRef.current){
+      const testDiv = deviceorientationRef.current.querySelector('.text');
+      if(testDiv){ testDiv.innerHTML = `${rotation}` }
       deviceorientationRef.current.style.transform = `rotate(${rotation}deg)`;
     }
-  }
+  },[])
 
-  // 브라우저 방향 
-  useEffect(() => {
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      if (e.alpha !== null) {
-        const calculatedOrientation = e.alpha * -1 + 15; // 브라우저 기준 방향 보정
-        orientationRef.current = calculatedOrientation;
-        markerRotate(calculatedOrientation);
-      }
-    };
-    window.addEventListener("deviceorientation", handleOrientation, true);
-    return () => {
-      window.removeEventListener("deviceorientation", handleOrientation);
-    };
-  }, []);
-  
+  useEffect(()=>{
+    // if (noticeTimeRef.current) {
+    //   clearInterval(noticeTimeRef.current);
+    // }
+    // noticeTimeRef.current = window.setInterval(() => {
+      
+    // }, 1000);
+    // return () => {
+    //   if (noticeTimeRef.current) clearInterval(noticeTimeRef.current);
+    // };
+  },[])
+
+
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
-    const geolocationSuccess = (position: GeolocationPosition) => {
-      const { latitude, longitude, heading, speed } = position.coords;
-      setCoords({ lat: latitude, lng: longitude });
-      if(speed && heading) {  // heading 값은 speed가 0 dlaus NaN 제공하지 못하면 null 
-        heading > 0 && setDeg(heading)
-        markerRotate(heading ?? orientationRef.current);  
+    // const geolocationSuccess = (position: GeolocationPosition) => {
+    //   const { latitude, longitude, heading, speed } = position.coords;
+    //   setCoords({ lat: latitude, lng: longitude });
+    // };
+    // const geolocationError = (error: GeolocationPositionError) => {
+    //   console.error("위치 받아오기 실패 " + error.code);
+    // };
+
+    // // ✅ 초기 위치 가져오기.
+    // navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {
+    //   enableHighAccuracy: true,
+    //   maximumAge: 0,
+    //   timeout: 5000,
+    // });
+
+    const stopWatchingPosition = () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null; // watchId를 초기화
       }
     };
-    const geolocationError = (error: GeolocationPositionError) => {
-      console.error("위치 받아오기 실패 " + error.code);
-    };
 
-    // ✅ 초기 위치 가져오기.
-    navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 5000,
-    });
+    const geolocationSuccess = (position: GeolocationPosition) => {
+      const { latitude, longitude, heading, speed } = position.coords;
+      if(deviceorientationRef.current) {
+        const test1 = deviceorientationRef.current.querySelector('.latitude');
+        const test2 = deviceorientationRef.current.querySelector('.longitude');
+        const test3 = deviceorientationRef.current.querySelector('.heading');
+        const test4 = deviceorientationRef.current.querySelector('.speed');
 
-    // ✅ watchPosition 계속 갱신하여 위치 정보를 받아 온다.
-    const watchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 5000,
-    });
-    return () => { // clean up
-      navigator.geolocation.clearWatch(watchId);
-    };
-  }, []);
-
-  // pc일 경우 좌표 안내 공지
-  useEffect(()=>{
-    if (noticeTimeRef.current) {
-      clearInterval(noticeTimeRef.current);
-    }
-    noticeTimeRef.current = window.setInterval(() => {
-      setCloseTime(prev => {
-        if (prev > 1) {
-          return prev - 1;
-        } else {
-          if (noticeTimeRef.current) clearInterval(noticeTimeRef.current);
-          return 0;
+        if(test1) test1.innerHTML = `${latitude}`;
+        if(test2) test2.innerHTML = `${longitude}`;
+        if(test3) test3.innerHTML = `${heading}`;
+        if(test4) test4.innerHTML = `${speed}`;
+        if(speed && heading){
+          markerRotate(heading)
+          
         }
+      }
+
+     
+      if(errorMessage.length > 0){
+        setErrorMessage('');
+      }
+    }
+
+    if(currentLocation > 1){
+      console.log(currentLocation)
+      // ✅ watchPosition 계속 갱신하여 위치 정보를 받아 온다.
+      watchIdRef.current = navigator.geolocation.watchPosition(geolocationSuccess, 
+        (error) => {
+          setErrorMessage('실시간 위치 에러'+ error);
+        }, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000,
       });
-    }, 1000);
-    return () => {
-      if (noticeTimeRef.current) clearInterval(noticeTimeRef.current);
-    };
-  },[])
-  console.log('dd')
+      return () => { // clean up
+       stopWatchingPosition();
+      };
+    }else{
+      stopWatchingPosition();
+    }
+    
+
+
+  }, [currentLocation]);
+
+  const handleCurrentLocation =() => {
+    setCurrentLocation(prev => {
+      if(prev >= 2){
+        return prev = 0;
+      }else{
+        return prev + 1
+      }
+    })
+    if (map && coords) {
+      const moveLatLon = new kakao.maps.LatLng(coords.lat, coords.lng);
+      map.panTo(moveLatLon);
+    }else{
+      console.log('map 또는 현재 위치를 찾을 수 없어요.. 😢')
+    }
+  }
 
   if(!coords) return null;
   return (
     <>
       <CustomOverlayMap 
         key={`current-${coords.lat},${coords.lng}`}
-        position={coords}>
+        position={!updateCoords ? coords : updateCoords}>
         <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-point">현재 접속 위치 표시</span>
-          {
-            false && (
-              <span className={`notice-text ${closeTime === 0 ? 'off':''}`}>
-                🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
-                {closeTime}
-              </span>
-            )
-          }
-          <span className="test">TEST: {deg}</span>
+          
+          <span className="test-error">
+            {errorMessage}
+          </span>
+          { currentLocation > 1 && (
+            <span className="test-current">실시간 적용중</span>
+          )}
+          <span className="text">TEST: {deg}</span>
+          <span className="test-box">
+            <span className="latitude"></span>
+            <span className="longitude"></span>
+            <span className="heading"></span>
+            <span className="speed"></span>
+          </span>
         </StyleCurrentPoint>
-        
       </CustomOverlayMap>
+      {/* 내 위치 */}
+      <div>
+        <CurrentLocationBtn locationState={currentLocation} clickEvent={handleCurrentLocation} />
+      </div>
     </>
   )
 }
+export default memo(CurrentMarker);
 
 const StyleCurrentPoint = styled.div`
-  .test {
+.test-current {
+  position:absolute;
+  color:blue;
+  left:-20px;
+  top:-250%;
+}
+  .test-error {
+    position:absolute;
+    top:-500%;
+    left:0;
+    color:red;
+  }
+  .text {
     position:absolute; 
     left:200%; 
+    color:red;
   }
 
   position:relative;

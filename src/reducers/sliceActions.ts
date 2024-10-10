@@ -98,7 +98,7 @@ export const storeKakaoDataSlice = createSlice({
 const userLocationState: KeyObjectAnyType = {
   road_address: null,
   address: null,
-  coords: null
+  coords: null,
 };
 export const userLocationSlice = createSlice({
   name: "user location",

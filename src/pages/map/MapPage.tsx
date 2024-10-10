@@ -1,5 +1,4 @@
 import { breakpoints, colors, media } from 'assets/style/Variable';
-import { CurrentLocationBtn } from 'components/article/map/CurrentLocationBtn';
 import KakaoMapAPI from 'components/article/map/KakaoMapAPI';
 import MapCenterLocation from 'components/article/map/MapCenterLocation';
 import MyBookmarkList from 'components/article/map/MyBookmarkList';
@@ -145,8 +144,6 @@ export default function MapPage() {
             placePopChange={placePopChange} />
           {/* 맵 가운데 주소 */}
           <MapCenterLocation map={kakaoData.mapRef} mapCenterUpdate={mapCenterUpdate}/>
-          {/* 내 위치 */}
-          <CurrentLocationBtn map={kakaoData.mapRef} />
         </div>
       </div>
     </StyleWrap>

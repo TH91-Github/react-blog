@@ -8,7 +8,7 @@ import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
 import { mapCenterSetting } from "utils/kakaomap/common";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
-import { CurrentMarker } from "./CurrentMarker";
+import CurrentMarker from "./CurrentMarker";
 interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
@@ -76,7 +76,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
     } 
   }
   return (
-    <StyleKakaoMap>
+    <StyleKakaoMap className="kakao-map">
       <Map
         center={kakaoData.location ?? { lat: 37.56682420267543, lng: 126.978652258823 }}
         level={3}
@@ -90,7 +90,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
               <MarkerBasic 
                 number={idx+1}
                 marker={marker}
-                active={pointPop?.id === marker.id ?? false }
+                active={pointPop ? pointPop.id === marker.id : false }
                 pointActiveEvent={pointActiveEvent}
                 detailPopEvent={detailPopEvent} />
             </CustomOverlayMap>
