@@ -11,7 +11,7 @@ type MyBookMarkerType = {
 }
 
 const CurrentMarker = ( {map}: MyBookMarkerType) => {
-  const {coords} = useSelector((state : RootState) => state.storeLocation);
+  const {coords:storeCoords} = useSelector((state : RootState) => state.storeLocation);
   const [updateCoords, setUpdateCoords] = useState<{ lat: number; lng: number} | null>(null);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null); 
   const rotationRef = useRef<number>(0); // 회전
@@ -120,20 +120,20 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
         return prev + 1
       }
     })
-    if (map && coords) {
-      const moveLatLon = new kakao.maps.LatLng(coords.lat, coords.lng);
+    if (map && storeCoords) {
+      const moveLatLon = new kakao.maps.LatLng(storeCoords.lat, storeCoords.lng);
       map.panTo(moveLatLon);
     }else{
       console.log('map 또는 현재 위치를 찾을 수 없어요.. 😢')
     }
   }
 
-  if(!coords) return null;
+  if(!storeCoords) return null;
   return (
     <>
       <CustomOverlayMap 
-        key={`current-${coords.lat},${coords.lng}`}
-        position={!updateCoords ? coords : updateCoords}>
+        key={`current-${storeCoords.lat},${storeCoords.lng}`}
+        position={!updateCoords ? storeCoords : updateCoords}>
         <StyleCurrentPoint ref={deviceorientationRef}>
           <span className="icon-point">현재 접속 위치 표시</span>
           
