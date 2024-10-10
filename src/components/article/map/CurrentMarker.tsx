@@ -26,7 +26,7 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
     if(deviceorientationRef.current){
       const testDiv = deviceorientationRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
-      deviceorientationRef.current.style.transform = `rotate(${Number((360 /2) * -1)}deg)`;
+      deviceorientationRef.current.style.transform = `rotate(${(rotation / 2) * -1}deg)`;
     }
   },[])
 
