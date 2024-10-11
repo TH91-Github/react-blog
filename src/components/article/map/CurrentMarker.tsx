@@ -10,50 +10,41 @@ type MyBookMarkerType = {
   map: kakao.maps.Map | null,
 }
 
-const CurrentMarker = ( {map}: MyBookMarkerType) => {
+const CurrentMarker = ({map}: MyBookMarkerType) => {
   const {coords:storeCoords} = useSelector((state : RootState) => state.storeLocation);
   const [updateCoords, setUpdateCoords] = useState<{ lat: number; lng: number} | null>(null);
   const deviceorientationRef = useRef<HTMLDivElement | null>(null); 
-  const rotationRef = useRef<number>(0); // 회전
   const [currentLocation, setCurrentLocation] = useState(0); 
 
   /* 테스트 */
-  const noticeTimeRef = useRef<number | null>(null);
   const watchIdRef = useRef<number | null>(null);
+  const deviceorientationEventRef = useRef(false); // 이벤트 중복 방지
   const [errorMessage, setErrorMessage] = useState('');
 
   const markerRotate = useCallback((rotation:number) => {
     if(deviceorientationRef.current){
       const testDiv = deviceorientationRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
-      deviceorientationRef.current.style.transform = `rotate(${(rotation / 2) * -1}deg)`;
+      // 방향 인라인 style
+      const adjustedRotation = (rotation + 180) % 360; 
+      deviceorientationRef.current.style.transform = `rotate(${adjustedRotation}deg)`;
     }
   },[])
 
-  useEffect(()=>{
-    // if (noticeTimeRef.current) {
-    //   clearInterval(noticeTimeRef.current);
-    // }
-    // noticeTimeRef.current = window.setInterval(() => {
-      
-    // }, 1000);
-    // return () => {
-    //   if (noticeTimeRef.current) clearInterval(noticeTimeRef.current);
-    // };
-  },[])
-
+  // ✅ 바라보고 있는 방향 회전
   const handleDeviceOrientation = (e:DeviceOrientationEvent) => {
     const alpha = Math.round(e.alpha || 0);  // z축 회전 (0 ~ 360)
     markerRotate(alpha);
   };
+
+  // ✅ 모바일 웹 방향 정보 이벤트 deviceorientation : 기기의 방향 감지
   const handleDeviceOrientationPermission = async () => {
-    // requestPermission 메서드가 존재하는지 확인
     if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
       try {
         const permissionState = await (DeviceOrientationEvent as any).requestPermission();
-        if (permissionState === 'granted') {
-          console.log("DeviceOrientation 권한이 허용되었습니다.");
+        if (permissionState === 'granted' && !deviceorientationEventRef.current) {
           window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+          deviceorientationEventRef.current = true;
         } else {
           console.log("DeviceOrientation 권한이 거부되었습니다.");
         }
@@ -62,26 +53,33 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
       }
     } else {
       // Android 또는 권한 요청이 필요 없는 브라우저에서는 이벤트 바로 추가
-      console.log("권한 요청 없이 DeviceOrientation 사용 가능합니다.");
-      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+      if (!deviceorientationEventRef.current) {
+        console.log("권한 요청 없이 DeviceOrientation 사용 가능합니다.");
+        window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+        deviceorientationEventRef.current = true;
+      }
     }
   };
   useEffect(() => {
     handleDeviceOrientationPermission();
+    return () => {
+      if (deviceorientationEventRef.current) {
+        window.removeEventListener('deviceorientation', handleDeviceOrientation);
+        deviceorientationEventRef.current = false;
+      }
+    };
     // 이벤트 리스너 추가
   }, []);
   
 
   // 현재 위치 갱신 - ✅ 수정 필요: 현재위치 버튼 클릭 시 계속 위치 갱신하도록 하기
   useEffect(() => {
-
     const stopWatchingPosition = () => { // 실시간 위치 멈추기
       if (watchIdRef.current !== null) {
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null; // watchId를 초기화
       }
     };
-
     const geolocationSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude } = position.coords;
       setUpdateCoords({ lat: latitude, lng:longitude});
@@ -90,7 +88,6 @@ const CurrentMarker = ( {map}: MyBookMarkerType) => {
         setErrorMessage('');
       }
     }
-
     if(currentLocation > 1){
       console.log(currentLocation)
       // ✅ watchPosition 계속 갱신하여 위치 정보를 받아 온다.

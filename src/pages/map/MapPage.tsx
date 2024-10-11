@@ -152,14 +152,13 @@ export default function MapPage() {
 
 
 const StyleWrap = styled.div`
-  height:100vh;
   background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
   .map-inner{
     overflow:hidden;
     position:relative;
     width:100%;
     max-width:${breakpoints.maxPc}px;
-    height:100vh;
+    height:100svh;
     margin:0 auto;
     padding-top:65px;
     &::before {
