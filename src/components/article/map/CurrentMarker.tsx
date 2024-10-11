@@ -171,9 +171,6 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
       <CustomOverlayMap 
         key={`current-${storeCoords.lat},${storeCoords.lng}`}
         position={!updateCoords ? storeCoords : updateCoords}>
-          <span>
-            {userDevices.browser}
-          </span>
         <StyleCurrentPoint>
           <div 
             ref={pointerRef}
