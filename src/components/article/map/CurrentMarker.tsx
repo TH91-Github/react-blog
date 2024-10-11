@@ -177,7 +177,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
         <StyleCurrentPoint>
           <div 
             ref={pointerRef}
-            className={`pointer ${(isRotate && userDevices.browser !== 'safari') ? 'is-rotate':''}`}>
+            className={`pointer ${isRotate ? 'is-rotate':''}`}>
             <span className="icon-point">현재 접속 위치 표시</span>
           </div>
         </StyleCurrentPoint>
