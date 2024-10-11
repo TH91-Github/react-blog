@@ -10,7 +10,6 @@ interface NavigationType {
   menuOn: boolean
 }
 export default function Navigation({menuOn}:NavigationType){
-  console.log(window.location.hostname);
   return (
     <StyledNav className={`gnb ${menuOn ? 'open' : ''}`}>
       <div className="gnb-inner">

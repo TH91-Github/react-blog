@@ -220,6 +220,7 @@ const StyleCurrentPoint = styled.div`
     background:${colors.baseWhite};
     border:1px solid ${colors.blue};
     text-indent:-9999px;
+    transform: scaleX(-1);
     &::before {
       display:none;
       position:absolute;
