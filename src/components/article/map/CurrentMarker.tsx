@@ -153,7 +153,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   // 실시간 현재 위치 테스트 
   useEffect(()=>{
     if(pointerRef.current){
-      const customOverlayMapDiv = pointerRef.current.parentElement;
+      const customOverlayMapDiv = pointerRef.current.parentElement?.parentElement;
       if(customOverlayMapDiv && !customOverlayMapDiv.style.transition) {
        customOverlayMapDiv.style.transition = 'all .1s';
       }
@@ -162,21 +162,20 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
 
   useEffect(()=>{
     popupState('notice');
-
   },[])
-  console.log(noticePopup)
-
   if(!storeCoords) return null;
   return (
     <>
       <CustomOverlayMap 
         key={`current-${storeCoords.lat},${storeCoords.lng}`}
         position={!updateCoords ? storeCoords : updateCoords}>
-        <StyleCurrentPoint 
-          ref={pointerRef}
-          className={isRotate ? 'is-rotate':''}>
-          <span className="icon-point">현재 접속 위치 표시</span>
-          {isRotate && <span className="text"></span> }
+        <StyleCurrentPoint>
+          <div 
+            ref={pointerRef}
+            className={`pointer ${isRotate ? 'is-rotate':''}`}>
+            <span className="icon-point">현재 접속 위치 표시</span>
+            {isRotate && <span className="text"></span> }
+          </div>
         </StyleCurrentPoint>
         { 
           (locationType > 1&& noticePopup.currentState ) && (
@@ -203,34 +202,31 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
 export default memo(CurrentMarker);
 
 const StyleCurrentPoint = styled.div`
-  .text {
-    position:absolute; 
-    left:200%; 
-    color:red;
-  }
-
-  position:relative;
-  width:20px;
-  height:20px;
-  &::before, &::after {
-    position:absolute;
-    top:50%;
-    left:50%;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background: ${colors.blue};
-    transform: translate(-50%, -50%);
-    animation: currentPointAni 2s linear infinite;
-    content:'';
-  }
-  &::after{
-    animation: currentPointAni 2s 0.5s linear infinite;
-  }
-  &.is-rotate {
-    .icon-point {
-      &::before {
-        display:block;
+  transform: scaleY(-1);
+  .pointer {
+    position:relative;
+    width:20px;
+    height:20px;
+    &::before, &::after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      background: ${colors.blue};
+      transform: translate(-50%, -50%);
+      animation: currentPointAni 2s linear infinite;
+      content:'';
+    }
+    &::after{
+      animation: currentPointAni 2s 0.5s linear infinite;
+    }
+    &.is-rotate {
+      .icon-point {
+        &::before {
+          display:block;
+        }
       }
     }
   }
