@@ -164,17 +164,20 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   useEffect(()=>{ // pc, mo 판단 팝업 1회만 노출.
     popupState('notice');
   },[popupState])
-
+  console.log(userDevices.browser)
   if(!storeCoords) return null;
   return (
     <>
       <CustomOverlayMap 
         key={`current-${storeCoords.lat},${storeCoords.lng}`}
         position={!updateCoords ? storeCoords : updateCoords}>
+          <span>
+            {userDevices.browser}
+          </span>
         <StyleCurrentPoint>
           <div 
             ref={pointerRef}
-            className={`pointer ${(isRotate && userDevices.browser !=='safari') ? 'is-rotate':''}`}>
+            className={`pointer ${(isRotate && userDevices.browser !== 'safari') ? 'is-rotate':''}`}>
             <span className="icon-point">현재 접속 위치 표시</span>
           </div>
         </StyleCurrentPoint>
