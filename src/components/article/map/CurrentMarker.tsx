@@ -19,6 +19,24 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   const [locationType, setLocationType] = useState(0); 
   const deviceorientationEventRef = useRef(false); // 이벤트 중복 방지
   const [isRotate, setIsRotate] = useState(false);
+  const stateTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [noticePopup, setNoticePopup] = useState({ // 확대 등 지도 새로고침 시 다시 보여지는 문제 방지
+    noticeState:true,
+    currentState:true,
+  });
+
+  const popupState = useCallback(( popType:string) => {
+    if (stateTimeRef.current) clearTimeout(stateTimeRef.current);
+    stateTimeRef.current = setTimeout(() => {
+      if(popType === 'notice'){
+        console.log('dd')
+        setNoticePopup( prev => ({...prev, noticeState:false}));
+      }else{
+        setNoticePopup( prev => ({...prev, currentState:false}));
+      }
+    }, 3000);
+    console.log('동작')
+  },[])
 
   // ✅ 바라보고 있는 방향 회전
   const markerRotate = useCallback((rotation:number) => {
@@ -26,14 +44,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
       const testDiv = pointerRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
       // 방향 인라인 style
-      let test = 0;
-      if(rotation <= 180){
-        test = rotation + 180
-      }else{
-        test = rotation - 180
-      }
-      const adjustedRotation = test;
-      pointerRef.current.style.transform = `rotate(${adjustedRotation}deg)`;
+      pointerRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   },[])
 
@@ -68,6 +79,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
         eventChk = true;
       }
     }
+    if(eventChk) popupState('currentState')
     setIsRotate(eventChk);
   },[handleDeviceOrientation]);
   
@@ -78,6 +90,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
         window.removeEventListener('deviceorientation', handleDeviceOrientation);
         deviceorientationEventRef.current = false;
         setIsRotate(false);
+        setNoticePopup( prev => ({...prev, currentState:true}));
       }
     }
     if(locationType > 1){
@@ -147,6 +160,12 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
     }
   },[pointerRef, storeCoords])
 
+  useEffect(()=>{
+    popupState('notice');
+
+  },[])
+  console.log(noticePopup)
+
   if(!storeCoords) return null;
   return (
     <>
@@ -157,19 +176,18 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
           ref={pointerRef}
           className={isRotate ? 'is-rotate':''}>
           <span className="icon-point">현재 접속 위치 표시</span>
-         
           {isRotate && <span className="text"></span> }
         </StyleCurrentPoint>
         { 
-          locationType > 1 && (
+          (locationType > 1&& noticePopup.currentState ) && (
             <StyleCurrentLocation>실시간 위치 사용 중...</StyleCurrentLocation>
           )
         }
         {
-          isPcMo() && (
+          (isPcMo() === 'pc' && noticePopup.noticeState) && (
             <StyleNoticeText>
-            🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
-          </StyleNoticeText>
+              🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
+            </StyleNoticeText>
           )
         }
         
