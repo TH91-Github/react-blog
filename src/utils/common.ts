@@ -1,6 +1,6 @@
 import { breakpoints, fonts } from "assets/style/Variable"
 
-export function isMobileChk():boolean{ // 모바일 사이즈 체크
+export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
   const wininnW = window.innerWidth;
   const scrollbarW = Number(wininnW - document.body.clientWidth);
   const winW = Number(wininnW - scrollbarW);
@@ -9,6 +9,18 @@ export function isMobileChk():boolean{ // 모바일 사이즈 체크
   : moChk = true;
   return moChk;
 }
+
+export const isPcMo = () => {
+  const userAgent = navigator.userAgent;
+  // 모바일 기기의 User-Agent 체크
+  if (/android/i.test(userAgent)) {
+    return 'android';
+  }else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+    return 'iPhone|iPad|iPod';
+  }else{
+    return 'pc';
+  }
+};
 
 export function rem(figure:number, remFix?:number):string { // rem 변환
   remFix = remFix ?? fonts.size

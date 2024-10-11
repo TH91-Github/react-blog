@@ -12,6 +12,7 @@ styled-components (styled)
 */ 
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { GlobalStyles } from 'assets/style/GlobalStyles';
 import CurrentLocation from "components/article/map/CurrentLocation";
 import AppLayout from "components/layout/AppLayout";
@@ -20,9 +21,8 @@ import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { actionMobileChk } from "store/store";
-import { isMobileChk } from "utils/common";
 import './App.css';
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { isMobileSizeChk } from "utils/common";
 
 function App() : JSX.Element {
   const location = useLocation();
@@ -38,7 +38,7 @@ function App() : JSX.Element {
 
   // Resize - ✏️ 컴포넌트 분리
   const handleResize = useCallback(() => {
-    const isMobile = isMobileChk();
+    const isMobile = isMobileSizeChk();
     dispatch(actionMobileChk(isMobile));
   }, [dispatch]);
 

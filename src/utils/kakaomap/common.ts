@@ -1,12 +1,11 @@
 import { StringOnlyArr } from "types/baseType";
 import { KakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
-import { isMobileChk } from "utils/common";
+import { isMobileSizeChk } from "utils/common";
 
 interface kakaoFetchPlacesType extends KakaoMapBasicType {
   keyword: string;
 }
 
-const kakaoGeocoder = new kakao.maps.services.Geocoder();
 export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
@@ -62,6 +61,7 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
 // coords : lat, lon , addrTypeNum : 1 간편 전체 주소, 2: 간편 주소 동까지, 3 전체 정보
 export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum?: number | undefined): Promise<string> {
   return new Promise((resolve, reject) => {
+    const kakaoGeocoder = new kakao.maps.services.Geocoder();
     kakaoGeocoder.coord2Address(coords.getLng(), coords.getLat(), (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
         let detailAddr: string | null;
@@ -130,7 +130,7 @@ export const getCurrentLocation = (
 
 // 센터 맞춤. : PC만 동작 중.
 export const mapCenterSetting = (map:kakao.maps.Map, correctionNumber:number) => {
-  const isMobile = isMobileChk();
+  const isMobile = isMobileSizeChk();
   const center = map.getCenter();
   const projection = map.getProjection();
   const centerPoint = projection.pointFromCoords(center);

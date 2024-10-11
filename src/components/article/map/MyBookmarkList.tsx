@@ -1,13 +1,13 @@
 import { colors, media, transitions } from "assets/style/Variable";
+import { SvgStar } from "assets/svg/common/CommonSvg";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { ListType, MapDataType, MarkerType } from "types/kakaoComon";
-import Bookmark from "./Bookmark";
 import { UserBookmarkType } from "types/baseType";
-import { isMobileChk } from "utils/common";
-import { SvgStar } from "assets/svg/common/CommonSvg";
+import { ListType, MapDataType } from "types/kakaoComon";
+import { isMobileSizeChk } from "utils/common";
+import Bookmark from "./Bookmark";
 
 type placePopChangeType = {
   kakaoData: MapDataType,
@@ -38,7 +38,7 @@ export default function MyBookmarkList ({kakaoData, updateClick}:placePopChangeT
   }, []);
   
   const handleMyBookmarkClick = (e:UserBookmarkType) =>{ // ✅ 선택 My Place 
-    const isMo = isMobileChk()
+    const isMo = isMobileSizeChk()
     if(e.bookmark){
       const bookmarkClickData = {
         ...kakaoData,

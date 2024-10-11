@@ -64,10 +64,10 @@ export default function UserLogin(){
     console.log(currentUser)
 
     if (currentUser) {
-      // firebase - Authentication에서 사용자 계정 삭제
       try {
+        currentUser.email && await removeDoc('userData', 'users', currentUser.email);
+        // Firebase Authentication에서 사용자 계정 삭제
         await deleteUser(currentUser).then(() => {
-          currentUser.email && removeDoc('userData','users',currentUser.email)
           userLoginInit(false);
           navigate('/');
         }).catch((error) => {
