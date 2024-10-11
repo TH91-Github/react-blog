@@ -1,11 +1,11 @@
-import { colors, transitions } from "assets/style/Variable";
+import { colors } from "assets/style/Variable";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { CurrentLocationBtn } from "./CurrentLocationBtn";
 import { isPcMo } from "utils/common";
+import { CurrentLocationBtn } from "./CurrentLocationBtn";
 
 type MyBookMarkerType = {
   map: kakao.maps.Map | null,
@@ -67,14 +67,20 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   
   // 방향 이벤트
   useEffect(() =>  {
-    if(locationType > 1){
-      handleDeviceOrientationPermission();
-    }
-    return () => {
+    const stopDeviceorientationEvent = () => { // 방향 이벤트 멈추기
       if (deviceorientationEventRef.current) {
         window.removeEventListener('deviceorientation', handleDeviceOrientation);
         deviceorientationEventRef.current = false;
+        setIsRotate(false);
       }
+    }
+    if(locationType > 1){
+      handleDeviceOrientationPermission();
+    }else{
+      stopDeviceorientationEvent();
+    }
+    return () => {
+      stopDeviceorientationEvent();
     };
   }, [locationType, handleDeviceOrientationPermission, handleDeviceOrientation]);
   
@@ -145,11 +151,14 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
           ref={pointerRef}
           className={isRotate ? 'is-rotate':''}>
           <span className="icon-point">현재 접속 위치 표시</span>
-          { locationType > 1 && (
-            <span className="test-current">실시간 적용중</span>
-          )}
+         
           {isRotate && <span className="text"></span> }
         </StyleCurrentPoint>
+        { 
+          locationType > 1 && (
+            <StyleCurrentLocation>실시간 위치 사용 중...</StyleCurrentLocation>
+          )
+        }
         {
           isPcMo() && (
             <StyleNoticeText>
@@ -170,12 +179,6 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
 export default memo(CurrentMarker);
 
 const StyleCurrentPoint = styled.div`
-  .test-current {
-    position:absolute;
-    color:blue;
-    left:-20px;
-    top:-250%;
-  }
   .text {
     position:absolute; 
     left:200%; 
@@ -254,6 +257,33 @@ const StyleCurrentPoint = styled.div`
   }
   
 `;
+const StyleCurrentLocation = styled.div`
+  position:absolute;
+  top:-250%;
+  left:50%;
+  padding:5px 10px;
+  border-radius:5px;
+  border:1px solid ${colors.yellow};
+  background:${colors.baseBlack};
+  font-size:14px;
+  text-align:center;
+  color:${colors.yellow};
+  pointer-events:none;
+  animation: noticeAni 3s ease both;
+  &::before {
+    display:block;
+    position:absolute;
+    bottom:-6px;
+    left:50%;
+    border-top:6px solid ${colors.yellow};
+    border-right:4px solid transparent;
+    border-left:4px solid transparent;
+    background:transparent;
+    transform: translateX(-50%);
+    content:'';
+  }
+`;
+
 const StyleNoticeText = styled.div`
   position:absolute;
   top:-250%;
@@ -264,6 +294,7 @@ const StyleNoticeText = styled.div`
   background:${colors.baseWhite};
   font-size:14px;
   text-align:center;
+  pointer-events:none;
   animation: noticeAni 3s ease both;
   @keyframes noticeAni {
     0%, 100% {
