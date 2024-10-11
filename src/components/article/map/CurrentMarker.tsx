@@ -26,7 +26,20 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
       const testDiv = deviceorientationRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
       // 방향 인라인 style
-      const adjustedRotation = (rotation + 180) % 360; 
+      const adjustedRotation = (rotation - 180) % 360;
+
+
+      // let adjustedRotation;
+      // // 남쪽을 바라볼 때는 좌우 반전이 필요함
+      // if (rotation >= 90 && rotation <= 270) {
+      //   // 남쪽을 기준으로 회전하는 경우 (180도 부근일 때)
+      //   adjustedRotation = (rotation + 360) % 360; // 360도 이상으로 올라가면 0으로 돌아가게 처리
+      // } else {
+      //   // 그 외의 경우 북쪽을 기준으로
+      //   adjustedRotation = (rotation + 180) % 360;
+      // }
+
+
       deviceorientationRef.current.style.transform = `rotate(${adjustedRotation}deg)`;
     }
   },[])
