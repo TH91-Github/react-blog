@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
 import { colors, media, shadow } from "assets/style/Variable";
 import { NavLink } from "react-router-dom";
 import { routerList } from "routes/RouterList";
 import styled from "styled-components";
 import { rem } from "utils/common";
-import { LocationType } from 'types/baseType';
 
 interface NavigationType {
   menuOn: boolean

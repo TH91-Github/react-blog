@@ -10,7 +10,7 @@ import { CurrentLocationBtn } from "./CurrentLocationBtn";
 type MyBookMarkerType = {
   map: kakao.maps.Map | null,
 }
-
+const userDevices = isPcMo();
 const CurrentMarker = ({map}: MyBookMarkerType) => {
   const {coords:storeCoords} = useSelector((state : RootState) => state.storeLocation);
   const [updateCoords, setUpdateCoords] = useState<{ lat: number; lng: number} | null>(null);
@@ -29,21 +29,16 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
     if (stateTimeRef.current) clearTimeout(stateTimeRef.current);
     stateTimeRef.current = setTimeout(() => {
       if(popType === 'notice'){
-        console.log('dd')
         setNoticePopup( prev => ({...prev, noticeState:false}));
       }else{
         setNoticePopup( prev => ({...prev, currentState:false}));
       }
     }, 3000);
-    console.log('동작')
   },[])
 
   // ✅ 바라보고 있는 방향 회전
   const markerRotate = useCallback((rotation:number) => {
-    if(pointerRef.current){
-      const testDiv = pointerRef.current.querySelector('.text');
-      if(testDiv){ testDiv.innerHTML = `${rotation}` }
-      // 방향 인라인 style
+    if(pointerRef.current){ 
       pointerRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   },[])
@@ -80,8 +75,9 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
       }
     }
     if(eventChk) popupState('currentState')
+      
     setIsRotate(eventChk);
-  },[handleDeviceOrientation]);
+  },[handleDeviceOrientation, popupState]);
   
   // 방향 이벤트
   useEffect(() =>  {
@@ -90,7 +86,6 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
         window.removeEventListener('deviceorientation', handleDeviceOrientation);
         deviceorientationEventRef.current = false;
         setIsRotate(false);
-        setNoticePopup( prev => ({...prev, currentState:true}));
       }
     }
     if(locationType > 1){
@@ -134,21 +129,27 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   }, [locationType]);
 
   // ✅ 현재 위치 이동 및 실시간
-  const handleCurrentLocation =() => {
+  const handleCurrentLocation = useCallback(() => {
     setLocationType(prev => {
+      if (stateTimeRef.current) clearTimeout(stateTimeRef.current);
       if(prev >= 2){
+        setNoticePopup( prev => ({...prev, currentState:false}));
         return prev = 0;
       }else{
+        setNoticePopup( prev => ({...prev, currentState:true}));
         return prev + 1
       }
     })
-    if (map && storeCoords) {
-      const moveLatLon = new kakao.maps.LatLng(storeCoords.lat, storeCoords.lng);
-      map.panTo(moveLatLon);
-    }else{
-      console.log('map 또는 현재 위치를 찾을 수 없어요.. 😢')
+    // ✅ 활성화 상태에서만 위치 이동.
+    if(locationType >= 0 && locationType < 2){
+      if (map && storeCoords) {
+        const moveLatLon = new kakao.maps.LatLng(storeCoords.lat, storeCoords.lng);
+        map.panTo(moveLatLon);
+      }else{
+        console.log('map 또는 현재 위치를 찾을 수 없어요.. 😢')
+      }
     }
-  }
+  },[map, locationType, storeCoords]);
 
   // 실시간 현재 위치 테스트 
   useEffect(()=>{
@@ -160,9 +161,10 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
     }
   },[pointerRef, storeCoords])
 
-  useEffect(()=>{
+  useEffect(()=>{ // pc, mo 판단 팝업 1회만 노출.
     popupState('notice');
-  },[])
+  },[popupState])
+
   if(!storeCoords) return null;
   return (
     <>
@@ -172,26 +174,23 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
         <StyleCurrentPoint>
           <div 
             ref={pointerRef}
-            className={`pointer ${isRotate ? 'is-rotate':''}`}>
+            className={`pointer ${(isRotate && userDevices.browser !=='safari') ? 'is-rotate':''}`}>
             <span className="icon-point">현재 접속 위치 표시</span>
-            {isRotate && <span className="text"></span> }
           </div>
         </StyleCurrentPoint>
         { 
-          (locationType > 1&& noticePopup.currentState ) && (
+          (locationType > 1 && noticePopup.currentState ) && (
             <StyleCurrentLocation>실시간 위치 사용 중...</StyleCurrentLocation>
           )
         }
         {
-          (isPcMo() === 'pc' && noticePopup.noticeState) && (
+          (userDevices.devices === 'pc' && noticePopup.noticeState) && (
             <StyleNoticeText>
               🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅<br />
             </StyleNoticeText>
           )
         }
-        
       </CustomOverlayMap>
-      
       {/* 내 위치 */}
       <div>
         <CurrentLocationBtn locationState={locationType} clickEvent={handleCurrentLocation} />
@@ -202,6 +201,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
 export default memo(CurrentMarker);
 
 const StyleCurrentPoint = styled.div`
+  position:relative;
   transform: scaleY(-1);
   .pointer {
     position:relative;
@@ -289,6 +289,7 @@ const StyleCurrentLocation = styled.div`
   text-align:center;
   color:${colors.yellow};
   pointer-events:none;
+  transform: translateX(-50%);
   animation: noticeAni 3s ease both;
   &::before {
     display:block;
@@ -315,6 +316,7 @@ const StyleNoticeText = styled.div`
   font-size:14px;
   text-align:center;
   pointer-events:none;
+  transform: translateX(-50%);
   animation: noticeAni 3s ease both;
   @keyframes noticeAni {
     0%, 100% {

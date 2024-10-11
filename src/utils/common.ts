@@ -12,14 +12,26 @@ export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
 
 export const isPcMo = () => {
   const userAgent = navigator.userAgent;
+  let chkUserAgent = {devices:'',browser:''};
+  
   // 모바일 기기의 User-Agent 체크
   if (/android/i.test(userAgent)) {
-    return 'android';
+    chkUserAgent.devices = 'android';
   }else if (/iPhone|iPad|iPod/i.test(userAgent)) {
-    return 'iPhone|iPad|iPod';
+    chkUserAgent.devices = 'iPhone|iPad|iPod';
   }else{
-    return 'pc';
+    chkUserAgent.devices = 'pc';
   }
+
+  // 브라우저 체크
+  if (/chrome/i.test(userAgent) && !/edg/i.test(userAgent)) {
+    chkUserAgent.browser = 'chrome';
+  } else if (/safari/i.test(userAgent) && !/chrome/i.test(userAgent)) {
+    chkUserAgent.browser = 'safari';
+  } else{
+    chkUserAgent.browser = 'etc';
+  }
+  return chkUserAgent;
 };
 
 export function rem(figure:number, remFix?:number):string { // rem 변환
