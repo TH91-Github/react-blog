@@ -26,7 +26,13 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
       const testDiv = pointerRef.current.querySelector('.text');
       if(testDiv){ testDiv.innerHTML = `${rotation}` }
       // 방향 인라인 style
-      const adjustedRotation = (rotation + 180) % 360; 
+      let test = 0;
+      if(rotation <= 180){
+        test = rotation + 180
+      }else{
+        test = rotation - 180
+      }
+      const adjustedRotation = test;
       pointerRef.current.style.transform = `rotate(${adjustedRotation}deg)`;
     }
   },[])
@@ -220,7 +226,6 @@ const StyleCurrentPoint = styled.div`
     background:${colors.baseWhite};
     border:1px solid ${colors.blue};
     text-indent:-9999px;
-    transform: scaleX(-1);
     &::before {
       display:none;
       position:absolute;
