@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { actionUserLocationUpdate } from "store/store";
-import { getCurrentLocation, kakaomapAddressFromCoords } from "utils/kakaomap/common";
+import { getCurrentLocation } from "utils/common";
+import { kakaomapAddressFromCoords } from "utils/kakaomap/common";
 
 export default function CurrentLocation() {
   const dispatch = useDispatch();

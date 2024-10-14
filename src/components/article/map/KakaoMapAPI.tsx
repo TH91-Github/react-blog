@@ -1,14 +1,14 @@
 import { media } from "assets/style/Variable";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
-import { mapCenterSetting } from "utils/kakaomap/common";
+import { kakaomapAddressFromCoords, kakaomapFetchAddress, mapCenterSetting } from "utils/kakaomap/common";
+import CurrentMarker from "./CurrentMarker";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
-import CurrentMarker from "./CurrentMarker";
 interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
@@ -19,7 +19,6 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
-
 
   const MapControlClass = () => {
     const mapDOM = document.querySelector('#__react-kakao-maps-sdk___Map');
@@ -65,7 +64,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
       activeChange()
       placePopChange(null);
     }
-    setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker)
+    setPointPop(prev => !marker ? null : prev && prev.id === marker.id ? null : marker);
   }
   const detailPopEvent = (marker:MarkerType | null) => {
     if(marker === null){
@@ -73,20 +72,35 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
     }else{
       setPointPop(null);
       placePopChange(marker);
-    } 
+    }
   }
+
+  
+  // ✅ 지도 클릭 지점 장소 가져오기.
+  const handleMapClick = useCallback(async(targetMap: kakao.maps.Map, mouseEvent: kakao.maps.event.MouseEvent) => {
+    if(targetMap){
+      const latLng = mouseEvent.latLng;
+      const clickAddress = await kakaomapAddressFromCoords(latLng,1);
+      const clickPlaceData = await kakaomapFetchAddress(clickAddress,latLng);
+      console.log(clickPlaceData)
+    }
+  },[])
+
   return (
     <StyleKakaoMap className="kakao-map">
       <Map
         center={kakaoData.location ?? { lat: 37.56682420267543, lng: 126.978652258823 }}
         level={3}
+        onClick={((m, e) => handleMapClick(m, e))}
         onCreate={setMap}>
         {
+          // ✅ 검색 결과 마커
           kakaoData.markerList.map((marker,idx) => (
             <CustomOverlayMap
               key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
               position={marker.position}
-              zIndex={pointPop?.id === marker.id ? 2 : 1}>
+              zIndex={pointPop?.id === marker.id ? 2 : 1}
+              clickable={true}>
               <MarkerBasic 
                 number={idx+1}
                 marker={marker}

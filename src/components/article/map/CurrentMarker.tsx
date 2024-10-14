@@ -39,7 +39,7 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   // ✅ 바라보고 있는 방향 회전
   const markerRotate = useCallback((rotation:number) => {
     if(pointerRef.current){ 
-      pointerRef.current.style.transform = `rotate(${rotation}deg)`;
+      pointerRef.current.style.transform = `rotate(${rotation - 15}deg)`;
     }
   },[])
 
@@ -164,13 +164,13 @@ const CurrentMarker = ({map}: MyBookMarkerType) => {
   useEffect(()=>{ // pc, mo 판단 팝업 1회만 노출.
     popupState('notice');
   },[popupState])
-  console.log(userDevices.browser)
   if(!storeCoords) return null;
   return (
     <>
       <CustomOverlayMap 
         key={`current-${storeCoords.lat},${storeCoords.lng}`}
-        position={!updateCoords ? storeCoords : updateCoords}>
+        position={!updateCoords ? storeCoords : updateCoords}
+        clickable={true} >
         <StyleCurrentPoint>
           <div 
             ref={pointerRef}

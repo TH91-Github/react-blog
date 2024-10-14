@@ -78,11 +78,10 @@ const StyledNav = styled.div`
   ${media.mo}{
     display:none;
     position:absolute;
-    top:0;
+    top:61px;
     left:0;
     width:100%;
-    height:100svh;
-    padding-top:61px;
+    height:calc(100svh - 61px);
     opacity:0;
     &.open {
       display:block;

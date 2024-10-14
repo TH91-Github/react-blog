@@ -1,11 +1,12 @@
 import { StringOnlyArr } from "types/baseType";
-import { KakaoMapBasicType, MarkerPositionType } from "types/kakaoComon";
+import { KakaoMapBasicType } from "types/kakaoComon";
 import { isMobileSizeChk } from "utils/common";
 
 interface kakaoFetchPlacesType extends KakaoMapBasicType {
   keyword: string;
 }
 
+// ✅ 키워드 검색
 export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
@@ -57,6 +58,30 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
   );
 };
 
+
+// ✅ 주소를 통해 장소 요청
+export const kakaomapFetchAddress = (address: string, latLng:kakao.maps.LatLng) => { // 주소 명과 기준 좌표
+  return new Promise((resolve, reject) => {
+    const ps2 = new kakao.maps.services.Places();
+    const errorTxt = '❌ 등록된 정보가 없는 곳이에요';
+    ps2.keywordSearch(address, (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        if (result.length > 0) {
+          resolve(result); 
+        } else {
+          resolve(errorTxt + '😅'); // 이모티콘으로 에러 구분
+        }
+      } else {
+        resolve(errorTxt + '⚠️');
+        // reject(new Error("장소 검색이 안되는 좌표")); 
+      }
+    }, {
+      location: latLng, // 검색 기준 좌표
+      radius: 10 // 반경 10m 찾기)
+    });
+  });
+};
+
 // kakao map 주소 가져오기
 // coords : lat, lon , addrTypeNum : 1 간편 전체 주소, 2: 간편 주소 동까지, 3 전체 정보
 export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum?: number | undefined): Promise<string> {
@@ -77,56 +102,15 @@ export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum
         }
         resolve(detailAddr);
       } else {
-        reject('주소를 가져올 수 없습니다.');
+        // reject('주소를 가져올 수 없습니다.');
       }
     });
   });
 }
-// 브라우저 제공 API를 통해 현재 위치 가져오기
-export const getCurrentLocation = (
-  initCenterPos?:MarkerPositionType, 
-  retryCount = 0, // 재시도 수
-  maxRetries = 2 // 총 재시도
-):Promise<MarkerPositionType> =>{
-  const defaultPos = initCenterPos ?? { lat: 37.56682420267543, lng: 126.978652258823 }; // 초기 지정 값 없다면 서울 시청 좌표
-  return new Promise((resolve) => {
-    // 🗺️ 현재 주소 받아오기
-    // 브라우저 환경에서 제공되는 웹 API navigator -> Geolocation 사용자 위치 정보
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          resolve(location);
-        },
-        (error) => {
-          console.log('⚠️ 다시 시도 ' + error);
-          if (retryCount < maxRetries) { // 재시도 / 최대 재도전
-            console.log(`재시도 중... (${retryCount + 1}/${maxRetries})`);
-            // 실패 시 재시도
-            resolve(getCurrentLocation(initCenterPos, retryCount + 1, maxRetries));
-          } else {
-            console.log('❌ 가져오기 실패');
-            resolve(defaultPos); // 재시도 초과 시 기본 위치 반환
-          }
-        },
-        { 
-          // enableHighAccuracy : gps, 배터리 소모 증가시킬 수 있다. false 시 저전력 모드의 위치 장치 사용 대신 정확도가 낮다.
-          enableHighAccuracy: true,
-          // 5초 내에 정보를 가져오지 못할 경우 오류로 지정.
-          timeout: 5000,
-          // 캐시된 위치 정보 허용 최대 시간 : 0 -> 최신 위치 정보 요청
-          maximumAge: 0
-        }
-      )
-    } else {
-      console.log("현재 위치를 확인할 수 없습니다.");
-      resolve(defaultPos);
-    }
-  });
-}
+
+
+
+
 
 // 센터 맞춤. : PC만 동작 중.
 export const mapCenterSetting = (map:kakao.maps.Map, correctionNumber:number) => {

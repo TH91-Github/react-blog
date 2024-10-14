@@ -1,4 +1,5 @@
 import { breakpoints, fonts } from "assets/style/Variable"
+import { MarkerPositionType } from "types/kakaoComon";
 
 export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
   const wininnW = window.innerWidth;
@@ -13,7 +14,7 @@ export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
 export const isPcMo = () => {
   const userAgent = navigator.userAgent;
   let chkUserAgent = {devices:'',browser:''};
-  
+
   // 모바일 기기의 User-Agent 체크
   if (/android/i.test(userAgent)) {
     chkUserAgent.devices = 'android';
@@ -73,6 +74,52 @@ export function currentTime() {
     minutes: now.getMinutes(),
     seconds: now.getSeconds()
   };
+}
+
+// 브라우저 제공 API를 통해 현재 위치 가져오기
+export const getCurrentLocation = (
+  initCenterPos?:MarkerPositionType, 
+  retryCount = 0, // 재시도 수
+  maxRetries = 2 // 총 재시도
+):Promise<MarkerPositionType> =>{
+  const defaultPos = initCenterPos ?? { lat: 37.56682420267543, lng: 126.978652258823 }; // 초기 지정 값 없다면 서울 시청 좌표
+  return new Promise((resolve) => {
+    // 🗺️ 현재 주소 받아오기
+    // 브라우저 환경에서 제공되는 웹 API navigator -> Geolocation 사용자 위치 정보
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          resolve(location);
+        },
+        (error) => {
+          console.log('⚠️ 다시 시도 ' + error);
+          if (retryCount < maxRetries) { // 재시도 / 최대 재도전
+            console.log(`재시도 중... (${retryCount + 1}/${maxRetries})`);
+            // 실패 시 재시도
+            resolve(getCurrentLocation(initCenterPos, retryCount + 1, maxRetries));
+          } else {
+            console.log('❌ 가져오기 실패');
+            resolve(defaultPos); // 재시도 초과 시 기본 위치 반환
+          }
+        },
+        { 
+          // enableHighAccuracy : gps, 배터리 소모 증가시킬 수 있다. false 시 저전력 모드의 위치 장치 사용 대신 정확도가 낮다.
+          enableHighAccuracy: true,
+          // 5초 내에 정보를 가져오지 못할 경우 오류로 지정.
+          timeout: 5000,
+          // 캐시된 위치 정보 허용 최대 시간 : 0 -> 최신 위치 정보 요청
+          maximumAge: 0
+        }
+      )
+    } else {
+      console.log("현재 위치를 확인할 수 없습니다.");
+      resolve(defaultPos);
+    }
+  });
 }
 
 /* 추가 수정 필요한 function 👇 */

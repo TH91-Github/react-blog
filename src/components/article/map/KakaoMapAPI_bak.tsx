@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 import MapCenterLocation from "./MapCenterLocation";
-import { getCurrentLocation } from "utils/kakaomap/common";
+import { getCurrentLocation } from "utils/common";
 
 const KakaoMapAPI = ({searchKey, mapDataUpdate}:kakaoMapType) => {
   const mapRef = useRef<kakao.maps.Map>(null)
