@@ -104,10 +104,13 @@ const StyleBookMarker = styled.div<StyleBookMarkerType>`
       position:absolute;
       left:50%;
       top:calc(100% + 5px);
+      padding:3px 5px;
+      border-radius:3px;
+      background:${colors.opacityBg};
       font-size:14px;
-      font-weight:800;
+      font-weight:600;
+      color:${colors.baseBlack};
       transform: translateX(-50%);
-      text-shadow:${shadow.textBaseW};
     }
   }
 `;

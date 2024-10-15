@@ -20,7 +20,6 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
     queryKey: ['placeDataQuery', id], // queryKey에 id를 포함시켜 place가 변경 될 때 다시
     queryFn: () => getDocPlace(placeCategory, id),
   });
-
   const handleCloseClick = () =>{ 
     placePopChange(null);
   }

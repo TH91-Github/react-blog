@@ -1,4 +1,4 @@
-import { StringOnlyArr } from "types/baseType";
+import { StringOnly, StringOnlyArr } from "types/baseType";
 import { KakaoMapBasicType } from "types/kakaoComon";
 import { isMobileSizeChk } from "utils/common";
 
@@ -60,25 +60,25 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
 
 
 // ✅ 주소를 통해 장소 요청
-export const kakaomapFetchAddress = (address: string, latLng:kakao.maps.LatLng) => { // 주소 명과 기준 좌표
+export const kakaomapFetchAddress = (address: string, latLng:kakao.maps.LatLng, option:boolean): Promise<StringOnly[] | null> => { // 주소 명과 기준 좌표
   return new Promise((resolve, reject) => {
     const ps2 = new kakao.maps.services.Places();
-    const errorTxt = '❌ 등록된 정보가 없는 곳이에요';
     ps2.keywordSearch(address, (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
         if (result.length > 0) {
-          resolve(result); 
-        } else {
-          resolve(errorTxt + '😅'); // 이모티콘으로 에러 구분
+          const res = placeSorting(result,'distance');
+          resolve(res); // 거리 기준 가까운 순서대로 정렬
         }
       } else {
-        resolve(errorTxt + '⚠️');
         // reject(new Error("장소 검색이 안되는 좌표")); 
+        resolve(null)
       }
-    }, {
-      location: latLng, // 검색 기준 좌표
-      radius: 10 // 반경 10m 찾기)
-    });
+    }, option ? {radius: 5}
+      : {
+        location: latLng, // 검색 기준 좌표
+        radius: 5 // 반경 10m 찾기)
+      }
+    );
   });
 };
 
@@ -108,9 +108,11 @@ export function kakaomapAddressFromCoords(coords: kakao.maps.LatLng, addrTypeNum
   });
 }
 
-
-
-
+function placeSorting (data:any,sortName:string) { 
+  return data.sort((a:any, b:any) => {
+    return a[sortName] - b[sortName]; // sortName 기준 오름차순 정렬
+  });
+}
 
 // 센터 맞춤. : PC만 동작 중.
 export const mapCenterSetting = (map:kakao.maps.Map, correctionNumber:number) => {

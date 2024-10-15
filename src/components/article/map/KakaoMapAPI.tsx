@@ -1,14 +1,15 @@
 import { media } from "assets/style/Variable";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomOverlayMap, Map, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
 import { KakaoMapBasicType, MarkerType } from "types/kakaoComon";
-import { kakaomapAddressFromCoords, kakaomapFetchAddress, mapCenterSetting } from "utils/kakaomap/common";
+import { mapCenterSetting } from "utils/kakaomap/common";
 import CurrentMarker from "./CurrentMarker";
 import MarkerBasic from "./MarkerBasic";
 import MyBookMarker from "./MyBookMarker";
+import { PicklatLngMarker } from "./PicklatLngMarker";
 interface KakaoMapType extends KakaoMapBasicType {
   activePoint: string | null;
   activeChange: () => void;
@@ -19,7 +20,7 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [map, setMap] = useState<kakao.maps.Map | null>(null)
   const [pointPop, setPointPop] = useState<MarkerType | null>(null);
-
+  
   const MapControlClass = () => {
     const mapDOM = document.querySelector('#__react-kakao-maps-sdk___Map');
     if(mapDOM){
@@ -74,24 +75,13 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
       placePopChange(marker);
     }
   }
-
+  console.log("azz")
   
-  // ✅ 지도 클릭 지점 장소 가져오기.
-  const handleMapClick = useCallback(async(targetMap: kakao.maps.Map, mouseEvent: kakao.maps.event.MouseEvent) => {
-    if(targetMap){
-      const latLng = mouseEvent.latLng;
-      const clickAddress = await kakaomapAddressFromCoords(latLng,1);
-      const clickPlaceData = await kakaomapFetchAddress(clickAddress,latLng);
-      console.log(clickPlaceData)
-    }
-  },[])
-
   return (
     <StyleKakaoMap className="kakao-map">
       <Map
         center={kakaoData.location ?? { lat: 37.56682420267543, lng: 126.978652258823 }}
         level={3}
-        onClick={((m, e) => handleMapClick(m, e))}
         onCreate={setMap}>
         {
           // ✅ 검색 결과 마커
@@ -109,6 +99,9 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
                 detailPopEvent={detailPopEvent} />
             </CustomOverlayMap>
           ))
+        }
+        {
+          <PicklatLngMarker map={map}  />
         }
         {/* ⭐ 즐겨 찾기 */}
         <MyBookMarker 
