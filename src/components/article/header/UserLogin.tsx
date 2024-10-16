@@ -6,8 +6,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { removeDoc } from "utils/firebase/common";
-import { auth, deleteUser, signOut } from "../../../firebase";
+import { auth } from "../../../firebase";
 import { SvgLogin, SvgLogOut } from "assets/svg/common/CommonSvg";
+import { deleteUser, signOut } from "firebase/auth";
 
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();

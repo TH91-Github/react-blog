@@ -1,4 +1,4 @@
-import { fireDB, doc, getDoc } from "../../firebase";
+import { fireDB } from "../../firebase";
 import { AppDispatch } from "store/store";
 // firebase - User data
 // export const fetchUserData = async (dispatch:AppDispatch) => {

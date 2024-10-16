@@ -1,4 +1,5 @@
-import { fireDB, doc, getDoc } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { fireDB } from "../../firebase";
 import { AppDispatch, actionKakaoDataUpdate } from "store/store";
 
 // firebase - kakao map data 

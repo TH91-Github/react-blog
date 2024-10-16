@@ -3,13 +3,14 @@ import EmailChk from "components/article/member/EmailChk";
 import LogInIDChk from "components/article/member/LogInIDChk";
 import NickNameChk from "components/article/member/NickNameChk";
 import PasswordChk from "components/article/member/PasswordChk";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useCallback, useRef, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomIdChk, randomNum } from "utils/common";
 import { pushDataDoc } from "utils/firebase/common";
-import { auth, createUserWithEmailAndPassword } from "../../firebase";
+import { auth } from "../../firebase";
 
 interface InputStateType {
   id: string,

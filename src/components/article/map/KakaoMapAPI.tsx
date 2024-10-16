@@ -75,8 +75,6 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
       placePopChange(marker);
     }
   }
-  console.log("azz")
-  
   return (
     <StyleKakaoMap className="kakao-map">
       <Map

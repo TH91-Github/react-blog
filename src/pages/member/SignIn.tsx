@@ -8,7 +8,9 @@ import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomNum } from 'utils/common';
 import { duplicateGetDoc, pushDataDoc } from "utils/firebase/common";
-import { auth, collection, fireDB, getDocs, provider, query, signInWithEmailAndPassword, signInWithPopup, where } from "../../firebase";
+import { fireDB, auth, provider } from "../../firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();

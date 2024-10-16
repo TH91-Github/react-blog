@@ -1,9 +1,8 @@
-import { runTransaction } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, setDoc, startAfter, updateDoc, runTransaction, where } from "firebase/firestore";
 import { StringOnly } from "types/baseType";
 import { PlaceDataTypeC, QueryReviewDataTypeC, ReviewAddDocTypeC, ReviewDataTypeC, ReviewRemoveTypeC } from "types/kakaoComon";
-import { collection, deleteDoc, doc, fireDB, getDoc, getDocs, limit, orderBy, query, setDoc, startAfter, updateDoc, where } from "../../firebase";
+import { fireDB,  } from "../../firebase";
 import { deleteStorageImg } from "./common";
-
 // ✅ Map Place
 // ✒️ place 정보 등록
 export const addDocPlace = async (collectionName:string, docId:string, place_name:string) => {

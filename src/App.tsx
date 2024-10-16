@@ -1,16 +1,3 @@
-/*
-✅ import 순서 
-React 관련 훅 (useCallback, useRef, useState)
-React Router (NavLink)
-Redux 관련 훅 (useDispatch, useSelector)
-Firebase 관련 모듈 (auth, signInWithEmailAndPassword)
-Store 관련 타입 (AppDispatch, RootState)
-컴포넌트 (InputElement)
-스타일 변수 (colors, transitions)
-styled-components (styled)
-타입 정의 (StringOnly)
-*/ 
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { GlobalStyles } from 'assets/style/GlobalStyles';

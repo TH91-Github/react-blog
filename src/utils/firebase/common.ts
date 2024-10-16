@@ -1,7 +1,8 @@
 import { UserBookmarkType, UserDataType } from "types/baseType";
-import { collection, deleteDoc, doc, firebaseStorage, fireDB, getDoc, getDocs, getDownloadURL, query, ref, setDoc, updateDoc, uploadBytes, where } from "../../firebase";
+import { fireDB, firebaseStorage} from "../../firebase";
 import { getEmailId } from "utils/common";
-import { deleteObject } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { collection, deleteDoc, doc, where, getDoc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
 
 // ✅ thData 기본
 // 추가
