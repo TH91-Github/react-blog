@@ -15,7 +15,7 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
-const firebaseConfig2 = {
+const mapFirebaseConfig = {
     // firebase 설정과 관련된 개인 정보
     apiKey: process.env.REACT_APP_MAP_API_KEY,
     authDomain: process.env.REACT_APP_MAP_AUTH_DOMAIN,
@@ -34,7 +34,7 @@ const provider = new GoogleAuthProvider();
 const firebaseStorage = getStorage(app);
 
 // firebase map
-const fbMapApp = initializeApp(firebaseConfig2, "firebase-map");
+const fbMapApp = initializeApp(mapFirebaseConfig, "firebase-map");
 const fbMapAuth = getAuth(fbMapApp);
 const fbMapDB = getFirestore(fbMapApp);
 const fbMapStorage = getStorage(fbMapApp);

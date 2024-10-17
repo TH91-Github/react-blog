@@ -95,7 +95,6 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       return;
     }
     try {
-      console.log('삭제')
       await reviewRemove({ 
         collectionName: placeCategory,
         docId: id,

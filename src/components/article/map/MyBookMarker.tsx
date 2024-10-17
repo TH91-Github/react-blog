@@ -29,7 +29,6 @@ export default function MyBookMarker({map, clickEvent}:MyBookMarkerType) {
 
   const handlePopClick = (marker:MarkerType | null) =>{ // 상세 페이지
     clickEvent(marker)
-    console.log('내 즐겨찾기 - 상세 페이지 오픈')
   }
   return (
     <>
@@ -39,7 +38,8 @@ export default function MyBookMarker({map, clickEvent}:MyBookMarkerType) {
           return marker.position 
           ? <CustomOverlayMap 
               key={`marker-${marker.place_name}-${marker.position.lat},${marker.position.lng}`}
-              position={marker.position}>
+              position={marker.position}
+              clickable={true}>
                 <StyleBookMarker 
                   $bgColor={colors.blue}
                   className={`marker ${isPopup ? 'active' :''}`}>

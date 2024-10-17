@@ -4,10 +4,14 @@ import { getEmailId } from "utils/common";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { collection, deleteDoc, doc, where, getDoc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
 
+// 기본
+const baseDB = process.env.REACT_APP_DB ?? '';
 // ✅ thData 기본
 // 추가
-export const pushDataDoc = async(docName:string, collectionName:string, data:UserDataType) => {
-  const userCollection = collection(fireDB, 'thData', docName, collectionName);
+export const pushDataDoc = async(
+  docName:string, collectionName:string, data:UserDataType, defaultBase:string = baseDB
+) => {
+  const userCollection = collection(fireDB, defaultBase, docName, collectionName);
   const newUserDoc = doc(userCollection);
   const newUserId = newUserDoc.id;
   data.id = newUserId; // doc 랜덤 id 추가
@@ -15,18 +19,22 @@ export const pushDataDoc = async(docName:string, collectionName:string, data:Use
 } 
 
 // document name, 하위 collection name, 비교 key - id, email 등, 비교할 value
-export const duplicateDoc = async(docName:string, collectionName:string, key:string, val:string) :Promise<boolean>=> {
+export const duplicateDoc = async(
+  docName:string, collectionName:string, key:string, val:string, defaultBase:string = baseDB
+) :Promise<boolean>=> {
   // 문서 필드 내 key(id, email 등)값 조회
-  const queryDuplicate = collection(fireDB, 'thData', docName, collectionName);
+  const queryDuplicate = collection(fireDB, defaultBase, docName, collectionName);
   const duplicatResult = query(queryDuplicate, where(key, '==', val));
   const querySnapshot = await getDocs(duplicatResult);
   return querySnapshot.empty
 }
 
 // key, val 비교 및 조회 후 가져오기
-export const duplicateGetDoc = async(docName:string, collectionName:string, key:string, val:string) :Promise<null | UserDataType>=> {
+export const duplicateGetDoc = async(
+  docName:string, collectionName:string, key:string, val:string, defaultBase:string = baseDB
+) :Promise<null | UserDataType>=> {
   // 문서 필드 내 key(id, email 등)값 조회
-  const queryGetDocRef = collection(fireDB, 'thData', docName, collectionName);
+  const queryGetDocRef = collection(fireDB, defaultBase, docName, collectionName);
   const getDocResult = query(queryGetDocRef, where(key, '==', val));
   const querySnapshot = await getDocs(getDocResult);
   if (!querySnapshot.empty) {// 정보가 있을 경우
@@ -46,8 +54,11 @@ export const duplicateGetDoc = async(docName:string, collectionName:string, key:
 }
 
 // 필드 데이터 변경
-export const collectionDocUpdate = async(docName:string, collectionName:string, docId:string, upDatakey:string, updateData: string | UserBookmarkType[]) => {
-  const queryUpdateRef = collection(fireDB, 'thData', docName, collectionName);
+export const collectionDocUpdate = async(
+  docName:string, collectionName:string, docId:string, upDatakey:string, updateData: string | UserBookmarkType[],
+  defaultBase:string = baseDB
+) => {
+  const queryUpdateRef = collection(fireDB, defaultBase, docName, collectionName);
   const upDateDoc = doc(queryUpdateRef, docId);
   const upDateSnap = await getDoc(upDateDoc);
 
@@ -61,8 +72,11 @@ export const collectionDocUpdate = async(docName:string, collectionName:string, 
 }
 
 // 필드 id 찾은 후 삭제
-export const removeDoc = async(docName:string, collectionName:string, emailId:string) => {
-  const queryRemoveRef = collection(fireDB, 'thData', docName, collectionName);
+export const removeDoc = async(
+  docName:string, collectionName:string, emailId:string,
+  defaultBase:string = baseDB
+) => {
+  const queryRemoveRef = collection(fireDB, defaultBase, docName, collectionName);
   const removeDocResult = query(queryRemoveRef, where('email', '==', emailId));
   const querySnapshot = await getDocs(removeDocResult);
 

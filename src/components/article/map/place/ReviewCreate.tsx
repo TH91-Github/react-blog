@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { getStorageImgUrl, ImguploadStorage } from "utils/firebase/common";
+import { mapGetStorageImgUrl, mapImguploadStorage } from "utils/firebase/place";
 
 interface ReviewCreateType {
   placeCategory: string,
@@ -19,9 +19,9 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
   const inputRef = useRef<InputElementRef>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const imgInputRef = useRef<ImgInpuElementRef | null>(null)
-  const ratingStarRef = useRef<HTMLInputElement>(null);
+  const ratingStarRef = useRef<InputElementRef>(null);
   const [isReview, setIsReview] = useState(false);
-
+  
   const handleReview = () => { // 리뷰 쓰기
     if(user){
       const input = inputRef.current?.getInputElement();
@@ -39,16 +39,19 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
     if(input){
       const reviewVal = input.value;
       if(reviewVal.trim()){
-        const ratingVal = parseFloat(ratingStarRef.current!.value ?? 5);
+        const ratingInput = ratingStarRef.current?.getInputElement();
+        let ratingVal = 5;
         const imgArr = imgInputRef.current.getImgFileArr();
         let imgUrl:string[] = [];
-
+        if(ratingInput){
+          ratingVal = parseInt(ratingInput.value);
+        }
         if(imgArr.length > 0){ // ✅ 이미지 등록
            // 이미지 - fire 스토리지 업로드 
           const imgPromises = imgArr.map((imgFile) => 
-            ImguploadStorage(imgFile.file, `map/${placeCategory}/${placeId}`, user?.email ?? 'img'));
+            mapImguploadStorage(imgFile.file, `map/${placeCategory}/${placeId}`, user?.email ?? 'img'));
           const imgFullPaths = await Promise.all(imgPromises);
-          const imgUrlPromises = imgFullPaths.map((pathItem) => getStorageImgUrl(pathItem));
+          const imgUrlPromises = imgFullPaths.map((pathItem) => mapGetStorageImgUrl(pathItem));
           imgUrl = await Promise.all(imgUrlPromises);
         }
         // 완료
@@ -56,6 +59,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
         imgInputRef.current.resetFile();
         setIsReview(false);
         reviewAdd(reviewVal, ratingVal, imgUrl);
+        ratingStarRef.current?.resetValue(); // 별점 초기화
       }else{
         inputRef.current.resetValue();
         dispatch(actionAlert({titMessage:'입력된 리뷰가 없어요!! 😲',isPopup:true, autoClose:2000}))
@@ -171,6 +175,24 @@ const StyleReviewCreate = styled.div`
   }
   .review-img-upload {
     padding:10px 0;
+    .imgupload{
+      .no-scroll {
+        & > ul > li {
+          img { 
+            display:block;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            object-position:top;
+          }
+        }
+      }
+    }
+    .img-preview-lists { 
+      li {
+        height:150px;
+      }
+    }
   }
   .review-rating {
     padding:10px 0;

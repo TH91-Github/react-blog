@@ -1,7 +1,8 @@
 import { colors } from "assets/style/Variable";
 import { SvgStar } from "assets/svg/common/CommonSvg";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components"
+import { InputElementRef } from "./InputElement";
 
 interface RatingStarType {
   initNum?: number;
@@ -11,7 +12,8 @@ interface RatingStarType {
   bgColor?:string;
 }
 
-const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, onlyView, max, starWidth, bgColor }: RatingStarType, ref) => {
+const RatingStar = forwardRef<InputElementRef, RatingStarType>(({ initNum, onlyView, max, starWidth, bgColor }: RatingStarType, ref) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [rating, setRating] = useState(initNum ?? 5);
   const ratingMax = max ?? 5;
   const starW = starWidth ?? '45px';
@@ -33,6 +35,16 @@ const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, only
     const ratingValue = ((ratingTouch.clientX - ratingRect.left) / ratingRect.width) * (ratingMax - 0.1) + 0.1;
     setRating(Math.max(0.1, Math.min(ratingMax, ratingValue)));
   };
+  
+  useImperativeHandle(ref, () => ({
+    // input 반환
+    getInputElement: () => inputRef.current ?? null,
+    // 초기화
+    resetValue: () => {
+      setRating(initNum ?? 5)
+    }
+  }));
+  
 
   return (
     <StyleRatingStar 
@@ -61,9 +73,9 @@ const RatingStar = forwardRef<HTMLInputElement, RatingStarType>(({ initNum, only
             ))
           }
           {
-            !onlyView && (
+            !onlyView && ( // 별점 수정이 가능한 경우에만 노출
               <input 
-                ref={ref}
+                ref={inputRef}
                 type="range"
                 name="input-rating" 
                 className="input-rating"

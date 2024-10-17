@@ -1,8 +1,14 @@
 import { InnerStyle } from 'assets/style/StyledCm';
 import { colors, media } from 'assets/style/Variable';
+import { useEffect } from 'react';
 import styled from "styled-components";
 
 export default function WeatherPage() {
+
+  useEffect(()=>{
+    
+  },[])
+
   return (
     <StyleWrap className="weather">
       <StyleStudyInner>

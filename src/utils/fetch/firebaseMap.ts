@@ -1,11 +1,11 @@
 import { doc, getDoc } from "firebase/firestore";
-import { fireDB } from "../../firebase";
+import { fbMapDB } from "../../firebase";
 import { AppDispatch, actionKakaoDataUpdate } from "store/store";
 
 // firebase - kakao map data 
 export const fetchKakaoMapData = async (dispatch:AppDispatch) => {
   try {
-    const docRef = doc(fireDB, 'kakaomap', 'places');
+    const docRef = doc(fbMapDB, 'kakaomap', 'places');
     const mapData = await getDoc(docRef);
     if (mapData.exists() && mapData.data().places) {
       const data = mapData.data().places;

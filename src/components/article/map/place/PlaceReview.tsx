@@ -27,7 +27,6 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
   const queryClient = useQueryClient();
   const lastLikeRef = useRef<string[]>(like); // clean up에서 의존성 like를 대신하기 위해
 
-  // 잔업 > 하트 > 타입
   const createPlaceUpdateInfo = useCallback((updateLike: string[]): any => ({
     collectionName: placeCategory,
     docId: placeDocId,
@@ -39,10 +38,10 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
 
   const handlelikeClick = () => {
     if(user){
+      // like 수 중 내 정보 추가/삭제
       const updatedLike = like.includes(user.uid)
         ? like.filter(likeItem => likeItem !== user.uid)
         : [...like, user.uid];
-      
       setLike(updatedLike);
       lastLikeRef.current = updatedLike;
       setTimeChkPost(updatedLike);
@@ -59,20 +58,22 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
     actionTimeRef.current = setTimeout(() => {
       const placeUpdateInfo = createPlaceUpdateInfo(updateLike);
       placeReviewUpdateDoc(placeUpdateInfo);
-      queryClient.invalidateQueries({ queryKey: ['placeReview'] });
-    }, 3000); 
+      queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });
+    }, 2000); 
   };
 
   useEffect(() => {
     setLike(reviewData.like || [])
-    // 3초 전에 컴포넌트를 벗어난 경우 바로 요청하기 위함.
-    return () => {
+    
+    return () => { // 2초 전에 컴포넌트를 벗어난 경우 바로 요청하기 위함.
       if (actionTimeRef.current) {
         clearTimeout(actionTimeRef.current);
         const placeUpdateInfo = createPlaceUpdateInfo(lastLikeRef.current); 
+        console.log(lastLikeRef.current)
+        setLike(lastLikeRef.current)
         placeReviewUpdateDoc(placeUpdateInfo);
-        queryClient.invalidateQueries({ queryKey: ['placeReview'] }); 
-      }
+        queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] }); 
+      } 
     };
   }, [placeCategory, placeDocId, reviewData, user, queryClient, createPlaceUpdateInfo]);
 
@@ -157,6 +158,11 @@ const StylePlaceReview = styled.div`
       & > li {
         overflow:hidden;
         position:relative;
+        height:150px;
+        & > img {
+          width:auto;
+          height:100%;
+        }
       }
     }
   }

@@ -87,7 +87,6 @@ export const ImgUpload = forwardRef<ImgInpuElementRef, ImgUploadType>(
     getImgFileArr: () => imgFileArr,
     // 초기화
     resetFile: () => {
-      console.log("초기화해줘!")
       setImgFileArr([]);
     }
   }));
@@ -96,8 +95,8 @@ export const ImgUpload = forwardRef<ImgInpuElementRef, ImgUploadType>(
     <StyleImgUpload className="imgupload">
       {
         imgFileArr.length > 0
-        ? (
-          preview ? (
+        ? ( 
+          preview ? ( // 미리보기 스크롤 있는 유형
             <ScrollList 
               isScroll={imgFileArr.length > 1 ? true : false} 
               flexType={'x'}>
@@ -115,7 +114,7 @@ export const ImgUpload = forwardRef<ImgInpuElementRef, ImgUploadType>(
               </ul>
             </ScrollList>
           )
-          : (
+          : ( // 리스트 형식
             <ul className="upload-lists">
               {
                 imgFileArr.map((imgItem, index) => (
@@ -174,6 +173,7 @@ interface FileItemType {
   index: number,
   handleClickEvent: (e: number) => void,
 }
+// 이미지 item 컴포넌트
 const FileItem = ({preview, imgData, index, handleClickEvent}:FileItemType) => {
   const handleItemClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     handleClickEvent(index)
@@ -212,6 +212,7 @@ const StyleImgUpload = styled.div`
         height:20px;
         border-radius:5px;
         background: rgba(0,0,0,.5);
+        transform:none;
         &::before, &::after{
           background:${colors.baseWhite};
         }
@@ -245,7 +246,6 @@ const StyleImgUpload = styled.div`
       }
     }
   }
-
   .input-upload {
     position:absolute;
     top:0;
