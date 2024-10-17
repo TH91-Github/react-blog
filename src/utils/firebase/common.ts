@@ -120,7 +120,7 @@ export const deleteStorageImg = async (imgListsPaths: string[]) => {
       return deleteObject(imgStorageRef); 
     });
     await Promise.all(deleteImgPromises); // 모든 처리를 기다려야하는 경우 map 사용 적절. foreach x
-    console.log("firebase storage 이미지들 삭제 성공");
+    // console.log("firebase storage 이미지들 삭제 성공");
   } catch (error) {
     console.error("❌ storage img 삭제 실패! ", error);
   }

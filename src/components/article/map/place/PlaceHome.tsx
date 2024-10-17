@@ -42,6 +42,22 @@ export default function PlaceHome({kakaoPlace, placeData}:PlaceDetailTabType) {
         <i className="icon-internet"><SvgInternet $fillColor={colors.yellow} /></i>
         <p><a href={urlHttps(kakaoPlace.url)} target="_blank" rel="noopener noreferrer" title={`${kakaoPlace.place_name} | 카카오맵 새 창`}>{urlHttps(kakaoPlace.url)}</a></p>
       </div>
+      {
+        placeData?.etcUrlList && (
+          <div className="">
+            {
+              placeData?.etcUrlList.map((etcItem,idx) => (
+                <p className="etc" key={etcItem+'-'+idx}>
+                  <a href={etcItem.url}>
+                    {etcItem.title}
+                  </a>
+                </p>
+              ))
+            }
+          </div>
+        )
+      }
+      
     </StylePlaceHome>
   )
 }

@@ -16,6 +16,7 @@ export const addDocPlace = async (collectionName:string, docId:string, place_nam
     reviewArr: [],
     galleryImgs:[],
     updateTime: new Date(),
+    etcUrlList:[],
   };
   try{
     await setDoc(placeDocRef, placeInitInfo);
@@ -57,7 +58,7 @@ export const getDocReview = async (
       );
   const reviewSnapshots = await getDocs(querySort);
   if (reviewSnapshots.empty) {
-    console.log('❌ 리뷰가 없어요! ');
+    // console.log('❌ 리뷰가 없어요! ');
     return { docs: [], lastDoc: null };
   }
 

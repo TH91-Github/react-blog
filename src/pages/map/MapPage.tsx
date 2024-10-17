@@ -43,13 +43,16 @@ export default function MapPage() {
   },[]);
 
   // 검색 결과
-  const searchResult = useCallback((val: string) => {
+  const searchResult = useCallback((val: string | null) => {
+    console.log(val)
     if (kakaoData.mapRef && val && mapPageRef.current) {
       try {
         kakaoFetchPlaces({kakaoData, keyword: val, kakaoUpdate});
       }catch (error) {
         console.log('검색 중 오류 발생 😲 \n 다시 시도해주세요 😢 '+ error);
       }
+    }else{ // 검색 리스트 초기화
+      setKakaoData(prev => ({...prev, markerList:[]}));
     }
   },[kakaoData, kakaoUpdate]);
 

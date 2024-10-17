@@ -98,9 +98,10 @@ const KakaoMapAPI = ({kakaoData, kakaoUpdate, activePoint, activeChange, placePo
             </CustomOverlayMap>
           ))
         }
-        {
-          <PicklatLngMarker map={map}  />
-        }
+        {/* 👆 클릭 지점 place */}
+        <PicklatLngMarker 
+          map={map}  
+          clickEvent={detailPopEvent} />
         {/* ⭐ 즐겨 찾기 */}
         <MyBookMarker 
           map={map} 

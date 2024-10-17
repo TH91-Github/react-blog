@@ -58,6 +58,7 @@ export interface PlaceDataTypeC {
   reviewArr: StringOnly[], // 리뷰 간략정보 : 리뷰 문서 id, user 정보
   galleryImgs:StringOnly[],
   updateTime: Date,
+  etcUrlList?:StringOnly[], // etcUrlList (기타 url, blog)정보 - id, url 
 }
 export interface ReviewAddDocTypeC { // place.ts 
   collectionName: string,

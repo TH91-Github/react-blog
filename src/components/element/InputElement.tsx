@@ -6,16 +6,17 @@ interface InputType {
   name?: string,
   type?: string,
   id?: string;
-  className?: string;
-  placeholder?: string;
-  prevVal?: string;
-  maxWidth?: string;
-  inputError?: boolean;
-  focusColor?: string;
-  keyEnter?: () => void;
-  changeEvent?: (e: string) => void;
-  focusEvent?: () => void;
-  blurEvent?: (e:React.FocusEvent<HTMLInputElement>) => void;
+  className?: string,
+  placeholder?: string,
+  prevVal?: string,
+  maxWidth?: string,
+  inputError?: boolean,
+  focusColor?: string,
+  keyEnter?: () => void,
+  changeEvent?: (e: string) => void,
+  focusEvent?: () => void,
+  removeEvent?: () => void,
+  blurEvent?: (e:React.FocusEvent<HTMLInputElement>) => void,
 }
 
 export interface InputElementRef {
@@ -26,7 +27,7 @@ export interface InputElementRef {
 export default(forwardRef<InputElementRef, InputType>( function InputText(
   {
     name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
-    keyEnter, changeEvent, focusEvent, blurEvent,
+    keyEnter, changeEvent, focusEvent, blurEvent, removeEvent
   }: InputType, ref ) {
   const [isFocus, setIsFocus] = useState<boolean>(prevVal ? true : false);
   const [val, setVal] = useState<string>(prevVal ?? "");
@@ -58,8 +59,9 @@ export default(forwardRef<InputElementRef, InputType>( function InputText(
     },500)
   },[changeEvent]);
 
-  const handleValRemove = () => {
+  const handleValRemove = () => { // 입력 초기화
     setVal('');
+    removeEvent && removeEvent();
     if (inputRef.current) {
       inputRef.current.focus();
     }

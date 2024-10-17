@@ -1,6 +1,6 @@
 import { colors, transitions } from "assets/style/Variable";
 import { ScrollList } from "components/element/ScrollList";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 import { MarkerType } from "types/kakaoComon";
@@ -8,12 +8,13 @@ import { kakaomapAddressFromCoords, kakaomapFetchAddress } from "utils/kakaomap/
 
 interface PicklatLngMarkerType {
   map: kakao.maps.Map | null,
+  clickEvent : (e:MarkerType) => void
 }
-export const PicklatLngMarker = ({map}:PicklatLngMarkerType) => {
+export const PicklatLngMarker = ({map, clickEvent}:PicklatLngMarkerType) => {
   const [pickPlace, setPickPlace] = useState<MarkerType[]|null>(null);
 
-  const handlePickPlaceClick = () => {
-    console.log('click')
+  const handlePickPlaceClick = (ePick:MarkerType) => {
+    clickEvent(ePick);
   }
   const handleCloseClick = () => {
     setPickPlace(null)
@@ -82,7 +83,7 @@ export const PicklatLngMarker = ({map}:PicklatLngMarkerType) => {
               <ScrollList
                 isScroll={true}
                 flexType={'y'}
-                scrollColor={colors.blue}>
+                scrollColor={colors.subTextColor}>
                 <ul>
                   {
                     pickPlace.map((pickMarker,idx) => {
@@ -90,7 +91,7 @@ export const PicklatLngMarker = ({map}:PicklatLngMarkerType) => {
                         <button 
                           type="button"
                           className="pick-btn"
-                          onClick={handlePickPlaceClick}>
+                          onClick={() => handlePickPlaceClick(pickMarker)}>
                           {pickMarker.place_name}
                         </button>
                       </li>
@@ -189,7 +190,11 @@ const StylePickMarker = styled.div`
     text-align:left;
     font-size:14px;
     white-space:nowrap;
-    text-overflow:ellipsis;  
+    text-overflow:ellipsis;
+    &:hover, &:focus {
+      background:${colors.blue};
+      color:${colors.originWhite};
+    }
   }
   .close-box {
     display:flex;
@@ -197,7 +202,7 @@ const StylePickMarker = styled.div`
     align-items:center;
     position:absolute;
     top:-1px;
-    right:-19px;
+    right:-14px;
     width:20px;
     height:20px;
     border-top-right-radius:4px;

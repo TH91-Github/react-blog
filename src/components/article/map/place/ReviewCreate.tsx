@@ -44,7 +44,7 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
         const imgArr = imgInputRef.current.getImgFileArr();
         let imgUrl:string[] = [];
         if(ratingInput){
-          ratingVal = parseInt(ratingInput.value);
+          ratingVal = parseFloat(ratingInput.value);
         }
         if(imgArr.length > 0){ // ✅ 이미지 등록
            // 이미지 - fire 스토리지 업로드 

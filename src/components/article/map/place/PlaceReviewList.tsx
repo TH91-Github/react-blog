@@ -65,7 +65,6 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       if (!placeData) {
         await placeAdd();
       }
-
       // 리뷰 추가 데이터
       const reviewInfo: ReviewAddDocTypeC = {
         collectionName: placeCategory,
@@ -83,7 +82,6 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
       updateQueryData(); // 데이터 갱신
     } catch (error) {
       dispatch(actionAlert({ titMessage: '❌ 리뷰 등록에 실패!!', isPopup: true}));
-      console.error(error);
     }
   }, [user, dispatch, placeData, placeAdd, placeCategory, id, updateQueryData]);
 

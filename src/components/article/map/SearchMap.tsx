@@ -7,7 +7,7 @@ import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 
 interface SearchMapType {
-  searchResult: (e: string) => void,
+  searchResult: (e: string | null) => void,
   isMoList: boolean,
   moListClick: () => void,
 }
@@ -39,7 +39,9 @@ export default function SearchMap({searchResult, isMoList, moListClick}:SearchMa
   const handleMoreClick = () => {
     moListClick();
   }
-
+  const inputRemove = () => { // input 검색어 삭제 시 초기화
+    searchResult(null);
+  }
   return (
     <StyleSearch className={isMoList ? 'active':''}>
       <span className={`map-search ${onVal ? 'on':''}`}>
@@ -49,7 +51,8 @@ export default function SearchMap({searchResult, isMoList, moListClick}:SearchMa
           placeholder={'📍 장소를 검색해보세요! 😁'} 
           blurEvent={blurEvent}
           keyEnter={handleEnter} 
-          focusColor={colors.yellow} />
+          focusColor={colors.yellow} 
+          removeEvent={inputRemove} />
       </span>
       <button 
         type="button"
