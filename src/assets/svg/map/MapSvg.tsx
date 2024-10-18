@@ -1,8 +1,6 @@
 import React from "react"
 import { _black, StyledSvg, SvgPropsType } from "../common/CommonSvg"
 
-
-
 // heart, 하트, 좋아요, like
 export const SvgHeart = React.memo(({$fillColor}:SvgPropsType ) => {
   return <StyledSvg $fillColor={$fillColor || _black }  viewBox="0 0 32 32" fill="none">

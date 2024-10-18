@@ -187,11 +187,11 @@ const StyleWrap = styled.div`
     max-width:${breakpoints.maxPc}px;
     height:100svh;
     margin:0 auto;
-    padding-top:51px;
+    padding-top:65px;
     &::before {
       position:absolute;
       z-index:3;
-      top:51px;
+      top:65px;
       left:0%;
       width:100%;
       height:1px;
@@ -237,9 +237,9 @@ const StyleWrap = styled.div`
     .map-content{
       display:flex;
       gap:5px;
-      top:60px;
+      top:75px;
       left:30px;
-      height:calc(100% - 90px);
+      height:calc(100% - 130px);
     }
     .content {
       display:flex;
@@ -269,6 +269,18 @@ const StyleWrap = styled.div`
     100% {
       transform: translateX(-50%) scale(1.5);
       opacity:0;
+    }
+  }
+  ${media.tab}{
+    .map-inner{
+      padding-top:50px;
+      &::before {
+        top:51px;
+      }
+    }
+    .map-content{
+      top:60px;
+      height:calc(100% - 100px);
     }
   }
   ${media.mo}{

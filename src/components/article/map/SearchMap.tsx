@@ -112,7 +112,7 @@ const StyleSearch = styled.div`
   }
   ${media.mo}{
     padding:5px 15px 5px 50px;
-    border-radius:5px;
+    border-radius:0px;
     ${(props)=> props.theme.shadow};
     .map-search {
       flex-grow:1;
