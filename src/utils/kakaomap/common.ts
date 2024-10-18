@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux";
-import { actionAlert, AppDispatch } from "store/store";
 import { StringOnly, StringOnlyArr } from "types/baseType";
 import { KakaoMapBasicType } from "types/kakaoComon";
 import { isMobileSizeChk } from "utils/common";

@@ -1,4 +1,4 @@
-import { colors, shadow, transitions } from "assets/style/Variable";
+import { colors, transitions } from "assets/style/Variable";
 import { SvgStar } from "assets/svg/common/CommonSvg";
 import { useCallback, useEffect, useState } from "react";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
@@ -13,7 +13,6 @@ interface MyBookMarkerType {
 }
 export default function MyBookMarker({map, clickEvent}:MyBookMarkerType) {
   const {user} = useSelector((state: RootState) => state.storeUserLogin);
-  const [isPopup, setIsPopup] = useState(false);
   const [zoom, setZoom] = useState(0);
 
   const handleZoomChange = useCallback(() =>{
@@ -42,7 +41,7 @@ export default function MyBookMarker({map, clickEvent}:MyBookMarkerType) {
               clickable={true}>
                 <StyleBookMarker 
                   $bgColor={colors.blue}
-                  className={`marker ${isPopup ? 'active' :''}`}>
+                  className="marker">
                   <span className="point-bar"></span>
                   <button 
                     type="button" 

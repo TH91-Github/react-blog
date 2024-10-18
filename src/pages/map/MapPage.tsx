@@ -46,7 +46,7 @@ export default function MapPage() {
   },[]);
 
   // 검색결과 place 없을 경우
-  const kakaoSearchError = () => {
+  const kakaoSearchError = useCallback(() => {
     let autoTime = 2000;
     const searchInput = searchInputRef.current?.getInputElement();
     dispatch(actionAlert({titMessage:'장소를 찾을 수 없어요..🥹',isPopup:true, autoClose:autoTime}));
@@ -54,7 +54,7 @@ export default function MapPage() {
       setKakaoData(prev => ({...prev, markerList:[]})) // 목록 초기화
       searchInput?.focus();
     },autoTime + 100);
-  }
+  },[dispatch]);
 
   // ✅ 검색 결과 - 업데이트
   const searchResult = useCallback((val: string | null) => {
@@ -67,7 +67,7 @@ export default function MapPage() {
     }else{ // 검색 리스트 초기화
       setKakaoData(prev => ({...prev, markerList:[]}));
     }
-  },[kakaoData, kakaoUpdate]);
+  },[kakaoData, kakaoUpdate, kakaoSearchError]);
 
 
   // ✅ 클릭한 place 상세 정보 열기 및 닫기 

@@ -40,7 +40,7 @@ export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
         layerPopupClose && layerPopupClose();
       }
     }, popAniSecond + 50)
-  }, [layerPopupClose]);
+  }, [layerPopupClose, confirmEvent]);
 
   // 닫기 
   const handleClose = useCallback((confirm?:boolean | unknown) => {

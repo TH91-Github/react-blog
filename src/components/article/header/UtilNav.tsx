@@ -1,8 +1,6 @@
-import React from 'react';
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import HeaderSearch from "./HeaderSearch";
 import ThemeBtn from "./ThemeBtn";
 import UserLogin from "./UserLogin";
 

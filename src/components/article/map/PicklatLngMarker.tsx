@@ -50,7 +50,9 @@ export const PicklatLngMarker = ({map, clickEvent}:PicklatLngMarkerType) => {
   },[map])
 
   const handleZoomChange = useCallback(() =>{
-    setPickPlace(null)
+    if(map){
+      setPickPlace(null)
+    }
   },[map])
 
   useEffect(() => {

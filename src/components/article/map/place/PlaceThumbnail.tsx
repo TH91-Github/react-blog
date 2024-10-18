@@ -1,4 +1,3 @@
-import { media } from "assets/style/Variable"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { StringOnly } from "types/baseType"

@@ -45,7 +45,7 @@ export default function SearchMap({searchResult, inputRef, isMoList, moListClick
   }
   useEffect(()=>{
     if(refInput.current) inputRef(refInput.current);
-  },[refInput])
+  },[refInput, inputRef])
   return (
     <StyleSearch className={isMoList ? 'active':''}>
       <span className={`map-search ${onVal ? 'on':''}`}>

@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
-import LayerPopup, { LayerRefType } from "./LayerPopup";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actionAlert, AppDispatch, RootState } from "store/store";
-import InputElement, { InputElementRef } from "./InputElement";
 import { alertCommonType } from "reducers/types";
+import { actionAlert, AppDispatch, RootState } from "store/store";
+import LayerPopup, { LayerRefType } from "./LayerPopup";
 
 
 // ✅ 전체 화면 영역 fixed - 바깥 위치하기 위해 컴포넌트화
