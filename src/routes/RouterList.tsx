@@ -18,41 +18,40 @@ export const routerList = [
   {
     id: "Resume",
     path: "resume",
-    title: "준비",
+    title: "🧾이력서",
     view:['main-th-blog','localhost'],
     element: <ResumePage />,
   },
   {
     id: "Weather",
     path: "weather",
-    title: '날씨',
+    title: '🌤️날씨',
     element: <WeatherPage />,
     view:['localhost'],
   },
   {
     id: "Map",
     path: "map",
-    title: '지도',
+    title: '🗺️지도',
     element: <MapPage />,
   },
   {
     id: "Portfolio",
     path: "portfolio",
     view: false,
-    title: '포트폴리오',
+    title: '🧾포트폴리오',
     element: <PortfolioPage />,
   },
   {
     id: "Study",
     path: "study",
-    title: '스터디',
     element: <StudyPage />,
     view:['localhost'],
     children:[
       {
         id:"Study Detail",
         path:"detail/:id",
-        title:"스터디 상세페이지",
+        title:"📚스터디",
         element: <StudyPage />
       }
     ]

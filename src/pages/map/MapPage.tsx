@@ -163,11 +163,11 @@ const StyleWrap = styled.div`
     max-width:${breakpoints.maxPc}px;
     height:100svh;
     margin:0 auto;
-    padding-top:65px;
+    padding-top:51px;
     &::before {
       position:absolute;
       z-index:3;
-      top:65px;
+      top:51px;
       left:0%;
       width:100%;
       height:1px;
@@ -213,9 +213,9 @@ const StyleWrap = styled.div`
     .map-content{
       display:flex;
       gap:5px;
-      top:80px;
+      top:60px;
       left:30px;
-      height:calc(90% - 40px);
+      height:calc(100% - 90px);
     }
     .content {
       display:flex;

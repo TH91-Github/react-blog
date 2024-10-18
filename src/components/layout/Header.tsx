@@ -10,10 +10,13 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import { LocationType } from "types/baseType";
 import { rem } from "utils/common";
+import { routerList } from 'routes/RouterList';
 
 type HeaderType= {
   location : LocationType
 }
+const indexTitle = process.env.REACT_APP_TITLE ?? '🖥️';
+
 export default function Header({location}:HeaderType){
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [isMoGnb, setIsMoGnb] = useState(false);
@@ -62,6 +65,39 @@ export default function Header({location}:HeaderType){
     mobileScrollOff(!isMoGnb);
     setIsMoGnb(!isMoGnb);
   }
+
+  const titleChange = useCallback(() => {
+    const pathNameArr = location.pathname.slice(1).split("/"); 
+    const pathName = pathNameArr[pathNameArr.length-1];
+    const routerPath = routerList.map(routerItem => {
+      let onRouter = null;
+      if(routerItem.path && pathNameArr.includes(routerItem.path)){
+        if(!routerItem.title && routerItem.children){
+          const childrenList = routerItem.children?.map(item => item.path ? item.path  : 'index');
+          if(childrenList?.includes(pathName)){
+            onRouter = routerItem.children[childrenList?.indexOf(pathName)]
+          }else{
+            onRouter = routerItem.children[0]
+          }
+        }else{
+          onRouter = routerItem;
+        }
+      }
+      return onRouter
+    })
+    .filter(Boolean)[0]; // null 제거하기
+
+    // document.title =
+    routerPath
+      ? document.title = `${indexTitle}_${routerPath.title}`
+      : document.title = `${indexTitle} - 😁`;
+    console.log(routerPath)
+
+
+  },[location])
+  useEffect(()=>{
+    titleChange();
+  },[location,titleChange])
 
   function mobileScrollOff(chkOnOff:boolean){ // mo 스크롤 막기
     const $Body = document.body;

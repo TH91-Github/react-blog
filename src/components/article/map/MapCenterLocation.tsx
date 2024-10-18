@@ -64,7 +64,7 @@ export default function MapCenterLocation({ map, mapCenterUpdate }: MapCenterLoc
 const StyleMapCenterAddress = styled.div`
   position:absolute;
   z-index:2;
-  top:15px;
+  top:10px;
   left:50%;
   transform: translateX(-50%);
   .text {
