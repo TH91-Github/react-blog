@@ -1,17 +1,18 @@
 import { colors, media, transitions } from "assets/style/Variable";
 import { SvgSearch } from "assets/svg/common/CommonSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 
 interface SearchMapType {
   searchResult: (e: string | null) => void,
+  inputRef: (target:InputElementRef) => void,
   isMoList: boolean,
   moListClick: () => void,
 }
-export default function SearchMap({searchResult, isMoList, moListClick}:SearchMapType){
+export default function SearchMap({searchResult, inputRef, isMoList, moListClick}:SearchMapType){
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const dispatch = useDispatch<AppDispatch>();
   const refInput = useRef<InputElementRef>(null);
@@ -42,6 +43,9 @@ export default function SearchMap({searchResult, isMoList, moListClick}:SearchMa
   const inputRemove = () => { // input 검색어 삭제 시 초기화
     searchResult(null);
   }
+  useEffect(()=>{
+    if(refInput.current) inputRef(refInput.current);
+  },[refInput])
   return (
     <StyleSearch className={isMoList ? 'active':''}>
       <span className={`map-search ${onVal ? 'on':''}`}>

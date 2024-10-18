@@ -1,13 +1,16 @@
+import { useDispatch } from "react-redux";
+import { actionAlert, AppDispatch } from "store/store";
 import { StringOnly, StringOnlyArr } from "types/baseType";
 import { KakaoMapBasicType } from "types/kakaoComon";
 import { isMobileSizeChk } from "utils/common";
 
 interface kakaoFetchPlacesType extends KakaoMapBasicType {
-  keyword: string;
+  keyword: string,
+  errorEvent: () => void,
 }
 
 // ✅ 키워드 검색
-export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPlacesType) => {
+export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate, errorEvent}:kakaoFetchPlacesType) => {
   const map = kakaoData.mapRef;
   const ps = new window.kakao.maps.services.Places();
   if(!map) return
@@ -48,7 +51,7 @@ export const kakaoFetchPlaces = ({kakaoData, keyword, kakaoUpdate}:kakaoFetchPla
         // 사이드 리스트 - 센터 보정
         mapCenterSetting(map, -135)
       }else{
-        console.log('찾을 수 없습니다.')
+        errorEvent();
       }
     },
     {

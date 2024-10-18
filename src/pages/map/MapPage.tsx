@@ -5,9 +5,10 @@ import MyBookmarkList from 'components/article/map/MyBookmarkList';
 import PlaceDetailPage from 'components/article/map/place/PlaceDetailPage';
 import SearchList from 'components/article/map/SearchList';
 import SearchMap from 'components/article/map/SearchMap';
+import { InputElementRef } from 'components/element/InputElement';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionAlert, AppDispatch, RootState } from 'store/store';
 import styled from "styled-components";
 import { MapDataType, MarkerType, PlacePopStateType } from 'types/kakaoComon';
 import { DateChange } from 'utils/common';
@@ -15,7 +16,9 @@ import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
+  const dispatch = useDispatch<AppDispatch>();
   const mapPageRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<InputElementRef|null>(null);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const [kakaoData, setKakaoData] = useState<MapDataType>({
     mapRef: null,
@@ -42,12 +45,22 @@ export default function MapPage() {
     }
   },[]);
 
-  // 검색 결과
+  // 검색결과 place 없을 경우
+  const kakaoSearchError = () => {
+    let autoTime = 2000;
+    const searchInput = searchInputRef.current?.getInputElement();
+    dispatch(actionAlert({titMessage:'장소를 찾을 수 없어요..🥹',isPopup:true, autoClose:autoTime}));
+    setTimeout(()=>{
+      setKakaoData(prev => ({...prev, markerList:[]})) // 목록 초기화
+      searchInput?.focus();
+    },autoTime + 100);
+  }
+
+  // ✅ 검색 결과 - 업데이트
   const searchResult = useCallback((val: string | null) => {
-    console.log(val)
     if (kakaoData.mapRef && val && mapPageRef.current) {
       try {
-        kakaoFetchPlaces({kakaoData, keyword: val, kakaoUpdate});
+        kakaoFetchPlaces({kakaoData, keyword: val, kakaoUpdate, errorEvent:kakaoSearchError});
       }catch (error) {
         console.log('검색 중 오류 발생 😲 \n 다시 시도해주세요 😢 '+ error);
       }
@@ -56,12 +69,20 @@ export default function MapPage() {
     }
   },[kakaoData, kakaoUpdate]);
 
-  // ✅ 클릭한 장소 상세 정보
+
+  // ✅ 클릭한 place 상세 정보 열기 및 닫기 
   const placePopChange = (ePlace:MarkerType | null) => {
     setPlacePop( ePlace ? { place:{...ePlace}, show: true } : {place:null, show:false});
   };
 
-  // 검색 리스트 place 선택 좌표
+  // 검색 input ref update
+  const inputRefUpdate = (searchInput:InputElementRef) => { 
+    if(!searchInputRef.current){
+      searchInputRef.current = searchInput;
+    }
+  }
+
+  // 검색 결과 리스트 장소 선택
   const listClick = useCallback((selectID:string) => {
     if(selectID !== placePop.place?.id){ // 다른 place를 클릭 시 팝업 off
       setPlacePop({place:null, show:false});
@@ -72,10 +93,12 @@ export default function MapPage() {
     setActivePoint(selectID)
   },[placePop, isMobile]);
 
-  const activeChange = () => { // 활성 마커 닫기 누를 경우 or 마커 비활성하기
+  // 지도상 활성 마커 닫기 누를 경우 or 마커 비활성하기
+  const activeChange = () => { 
     setActivePoint(null)
   }
 
+  // ✅ MO일 경우 리스트가 안보이기 때문.
   const moListClick = () =>{ // Mo 팝업 리스트 창
     if(isMobile){ 
       setIsMoList(prev => !prev);
@@ -110,6 +133,7 @@ export default function MapPage() {
           <div className="content">
             {/* 검색 */}
             <SearchMap 
+              inputRef={inputRefUpdate}
               searchResult={searchResult}
               isMoList={isMoList}
               moListClick={moListClick} />

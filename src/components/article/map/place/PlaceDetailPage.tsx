@@ -145,6 +145,8 @@ const StylePlaceDetail = styled.div`
   }
   .place-tit {
     flex-grow:1;
+    flex-basis:0;
+    flex-shrink: 0;
     position:relative;
     padding-left:20px;
     &::before {
@@ -189,7 +191,9 @@ const StylePlaceDetail = styled.div`
     }
   }
   .place-bookmark {
+    flex-shrink: 0;
     flex-basis: 20px;
+    width:20px;
     padding:5px 0;
   }
   .place-cont {
