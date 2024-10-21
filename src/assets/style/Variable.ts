@@ -36,6 +36,7 @@ export const colors = {
   originBlack: "#000000",
   bgSubBlack: "#111320",
   bgContBlack: "#1a1e31",
+  bgGray: "#eeeef0",
   // point
   green: "#0C9463",
   yellow: "#FFB000",

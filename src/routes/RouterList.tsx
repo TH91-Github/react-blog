@@ -8,6 +8,7 @@ import MemberPage from "pages/member/MemberPage";
 import SignIn from "pages/member/SignIn";
 import SignUp from "pages/member/SignUp";
 import StudyPage from "pages/study/StudyPage";
+import { HubRoomPage } from 'pages/hubRoom/HubRoomPage';
 
 export const routerList = [
   { // Main
@@ -36,11 +37,11 @@ export const routerList = [
     element: <MapPage />,
   },
   {
-    id: "Portfolio",
-    path: "portfolio",
-    view: false,
-    title: '🧾포트폴리오',
-    element: <PortfolioPage />,
+    id: "Hub-Room",
+    path: "HubRoom",
+    title: '🗂️ 허브 (팀)룸',
+    view:['localhost'],
+    element: <HubRoomPage />,
   },
   {
     id: "Study",

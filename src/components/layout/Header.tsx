@@ -36,7 +36,7 @@ export default function Header({location}:HeaderType){
 
   const handleScroll = useCallback(() => {
     if(location.pathname === "/" && headerTop.current === 0) headerTopChk();
-    if(window.scrollY < headerTop.current + 10){
+    if(window.scrollY < headerTop.current + 1){
       setIsFixed(false)
       headerRef.current!.style.transform = `translateY(-${window.scrollY}px)`;
     }else{
@@ -87,12 +87,9 @@ export default function Header({location}:HeaderType){
     })
     .filter(Boolean)[0]; // null 제거하기
 
-    // document.title =
     routerPath
       ? document.title = `${indexTitle}_${routerPath.title}`
       : document.title = `${indexTitle} - 😁`;
-    console.log(routerPath)
-
 
   },[location])
   useEffect(()=>{
@@ -117,7 +114,7 @@ export default function Header({location}:HeaderType){
   };
   return (
     <StyledHeader
-      className={`${!sticky ? "main-header" : ""} ${isMoGnb ? "gnb-on" : ""} ${isFixed ? "is-fixed" : ""}`}
+      className={`${!sticky?"main-header":""} ${isMoGnb?"gnb-on" :""} ${isFixed ?"is-fixed":""}`}
       ref={headerRef}>
       <div className="header-wrap" >
         <div className="header-inner">
@@ -181,7 +178,7 @@ const StyledHeader = styled.header`
     .header-wrap{
       background:${props => props.theme.opacityBg};
       ${props => props.theme.shadowLine};
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(4px);
     }
     .header-inner{
       padding:0 30px;
@@ -189,8 +186,11 @@ const StyledHeader = styled.header`
     }
     .gnb-link{
       font-size:18px;
-      color: ${colors.baseBlack};
+      color: ${(props)=> props.theme.color};
       text-shadow: unset;
+      &.active { 
+        color:${colors.purple};
+      }
       &:hover{
         color:${colors.yellow};
          text-shadow:${shadow.textBaseW};
