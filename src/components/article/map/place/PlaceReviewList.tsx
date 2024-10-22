@@ -1,4 +1,4 @@
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
@@ -156,7 +156,7 @@ const StylePlaceReviewList = styled.div`
   flex-direction:column;
   position:relative;
   height:100%;
-  padding-top:20px;
+  padding:20px 0 0;
   .review-inner {
     flex-grow:1;
     padding:0 10px;
@@ -202,5 +202,8 @@ const StylePlaceReviewList = styled.div`
     padding:15px;
     text-align:center;
     line-height:1.5;
+  }
+  ${media.mo}{
+    padding:20px 0 30px;
   }
 `;

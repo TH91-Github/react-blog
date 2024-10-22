@@ -19,8 +19,9 @@ pc: 768 ~
 tab: 768 ~ 1139
 mo: ~ 767
 onlyMo: ~ 449
-*/ 
+*/
 export const media : StringOnly = {
+  minPc:`@media screen and (min-width:${breakpoints.pc + 'px'})`,
   onlyPc : `@media screen and (min-width:${breakpoints.tab + 'px'})`,
   pc: `@media screen and (min-width:${breakpoints.mo + 'px'})`,
   tab: `@media screen and (min-width:${breakpoints.mo + 'px'}) and (max-width: ${breakpoints.tab-1 + 'px'})`,
@@ -92,6 +93,7 @@ export const lightTheme = {
   gradientBg:colors.gradientWhite,
   lineColor:colors.baseBlack,
   color:colors.baseBlack,
+  colorChange:colors.baseWhite,
   bgOrigin:colors.originWhite,
   bgColor:colors.baseWhite,
   opacityBg:'rgba(255,255,255,.7)',
@@ -106,6 +108,7 @@ export const darkTheme = {
   gradientBg:colors.gradientDark,
   lineColor:colors.baseWhite,
   color:colors.baseWhite,
+  colorChange:colors.baseBlack,
   bgOrigin:colors.baseBlack,
   bgColor:colors.baseBlack,
   opacityBg:'rgba(17,19,32,.7)',

@@ -2,13 +2,13 @@ import React from 'react';
 import MainPage from "pages/main/MainPage";
 import ResumePage from "pages/resume/ResumePage";
 import MapPage from "pages/map/MapPage";
-import PortfolioPage from "pages/portfolio/PortfolioPage";
 import WeatherPage from "pages/weather/WeatherPage";
 import MemberPage from "pages/member/MemberPage";
 import SignIn from "pages/member/SignIn";
 import SignUp from "pages/member/SignUp";
 import StudyPage from "pages/study/StudyPage";
-import { HubRoomPage } from 'pages/hubRoom/HubRoomPage';
+import { SquadRoomPage } from 'pages/room/SquadRoomPage';
+
 
 export const routerList = [
   { // Main
@@ -37,11 +37,11 @@ export const routerList = [
     element: <MapPage />,
   },
   {
-    id: "Hub-Room",
-    path: "HubRoom",
-    title: '🗂️ 허브 (팀)룸',
+    id: "Room",
+    path: "SquadRoom",
+    title: '🗂️ 팀 방',
     view:['localhost'],
-    element: <HubRoomPage />,
+    element: <SquadRoomPage />,
   },
   {
     id: "Study",

@@ -222,8 +222,8 @@ const StylePlaceDetail = styled.div`
     }
   }
   ${media.mo} {
-    position:fixed;
-    top:60px;
+    position:absolute;
+    top:0;
     z-index:104;
     width:100vw;
     height:calc(100svh - 60px);

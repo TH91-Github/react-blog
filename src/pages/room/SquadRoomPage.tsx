@@ -1,10 +1,11 @@
-import { breakpoints, colors, transitions } from "assets/style/Variable";
-import { HubRoomNav } from "components/article/hubRoom/HubRoomNav";
+import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
+import { FolderList } from "components/article/room/FolderLists";
+import { SquadRoomNav } from "components/article/room/SquadRoomNav";
 import { ListBtnActive } from "components/effect/ListBtnActive";
 import { useState } from "react";
 import styled from "styled-components";
 
-export const HubRoomPage = () => {
+export const SquadRoomPage = () => {
   const [roomViewType, setRoomViewType] = useState([
     { id:'view-1', title:'폴더로 보기', active:true, },
     { id:'view-2', title: '리스트로 보기', active:false,}
@@ -20,12 +21,12 @@ export const HubRoomPage = () => {
     );
   }
   return (
-    <StyledHubRoomPage className="hub-room">
-      <div className="hub-room-inner">
+    <StyledSquadRoomPage className="squad-room">
+      <div className="squad-room-inner">
         {/* left - 사이드 바 */}
-        <div className="hub-room-nav">
-          <h2 className="hub-room-title">팀 룸</h2>
-          <HubRoomNav />
+        <div className="squad-room-nav">
+          <h2 className="squad-room-title">팀 룸</h2>
+          <SquadRoomNav />
           <span>
             {/* 홈에 있을 경우 전체 팀룸 보여주기. */}
             <button 
@@ -49,15 +50,15 @@ export const HubRoomPage = () => {
           </ul>
         </div>
         {/* center - content */}
-        <div className="hub-room-content">
-          <div className="team-room">
-            <div className="team-head">
+        <div className="squad-room-content">
+          <div className="room-wrap">
+            <div className="room-head">
               <div className="title-info">
                 <h3 className="title">
-                  참여하고 있는 
-                  <span className="room-size">0</span>
+                  함께 하고 있는 방
+                  <span className="room-size">{ false && 0}</span>
                 </h3>
-                <p className="desc"></p>
+                <p className="desc">함께 공간을 만들어서 공유하세요! 😉</p>
               </div>
               <div className="room-btns">
                 <ListBtnActive 
@@ -65,33 +66,54 @@ export const HubRoomPage = () => {
                   clickEvent={roomViewActive}/>
                 <button 
                   type="button"
-                  className="create-team">
+                  className="create-room">
                     <span>+ 팀룸 만들기</span>
                 </button>
               </div>
             </div>
-            <div className={roomViewType.find((roomType,idx) => roomType.active)?.id === 'view-1' ? '':'lists' }>
-              dd
+            <div 
+              className={`room-category ${roomViewType.find(roomType => roomType.active)?.id === 'view-1' ? '':'lists'}`}>
+              <div className="room-lists">
+                {/* 여행 */}
+                <div className="room-lists-item">
+                  <FolderList />
+                </div>
+                {/* 금전 */}
+                <div className="room-lists-item">
+                  <FolderList />
+                </div>
+                {/* 캘린더 */}
+                <div className="room-lists-item">
+                  <FolderList />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </StyledHubRoomPage>
+    </StyledSquadRoomPage>
   )
 }
-const StyledHubRoomPage = styled.div`
+const StyledSquadRoomPage = styled.div`
   overflow-x:hidden;
   position:relative;
   padding-top:65px;
   background:${(props)=> props.theme.bgColor};
-  .hub-room-inner {
+  &::before{
+    position:absolute;
+    width:100%;
+    height:250px;
+    background:${(props)=> props.theme.type ==='dark' ? colors.baseWhite : colors.baseBlack};
+    content:'';
+  }
+  .squad-room-inner {
     position:relative;
     width:100%;
     max-width:${breakpoints.pc}px;
     padding:0 30px;
     margin:0 auto;
   }
-  .hub-room-nav {
+  .squad-room-nav {
     display:flex;
     justify-content:center;
     flex-direction: column;
@@ -102,20 +124,28 @@ const StyledHubRoomPage = styled.div`
     padding:0 0 0 30px;
     height:100%;
   }
-  .hub-room-content {
-    padding: 30px 0 30px 120px;
+  .squad-room-content {
+    padding: 60px 0 30px 120px;
     height:200svh;
     border:1px solid blue;
   }
-  .team-room{
+  .room-wrap{
     
   }
-  .team-head {
+  .room-head {
     display:flex;
     justify-content: space-between;
   }
-  .title {
-    
+  .title-info {
+    .title{
+      font-size:24px;
+      color:${(props)=> props.theme.colorChange};
+    } 
+    .desc{
+      margin-top:10px;
+      font-size:14px;
+      color:${colors.lineColor};
+    }
   }
   .room-size {
     font-size:14px;
@@ -131,8 +161,7 @@ const StyledHubRoomPage = styled.div`
       }
     }
   }
-  
-  .create-team {
+  .create-room {
     padding:5px;
     border-radius:5px;
     border:1px solid ${colors.blue};
@@ -143,6 +172,27 @@ const StyledHubRoomPage = styled.div`
     &:hover, &:focus {
       background:${colors.originWhite};
       color:${colors.blue};
+    }
+  }
+  .room-category{
+    margin-top:10px;
+  }
+  .room-lists {
+    display:flex;
+    gap:30px;
+    width:max-content;
+    &-item{ 
+      width:200px;
+    }
+  }
+  ${(props)=> props.theme.type === 'dark' && `
+    .btn-lists, .create-room {
+      box-shadow:${shadow.bgBase};
+    }
+  `}
+  ${media.minPc}{
+    .squad-room-content{
+      padding-left:0;
     }
   }
 `;

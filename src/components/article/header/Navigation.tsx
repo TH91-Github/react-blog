@@ -1,4 +1,4 @@
-import { colors, media, shadow } from "assets/style/Variable";
+import { colors, media, shadow, transitions } from "assets/style/Variable";
 import { NavLink } from "react-router-dom";
 import { routerList } from "routes/RouterList";
 import styled from "styled-components";
@@ -44,26 +44,46 @@ const StyledNav = styled.div`
       gap:20px;
       align-items:center;
       position:relative;
+      & > li {
+        overflow:hidden;
+      }
     }
     &-link {
       display:inline-block;
+      position:relative;
       padding:20px 0;
       font-weight:600;
       font-size:${rem(21)};
       color:${colors.baseWhite};
       text-shadow:${shadow.textBase};
       transition:all .3s;
-      &:hover{
-        color:${colors.yellow};
-        text-shadow:${shadow.textBaseW}, rgba(127, 127, 127, 0.4) 1px 1px, rgba(127, 127, 127, 0.3) 2px 2px;
+      &::after {
+        position:absolute;
+        left:0;
+        bottom:0;
+        width:100%;
+        height:4px;
+        border-top-right-radius:50px;
+        border-top-left-radius:50px;
+        background:${colors.purple};
+        transition:${transitions.base};
+        transform:translateY(5px); scale(0);
+        content:'';
+      }
+      &:hover, &:focus{
+        &::after{
+          transform:translateY(0); scale(1);
+        }
       }
       &.active {
         color: ${colors.purple};
         text-shadow:${shadow.textBase};
+        &::after{
+          transform:translateY(0); scale(1);
+        }
       }
     }
   }
-
   ${media.tab}{
     .gnb{
       &-lists {
@@ -112,6 +132,9 @@ const StyledNav = styled.div`
         font-size:${rem(16)};
         font-weight:500;
         color:${props => props.theme.color};
+        &::after {
+          height:2px;
+        }
       }
     }
   }

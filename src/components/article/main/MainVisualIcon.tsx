@@ -26,6 +26,7 @@ const StyleMainIcon = styled.div`
   left:0;
   width:100%;
   height:100%;
+  pointer-events:none;
   & > .img { 
     position:absolute;
   }
@@ -49,7 +50,7 @@ const StyleMainIcon = styled.div`
   .icon3 {
     bottom:45%;
     right:40%;
-    animation: mainIconAni1 15s ease infinite;
+    animation: mainIconAni3 10s ease infinite;
   }
   .icon4 {
     bottom:10%;
@@ -64,13 +65,19 @@ const StyleMainIcon = styled.div`
   }
   @keyframes mainIconAni1 {
     0% { transform: rotate(0); }
-    40% { transform: translateY(-10px) rotate(-10deg); }
+    40% { transform: translateY(-15px) rotate(-10deg); }
     80% { transform: rotate(15deg); }
     100% { transform: translateY(0px) rotate(0deg); } 
   }
   @keyframes mainIconAni2 {
     0% { transform: rotate(0); }
-    40% { transform: translateY(-10px) rotate(-8deg); }
+    40% { transform: translateY(-20px) rotate(-8deg); }
+    80% { transform: rotate(15deg); }
+    100% { transform: translateY(0px) rotate(0deg); } 
+  }
+  @keyframes mainIconAni3 {
+    0% { transform: rotate(0); }
+    40% { transform: translateY(-25px) rotate(-15deg); }
     80% { transform: rotate(15deg); }
     100% { transform: translateY(0px) rotate(0deg); } 
   }

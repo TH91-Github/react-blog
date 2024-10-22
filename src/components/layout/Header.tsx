@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
 import Navigation from "components/article/header/Navigation";
 import UtilNav from "components/article/header/UtilNav";
-import Logo from "components/element/Logo";
+import Logo from "components/effect/Logo";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
@@ -192,8 +192,8 @@ const StyledHeader = styled.header`
         color:${colors.purple};
       }
       &:hover{
-        color:${colors.yellow};
-         text-shadow:${shadow.textBaseW};
+        color:${colors.purple};
+        text-shadow:${shadow.textBaseW};
       }
     }
   }

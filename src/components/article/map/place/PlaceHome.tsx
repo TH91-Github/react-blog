@@ -1,5 +1,5 @@
 
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import RatingStar from "components/element/RatingStar";
 import styled from "styled-components";
 import { PlaceDetailTabType } from "./PlaceDetailTab";
@@ -66,7 +66,7 @@ const StylePlaceHome = styled.div`
   display:flex;
   flex-direction: column;
   gap:20px;
-  padding:20px 10px 10px;
+  padding:20px 10px;
   & > div {
     position:relative;
     padding-left:25px;
@@ -149,5 +149,8 @@ const StylePlaceHome = styled.div`
       overflow:hidden;
       text-overflow:ellipsis;
     }
+  }
+  ${media.mo} {
+    padding:20px 15px 30px;
   }
 `;

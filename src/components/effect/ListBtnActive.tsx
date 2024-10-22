@@ -4,15 +4,17 @@ import styled from "styled-components";
 
 interface BtnDataType {
   active: boolean,
+  title:string,
   [key: string]: string | boolean,
 }
 
 interface ListBtnActiveType { // title, active,
   btnData:BtnDataType[],
   activeColor?:string,
+  children?: React.ReactNode,
   clickEvent: (activeNumber:number) => void,
 }
-export const ListBtnActive = ({btnData, activeColor, clickEvent}:ListBtnActiveType) => {
+export const ListBtnActive = ({btnData, activeColor, children, clickEvent}:ListBtnActiveType) => {
   const listWrapRef = useRef<HTMLDivElement>(null);
   const [activeStyle, setActiveStyle] = useState({left:5, width:16, height:16 });
 
@@ -73,8 +75,19 @@ export const ListBtnActive = ({btnData, activeColor, clickEvent}:ListBtnActiveTy
             type="button" 
             key={idx}
             className={`btn ${btnItem.active?'active':''}`}
+            title={btnItem.title ?? '선택'}
             onClick={(e)=>handleClickl(e, idx)}>
-            {btnItem.title}
+            {
+              !children ? ( // 데이터 title 값 전달 시 
+                <span>{btnItem.title}</span>
+              )
+              : ( // 아이콘, 다른 유형의 버튼으로 사용.
+                <span>{children}</span>
+              )
+            }
+            {
+              btnItem.active && <span className="blind">선택 됨</span>
+            }
           </button>
         ))
       }
@@ -110,8 +123,12 @@ const StyleListBtnActive = styled.div<StyleListBtnActiveType>`
   }
   & > button {
     position:relative;
-    padding:2px 4px;
-    line-height:1;
     z-index:2;
+    padding:2px 4px;
+    color:${colors.subTextColor};
+    line-height:1;
+    &.active {
+      color:${colors.baseBlack};
+    }
   }
 `;
