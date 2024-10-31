@@ -2,7 +2,7 @@
 // ❌ 아직 완성되지 않았음
 
 //기상청 격자 변환 함수
-import { DateChange } from "utils/common";
+import { dateChange } from "utils/common";
 type Coordinates = {
   lat?: number;
   lng?: number;
@@ -86,7 +86,7 @@ export function dfs_xy_conv(code: "toXY" | "toLL", v1: number, v2: number): Coor
 }
 
 export function weatherClock(){ // 0000 ~ 2400 시간 체크
-  const nowTime = Number(DateChange('hours'));
+  const nowTime = Number(dateChange('hours'));
   return nowTime < 10 ? `0${nowTime}00`: `${nowTime}00`
 }
 

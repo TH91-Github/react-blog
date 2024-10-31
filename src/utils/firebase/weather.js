@@ -1,3 +1,4 @@
+
 // 컬렉션, 문서 1~3에 따라 data 가져오기
 export const getdepthCollectionDoc = async (firebaseFind) => {
   const {DB, col1, doc1, col2, doc2, col3, doc3} = firebaseFind;

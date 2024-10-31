@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionAlert, AppDispatch, RootState } from 'store/store';
 import styled from "styled-components";
 import { MapDataType, MarkerType, PlacePopStateType } from 'types/kakaoComon';
-import { DateChange } from 'utils/common';
 import { kakaoFetchPlaces } from 'utils/kakaomap/common';
 
 export default function MapPage() {
@@ -117,7 +116,6 @@ export default function MapPage() {
         location: useLocation.coords
       }))
     }
-    DateChange();
   },[useLocation])
 
   useEffect(()=>{

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 import { ReviewDataTypeC } from "types/kakaoComon";
-import { DateChange } from "utils/common";
+import { dateChange } from "utils/common";
 import { placeReviewUpdateDoc } from "utils/firebase/place";
 import { ScrollList } from "components/element/ScrollList";
 import { SvgStar } from "assets/svg/common/CommonSvg";
@@ -116,7 +116,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
             <span className="num">{reviewData.rating}</span>
           </span>
           <span className="date">
-            {DateChange('y2mdwhm', reviewData.time)}
+            {dateChange('y2mdwhm', reviewData.time)}
           </span>
         </div>
         {
