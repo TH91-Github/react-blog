@@ -1,11 +1,10 @@
-import { dateChange, fromToday } from "./common";
+import { dateChange, fromToday, weatherClock } from "./common";
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
 export function weatherTime(requestType) {
   const d = new Date();
   let h = d.getHours();
   const m = d.getMinutes();
-
   // 현재 오늘날짜 전달하고 전날 가져오는
   if(requestType === 'getUltraSrtNcst'){ // 초단기실황
     if (m < 30) {
@@ -50,7 +49,7 @@ const requestNum = (requestType) => { // 요청 수
   const requestNumbers = {
     getUltraSrtNcst: 8,
     getUltraSrtFcst: 60,
-    getVilageFcst: 900
+    getVilageFcst: 1000
   };
   return requestNumbers[requestType] || 0;
 };
@@ -62,22 +61,25 @@ export async function getWeather(coords, requestType, updateTime) { // 좌표, �
   const requesDate = updateTime ? {ymd:dateChange('ymdStrBefore'),hm:'2300'}: weatherTime(requestType);
   const numOfRows =  requestNum(requestType);
   let weatherData = {date:updateTime ? dateChange('ymdStr') : requesDate.ymd, baseUpdate: updateTime ? -1 :requesDate.hm, xy:{nx:nx,ny:ny},res:[]};
-
-  const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&numOfRows=${numOfRows}&pageNo=1&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
-
+  // const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&pageNo=1&numOfRows=${numOfRows}&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
+  const resultUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=kmhFfYET7ZEY6Ka02Z2woR6IQ7d9lz%2FbdVxyD5qfBoI7JvVJOd9Zrd9yI1jtINYXVj5KTkbANphw4Iwan2Oavg%3D%3D&pageNo=1&numOfRows=100&dataType=JSON&base_date=20241031&base_time=2300&nx=61&ny=126";
+  console.log('요청')
   try{
     const res = await fetch(resultUrl);
+    if (!res.ok) {
+      throw new Error(`${res.status}`);
+    }
     const data = await res.json();
+    console.log(data);
+
     const filterData = weatherArr(data.response.body.items.item, requestType, updateTime ? -1 :requesDate.hm);
     weatherData.res = filterData;
   }catch(error){
     console.log(`${requestType ?? '초기 요청'} ❌ 날씨 api 요청 에러...`)
-    weatherData.res = null;
   }
   return weatherData;
 };
 
-// 초단기, 단기예보 요청 시
 function weatherArr(weatherItems, requestType, updateTime) {
   const cutDay = fromToday(2);
   const dateArr = weatherItems.reduce((newArr, newItem) => {
@@ -137,13 +139,12 @@ export const getWeatherUpdate = async (originalData, coords, requestType)=>{
   }
 };
 
-// ✅ 이전과 이후 데이터 비교 후 최신으로 업데이트
+// ✅ 이전과 이후 데이터 비교 후 업데이트
 const weatherMerge = (mPrev, mNext, requestType) => {
   const {res:prevRes,} = mPrev;
   const {res:nextRes, baseUpdate:nextUpdate} = mNext;
   let resultData = {...mPrev, baseUpdate:nextUpdate, };
   
-  console.log(mNext)
   // 같은 날 변경
   const updateWeatherData = prevRes.map((prevItem,idx) => {
     const current = nextRes[idx];
@@ -201,7 +202,16 @@ const weatherCategoryListUpdate = (categoryPrev,categoryNext) => {
   return updateCategory;
 }
 
+export const currentWeather = (weatherLists) => {
+  console.log(weatherLists)
+  // const currentTime = weatherClock();
+  // const currentData = weatherLists.map(listsItem => {
+  //   const timeData = listsItem.timeLists.find(timeItem => timeItem.time === currentTime);    
 
+  //   return {TMN:listsItem.TMN, TMX:listsItem.TMX, category:timeData.categoryList}
+  // })
+  // console.log(currentData)
+}
 
 // 📌 기상청 api  관련
 // 기상청 격자 변환 함수

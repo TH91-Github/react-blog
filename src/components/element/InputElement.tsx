@@ -24,7 +24,7 @@ export interface InputElementRef {
   resetValue: () => void;
 }
 
-export default(forwardRef<InputElementRef, InputType>( function InputText(
+export default(forwardRef<InputElementRef, InputType>( function InputElement(
   {
     name, type, id, className, placeholder, prevVal, maxWidth, inputError,focusColor,
     keyEnter, changeEvent, focusEvent, blurEvent, removeEvent
