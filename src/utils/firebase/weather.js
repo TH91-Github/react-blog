@@ -22,7 +22,29 @@ export const getdepthCollectionDoc = async (firebaseFind) => {
   }
 };
 
-// 날씨 추가
+// ✅ 날씨 옵션 공통
+export const firebaseWeatherOpt = (location) => ({
+  DB: storeWeatherDB,
+  col1: 'weather',
+  doc1: locationCategory(location.addr1),
+  col2: 'districtCode',
+  doc2: location.districtCode,
+});
+
+// ✅ firebase 필요 데이터 생성 및 전달
+export const firebaseWeatherUpdate = async(location, data) => {
+  if (!data?.res) return;
+  const locationTitle = (location.addr2 || "") + " " + (location.addr3 || "") || location.addr1;
+  const firebaseFind = {
+    ...firebaseWeatherOpt(location),
+    title:locationTitle,
+    coords:data.xy
+  }
+  await updateWeatherDoc(firebaseFind, data);
+};
+
+
+// ✅ 최종 - 날씨 추가
 export const updateWeatherDoc = async(firebaseFind, weatherData)=>{
   const {DB, col1, doc1, col2, doc2, title,coords} = firebaseFind;
   const doc3Year = weatherData.date.slice(0, 4); // ex - 2024
@@ -63,3 +85,4 @@ export const updateWeatherDoc = async(firebaseFind, weatherData)=>{
     console.log(error)
   }
 }
+

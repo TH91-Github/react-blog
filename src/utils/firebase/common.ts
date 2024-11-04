@@ -125,3 +125,5 @@ export const deleteStorageImg = async (imgListsPaths: string[]) => {
     console.error("❌ storage img 삭제 실패! ", error);
   }
 }
+
+

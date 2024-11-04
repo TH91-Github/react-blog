@@ -45,42 +45,40 @@ export function weatherTime(requestType) {
   return { ymd, hm };
 }
 
-const requestNum = (requestType) => { // 요청 수
+const requestNumber = (requestType) => { // 요청 수
   const requestNumbers = {
     getUltraSrtNcst: 8,
     getUltraSrtFcst: 60,
-    getVilageFcst: 1000
+    getVilageFcst: 835,
   };
   return requestNumbers[requestType] || 0;
 };
 
 // ✅ 공공데이터 API 요청 - getUltraSrtNcst(초단기실황), getUltraSrtFcst(초단기), getVilageFcst(단기)
-export async function getWeather(coords, requestType, updateTime) { // 좌표, 요청 타입, 요청 기준 시간
-  const _URL = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/${requestType}`;
+export async function getWeather(coords, getName, getTime, getNum) { // 좌표, 요청 타입, 요청 기준 시간, 요청 수(필요 시)
+  const _URL = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/${getName}`;
   const { x:nx, y:ny } = dfs_xy_conv("toXY", coords.lat, coords.lng); // 좌표 격자 변환
-  const requesDate = updateTime ? {ymd:dateChange('ymdStrBefore'),hm:'2300'}: weatherTime(requestType);
-  const numOfRows =  requestNum(requestType);
-  let weatherData = {date:updateTime ? dateChange('ymdStr') : requesDate.ymd, baseUpdate: updateTime ? -1 :requesDate.hm, xy:{nx:nx,ny:ny},res:[]};
-  // const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&pageNo=1&numOfRows=${numOfRows}&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
-  const resultUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=kmhFfYET7ZEY6Ka02Z2woR6IQ7d9lz%2FbdVxyD5qfBoI7JvVJOd9Zrd9yI1jtINYXVj5KTkbANphw4Iwan2Oavg%3D%3D&pageNo=1&numOfRows=100&dataType=JSON&base_date=20241031&base_time=2300&nx=61&ny=126";
-  console.log('요청')
+  const requesDate = getTime ? getTime : weatherTime(getName);
+  const numOfRows =  getNum ? getNum : requestNumber(getName);
+  let returnData = {date:getTime ? dateChange('ymdStr') : requesDate.ymd, baseUpdate: getTime ? -1 :requesDate.hm, xy:{nx:nx,ny:ny},res:[]};
+
+  const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&pageNo=1&numOfRows=${numOfRows}&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
+
   try{
     const res = await fetch(resultUrl);
     if (!res.ok) {
       throw new Error(`${res.status}`);
     }
-    const data = await res.json();
-    console.log(data);
-
-    const filterData = weatherArr(data.response.body.items.item, requestType, updateTime ? -1 :requesDate.hm);
-    weatherData.res = filterData;
+    const resultData = await res.json();
+    const addData = weatherFilter(resultData.response.body.items.item, getName, getTime ? -1 :requesDate.hm);
+    returnData.res = addData;
   }catch(error){
-    console.log(`${requestType ?? '초기 요청'} ❌ 날씨 api 요청 에러...`)
+    console.log(`${getName} ❌ 날씨 api 요청 에러...`)
   }
-  return weatherData;
+  return returnData;
 };
 
-function weatherArr(weatherItems, requestType, updateTime) {
+function weatherFilter(weatherItems, requestType, updateTime) {
   const cutDay = fromToday(2);
   const dateArr = weatherItems.reduce((newArr, newItem) => {
     const { fcstDate, fcstTime, category, fcstValue } = newItem;
@@ -98,7 +96,6 @@ function weatherArr(weatherItems, requestType, updateTime) {
       };
       newArr.push(dateFind);
     }
-   
     if (category === 'TMN') {
       dateFind.TMN = fcstValue; // 최저 기온 업데이트
     } else if (category === 'TMX') {
@@ -127,63 +124,45 @@ function weatherArr(weatherItems, requestType, updateTime) {
   })
 }
 
-// ✅ 요청 조건에 맞는 업데이트 
-export const getWeatherUpdate = async (originalData, coords, requestType)=>{
-  const baseData = JSON.parse(JSON.stringify(originalData));
-  const getWeatherData = await getWeather(coords, requestType);
-  if(baseData.res && getWeatherData.res){ 
-    const newUpdateData = weatherMerge(baseData, getWeatherData, requestType);
-    return newUpdateData;
-  }else{
-    return null;
-  }
+// ✅ 2개 날씨 데이터 합치기 - 같은 날짜, 시간 업데이트 
+export const weatherMerge = (prevOriginal, nextOriginal) => {
+  // 원본 데이터 지키기 위해
+  const prevData = JSON.parse(JSON.stringify(prevOriginal));
+  const nextData = JSON.parse(JSON.stringify(nextOriginal));
+  
+  const resultMerge = {
+    ...prevData,
+    baseUpdate: nextData.baseUpdate,
+    res: prevData.res.map(prevItem => {
+      // res 내 같은 날 찾은 후 정보 업데이트
+      const sameData = nextData.res.find(nextResItem => nextResItem.date === prevItem.date);
+      if (sameData) {
+        // 같은 시간 카테고리 업데이트 
+        const mergedTimeLists = [...prevItem.timeLists, ...sameData.timeLists].reduce((acc, reduceItem) => {
+          const findIndex = acc.findIndex(el => el.time === reduceItem.time);
+          if (findIndex !== -1) {
+            // 이전값과 이후 값 비교 ----- item.categoryList
+            acc[findIndex].categoryList = weatherCategoryListUpdate(acc[findIndex].categoryList, reduceItem.categoryList);
+          } else {
+            acc.push(reduceItem);  // 중복되지 않는 항목 추가
+          }
+          return acc;
+        }, []);
+        return { ...prevItem, ...sameData, timeLists: mergedTimeLists };
+      }
+      return prevItem;
+    })
+  };
+
+  // 일치하지 않은 다른 날 추가
+  nextData.res.forEach(nextDataItem => {
+    if (!resultMerge.res.some(someItem => someItem.date === nextDataItem.date)) {
+      resultMerge.res.push(nextDataItem);
+    }
+  });
+  return resultMerge;
 };
 
-// ✅ 이전과 이후 데이터 비교 후 업데이트
-const weatherMerge = (mPrev, mNext, requestType) => {
-  const {res:prevRes,} = mPrev;
-  const {res:nextRes, baseUpdate:nextUpdate} = mNext;
-  let resultData = {...mPrev, baseUpdate:nextUpdate, };
-  
-  // 같은 날 변경
-  const updateWeatherData = prevRes.map((prevItem,idx) => {
-    const current = nextRes[idx];
-    // 최저 최고 기온 있는 경우 업데이트
-    if(current){
-      if(current.TMN) prevItem.TMN = current.TMN;
-      if(current.TMX) prevItem.TMX = current.TMX;
-      // -1이 아닌 경우 해당 요청에 맞게 시간 입력
-      if(current.getUltraSrtNcst !== -1) prevItem.getUltraSrtNcst = current.getUltraSrtNcst;
-      if(current.getUltraSrtFcst !== -1) prevItem.getUltraSrtFcst = current.getUltraSrtFcst;
-      if(current.getVilageFcst !== -1) prevItem.getVilageFcst = current.getVilageFcst;
-    }
-    // 시간대별 업데이트 - timeLists []
-    if(current && current.timeLists) prevItem.timeLists = weatherTimeListUpdate(prevItem.timeLists, current.timeLists, nextUpdate,requestType);
-    return prevItem;
-  })
-  resultData.res = updateWeatherData;
-  return resultData;
-}
-// ✅ 같은 시간대 찾아서 업데이트
-const weatherTimeListUpdate = (timePrev,timetNext, updateTime, requestType) => { // timeLists[], timeLists[], 요청 타입
-  return timePrev.map(timePrevItem => {
-    const sameTime = timetNext.find(timetNextItem => {
-      // 초단기 실황은 time 값이 없으므로 업데이트 시간과 일치하는 시간대 업데이트
-      if(requestType === 'getUltraSrtNcst'){
-        return updateTime === timePrevItem.time
-      }else{
-        return timetNextItem.time ? timetNextItem.time === timePrevItem.time : updateTime === timePrevItem.time
-      }
-    }); 
-    // 같은 시간대가 없다면 업데이트 x, 기존 값 반환.
-    if(sameTime){
-      const newD = weatherCategoryListUpdate(timePrevItem.categoryList, sameTime.categoryList);
-      return {...timePrevItem, categoryList: newD}
-    }else{
-      return timePrevItem;
-    }
-  })
-}
 
 // ✅ 같은 시간대 > 카테고리가 같다면 업데이트 일치하는 카테고리가 없다면 추가.
 const weatherCategoryListUpdate = (categoryPrev,categoryNext) => {
