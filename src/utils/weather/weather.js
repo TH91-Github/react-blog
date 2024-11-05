@@ -119,7 +119,7 @@ function weatherFilter(weatherItems, requestType, updateTime) {
   }, []);
 
   return dateArr.filter(dateArrItem => { // 오늘, 내일, 모레까지만 데이터 반환
-    dateArrItem[requestType] = updateTime;
+    dateArrItem[requestType] = updateTime; // 업데이트 시간 추가
     return cutDay >= Number(dateArrItem.date);
   })
 }
@@ -148,7 +148,17 @@ export const weatherMerge = (prevOriginal, nextOriginal) => {
           }
           return acc;
         }, []);
-        return { ...prevItem, ...sameData, timeLists: mergedTimeLists };
+
+        return { 
+          ...prevItem, 
+          ...sameData, 
+          TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
+          TMX: sameData.TMX !== null ? sameData.TMX : prevItem.TMX,
+          TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
+          getUltraSrtNcst: sameData.getUltraSrtNcst !== -1 ? sameData.getUltraSrtNcst : prevItem.getUltraSrtNcst,
+          getUltraSrtFcst: sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst,
+          getVilageFcst: sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst,
+          timeLists: mergedTimeLists };
       }
       return prevItem;
     })
@@ -180,6 +190,17 @@ const weatherCategoryListUpdate = (categoryPrev,categoryNext) => {
   });
   return updateCategory;
 }
+
+
+
+// ✅ 초기 요청
+export const weatherInit = async(coords)=>{ 
+  const beforeDay = await getWeather(coords, 'getVilageFcst',{ymd:dateChange('ymdStrBefore'),hm:'2300'},36);
+  const baseDayArr = await getWeather(coords, 'getVilageFcst',{ymd:dateChange('ymdStr'),hm:'0230'});
+  const resultDays = await weatherMerge(beforeDay, baseDayArr);
+  
+  return resultDays?.res ? resultDays : false;
+};
 
 export const currentWeather = (weatherLists) => {
   console.log(weatherLists)
