@@ -1,4 +1,4 @@
-import { dateChange, fromToday, weatherClock } from "./common";
+import { dateChange, fromToday } from "./common";
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
 export function weatherTime(requestType) {
@@ -45,6 +45,20 @@ export function weatherTime(requestType) {
   return { ymd, hm };
 }
 
+// ✅ 시간 차이
+export const timeDifference = (beforeH, nextH, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
+  // 시간을 분 단위로 변환
+  const bMinutes = parseInt(beforeH.slice(0, 2)) * 60 + parseInt(beforeH.slice(2, 4));
+  const nMinutes = parseInt(nextH.slice(0, 2)) * 60 + parseInt(nextH.slice(2, 4));
+  const cutM = diffH * 60;
+
+  // 24시간 기준 차이 계산
+  const difference = Math.abs(bMinutes - nMinutes);
+  const diffMinutes = Math.min(difference, 1440 - difference); // 1440분 = 24시간
+
+  return diffMinutes >= cutM
+}
+
 const requestNumber = (requestType) => { // 요청 수
   const requestNumbers = {
     getUltraSrtNcst: 8,
@@ -53,6 +67,19 @@ const requestNumber = (requestType) => { // 요청 수
   };
   return requestNumbers[requestType] || 0;
 };
+
+
+// 날씨 요청 3번 시도
+async function gethWithRetry(url, getRequesNumber) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${res.status}`);
+    return await res.json();
+  } catch (error) {
+    if (getRequesNumber === 1) throw new Error('❌ 요청이 3번 실패했습니다.');
+    return await gethWithRetry(url, getRequesNumber - 1);
+  }
+}
 
 // ✅ 공공데이터 API 요청 - getUltraSrtNcst(초단기실황), getUltraSrtFcst(초단기), getVilageFcst(단기)
 export async function getWeather(coords, getName, getTime, getNum) { // 좌표, 요청 타입, 요청 기준 시간, 요청 수(필요 시)
@@ -64,15 +91,12 @@ export async function getWeather(coords, getName, getTime, getNum) { // 좌표, 
 
   const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&pageNo=1&numOfRows=${numOfRows}&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
 
-  try{
-    const res = await fetch(resultUrl);
-    if (!res.ok) {
-      throw new Error(`${res.status}`);
-    }
-    const resultData = await res.json();
-    const addData = weatherFilter(resultData.response.body.items.item, getName, getTime ? -1 :requesDate.hm);
+  try {
+    const resultData = await gethWithRetry(resultUrl, 3);
+    const addData = weatherFilter(resultData.response.body.items.item, getName, getTime ? -1 : requesDate.hm);
     returnData.res = addData;
-  }catch(error){
+  } catch (error) {
+    console.error(error.message);
     console.log(`${getName} ❌ 날씨 api 요청 에러...`)
   }
   return returnData;
@@ -154,7 +178,6 @@ export const weatherMerge = (prevOriginal, nextOriginal) => {
           ...sameData, 
           TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
           TMX: sameData.TMX !== null ? sameData.TMX : prevItem.TMX,
-          TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
           getUltraSrtNcst: sameData.getUltraSrtNcst !== -1 ? sameData.getUltraSrtNcst : prevItem.getUltraSrtNcst,
           getUltraSrtFcst: sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst,
           getVilageFcst: sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst,
@@ -191,15 +214,21 @@ const weatherCategoryListUpdate = (categoryPrev,categoryNext) => {
   return updateCategory;
 }
 
-
-
 // ✅ 초기 요청
-export const weatherInit = async(coords)=>{ 
-  const beforeDay = await getWeather(coords, 'getVilageFcst',{ymd:dateChange('ymdStrBefore'),hm:'2300'},36);
-  const baseDayArr = await getWeather(coords, 'getVilageFcst',{ymd:dateChange('ymdStr'),hm:'0230'});
-  const resultDays = await weatherMerge(beforeDay, baseDayArr);
-  
-  return resultDays?.res ? resultDays : false;
+export const weatherInit = async (coords) => {
+  // 1차 0~2시
+  const beforeDay = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStrBefore'), hm: '2300' }, 36);
+  if (!beforeDay.res || beforeDay.res.length === 0) {
+    console.error("0~2시 정보 가져오기 실패...");
+    return false;
+  }
+  // 2차 2~모레 전체
+  const resultDays = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStr'), hm: '0230' });
+  if (!resultDays.res || resultDays.res.length === 0) {
+    console.error("단기 예보 가져오기 실패");
+    return false;
+  }
+  return await weatherMerge(beforeDay, resultDays);
 };
 
 export const currentWeather = (weatherLists) => {

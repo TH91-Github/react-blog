@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -6,14 +6,12 @@ import { colors } from "../../assets/style/Variable";
 import { actionWeathcer } from "../../redux/store";
 import { dateChange, fromToday } from "../../utils/common";
 import { firebaseWeatherOpt, firebaseWeatherUpdate, getdepthCollectionDoc } from "../../utils/study/firebase";
-import { getWeather, weatherInit, weatherMerge, weatherTime } from "../../utils/weather";
+import { getWeather, timeDifference, weatherInit, weatherMerge, weatherTime } from "../../utils/weather";
 import { WeatherMain } from "./WeatherMain";
-import { WeatherUpdate } from "./WeatherUpdate";
 
 export default function WeatherCont() {
   const storeWeather = useSelector((state) => state.storeWeather);
   const dispatch = useDispatch();
-  const [request, setRequest] = useState(false);
   const isRequestRef = useRef(false);
 
   // ✅ firebase 확인
@@ -33,101 +31,110 @@ export default function WeatherCont() {
     }
   );
 
-  const todayWeatherChk = useCallback(()=>{
+  // ✅ 업데이트
+  const updateWeatherData = useCallback(async (requestType, beforeData) => {
+    const coords = storeWeather.coords;
+    if (isRequestRef.current) return;
+    isRequestRef.current = true;
+    let requestData, mergeData;
+
+    try {
+      switch (requestType) {
+        case 'getUltraSrtNcst':
+          requestData = await getWeather(coords, 'getUltraSrtNcst');
+          break;
+        case 'getUltraSrtFcst':
+          requestData = await getWeather(coords, 'getUltraSrtFcst');
+          break;
+        case 'getVilageFcst':
+          requestData = await getWeather(coords, 'getVilageFcst');
+          break;
+        default:
+          throw new Error('❌ 잘못된 요청 타입');
+      }
+
+      // ✅ res 날씨 정보가 있는 경우에만 업데이트
+      if (requestData?.res.length > 0) {
+        mergeData = await weatherMerge(beforeData, requestData);
+        if (requestType === 'getUltraSrtNcst') {
+          firebaseWeatherUpdate(storeWeather.location, mergeData);  // 실황 업데이트 이후 firebase 업데이트
+        }
+        dispatch(actionWeathcer({ data: mergeData }));
+      }
+    } finally {
+      isRequestRef.current = false;
+    }
+    // n차 업데이트 이후 다음 요청 -> 단기 -> 초단기 -> 실황 순
+    if (requestType === 'getVilageFcst') { 
+      await updateWeatherData('getUltraSrtFcst', mergeData); // 초단기
+    } else if (requestType === 'getUltraSrtFcst') {
+      await updateWeatherData('getUltraSrtNcst', mergeData); // 실황
+    }
+    console.log(mergeData)
+  }, [storeWeather.coords, storeWeather.location, dispatch]);
+
+  // ✅ 새로운 데이터가 필요한 경우.
+  const getWeatherInit = useCallback(async() => {
+    const initWeather = await weatherInit(storeWeather.coords);
+    if(initWeather?.res?.length > 0) {
+      await updateWeatherData('getVilageFcst', initWeather);
+    }else{
+      console.log('실패')
+    }
+  },[storeWeather.coords, dispatch, updateWeatherData]);
+
+  // ✅ 받아온 데이터 오늘 기준 체크
+  const todayWeatherChk = useCallback(async()=>{
     const {ymd, hm:ultraSrtNcstHM} = weatherTime('getUltraSrtNcst'); // 초단기실황
+    const {hm:getVilageFcstHM} = weatherTime('getVilageFcst'); // 단기
+    const {hm:getUltraSrtFcstHM} = weatherTime('getUltraSrtFcst'); // 초단기
     const threeDays = [ymd,fromToday(1),fromToday(2)];
     const weatherLists = threeDays.map(dayItem => firebaseWeather[dayItem]).filter(Boolean);
-    console.log(ymd)
-    console.log(ultraSrtNcstHM)
+
+    console.log(weatherLists)
     // 오늘, 내일, 모레 데이터가 없는 경우 다시 요청.
     if(weatherLists.length < threeDays.length){
-      // getWeatherInit();
-      console.log('요청하자')
-    }else{
-      console.log('있네')
+      getWeatherInit();
+    }else{ // ✅ 받아온 데이터 최신화
       const today = weatherLists.find(todayItem => todayItem.date === ymd);
-      const nData = {
+      const reData = {
         date: ymd,
         baseUpdate:ultraSrtNcstHM,
         res:[...weatherLists],
         xy:{nx:storeWeather.location.x,ny:storeWeather.location.y}
       }
-      dispatch(actionWeathcer({data:nData}));
+      dispatch(actionWeathcer({data:reData}));
+      if(getVilageFcstHM !== today.getVilageFcst){ // 3시간 단위 단기 업데이트
+        console.log('단기 업데이트 진행')
+        await updateWeatherData('getVilageFcst', reData);
+      }else if(timeDifference(today.getUltraSrtFcst, getUltraSrtFcstHM)){
+        console.log('초단기')
+        await updateWeatherData('getUltraSrtFcst', reData);
+      }else if(ultraSrtNcstHM !== today.getUltraSrtNcst){ // 실황
+        console.log('실황')
+        await updateWeatherData('getUltraSrtNcst', reData);
+      }
     }
-  },[firebaseWeather])
-
-  // ✅ 현재 시간 초단기 업데이트
-  const getWeatherUltraSrtNcst = useCallback(async(beforeData)=>{
-    const requestData = await getWeather(storeWeather.coords, 'getUltraSrtNcst');
-    if(requestData?.res.length > 0) { 
-      const mergeData = await weatherMerge(beforeData, requestData);
-      dispatch(actionWeathcer({ data: mergeData}));
-      console.log('4차 완')
-      // firebase 업데이트
-      firebaseWeatherUpdate(storeWeather.location, mergeData);
-    }
-  },[storeWeather.coords]);
-
-  // ✅ 현재 시간 초단기 업데이트
-  const getWeatherUltraSrtFcst = useCallback(async(beforeData)=>{
-    const requestData = await getWeather(storeWeather.coords, 'getUltraSrtFcst');
-    if(requestData?.res.length > 0) { 
-      const mergeData = await weatherMerge(beforeData, requestData);
-      dispatch(actionWeathcer({ data: mergeData}));
-      console.log('3차 완')
-      console.log(mergeData)
-      await getWeatherUltraSrtNcst(mergeData);
-    }
-  },[storeWeather.coords,getWeatherUltraSrtNcst]);
-
-  // ✅ 현재 시간 기준 단기 업데이트
-  const getWeatherVilageFcst = useCallback(async(beforeData)=>{
-    const requestData = await getWeather(storeWeather.coords, 'getVilageFcst');
-    if(requestData?.res.length > 0) { 
-      const mergeData = await weatherMerge(beforeData, requestData);
-      dispatch(actionWeathcer({ data: mergeData}));
-      console.log('2차 완')
-      await getWeatherUltraSrtFcst(mergeData);
-    }
-  },[storeWeather.coords, getWeatherUltraSrtFcst]);
-
-  // ✅ 새로운 데이터가 필요한 경우.
-  const getWeatherInit = useCallback(async() => {
-    console.log('초기 요청')
-    const initWeather = await weatherInit(storeWeather.coords);
-    if(initWeather?.res.length > 0) {
-      // 초기 데이터 요청 후 store에 업데이트
-      dispatch(actionWeathcer({ data: initWeather }));
-      console.log('1차 업데이트 완료');
-      await getWeatherVilageFcst(initWeather); 
-    }
-  },[storeWeather.coords, getWeatherVilageFcst]);
+  },[firebaseWeather, dispatch, getWeatherInit, storeWeather.location, updateWeatherData])
 
   // ✅ 초기 저장된 데이터 유무 확인. 
   useEffect(() => {
     if (isLoading || !storeWeather.coords) return; 
     if (!firebaseWeather) { // 년도 & 지역 관련 날씨가 없는 경우 새롭게 추가
-      console.log('새롭게 시작')
       getWeatherInit();
-    }else{ 
-      console.log('기존에 값 있다.')
+    }else{ // firebase 값 있는 경우.
       todayWeatherChk();
     }
-  }, [firebaseWeather, isLoading, storeWeather.coords, todayWeatherChk]);
+  }, [firebaseWeather, isLoading, storeWeather.coords, getWeatherInit, todayWeatherChk]);
 
   return (
     <StyleWeatherCont>
-
       <WeatherMain />
     </StyleWeatherCont>
   )
 }
 const StyleWeatherCont = styled.div`
   padding-top:85px;
-  .current-weather{
-    
-  }
-  
   .temperature-box{
     &.lh {
       display:flex;
