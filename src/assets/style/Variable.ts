@@ -41,6 +41,7 @@ export const colors = {
   // point
   green: "#0C9463",
   yellow: "#FFB000",
+  yellowRgb: "255, 191, 16",
   blue: "#419ef5",
   red: "#e8392c",
   navy: "#333A73",
