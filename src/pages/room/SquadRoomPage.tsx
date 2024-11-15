@@ -55,7 +55,7 @@ export const SquadRoomPage = () => {
             <div className="room-head">
               <div className="title-info">
                 <h3 className="title">
-                  함께 하고 있는 방
+                  함께 하고 있는 공간
                   <span className="room-size">{ false && 0}</span>
                 </h3>
                 <p className="desc">함께 공간을 만들어서 공유하세요! 😉</p>

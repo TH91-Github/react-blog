@@ -1,8 +1,9 @@
 import React from 'react';
-import { breakpoints, colors, media, shadow } from "assets/style/Variable"
-import styled from "styled-components"
-import { rem } from "utils/common"
+import { breakpoints, colors, media, shadow } from "assets/style/Variable";
+import styled from "styled-components";
+import { rem } from "utils/common";
 import MainVisualIcon from 'components/article/main/MainVisualIcon';
+import { MapCont } from 'components/article/main/MapCont';
 
 export default function MainPage() : JSX.Element{ 
   console.log('main')
@@ -18,7 +19,7 @@ export default function MainPage() : JSX.Element{
           </div>
         </div>
         <div className="content">
-          {/* content */}
+          <MapCont />  
         </div>
       </StyleWrap>
   )
@@ -68,12 +69,6 @@ const StyleWrap = styled.div`
         text-shadow: ${shadow.textBase};
       }
     }
-    &-icon {
-      
-    }
-  }
-  .content {
-    height:500px;
   }
   ${media.mo}{
     .visual {
