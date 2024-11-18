@@ -137,7 +137,6 @@ const StyledHeader = styled.header`
   left:0;
   width:100%;
   background:${props => props.theme.opacityBg};
-  ${({theme}) => theme.shadow};
   transition: all .01s;
   .header-wrap{
     transition: ${transitions.base};
@@ -163,7 +162,6 @@ const StyledHeader = styled.header`
   &.main-header {
     top: calc((100% - clamp(${rem(500)}, 80%, ${rem(600)})) / 2);
     background:transparent;
-    box-shadow:none;
     .header-inner {
       width:clamp(${rem(800)}, 90%, ${breakpoints.pc}px);
       padding:20px 30px;
@@ -175,7 +173,6 @@ const StyledHeader = styled.header`
     top:0;
     left:0;
     width:100%;
-    box-shadow:none;
     transition: unset;
     .header-wrap{
       background:${props => props.theme.opacityBg};
