@@ -155,11 +155,14 @@ export function fromToday(day=0) {
   return new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10).replace(/-/g, '');
 }
 
-export function dateChange(type?: string, callDate?: any) { 
+export function dateChange(type:string = 'default', callDate?: any) { // 
   // callDate가 Timestamp 객체일 경우 toDate()로 변환
   // > new Date(callDate) 2024,1,1 or 2424-1-1 or 2424/1/1 문자열
   const d = callDate ? (callDate.toDate ? callDate.toDate() : new Date(callDate)) : new Date();
-  if(type && type.includes('Before')) d.setDate(d.getDate() - 1);
+  if (isNaN(d)) {
+    throw new Error('Invalid date');
+  }
+  if (type.includes('Before')) d.setDate(d.getDate() - 1);
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const week = weekChange(d.getDay());
@@ -168,7 +171,7 @@ export function dateChange(type?: string, callDate?: any) {
   const m = d.getMinutes();
   const s = d.getSeconds();
 
-  const handlers :{ [key: string]: string | number } = {
+  const handlers :Record<string, any>= {
     full: d.toLocaleString(), // EX - 2024. 1. 1. 오후 3:32:46
     ymd:`${year}. ${month}. ${day}`, // EX - 2024.1.1
     ymdw: `${year}. ${month}. ${day}. ${week}`, // EX - 2024.1.1.월
@@ -183,11 +186,12 @@ export function dateChange(type?: string, callDate?: any) {
     minutes: m,
     seconds: s,
     ymdStr: d.getFullYear().toString()+(d.getMonth() + 1).toString().padStart(2, '0')+d.getDate().toString().padStart(2, '0'), // 20240101
-    ymdStrBefore:d.getFullYear().toString()+(d.getMonth() + 1).toString().padStart(2, '0')+d.getDate().toString().padStart(2, '0'),
+    ymdStrBefore:d.getFullYear().toString()+(d.getMonth() + 1).toString().padStart(2, '0')+d.getDate().toString().padStart(2, '0'), // 하루 전날 20240101 > 20231231
     default: d.toString(),
   };
-  return handlers[type ?? 'default'];
+  return handlers[type];
 }
+
 
 const weekChange = (e:number, lang?:string) => {
   const weekDays: { [key: number]: string } = {

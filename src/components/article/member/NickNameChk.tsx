@@ -3,7 +3,7 @@ import InputElement, { InputElementRef } from "components/element/InputElement";
 import { RefInputType } from "pages/member/SignUp";
 import { specialCharactersSpacesCheck } from "utils/regex";
 
-export default function NameChk({lineColor, refPush, validationUpdate}:RefInputType){
+export default function NickNameChk({lineColor, refPush, validationUpdate}:RefInputType){
   const refInput = useRef<InputElementRef>(null);
   const [valError, setValError] = useState(false);
 

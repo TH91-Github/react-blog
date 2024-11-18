@@ -90,8 +90,8 @@ export default function Header({location}:HeaderType){
     routerPath
       ? document.title = `${indexTitle}_${routerPath.title}`
       : document.title = `${indexTitle} - 😁`;
-
   },[location])
+
   useEffect(()=>{
     titleChange();
   },[location,titleChange])
