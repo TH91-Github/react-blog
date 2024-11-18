@@ -1,4 +1,4 @@
-import { colors, transitions } from "assets/style/Variable";
+import { colors, media, transitions } from "assets/style/Variable";
 import { SvgArrow } from "assets/svg/common/CommonSvg";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components"
@@ -27,6 +27,7 @@ type StyleArrowBtnLinkType = {
   $bgColor: string,
 }
 const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
+  
   .btn-link-arrow{
     display:inline-block;
     overflow:hidden;
@@ -36,6 +37,7 @@ const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
     transition:${transitions.base};
     border:1px solid ${({$bgColor}) => $bgColor};
     font-size:14px;
+    text-align:left;
     &::before{
       position:absolute;
       top:0;
@@ -93,12 +95,13 @@ const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
     }
     
     @keyframes arrow1Ani {
-    0%, 100%{
-      opacity:0;
-    }
-    50%{
-      opacity:1;
+      0%, 100%{
+        opacity:0;
+      }
+      50%{
+        opacity:1;
+      }
     }
   }
-  }
+
 `;

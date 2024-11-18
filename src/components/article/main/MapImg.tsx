@@ -106,7 +106,6 @@ const StylePointMap = styled.div<StylePointMapType>`
       transform:translateY(-5px);
     }
   }
-
   &::before{
     position:absolute;
     top:50%;
