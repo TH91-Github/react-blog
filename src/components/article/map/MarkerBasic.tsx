@@ -25,7 +25,7 @@ export default function MarkerBasic({number, marker, active, pointActiveEvent, d
   return (
     <StyleMarker 
       ref={markerRef}
-      $bgColor={active ? colors.yellow : colors.purple}
+      $bgColor={active ? colors.yellow : colors.mSlateBlue}
       className={`marker ${active ? 'active' :''}`}>
       <span className="point-bar"></span>
       <button type="button" className="marker-btn" onClick={handlePopClick}>

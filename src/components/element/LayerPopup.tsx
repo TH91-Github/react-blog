@@ -234,7 +234,7 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
       width:6px;
       height:6px;
       border-radius:50%;
-      background:${colors.purple};
+      background:${colors.mSlateBlue};
       transform: translateX(-50%);
       content:'';
     }

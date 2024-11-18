@@ -74,7 +74,7 @@ const StyleItem = styled.li`
       width:calc(100% - 30px);
       height:2px;
       border-radius:2px;
-      background:${colors.purple};
+      background:${colors.mSlateBlue};
       transition: ${transitions.base};
       transform: translateX(100%);
       content:'';
@@ -84,7 +84,7 @@ const StyleItem = styled.li`
         transform: translateX(0);
       }
       .num {
-        background:${colors.purple};
+        background:${colors.mSlateBlue};
       }
     }
   }

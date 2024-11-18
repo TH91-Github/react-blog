@@ -1,5 +1,4 @@
-import { InnerStyle } from 'assets/style/StyledCm';
-import { colors, media } from 'assets/style/Variable';
+import { breakpoints, colors, media } from 'assets/style/Variable';
 import { useEffect } from 'react';
 import styled from "styled-components";
 
@@ -11,22 +10,27 @@ export default function WeatherPage() {
 
   return (
     <StyleWrap className="weather">
-      <StyleStudyInner>
+      <div className="weather-inner">
       weather
-      </StyleStudyInner>
+      </div>
     </StyleWrap>
   )
 }
 
 const StyleWrap = styled.div`
   background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : colors.baseWhite}; 
-`;
-const StyleStudyInner = styled(InnerStyle)`
-  display:grid;
-  grid-template-columns: 3fr 7fr;
-  gap: 20px;
-  padding-top:70px;
+  .weather-inner{
+    overflow:hidden;
+    position:relative;
+    width:100%;
+    max-width:${breakpoints.maxPc}px;
+    height:100svh;
+    margin:0 auto;
+    padding-top:65px;
+  }
   ${media.mo}{
-    padding-top:70px;
+    .weather-inner {
+      padding-top:60px;
+    }
   }
 `;

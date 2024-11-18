@@ -54,7 +54,7 @@ const StyleLogo = styled.div`
       &:nth-child(1){  
         animation-name: cube1;
         @keyframes cube1 {
-          1.19%{background: ${colors.purple};}
+          1.19%{background: ${colors.mSlateBlue};}
           2.38%, 100%{background:${colors.originWhite};}
         }
       }
@@ -62,7 +62,7 @@ const StyleLogo = styled.div`
         animation-name: cube2;
         @keyframes cube2 {
           2.38%, 4.76% {background:${colors.originWhite};}
-          3.57% {background: ${colors.purple};}
+          3.57% {background: ${colors.mSlateBlue};}
           64.848%, 93.412%, 100% {transform:translateY(0)}
           71.99%, 86.27% {transform:translateY(calc(100% + 1px))}
         }
@@ -71,14 +71,14 @@ const StyleLogo = styled.div`
         animation-name: cube3;
         @keyframes cube3 {
           4.76%, 7.14%, 100% {background:${colors.originWhite};}
-          5.95% {background: ${colors.purple};}
+          5.95% {background: ${colors.mSlateBlue};}
         }
       }
       &:nth-child(4){
         animation-name: cube4;
         @keyframes cube4 {
           7.14%, 9.52% {background:${colors.originWhite};}
-          8.33% {background: ${colors.purple};}
+          8.33% {background: ${colors.mSlateBlue};}
           29.142%, 57.706%, 100%{transform:translateX(0)}
           36.284%, 50.564% {transform:translateX(calc(100% + 1px))}
         }
@@ -87,14 +87,14 @@ const StyleLogo = styled.div`
         animation-name: cube5;
         @keyframes cube5 {
           9.52%, 11.9%, 100% {background:${colors.originWhite};}
-          10.71% {background: ${colors.purple};}
+          10.71% {background: ${colors.mSlateBlue};}
         }
       }
       &:nth-child(6){
         animation-name: cube6;
         @keyframes cube6 {
           11.9%, 14.28% {background:${colors.originWhite};}
-          13.09% {background: ${colors.purple};}
+          13.09% {background: ${colors.mSlateBlue};}
           29.142%, 57.706%, 100%{transform:translateX(0)}
           36.284%, 50.564% {transform:translateX(calc((100% + 1px) * -1))}
         }
@@ -103,7 +103,7 @@ const StyleLogo = styled.div`
         animation-name: cube7;
         @keyframes cube7 {
           14.28%, 16.66% {background:${colors.originWhite};}
-          15.47% {background: ${colors.purple};}
+          15.47% {background: ${colors.mSlateBlue};}
           29.142%, 57.706%, 100%{transform:translateX(0)}
           36.284%, 50.564% {transform:translateX(calc(100% + 1px))}
         }
@@ -112,7 +112,7 @@ const StyleLogo = styled.div`
         animation-name: cube8;
         @keyframes cube8 {
           16.66%, 19.04% {background:${colors.originWhite};}
-          17.85% {background: ${colors.purple};}
+          17.85% {background: ${colors.mSlateBlue};}
           64.848%, 93.412%, 100% {transform:translateY(0)}
           71.99%, 86.27% {transform:translateY(calc((100% + 1px) * -1))}
         }
@@ -121,7 +121,7 @@ const StyleLogo = styled.div`
         animation-name: cube9;
         @keyframes cube9 {
           19.04%, 21.42% {background:${colors.originWhite};}
-          20.23% {background: ${colors.purple};}
+          20.23% {background: ${colors.mSlateBlue};}
           29.142%, 57.706%, 100%{transform:translateX(0)}
           36.284%, 50.564% {transform:translateX(calc((100% + 1px) * -1))}
         }
@@ -138,7 +138,7 @@ const StyleLogo = styled.div`
       text-shadow:${shadow.textBase};
       & > em { 
         font-weight:600;
-        color:${colors.purple};
+        color:${colors.mSlateBlue};
       }
     }
   }

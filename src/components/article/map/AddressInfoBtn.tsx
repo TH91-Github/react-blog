@@ -64,7 +64,7 @@ const StyleAddress = styled.div`
     width:1px;
     height:8px;
     border-radius:5px;
-    background:${colors.purple};
+    background:${colors.mSlateBlue};
     transform: rotate(45deg) translate(-50%, -50%);
     transform-origin:center center;
     content:'';

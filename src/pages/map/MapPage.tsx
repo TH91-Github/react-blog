@@ -207,10 +207,10 @@ const StyleWrap = styled.div`
       transform: scaleX(1);background:${colors.yellow};
     } 
     50% {
-      transform: scaleX(0); background:${colors.purple};
+      transform: scaleX(0); background:${colors.mSlateBlue};
     }
     75% {
-      transform: scaleX(1); background:${colors.purple};
+      transform: scaleX(1); background:${colors.mSlateBlue};
     }
   }
   .map-content{

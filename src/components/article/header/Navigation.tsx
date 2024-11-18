@@ -65,7 +65,7 @@ const StyledNav = styled.div`
         height:4px;
         border-top-right-radius:50px;
         border-top-left-radius:50px;
-        background:${colors.purple};
+        background:${colors.mSlateBlue};
         transition:${transitions.base};
         transform:translateY(5px); scale(0);
         content:'';
@@ -76,7 +76,7 @@ const StyledNav = styled.div`
         }
       }
       &.active {
-        color: ${colors.purple};
+        color: ${colors.mSlateBlue};
         text-shadow:${shadow.textBase};
         &::after{
           transform:translateY(0); scale(1);

@@ -51,6 +51,7 @@ const StyleMapCont = styled.div`
       padding:30px;
       .title{ 
         position:relative;
+        font-size:36px;
         &::before{
           position:absolute;
           top:-50px;
@@ -63,6 +64,8 @@ const StyleMapCont = styled.div`
       }
       .desc{
         margin-top:10px;
+        font-size:18px;
+        color:${colors.subTextColor};
       }
     }
     .btn-article {
@@ -82,7 +85,7 @@ const StyleMapCont = styled.div`
         left:50%;
         width:380px;
         max-width:80%;
-        padding:80px 30px 30px;
+        padding:60px 15px 20px;
         border-top: 2px solid rgba(148,148,148, .3);
         border-radius:5px;
         background-color:${props => props.theme.opacityBg};
@@ -91,10 +94,17 @@ const StyleMapCont = styled.div`
         transform:translate(-50%, -50%);
         text-align:center;
         .title{
+          font-size:18px;
           &::before{
+            top:-40px;
             left:50%;
+            width:80px;
+            height:35px;
             transform:translateX(-50%);
           }
+        }
+        .desc{
+          font-size:14px;
         }
       }
     }
