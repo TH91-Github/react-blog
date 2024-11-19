@@ -195,7 +195,6 @@ const StyleWrap = styled.div`
       height:1px;
       background:${colors.yellow};
       animation: mapLineAni 30s infinite;
-      will-change: transform;
       content:'';
     }
   }

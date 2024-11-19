@@ -135,7 +135,7 @@ const StyleWrap = styled.div<StyleProps>`
   .input {
     display:block;
     width:100%;
-    padding:8px 30px 8px 10px;
+    padding:8px 34px 8px 10px;
     border:1px solid transparent;
     font-size:14px;
     background:none;
@@ -158,7 +158,7 @@ const StyleWrap = styled.div<StyleProps>`
     display:none;
     position:absolute;
     top:50%;
-    right:5px;
+    right:8px;
     width:20px;
     height:20px;
     border-radius:50%;

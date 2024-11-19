@@ -89,6 +89,20 @@ export const shadow = {
   bgBaseW: 'rgba(255,255,255, 0.3) 0.7px 5px 5px',
 }
 
+export const translucence = {
+  light: `
+    background: transparent;
+    box-shadow:inset 1px 1px 1px 0px rgba(255,255,255,.5), 3px 3px 10px 0px rgba(0,0,0,.1), 2px 2px 3px 0px rgba(0,0,0,.1);
+    backdrop-filter: blur(3px);
+  `,
+  dark:`
+    background: transparent;
+    box-shadow:inset 1px 1px 1px 0px rgba(127,127,127,.5), 3px 3px 5px 0px rgba(255,255,255,.1), 2px 2px 3px 0px rgba(255,255,255,.1);
+    backdrop-filter: blur(3px);
+  `
+}
+
+
 // 다크/라이트 모드
 export const lightTheme = {
   type:'light',
@@ -98,12 +112,13 @@ export const lightTheme = {
   colorChange:colors.baseWhite,
   bgOrigin:colors.originWhite,
   bgColor:colors.baseWhite,
-  opacityBg:'rgba(255,255,255,.7)',
+  opacityBg:'rgba(255,255,255,.5)',
   shadow:'box-shadow:rgba(127,127,127, 0.3) 0.7px 5px 5px',
   shadowLine:'border-bottom:1px solid rgba(17,19,32,.2); box-shadow: rgba(17,19,32,.3) 0.7px 1px 5px;',
   subTextColor:colors.subTextColor,
   shadowText:shadow.textBase,
   shadowBg: shadow.bgBase,
+  translucence: translucence.light
 }
 export const darkTheme = {
   type:'dark',
@@ -113,12 +128,13 @@ export const darkTheme = {
   colorChange:colors.baseBlack,
   bgOrigin:colors.baseBlack,
   bgColor:colors.baseBlack,
-  opacityBg:'rgba(17,19,32,.7)',
+  opacityBg:'rgba(17,19,32,.5)',
   shadow:'box-shadow:rgba(255,255,255, 0.3) 0.7px 5px 5px',
   shadowLine:'border-bottom:1px solid rgba(255,255,255,.2); box-shadow: rgba(54,58,82,.3) 0.7px 1px 5px;',
   subTextColor:'#d5d5d5',
   shadowText:shadow.textBaseW,
   shadowBg: shadow.bgBaseW,
+  translucence: translucence.dark
 }
 
 // transition

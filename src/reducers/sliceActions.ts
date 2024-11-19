@@ -99,6 +99,7 @@ const userLocationState: KeyObjectAnyType = {
   road_address: null,
   address: null,
   coords: null,
+  weather: null,
 };
 export const userLocationSlice = createSlice({
   name: "user location",
