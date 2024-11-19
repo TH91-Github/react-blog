@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { lightTheme } from 'assets/style/Variable';
 import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
 import { fetchResumeData } from './thunk/asyncThunk';
-import { alertCommonType, ResumeDocumentType, ResumeState, testStateType, ThemeState, userLoginType } from './types';
+import { alertCommonType, ResumeDocumentType, ResumeState, testStateType, ThemeState, UserLoginType, WeatherActionType } from './types';
 
 // 📍테스트용 
 const testState : testStateType = {
@@ -62,7 +62,7 @@ export const alertCommonSlice = createSlice({
 })
 
 // 📍logIn 상태 
-const userLoginState: userLoginType = {
+const userLoginState: UserLoginType = {
   loginState: false,
   user: null
 };
@@ -70,7 +70,7 @@ export const userLoginSlice = createSlice({
   name: "user login",
   initialState: userLoginState,
   reducers: {
-    actionUserLogin(state, propsAction: PayloadAction<userLoginType>){
+    actionUserLogin(state, propsAction: PayloadAction<UserLoginType>){
       return { ...state, ...propsAction.payload };
     },
   },
@@ -80,6 +80,23 @@ export const userLoginSlice = createSlice({
   //     state.user = action.payload.user;
   //   });
   // },
+})
+
+// 📍weather 날씨 
+const weatherState = {
+  data: null, // date, res, xy, baseUpdate
+  coords: null,
+  location: null,
+  loading:false,
+};
+export const weatherSlice = createSlice({
+  name: "user login",
+  initialState: weatherState,
+  reducers: {
+    actionWeathcer(state, propsAction:PayloadAction<WeatherActionType>){
+      return { ...state, ...propsAction.payload };
+    },
+  },
 })
 
 // 📍kakao map data - firebase

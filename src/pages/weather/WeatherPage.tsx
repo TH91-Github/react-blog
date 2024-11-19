@@ -1,5 +1,7 @@
 import { breakpoints, colors, media } from 'assets/style/Variable';
+import { LongWeather } from 'components/article/weather/LongWeather';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
+import { WeatherInfo } from 'components/article/weather/WeatherInfo';
 import { useEffect } from 'react';
 import styled from "styled-components";
 
@@ -9,13 +11,16 @@ export default function WeatherPage() {
     
   },[])
   const weatherAddrUpdate = () => {
-
+    
   }
   return (
     <StyleWrap className="weather">
       <div className="weather-inner">
+        <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">
-          <WeatherHeader addrUpdate={weatherAddrUpdate}/>
+          <WeatherInfo />
+          {/* 한 주 */}
+          <LongWeather />
         </div>
       </div>
     </StyleWrap>
@@ -43,6 +48,18 @@ const StyleWrap = styled.div`
       content:'';
     }
   }
+  .weather-content{
+    display:flex;
+    gap:30px;
+    margin-top:30px;
+    .info {
+      width:calc(60% - 15px);
+    }
+    .long-weather {
+      width:calc(40% - 15px);
+    }
+  }
+  
   ${media.tab}{
     .weather-inner{
       padding-top:50px;

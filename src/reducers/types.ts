@@ -6,7 +6,7 @@ export interface ThemeState {
   color:StringOnly
 }
 // 로그인 user 상태
-export interface userLoginType {
+export interface UserLoginType {
   loginState: boolean,
   user: UserDataType | null,
 }
@@ -42,6 +42,13 @@ export interface alertCommonType {
   checkBtn?: boolean,
   confirmState?:boolean,
   autoClose?: number | undefined;
+}
+
+export interface WeatherActionType { // 수정 진행중
+  data: null | any;
+  coords: null | any;
+  location: null | any;
+  loading: boolean;
 }
 
 export interface testStateType {

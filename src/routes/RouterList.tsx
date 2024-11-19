@@ -38,7 +38,7 @@ export const routerList = [
   },
   {
     id: "Room",
-    path: "SquadRoom",
+    path: "squadRoom",
     title: '🗂️ 팀 방',
     view:['localhost'],
     element: <SquadRoomPage />,

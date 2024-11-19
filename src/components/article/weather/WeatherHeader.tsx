@@ -26,6 +26,10 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
           : <span className="blind">로딩 사용 예정.</span>
         }
       </p>
+      {/* 즐겨찾기 회원전용 */}
+      <div className="">
+        
+      </div>
     </StyleWeatherHeader>
   )
 }
@@ -34,7 +38,7 @@ const StyleWeatherHeader = styled.div`
   display:flex;
   gap:20px;
   margin-top:30px;
-  padding:10px;
+  padding:10px 20px;
   border-radius:5px;
   ${({theme}) => theme.translucence};
   background: ${({theme}) => theme.opacityBg};

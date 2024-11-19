@@ -102,7 +102,6 @@ export const translucence = {
   `
 }
 
-
 // 다크/라이트 모드
 export const lightTheme = {
   type:'light',

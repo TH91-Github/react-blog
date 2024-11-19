@@ -10,11 +10,13 @@ interface BtnDataType {
 
 interface ListBtnActiveType { // title, active,
   btnData:BtnDataType[],
+  bgColor?:string,
   activeColor?:string,
+  activeTextColor?:string,
   children?: React.ReactNode,
   clickEvent: (activeNumber:number) => void,
 }
-export const ListBtnActive = ({btnData, activeColor, children, clickEvent}:ListBtnActiveType) => {
+export const ListBtnActive = ({btnData, bgColor, activeColor, activeTextColor, children, clickEvent}:ListBtnActiveType) => {
   const listWrapRef = useRef<HTMLDivElement>(null);
   const [activeStyle, setActiveStyle] = useState({left:5, width:16, height:16 });
 
@@ -38,7 +40,6 @@ export const ListBtnActive = ({btnData, activeColor, children, clickEvent}:ListB
     const activeBtn = listWrapRef.current.querySelectorAll('.btn')[activeIndex];
 
     if (activeBtn) {
-      console.log(activeBtn.getBoundingClientRect());
       const { left, width, height } = activeBtn.getBoundingClientRect();
       setActiveStyle({
         left: left - listWrapRef.current.getBoundingClientRect().left,
@@ -58,9 +59,6 @@ export const ListBtnActive = ({btnData, activeColor, children, clickEvent}:ListB
     return () => clearTimeout(renderTime); // cleanup
   }, [activePos]);
 
-  
-  console.log('dd')
-
   return (
     <StyleListBtnActive 
       ref={listWrapRef}
@@ -68,7 +66,9 @@ export const ListBtnActive = ({btnData, activeColor, children, clickEvent}:ListB
       $left={activeStyle.left}
       $width={activeStyle.width}
       $height={activeStyle.height}
-      $activeColor={activeColor ?? colors.originWhite}>
+      $bgColor={bgColor ?? colors.bgGray}
+      $activeColor={activeColor ?? colors.originWhite}
+      $activeTextColor={activeTextColor ?? colors.baseBlack} >
       {
         btnData.map((btnItem, idx) => (
           <button 
@@ -99,7 +99,9 @@ interface StyleListBtnActiveType {
   $left:number,
   $width:number,
   $height:number,
+  $bgColor:string,
   $activeColor:string,
+  $activeTextColor?:string,
 }
 const StyleListBtnActive = styled.div<StyleListBtnActiveType>`
   display:flex;
@@ -107,11 +109,13 @@ const StyleListBtnActive = styled.div<StyleListBtnActiveType>`
   position:relative;
   padding:5px;
   border-radius:5px;
-  background:${colors.bgGray};
+  background:${props => props.$bgColor};
   &:before {
     position:absolute;
     top:50%;
     left:0;
+    min-width:40px;
+    min-height:20px;
     width:${props => props.$width}px;
     height:${props => props.$height}px;
     border-radius:4px;
@@ -124,11 +128,12 @@ const StyleListBtnActive = styled.div<StyleListBtnActiveType>`
   & > button {
     position:relative;
     z-index:2;
-    padding:2px 4px;
+    padding:5px 8px;
     color:${colors.subTextColor};
+    transition:${transitions.base};
     line-height:1;
     &.active {
-      color:${colors.baseBlack};
+      color:${props => props.$activeTextColor};
     }
   }
 `;

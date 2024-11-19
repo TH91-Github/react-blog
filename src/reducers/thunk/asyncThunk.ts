@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { firebaseGetDoc } from "api/firebaseDB/firebaseStore";
-import { ResumeDocumentType, userLoginType } from "reducers/types";
+import { ResumeDocumentType, UserLoginType } from "reducers/types";
 import { actionUserLogin, RootState } from "store/store";
 
 // createAsyncThunk: redux Toolkit 비동기 작업을 정의 하는데 사용. - pending / fulfilled / rejected
@@ -22,7 +22,7 @@ export const toggleUserBookmark = createAsyncThunk(
     const state = getState() as RootState;
     const currentState = state.storeUserLogin;
     console.log(currentState)
-    const newStore:userLoginType = { ...currentState, user: null};
+    const newStore:UserLoginType = { ...currentState, user: null};
     dispatch(actionUserLogin(newStore));
     return newStore;
   }
