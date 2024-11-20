@@ -1,7 +1,7 @@
 import { dateChange, fromToday } from "./common";
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
-export function weatherTime(requestType) {
+ function weatherTime(requestType) {
   const d = new Date();
   let h = d.getHours();
   const m = d.getMinutes();
@@ -46,7 +46,7 @@ export function weatherTime(requestType) {
 }
 
 // ✅ 시간 차이
-export const timeDifference = (beforeH, nextH, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
+ const timeDifference = (beforeH, nextH, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
   // 시간을 분 단위로 변환
   const bMinutes = parseInt(beforeH.slice(0, 2)) * 60 + parseInt(beforeH.slice(2, 4));
   const nMinutes = parseInt(nextH.slice(0, 2)) * 60 + parseInt(nextH.slice(2, 4));
@@ -68,7 +68,6 @@ const requestNumber = (requestType) => { // 요청 수
   return requestNumbers[requestType] || 0;
 };
 
-
 // 날씨 요청 3번 시도
 async function gethWithRetry(url, getRequesNumber) {
   try {
@@ -82,7 +81,7 @@ async function gethWithRetry(url, getRequesNumber) {
 }
 
 // ✅ 공공데이터 API 요청 - getUltraSrtNcst(초단기실황), getUltraSrtFcst(초단기), getVilageFcst(단기)
-export async function getWeather(coords, getName, getTime, getNum) { // 좌표, 요청 타입, 요청 기준 시간, 요청 수(필요 시)
+ async function getWeather(coords, getName, getTime, getNum) { // 좌표, 요청 타입, 요청 기준 시간, 요청 수(필요 시)
   const _URL = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/${getName}`;
   const { x:nx, y:ny } = dfs_xy_conv("toXY", coords.lat, coords.lng); // 좌표 격자 변환
   const requesDate = getTime ? getTime : weatherTime(getName);
@@ -149,7 +148,7 @@ function weatherFilter(weatherItems, requestType, updateTime) {
 }
 
 // ✅ 2개 날씨 데이터 합치기 - 같은 날짜, 시간 업데이트 
-export const weatherMerge = (prevOriginal, nextOriginal) => {
+ const weatherMerge = (prevOriginal, nextOriginal) => {
   // 원본 데이터 지키기 위해
   const prevData = JSON.parse(JSON.stringify(prevOriginal));
   const nextData = JSON.parse(JSON.stringify(nextOriginal));
@@ -157,7 +156,7 @@ export const weatherMerge = (prevOriginal, nextOriginal) => {
   const resultMerge = {
     ...prevData,
     baseUpdate: nextData.baseUpdate,
-    res: prevData.res.map(prevItem => {
+    res: prevData.res.map((prevItem,idx) => {
       // res 내 같은 날 찾은 후 정보 업데이트
       const sameData = nextData.res.find(nextResItem => nextResItem.date === prevItem.date);
       if (sameData) {
@@ -173,14 +172,19 @@ export const weatherMerge = (prevOriginal, nextOriginal) => {
           return acc;
         }, []);
 
+        // 가장 처음 오늘 날 또는 오늘날 date 비교
+        const getUltraSrtNcstValue = idx === 0 ? (sameData.getUltraSrtNcst !== -1 ? sameData.getUltraSrtNcst : prevItem.getUltraSrtNcst) : -1;
+        const getUltraSrtFcstValue = idx === 0 ? (sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst) : -1;
+        const getVilageFcstValue = idx === 0 ? (sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst) : -1;
+        
         return { 
           ...prevItem, 
           ...sameData, 
           TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
           TMX: sameData.TMX !== null ? sameData.TMX : prevItem.TMX,
-          getUltraSrtNcst: sameData.getUltraSrtNcst !== -1 ? sameData.getUltraSrtNcst : prevItem.getUltraSrtNcst,
-          getUltraSrtFcst: sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst,
-          getVilageFcst: sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst,
+          getUltraSrtNcst: getUltraSrtNcstValue,
+          getUltraSrtFcst: getUltraSrtFcstValue,
+          getVilageFcst: getVilageFcstValue,
           timeLists: mergedTimeLists };
       }
       return prevItem;
@@ -215,7 +219,7 @@ const weatherCategoryListUpdate = (categoryPrev,categoryNext) => {
 }
 
 // ✅ 초기 요청
-export const weatherInit = async (coords) => {
+ const weatherInit = async (coords) => {
   // 1차 0~2시
   const beforeDay = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStrBefore'), hm: '2300' }, 36);
   if (!beforeDay.res || beforeDay.res.length === 0) {
@@ -231,7 +235,7 @@ export const weatherInit = async (coords) => {
   return await weatherMerge(beforeDay, resultDays);
 };
 
-export const currentWeather = (weatherLists) => {
+ const currentWeather = (weatherLists) => {
   console.log(weatherLists)
   // const currentTime = weatherClock();
   // const currentData = weatherLists.map(listsItem => {

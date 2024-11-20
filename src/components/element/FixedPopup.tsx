@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { alertCommonType } from "reducers/types";
+import { AlertCommonType } from "reducers/types";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import LayerPopup, { LayerRefType } from "./LayerPopup";
 
@@ -10,7 +10,7 @@ export default function FixedPopup () {
   const dispatch = useDispatch<AppDispatch>(); 
   const refPopup = useRef<LayerRefType>(null);
   const alert = useSelector((state : RootState) => state.storeAlert);
-  const initAlert:alertCommonType = {
+  const initAlert:AlertCommonType = {
     isPopup:false, 
     titMessage:'', 
     txtMessage: '',

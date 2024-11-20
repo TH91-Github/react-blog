@@ -2,6 +2,7 @@ import { breakpoints, colors, media } from 'assets/style/Variable';
 import { LongWeather } from 'components/article/weather/LongWeather';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
 import { WeatherInfo } from 'components/article/weather/WeatherInfo';
+import { WeatherUpdate } from 'components/article/weather/WeatherUpdate';
 import { useEffect } from 'react';
 import styled from "styled-components";
 
@@ -15,6 +16,7 @@ export default function WeatherPage() {
   }
   return (
     <StyleWrap className="weather">
+      <WeatherUpdate />
       <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">

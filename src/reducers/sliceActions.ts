@@ -2,10 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { lightTheme } from 'assets/style/Variable';
 import { KakaofireStore, KeyObjectAnyType } from 'types/kakaoComon';
 import { fetchResumeData } from './thunk/asyncThunk';
-import { alertCommonType, ResumeDocumentType, ResumeState, testStateType, ThemeState, UserLoginType, WeatherActionType } from './types';
+import { AlertCommonType, ResumeDocumentType, ResumeState, TestStateType, ThemeState, UserLoginType, WeatherActionType } from './types';
 
 // 📍테스트용 
-const testState : testStateType = {
+const testState : TestStateType = {
   isOn: false,
   arr: []
 };
@@ -13,7 +13,7 @@ export const testSlice = createSlice({
   name: "user login",
   initialState: testState,
   reducers: {
-    actionTest(state, propsAction: PayloadAction<testStateType>){
+    actionTest(state, propsAction: PayloadAction<TestStateType>){
       return { ...state, ...propsAction.payload };
     },
   },
@@ -43,7 +43,7 @@ export const themeSlice = createSlice({
   }
 })
 // 📍alert
-const alertCommon :alertCommonType = {
+const alertCommon :AlertCommonType = {
   isPopup: false,
   titMessage: '',
   txtMessage:'',
@@ -55,7 +55,7 @@ export const alertCommonSlice = createSlice({
   name: "user login",
   initialState: alertCommon,
   reducers: {
-    actionAlert(state, propsAction: PayloadAction<alertCommonType>){
+    actionAlert(state, propsAction: PayloadAction<AlertCommonType>){
       return { ...state, ...propsAction.payload };
     },
   },
@@ -83,7 +83,7 @@ export const userLoginSlice = createSlice({
 })
 
 // 📍weather 날씨 
-const weatherState = {
+const weatherState:WeatherActionType= {
   data: null, // date, res, xy, baseUpdate
   coords: null,
   location: null,
@@ -93,7 +93,7 @@ export const weatherSlice = createSlice({
   name: "user login",
   initialState: weatherState,
   reducers: {
-    actionWeathcer(state, propsAction:PayloadAction<WeatherActionType>){
+    actionWeathcer(state, propsAction:PayloadAction<Partial<WeatherActionType>>){ // Partial 일부 필드만 업데이트할 때 안전하게 병합 가능.
       return { ...state, ...propsAction.payload };
     },
   },

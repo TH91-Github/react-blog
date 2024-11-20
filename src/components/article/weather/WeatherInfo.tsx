@@ -8,12 +8,14 @@ import styled from "styled-components"
 export const WeatherInfo = () => {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(0, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
+  const storeWeather = useSelector((state : RootState) => state.storeWeather);
   const [pickDay, setPickDay] = useState([
     { title:'오늘', active:true, },
     { title:'내일', active:false,},
     { title:'모레', active:false,}
   ])
 
+  
   const pickDayActive = (activeN:any) => {
     setPickDay(
       prev => prev.map((prevItem, idx) => ({

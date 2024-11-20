@@ -18,7 +18,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
   const {id, place_name, address} = kakaoPlace;
-  const placeCategory = locationCategory(address.address.region_1depth_name);
+  const placeCategory = locationCategory(address.address.region_1depth_name) ?? 'ETC';
   
   const updateQueryData = useCallback(() => { // // 등록, 삭제 이후 갱신
     queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });

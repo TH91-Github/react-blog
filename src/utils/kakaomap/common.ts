@@ -148,11 +148,15 @@ const locationKeywords:StringOnlyArr= {
   "Dokdo":["독도"],
   "ETC": [""]
 };
-export function locationCategory(keyword:string) {
-  for (const region in locationKeywords) {
-    if (locationKeywords[region].includes(keyword)) {
-      return region;
+export function locationCategory(keyword:string | null) {
+  if(keyword){
+    for (const region in locationKeywords) {
+      if (locationKeywords[region].includes(keyword)) {
+        return region;
+      }
     }
+    return "ETC";
+  }else{
+    return null;
   }
-  return "ETC";
 }

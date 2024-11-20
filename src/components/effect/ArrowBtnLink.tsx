@@ -14,8 +14,8 @@ export const ArrowBtnLink = ({link, title, onColor}:ArrowBtnLinkType) => {
       <NavLink to={link} title={title} className="btn-link-arrow">
         <span className="txt">{title}</span>
         {
-          Array.from({ length:3}, (_) => (
-            <span className="arrow"><SvgArrow $fillColor={onColor ?? colors.baseWhite}/></span>
+          Array.from({ length:3}, (_, idx) => (
+            <span className="arrow" key={idx}><SvgArrow $fillColor={onColor ?? colors.baseWhite}/></span>
           ))
         }
       </NavLink>

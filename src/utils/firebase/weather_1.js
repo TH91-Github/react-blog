@@ -23,7 +23,7 @@ export const getdepthCollectionDoc = async (firebaseFind) => {
 };
 
 // ✅ 날씨 옵션 공통
-export const firebaseWeatherOpt = (location) => ({
+const firebaseWeatherOpt = (location) => ({
   DB: storeWeatherDB,
   col1: 'weather',
   doc1: locationCategory(location.addr1),

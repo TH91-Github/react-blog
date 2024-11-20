@@ -1,3 +1,4 @@
+import { Firestore } from "firebase/firestore"
 import { MarkerType } from "./kakaoComon"
 
 export interface LocationType {
@@ -50,4 +51,13 @@ export type StyleProps = { // default
   $unit?:string,
 }
 
-
+// firebase DB, 그 외 string 타입
+export interface FirebaseFindType {
+  DB: Firestore; // DB만 Firestore 타입
+  col1: string;
+  doc1: string;
+  col2?: string;
+  doc2?: string;
+  col3?: string;
+  doc3?: string; 
+}

@@ -1,4 +1,4 @@
-import { UserBookmarkType, UserDataType } from "types/baseType";
+import { FirebaseFindType, StringOnly, UserBookmarkType, UserDataType } from "types/baseType";
 import { fireDB, firebaseStorage} from "../../firebase";
 import { getEmailId } from "utils/common";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -28,6 +28,31 @@ export const duplicateDoc = async(
   const querySnapshot = await getDocs(duplicatResult);
   return querySnapshot.empty
 }
+
+// 컬렉션, 문서 1~3에 따라 data 가져오기
+export const getdepthCollectionDoc = async (firebaseFind:FirebaseFindType) => {
+  const {DB, col1, doc1, col2, doc2, col3, doc3} = firebaseFind;
+  let docRef;
+  // if(doc3){
+  //   docRef = doc(DB, col1, doc1, col2!, doc2!, col3!, doc3!);
+  // }else if(doc2){
+  //   docRef = doc(DB, col1, doc1, col2!, doc2!);
+  // }else{
+  //   docRef = doc(DB, col1, doc1);
+  // }
+  // try {
+  //   const docSnap = await getDoc(docRef);
+  //   if (docSnap.exists()) {
+  //     return docSnap.data(); 
+  //   } else {
+  //     return null;
+  //   }
+  // } catch (error) { 
+  //   console.error("다중 컬렉션 문서 가져오기 실패", error);
+  //   return null;
+  // }
+  return null;
+};
 
 // key, val 비교 및 조회 후 가져오기
 export const duplicateGetDoc = async(
