@@ -3,12 +3,12 @@ import { StringOnly } from "types/baseType";
 // 📌 기상청 api  관련
 //기상청 격자 변환 함수
 import { MarkerPositionType } from "types/kakaoComon";
-import { WeatherApiResponseType } from "types/weatherType";
-import { dateChange } from "utils/common";
+import { RequestNameType, WeatherTimeListType, WeatherApiDataType, WeatherApiResponseType, WeatherLocationType, WeatherTimeDataType, WeatherCategoryListsType } from "types/weatherType";
+import { dateChange, fromToday } from "utils/common";
 
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
-function weatherTime(requestType:string) {
+export function weatherTime(requestType:string) {
   const d = new Date();
   let h = d.getHours();
   const m = d.getMinutes();
@@ -54,7 +54,7 @@ function weatherTime(requestType:string) {
 }
 
 // ✅ 시간 차이
-const timeDifference = (beforeH:string, nextH:string, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
+export const timeDifference = (beforeH:string, nextH:string, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
   // 시간을 분 단위로 변환
   const bMinutes = parseInt(beforeH.slice(0, 2)) * 60 + parseInt(beforeH.slice(2, 4));
   const nMinutes = parseInt(nextH.slice(0, 2)) * 60 + parseInt(nextH.slice(2, 4));
@@ -98,42 +98,160 @@ export const weatherInit = async (coords:MarkerPositionType) => {
   // 1차 0~2시
   const beforeDay = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStrBefore'), hm: '2300' }, 36);
 
-  // if (!beforeDay.res || beforeDay.res.length === 0) {
-  //   console.error("0~2시 정보 가져오기 실패...");
-  //   return false;
-  // }
-  // // 2차 2~모레 전체
-  // const resultDays = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStr'), hm: '0230' });
-  // if (!resultDays.res || resultDays.res.length === 0) {
-  //   console.error("단기 예보 가져오기 실패");
-  //   return false;
-  // }
-  // return await weatherMerge(beforeDay, resultDays);
+  if (!beforeDay.res || beforeDay.res.length === 0) {
+    console.error("0~2시 정보 가져오기 실패...");
+    return false;
+  }
+  // 2차 2~모레 전체
+  const resultDays = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStr'), hm: '0230' });
+  if (!resultDays.res || resultDays.res.length === 0) {
+    console.error("단기 예보 가져오기 실패");
+    return false;
+  }
+  return await weatherMerge(beforeDay, resultDays);
 };
 
 // ✅ 공공데이터 API 요청 - getUltraSrtNcst(초단기실황), getUltraSrtFcst(초단기), getVilageFcst(단기)
 // 좌표, 요청 타입, 요청 기준 시간, 요청 수(필요 시)
-export async function getWeather(coords:MarkerPositionType, getName:'getUltraSrtNcst' | 'getUltraSrtFcst' | 'getVilageFcst', getTime?:StringOnly, getNum?:number) { 
+export async function getWeather(coords:MarkerPositionType, getName:RequestNameType, getTime?:StringOnly, getNum?:number) { 
   const _URL = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/${getName}`;
   const { x:nx, y:ny } = dfs_xy_conv("toXY", coords.lat, coords.lng); // 좌표 격자 변환
   const requesDate = getTime ? getTime : weatherTime(getName);
   const numOfRows =  getNum ? getNum : requestNumber(getName);
-  let returnData = {date:getTime ? dateChange('ymdStr') : requesDate.ymd, baseUpdate: getTime ? -1 :requesDate.hm, xy:{nx:nx,ny:ny},res:[]};
+  let returnData:WeatherLocationType = {date:getTime ? dateChange('ymdStr') : requesDate.ymd, baseUpdate: getTime ? -1 :requesDate.hm, xy:{nx:nx??0,ny:ny??0},res:[]};
   const resultUrl = `${_URL}?serviceKey=${process.env.REACT_APP_WEATHER_KEY}&pageNo=1&numOfRows=${numOfRows}&dataType=JSON&base_date=${requesDate.ymd}&base_time=${requesDate.hm}&nx=${nx}&ny=${ny}`;
-
-  console.log(resultUrl)
-
   try {
     const resultData = await gethWithRetry<WeatherApiResponseType>(resultUrl, 3);
-
-    // const addData = weatherFilter(resultData.response.body.items.item, getName, getTime ? -1 : requesDate.hm);
-    // returnData.res = addData;
+    const addData = weatherFilter(resultData.response.body.items.item, getName, getTime ? -1 : requesDate.hm);
+    returnData.res = addData;
   } catch (error) {
     console.error(error);
     console.log(`${getName} ❌ 날씨 api 요청 에러...`)
   }
-  // return returnData;
+  return returnData;
 };
+
+function weatherFilter(weatherItems:WeatherApiDataType[], requestType:RequestNameType, updateTime:string | number) {
+  const cutDay = fromToday(2);
+  const dateArr = weatherItems.reduce<WeatherTimeDataType[]>((newArr, newItem) => {
+    const { fcstDate, fcstTime, category, fcstValue } = newItem;
+    
+    // 날짜를 찾거나 없으면 새로 추가 ex) fcstDate : 20241231
+    let dateFind = newArr.find(dateFindItem => dateFindItem.date === (fcstDate ?? newItem.baseDate));
+
+    if (!dateFind) {
+      dateFind = {
+        date: (fcstDate ?? newItem.baseDate),
+        TMN: null,
+        TMX: null,
+        timeLists: [],
+        getUltraSrtNcst:-1, // 요청에 따라 업데이트 시간 입력
+        getUltraSrtFcst:-1,
+        getVilageFcst:-1,
+      };
+      newArr.push(dateFind);
+    }
+
+    if (category === 'TMN') {
+      dateFind.TMN = fcstValue; // 최저 기온 업데이트
+    } else if (category === 'TMX') {
+      dateFind.TMX = fcstValue; // 최고 기온 업데이트
+    } else {
+      // timeLists에서 해당 시간(fcstTime)을 찾기
+      let timeFind = dateFind.timeLists.find(timeItem => timeItem.time === (fcstTime ?? newItem.baseTime));
+      if (!timeFind) { // 시간이 없을 경우 추가
+        timeFind = {
+          time: (fcstTime ?? newItem.baseTime),
+          categoryList: [],
+        };
+        dateFind.timeLists.push(timeFind);
+      }
+      timeFind.categoryList.push({
+        value: (fcstValue ?? newItem.obsrValue),
+        category : category
+      });
+    }
+
+    return newArr;
+  }, []);
+
+  return dateArr.filter(dateArrItem => { // 오늘, 내일, 모레까지만 데이터 반환
+    dateArrItem[requestType] = updateTime; // 업데이트 시간 추가
+    return Number(cutDay) >= Number(dateArrItem.date);
+  })
+}
+
+
+export const weatherMerge = (prevOriginal:WeatherLocationType, nextOriginal:WeatherLocationType) => {
+  // 원본 데이터 지키기 위해
+  const prevData = JSON.parse(JSON.stringify(prevOriginal));
+  const nextData = JSON.parse(JSON.stringify(nextOriginal));
+  
+  // WeatherTimeDataType
+  const resultMerge = {
+    ...prevData,
+    baseUpdate: nextData.baseUpdate,
+    res: prevData.res.map((prevItem:WeatherTimeDataType,idx:number) => {
+      // res 내 같은 날 찾은 후 정보 업데이트
+      const sameData = nextData.res.find((nextResItem:WeatherTimeDataType) => nextResItem.date === prevItem.date);
+      if (sameData) {
+        // 같은 시간 카테고리 업데이트
+        const mergedTimeLists = [...prevItem.timeLists, ...sameData.timeLists].reduce((acc, reduceItem) => {
+          const findIndex = acc.findIndex((el:WeatherTimeListType) => el.time === reduceItem.time);
+          if (findIndex !== -1) {
+            // 이전값과 이후 값 비교 ----- item.categoryList
+            acc[findIndex].categoryList = weatherCategoryListUpdate(acc[findIndex].categoryList, reduceItem.categoryList);
+          } else {
+            acc.push(reduceItem);  // 중복되지 않는 항목 추가
+          }
+          return acc;
+        }, []);
+        // 가장 처음 오늘 날 또는 오늘날 date 비교
+        const getUltraSrtNcstValue = idx === 0 ? (sameData.getUltraSrtNcst !== -1 ? sameData.getUltraSrtNcst : prevItem.getUltraSrtNcst) : -1;
+        const getUltraSrtFcstValue = idx === 0 ? (sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst) : -1;
+        const getVilageFcstValue = idx === 0 ? (sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst) : -1;
+        
+        return { 
+          ...prevItem, 
+          ...sameData, 
+          TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
+          TMX: sameData.TMX !== null ? sameData.TMX : prevItem.TMX,
+          getUltraSrtNcst: getUltraSrtNcstValue,
+          getUltraSrtFcst: getUltraSrtFcstValue,
+          getVilageFcst: getVilageFcstValue,
+          timeLists: mergedTimeLists,
+        };
+      }
+      return prevItem;
+    })
+  };
+
+  // 일치하지 않은 다른 날 추가
+  nextData.res.forEach((nextDataItem:WeatherTimeDataType) => {
+    if (!resultMerge.res.some((someItem:WeatherTimeDataType) => someItem.date === nextDataItem.date)) {
+      resultMerge.res.push(nextDataItem);
+    }
+  });
+  return resultMerge;
+};
+
+// ✅ 같은 시간대 > 카테고리가 같다면 업데이트 일치하는 카테고리가 없다면 추가.
+const weatherCategoryListUpdate = (categoryPrev:WeatherCategoryListsType[],categoryNext:WeatherCategoryListsType[]) => {
+  // ✔️ map key, value
+  const cNext = new Map(categoryNext.map(categoryNextItem => [categoryNextItem.category, categoryNextItem.value])); 
+  const updateCategory = categoryPrev.map(categoryPrevItem => ({ // if - ? ncNext.value : ncPrev.value 
+    category: categoryPrevItem.category,
+    value: cNext.has(categoryPrevItem.category) ? cNext.get(categoryPrevItem.category) : categoryPrevItem.value ?? categoryPrevItem.obsrValue,
+  })) // ☝️ map로 변환한 최신 카테고리 이전과 같은 값이 있으면 최신 카테고리 value : 이전
+  
+  // ✅ 기존에 없다면 카테고리 추가.
+  categoryNext.forEach(nextCItem => {
+    if (!categoryPrev.some(prevCItem => prevCItem.category === nextCItem.category)) {
+      updateCategory.push(nextCItem); 
+    }
+  });
+  return updateCategory;
+}
 
 
 type Coordinates = {

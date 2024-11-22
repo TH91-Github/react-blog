@@ -1,7 +1,7 @@
 import { LayerRefType } from "components/element/LayerPopup";
 import { StringOnly, UserDataType } from "types/baseType";
 import { MarkerPositionType } from "types/kakaoComon";
-import { WeatherLocation } from "types/weatherType";
+import { KORLocationType } from "types/weatherType";
 
 export interface ThemeState {
   mode:string
@@ -49,7 +49,7 @@ export interface AlertCommonType {
 export interface WeatherActionType { // 수정 진행중
   data: null | any;
   coords: null | MarkerPositionType;
-  location: null | WeatherLocation;
+  location: null | KORLocationType;
   loading: boolean;
 }
 

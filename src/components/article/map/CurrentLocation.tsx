@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { actionUserLocationUpdate, actionWeathcer } from "store/store";
-import { WeatherLocation } from "types/weatherType";
 import { getCurrentLocation } from "utils/common";
 import { kakaomapAddressFromCoords } from "utils/kakaomap/common";
 import { coordsFindLocation } from "utils/weather/korLocation";
@@ -22,9 +21,6 @@ export default function CurrentLocation() {
       console.log("현재 위치 가져오기 에러.. 😢 "+error);
     }
   },[dispatch]);
-
-
-
 
   useEffect(() => {
     const locationPos = async() => {

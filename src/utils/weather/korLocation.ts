@@ -1,6 +1,6 @@
 import { MarkerPositionType } from "types/kakaoComon";
-import { WeatherLocation } from "types/weatherType";
-
+import { KORLocationType } from "types/weatherType";
+import korLocationData from './kor_location.json';
 /*
   districtCode : 행정구역코드
   addr1 : 특별시, 광역시, 도 
@@ -19,37 +19,24 @@ import { WeatherLocation } from "types/weatherType";
   updateETC : 위치 업데이트
   ※ 자료제공 : 공공데이터 API 
 */
-const KOR_LOCATION = [
-  {
-   "districtCode": "1100000000",
-   "addr1": "서울특별시",
-   "x": "60",
-   "y": "127",
-   "longH": "126",
-   "longM": "58",
-   "longS": "48.03",
-   "latH": "37",
-   "latM": "33",
-   "latS": "48.85",
-   "longS100": "126.980008333333",
-   "latS100": "37.5635694444444"
-  },
-]
 
+// 많은 데이터 json 분리 - 모든 데이터 타입 분석 타입 추론 시도 - 과부하
+// json 분리 직접 데이터 타입을 추론하려 하지 않아 오류 방지.
+const KOR_LOCATION: KORLocationType[] = korLocationData;
 // ✅ 키워드로 일치하는 장소 찾기.
 function keyWordFindLocation(addressName:string){
   const keywords = addressName.trim().split(" ");
 
-  // const result = KOR_LOCATION.find(location => 
-  //   // ✅ every : 모든 요소가 특정 조건을 만족하는지 확인
-  //   keywords.every(keyword =>
-  //     (location.addr1 && location.addr1.includes(keyword)) ||
-  //     (location.addr2 && location.addr2.includes(keyword)) ||
-  //     (location.addr3 && location.addr3.includes(keyword))
-  //   )
-  // );
+  const result = KOR_LOCATION.find(location => 
+    // ✅ every : 모든 요소가 특정 조건을 만족하는지 확인
+    keywords.every(keyword =>
+      (location.addr1 && location.addr1.includes(keyword)) ||
+      (location.addr2 && location.addr2.includes(keyword)) ||
+      (location.addr3 && location.addr3.includes(keyword))
+    )
+  );
 
-  // return result || null;
+  return result || null;
 };
 
 // ✅ 현재 좌표와 KOR_LOCATION 날씨 기준 위치 비교 가까운 곳 정보 반환
@@ -71,18 +58,17 @@ export function coordsFindLocation(coords:MarkerPositionType) {
   }
 
   // 가장 가까운 위치 찾기
-  let resultLocation:null| WeatherLocation= null;
+  let resultLocation:null| KORLocationType= null;
   let minDistance = Infinity;
   KOR_LOCATION.forEach(locationItem => {
-    const kLat = parseFloat(locationItem.latS100);
-    const kLng = parseFloat(locationItem.longS100);
+    const kLat = parseFloat(locationItem.latS100.toString());
+    const kLng = parseFloat(locationItem.longS100.toString());
     const distance = calculateDistance(targetLat, targetLng, kLat, kLng);
     if (distance < minDistance) {
       minDistance = distance;
       resultLocation = locationItem;
     }
   });
-
   return resultLocation;
 }
 
