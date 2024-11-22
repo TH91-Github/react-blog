@@ -122,9 +122,11 @@ const StylePlaceDetail = styled.div`
   }
   .place-head {
     overflow:hidden;
+    flex-shrink: 0;
     display:flex;
     flex-wrap: wrap;
     gap:20px;
+    height:240px;
     padding:10px;
   }
   .thumbnail {
@@ -197,7 +199,7 @@ const StylePlaceDetail = styled.div`
     padding:5px 0;
   }
   .place-cont {
-    flex-grow:1;
+    height:calc(100% - 240px);
     position:relative;
     border-top:5px solid ${colors.lineColor};
   }

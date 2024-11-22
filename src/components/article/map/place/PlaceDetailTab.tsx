@@ -54,6 +54,7 @@ const StylePlaceDetailTab = styled.div`
   display:flex;
   flex-direction: column;
   .tab-nav{
+    flex-shrink: 0;
     & > ul {
       display:flex;
       width: max-content;
@@ -78,7 +79,8 @@ const StylePlaceDetailTab = styled.div`
     }
   }
   .tab-btn {
-    padding:13px 15px;
+    height:45px;
+    padding:0 15px;
     font-size:18px;
     color:${colors.subTextColor};
     transition: ${transitions.base};
@@ -93,6 +95,8 @@ const StylePlaceDetailTab = styled.div`
   }
   .tab-cont {
     flex-grow:1;
+    position:relative;
+    height:calc(100% - 45px);
     border-top:5px solid ${colors.lineColor};
     &-inner {
       height:100%;

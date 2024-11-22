@@ -159,6 +159,9 @@ const StylePlaceReviewList = styled.div`
   padding:20px 0 0;
   .review-inner {
     flex-grow:1;
+    display:flex;
+    flex-direction:column;
+    height:calc(100% - 61px);
     padding:0 10px;
   }
   .title {
@@ -185,7 +188,6 @@ const StylePlaceReviewList = styled.div`
   .review-list {
     overflow-y:auto;
     position:relative;
-    max-height:300px;
     padding:0 5px 0 0;
     &::-webkit-scrollbar {
       width:5px;
