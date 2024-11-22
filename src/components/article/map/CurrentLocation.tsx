@@ -14,8 +14,8 @@ export default function CurrentLocation() {
       const coords = {lat:coordsPos.getLat(), lng:coordsPos.getLng()}
       dispatch(actionUserLocationUpdate({...address, coords: coords }));
 
-      // 기상청 store 업데이트 
-      const locationData= coordsFindLocation(coords); 
+      // 기상청 위치 조회 - store 업데이트 
+      const locationData = coordsFindLocation(coords); 
       dispatch(actionWeathcer({coords:coords, location:locationData }));
     } catch (error) {
       console.log("현재 위치 가져오기 에러.. 😢 "+error);

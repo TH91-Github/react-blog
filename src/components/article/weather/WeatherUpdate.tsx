@@ -76,7 +76,6 @@ export const WeatherUpdate = () => {
   const getWeatherInit = useCallback(async() => {
     if(!storeWeather.coords) return
     const initWeather = await weatherInit(storeWeather!.coords);
-    console.log(initWeather)
     if(initWeather?.res?.length > 0) {
       await updateWeatherData('getVilageFcst', initWeather);
     }else{
@@ -92,7 +91,6 @@ export const WeatherUpdate = () => {
     const threeDays = [ymd,fromToday(1),fromToday(2)];
     const weatherLists = threeDays.map(dayItem => firebaseWeather[dayItem]).filter(Boolean);
 
-    console.log(weatherLists)
     if(!storeWeather.location) return
     // 오늘, 내일, 모레 데이터가 없는 경우 다시 요청.
     if(weatherLists.length < threeDays.length){
@@ -108,13 +106,10 @@ export const WeatherUpdate = () => {
       }
       dispatch(actionWeathcer({data:reData, loading:false}));
       if(getVilageFcstHM !== today.getVilageFcst){ // 3시간 단위 단기 업데이트
-        console.log('단기 업데이트 진행')
         await updateWeatherData('getVilageFcst', reData);
       }else if(timeDifference(today.getUltraSrtFcst, getUltraSrtFcstHM)){
-        console.log('초단기')
         await updateWeatherData('getUltraSrtFcst', reData);
       }else if(ultraSrtNcstHM !== today.getUltraSrtNcst){ // 실황
-        console.log('실황')
         await updateWeatherData('getUltraSrtNcst', reData);
       }
     }

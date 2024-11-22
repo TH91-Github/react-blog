@@ -23,7 +23,7 @@ export const getWeatherdepthCollectionDoc = async (firebaseFind:StringOnly) => {
       return null;
     }
   } catch (error) { 
-    console.error("다중 컬렉션 문서 가져오기 실패", error);
+    console.error("날씨 문서 가져오기 실패", error);
     return null;
   }
 };
