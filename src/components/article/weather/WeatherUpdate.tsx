@@ -105,14 +105,17 @@ export const WeatherUpdate = () => {
         res:[...weatherLists],
         xy:{nx:Number(storeWeather.location.x), ny:Number(storeWeather.location.y)}
       }
-      dispatch(actionWeathcer({data:reData, loading:false}));
       
+      // 현재 시간과 비교 후 최신화
       if(getVilageFcstHM !== (today?.getVilageFcst)){ // 3시간 단위 단기 업데이트
         await updateWeatherData('getVilageFcst', reData);
       }else if(timeDifference(`${today?.getUltraSrtFcst}`, getUltraSrtFcstHM)){
         await updateWeatherData('getUltraSrtFcst', reData);
       }else if(ultraSrtNcstHM !== today?.getUltraSrtNcst){ // 실황
         await updateWeatherData('getUltraSrtNcst', reData);
+      }else{
+        // 기존 값 그대로 사용.
+        dispatch(actionWeathcer({data:reData, loading:false}));
       }
     }
   },[firebaseWeather, storeWeather.location, dispatch, getWeatherInit, updateWeatherData])
@@ -122,10 +125,13 @@ export const WeatherUpdate = () => {
     if (isLoading || !storeWeather.coords) return; 
     if (!firebaseWeather) { // 년도 & 지역 관련 날씨가 없는 경우 새롭게 추가
       getWeatherInit();
+      console.log('새로')
     }else{ // firebase 값 있는 경우.
       todayWeatherChk();
+      console.log("기존")
     }
   }, [firebaseWeather, isLoading, storeWeather.coords, getWeatherInit, todayWeatherChk]);
 
   return null
 }
+WeatherUpdate.displayName = "weather-update";

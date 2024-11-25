@@ -3,6 +3,8 @@ import { SvgSearch } from "assets/svg/common/CommonSvg";
 import { SvgThermometer } from "assets/svg/weather/weatherSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useCallback, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 import styled from "styled-components";
 import { MarkerPositionType } from "types/kakaoComon";
 import { keyWordFindLocation } from "utils/weather/korLocation";
@@ -11,14 +13,15 @@ interface SearchWrapType {
   searchUpdate: (searchCoords:MarkerPositionType) => void;
 }
 export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
+  const {loading} = useSelector((state : RootState) => state.storeWeather);
   const inputRef = useRef<InputElementRef>(null);
   const errorTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isFocus, setIsFocus] = useState(false);
   const [isError, setIsError] = useState({error:false, message:''});
   const [addrVal, setAddrVal] = useState('');
 
-  const errorActive = useCallback(() => {
-    setIsError({error:true, message:'띄어쓰기 또는 입력을 확인해주세요. 😂'});
+  const errorActive = useCallback((errorVal:string) => {
+    setIsError({error:true, message:errorVal});
     if (errorTimeout.current) {
       clearTimeout(errorTimeout.current);
     }
@@ -42,13 +45,13 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     }
   },[]);
 
-  const handleChange = useCallback((v:string)=>{
+  const handleChange = useCallback((v:string)=>{ // 미리보기 지역을 나타내기 위함. - 진행 예정
     setAddrVal(v.trim())
   },[])
 
-  const handleClick = () => {
-    console.log('검색')
-    if(!inputRef.current) return
+  const handleClick = useCallback(() => {
+    if(!inputRef.current || isError.error) return
+    if(loading) errorActive('✋ 잠시 후에 시도해주세요!!');
     const inputVal = inputRef.current.getInputElement()!.value;
 
     if(inputVal.trim()){
@@ -56,12 +59,12 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
       if(addrResult){
         searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
       }else{
-        errorActive();
+        errorActive('띄어쓰기 또는 입력을 확인해주세요. 😂');
       }
     }else{
-      console.log("입력을 확인해주세요")
+      errorActive('입력을 확인해주세요!');
     }
-  }
+  },[ isError.error, loading, errorActive, searchUpdate]);
 
   return( 
     <StyleSearchWrap className={isFocus ? 'isFocus':''}>

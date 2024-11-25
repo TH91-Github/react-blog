@@ -1,6 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { colors } from "assets/style/Variable";
-import { spawn } from "child_process";
 import { TimeDate } from "components/effect/TimeDate";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
