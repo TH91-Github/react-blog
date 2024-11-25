@@ -1,9 +1,7 @@
 import { colors } from "assets/style/Variable";
 import { ListBtnActive } from "components/effect/ListBtnActive";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
-import styled from "styled-components"
+import styled from "styled-components";
 import { WeatherSelectDay } from "./WeatherSelectDay";
 
 export const WeatherInfo = () => {
@@ -13,14 +11,14 @@ export const WeatherInfo = () => {
     { title:'모레', active:false,}
   ])
 
-  const pickDayActive = (activeN:any) => {
+  const pickDayActive = (activeN:number) => {
+    console.log(activeN)
     setPickDay(
       prev => prev.map((prevItem, idx) => ({
         ...prevItem,
         active: idx === activeN
       }))
     )
-    console.log(activeN)
   }
 
   return (
@@ -35,9 +33,7 @@ export const WeatherInfo = () => {
             activeTextColor={colors.originWhite}
             clickEvent={pickDayActive}/>
         </div>
-        <WeatherSelectDay />
-
-        
+        <WeatherSelectDay  isDay={pickDay.findIndex((day) => day.active)}/>
       </div>
       {/* 시간 별 온도 그래프 */}
       <div>

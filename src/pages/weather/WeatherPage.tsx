@@ -3,16 +3,24 @@ import { LongWeather } from 'components/article/weather/LongWeather';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
 import { WeatherInfo } from 'components/article/weather/WeatherInfo';
 import { WeatherUpdate } from 'components/article/weather/WeatherUpdate';
-import { useEffect } from 'react';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { actionWeathcer, AppDispatch } from 'store/store';
 import styled from "styled-components";
+import { MarkerPositionType } from 'types/kakaoComon';
+import { coordsFindLocation } from 'utils/weather/korLocation';
 
 export default function WeatherPage() {
+  const dispatch = useDispatch<AppDispatch>(); 
 
-  useEffect(()=>{
-    
-  },[])
-  const weatherAddrUpdate = () => {
-    
+  // 기상청 기준 해당 좌표 정보
+  const getLocation = useCallback((coords:MarkerPositionType) => {
+    const locationData = coordsFindLocation(coords); 
+    dispatch(actionWeathcer({coords:coords, location:locationData}));
+  },[dispatch]);
+
+  const weatherAddrUpdate = (searchCoords:MarkerPositionType) => {
+    getLocation(searchCoords);
   }
   return (
     <StyleWrap className="weather">

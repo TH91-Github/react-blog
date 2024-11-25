@@ -28,8 +28,8 @@ export interface WeatherTimeListType {
 }
 export interface WeatherTimeDataType { // day 날씨 정보
   date: string | number;
-  TMN: string | number |null;
-  TMX: string | number |null;
+  TMN: string | null;
+  TMX: string | null;
   timeLists: WeatherTimeListType[];
   getUltraSrtNcst: number | string;
   getUltraSrtFcst: number | string;

@@ -153,9 +153,9 @@ function weatherFilter(weatherItems:WeatherApiDataType[], requestType:RequestNam
     }
 
     if (category === 'TMN') {
-      dateFind.TMN = fcstValue; // 최저 기온 업데이트
+      dateFind.TMN = `${fcstValue}`; // 최저 기온 업데이트
     } else if (category === 'TMX') {
-      dateFind.TMX = fcstValue; // 최고 기온 업데이트
+      dateFind.TMX = `${fcstValue}`; // 최고 기온 업데이트
     } else {
       // timeLists에서 해당 시간(fcstTime)을 찾기
       let timeFind = dateFind.timeLists.find(timeItem => timeItem.time === (fcstTime ?? newItem.baseTime));

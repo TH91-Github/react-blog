@@ -4,14 +4,30 @@ import { SvgThermometer } from "assets/svg/weather/weatherSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import { useCallback, useRef, useState } from "react";
 import styled from "styled-components";
+import { MarkerPositionType } from "types/kakaoComon";
+import { keyWordFindLocation } from "utils/weather/korLocation";
 
 interface SearchWrapType {
-  searchUpdate: () => void;
+  searchUpdate: (searchCoords:MarkerPositionType) => void;
 }
 export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
   const inputRef = useRef<InputElementRef>(null);
+  const errorTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [isError, setIsError] = useState({error:false, message:''});
   const [addrVal, setAddrVal] = useState('');
+
+  const errorActive = useCallback(() => {
+    setIsError({error:true, message:'띄어쓰기 또는 입력을 확인해주세요. 😂'});
+    if (errorTimeout.current) {
+      clearTimeout(errorTimeout.current);
+    }
+    // 연속 요청을 막기 위해
+    errorTimeout.current = setTimeout(() => {
+      setIsError({error:false, message:''});
+      inputRef.current?.inputIsFocus();
+    }, 1000); 
+  },[]);
 
   const handleFocus = () => {
     setIsFocus(true);
@@ -32,49 +48,58 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
 
   const handleClick = () => {
     console.log('검색')
-    // const inputVal = inputRef.current.getInputElement().value;
+    if(!inputRef.current) return
+    const inputVal = inputRef.current.getInputElement()!.value;
 
-    // if(inputVal.trim()){
-    //   const addrResult = keyWordFindLocation(inputVal);
-    //   if(addrResult){
-    //     // searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
-    //   }else{
-    //     console.log('띄어쓰기 또는 입력을 확인해주세요')
-    //   }
-    // }else{
-    //   console.log("입력을 확인해주세요")
-    // }
+    if(inputVal.trim()){
+      const addrResult = keyWordFindLocation(inputVal);
+      if(addrResult){
+        searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
+      }else{
+        errorActive();
+      }
+    }else{
+      console.log("입력을 확인해주세요")
+    }
   }
 
   return( 
     <StyleSearchWrap className={isFocus ? 'isFocus':''}>
-      <span className="search-icon"><SvgSearch $fillColor={isFocus ? colors.mSlateBlue:colors.lineColor} /></span>
-      <InputElement 
-        ref={inputRef}
-        name={'weahter-search'}
-        keyEnter={handleClick}
-        focusEvent={handleFocus}
-        blurEvent={handleFocusOut}
-        changeEvent={handleChange}
-        focusColor={colors.mSlateBlue}
-        placeholder={'지역을 검색해주세요. 😁'} />
-      <button 
-        type="button" 
-        className="btn"
-        onClick={handleClick}>
-        <span className="btn-icon"><SvgThermometer /></span>
-      </button>
+      <div className="search">
+        <span className="search-icon"><SvgSearch $fillColor={isFocus ? colors.mSlateBlue:colors.lineColor} /></span>
+        <InputElement 
+          ref={inputRef}
+          name={'weahter-search'}
+          keyEnter={handleClick}
+          focusEvent={handleFocus}
+          blurEvent={handleFocusOut}
+          changeEvent={handleChange}
+          focusColor={colors.mSlateBlue}
+          placeholder={'지역을 검색해주세요. 😁'} />
+        <button 
+          type="button" 
+          className="btn"
+          onClick={handleClick}>
+          <span className="btn-icon"><SvgThermometer /></span>
+        </button>
+      </div>
       {/* 지역별 보기 리스트 예정. */}
+      {
+        isError.error && <div className="error-txt">{isError.message}</div>
+      }
     </StyleSearchWrap>
   )
 }
 const StyleSearchWrap = styled.div`
-  overflow:hidden;
-  display:flex;
-  align-items:center;
   position:relative;
-  height:40px;
-  border-radius:5px;
+  .search{
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    position:relative;
+    height:40px;
+    border-radius:5px;
+  }
   .search-icon {
     display:flex;
     align-items:center;
@@ -98,16 +123,16 @@ const StyleSearchWrap = styled.div`
     margin-left:-1px;
     width:300px;
     height:100%;
-  }
-  .input  {
-    height:100%;
-    border-top:1px solid ${colors.lineColor};
-    border-bottom:1px solid ${colors.lineColor};
-    border-right:none;
-    border-left: none;
-    &:focus{
+    .input  {
+      height:100%;
+      border-top:1px solid ${colors.lineColor};
+      border-bottom:1px solid ${colors.lineColor};
       border-right:none;
       border-left: none;
+      &:focus{
+        border-right:none;
+        border-left: none;
+      }
     }
   }
   .btn {
@@ -159,5 +184,12 @@ const StyleSearchWrap = styled.div`
         }
       }
     }
+  }
+  .error-txt{
+    position:absolute;
+    top:calc(100% + 10px);
+    left:50px;
+    font-size:14px;
+    color:${colors.red};
   }
 `;

@@ -1,12 +1,13 @@
-import styled from "styled-components";
-import { SearchWrap } from "./SearchWrap";
-import { colors, shadow, translucence } from "assets/style/Variable";
-import { RootState } from "store/store";
-import { useSelector } from "react-redux";
+import { colors } from "assets/style/Variable";
 import { SvgPoint } from "assets/svg/common/CommonSvg";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import styled from "styled-components";
+import { MarkerPositionType } from "types/kakaoComon";
+import { SearchWrap } from "./SearchWrap";
 
 interface WeatherHeaderType {
-  addrUpdate : () => void;
+  addrUpdate : (searchCoords:MarkerPositionType) => void;
 }
 export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
   const useLocation = useSelector((state : RootState) => state.storeLocation);

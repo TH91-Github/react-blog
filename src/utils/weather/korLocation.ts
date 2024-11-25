@@ -24,7 +24,7 @@ import korLocationData from './kor_location.json';
 // json 분리 직접 데이터 타입을 추론하려 하지 않아 오류 방지.
 const KOR_LOCATION: KORLocationType[] = korLocationData;
 // ✅ 키워드로 일치하는 장소 찾기.
-function keyWordFindLocation(addressName:string){
+export function keyWordFindLocation(addressName:string){
   const keywords = addressName.trim().split(" ");
 
   const result = KOR_LOCATION.find(location => 

@@ -21,6 +21,7 @@ interface InputType {
 
 export interface InputElementRef {
   getInputElement: () => HTMLInputElement | null;
+  inputIsFocus: () => void;
   resetValue: () => void;
 }
 
@@ -70,6 +71,7 @@ export default(forwardRef<InputElementRef, InputType>( function InputElement(
   useImperativeHandle(ref, () => ({
     // input 반환
     getInputElement: () => inputRef.current,
+    inputIsFocus: () => inputRef.current?.focus(),
     // 초기화
     resetValue: () => {
       setVal('');
