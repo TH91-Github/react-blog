@@ -142,7 +142,7 @@ export const transitions = {
   ease: "all .3s ease",
   easeInOut: "all .3s ease-in-out"
 }
-export const animaion = {
+export const animation = {
   fadeIn : `fadeIn .3s ease-in-out both`,
   fadeUp : `fadeUp .8s ease both`,
 }

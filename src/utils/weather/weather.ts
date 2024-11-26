@@ -101,14 +101,15 @@ export const weatherInit = async (coords:MarkerPositionType) => {
   if (!beforeDay.res || beforeDay.res.length === 0) {
     console.error("0~2시 정보 가져오기 실패...");
     return false;
+  }else{
+    // 2차 2~모레 전체
+    const resultDays = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStr'), hm: '0230' });
+    if (!resultDays.res || resultDays.res.length === 0) {
+      console.error("단기 예보 가져오기 실패");
+      return false;
+    }
+    return await weatherMerge(beforeDay, resultDays);
   }
-  // 2차 2~모레 전체
-  const resultDays = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStr'), hm: '0230' });
-  if (!resultDays.res || resultDays.res.length === 0) {
-    console.error("단기 예보 가져오기 실패");
-    return false;
-  }
-  return await weatherMerge(beforeDay, resultDays);
 };
 
 // ✅ 공공데이터 API 요청 - getUltraSrtNcst(초단기실황), getUltraSrtFcst(초단기), getVilageFcst(단기)
@@ -211,11 +212,25 @@ export const weatherMerge = (prevOriginal:WeatherLocationType, nextOriginal:Weat
         const getUltraSrtFcstValue = idx === 0 ? (sameData.getUltraSrtFcst !== -1 ? sameData.getUltraSrtFcst : prevItem.getUltraSrtFcst) : -1;
         const getVilageFcstValue = idx === 0 ? (sameData.getVilageFcst !== -1 ? sameData.getVilageFcst : prevItem.getVilageFcst) : -1;
         
+        // 최저, 최고 기온
+        let TMNVal = sameData.TMN !== null ? sameData.TMN : prevItem.TMN;
+        let TMXVal = sameData.TMX !== null ? sameData.TMX : prevItem.TMX;
+        if(sameData.getUltraSrtNcst !== -1 ){
+          const currentTime = sameData.timeLists.find((timeItem:WeatherTimeListType) => timeItem.time === weatherClock());
+          const currentTemperature = currentTime?.categoryList.find((categoryItem:WeatherCategoryListsType) => categoryItem.category ==='T1H');
+          if(currentTemperature){ // 단기로 가져온 최저/최고 온도와 현 시간 기준 온도와 차이가 있을 수 있기에
+            const temperature = currentTemperature.value;
+            // 최저 기존 값 사용 or 현시간 온도 내림 값 
+            TMNVal = (Number(TMNVal) < Number(temperature)) ? TMNVal : Math.floor(temperature);
+            // 최고 기존 값 사용 or 현시간 온도 올림 값
+            TMXVal = (Number(TMXVal) > Number(temperature)) ? TMXVal : Math.ceil(temperature);
+          }
+        }
         return { 
           ...prevItem, 
           ...sameData, 
-          TMN: sameData.TMN !== null ? sameData.TMN : prevItem.TMN,
-          TMX: sameData.TMX !== null ? sameData.TMX : prevItem.TMX,
+          TMN: TMNVal,
+          TMX: TMXVal,
           getUltraSrtNcst: getUltraSrtNcstValue,
           getUltraSrtFcst: getUltraSrtFcstValue,
           getVilageFcst: getVilageFcstValue,
@@ -335,3 +350,4 @@ export function dfs_xy_conv(code: "toXY" | "toLL", v1: number, v2: number): Coor
 
   return rs;
 }
+

@@ -25,14 +25,15 @@ import korLocationData from './kor_location.json';
 const KOR_LOCATION: KORLocationType[] = korLocationData;
 // ✅ 키워드로 일치하는 장소 찾기.
 export function keyWordFindLocation(addressName:string){
-  const keywords = addressName.trim().split(" ");
+  const refinedAddress = addressName.trim().replace(/(구|동|읍|군)$/, ""); // EX) 논현1동 2동 -> 논현으로 가능하도록
+  const keywords = refinedAddress.split(" ");
 
   const result = KOR_LOCATION.find(location => 
     // ✅ every : 모든 요소가 특정 조건을 만족하는지 확인
     keywords.every(keyword =>
       (location.addr1 && location.addr1.includes(keyword)) ||
       (location.addr2 && location.addr2.includes(keyword)) ||
-      (location.addr3 && location.addr3.includes(keyword))
+      (location.addr3 && location.addr3.startsWith(keyword))
     )
   );
 

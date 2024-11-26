@@ -20,13 +20,34 @@ export const WeatherCategory = ({activeUpdate}) => {
     activeUpdate(activeN)
   }
   return (
-    <StyleWeatherCategory>
-      <ListBtnActive 
-        btnData={pickDay}
-        activeColor={colors.blue}
-        bgColor={'#202b3d'}
-        clickEvent={pickDayActive}/>
-    </StyleWeatherCategory>
+    <div>
+      1번
+      {
+        data
+        ? (
+          <div className="wrap">
+            <div className="item">
+              TEST
+            </div>
+          </div>  
+        )
+        :(
+          <div className="stskeleton-wrap">
+            <div className="stskeleton-item">
+
+            </div>
+          </div> 
+        )
+      }
+
+      2번
+      <div className={`wrap ${!data ? 'stskeleton-wrap':''}`}>
+        <div className={`item ${!data ? 'stskeleton-item':''}`}>
+          {data.test}
+        </div>
+      </div>  
+
+    </div>
   )
 }
 const StyleWeatherCategory = styled.div`

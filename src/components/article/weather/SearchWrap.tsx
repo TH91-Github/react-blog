@@ -32,9 +32,9 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     }, 1000); 
   },[]);
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     setIsFocus(true);
-  }
+  },[])
 
   const handleFocusOut = useCallback((e: React.ChangeEvent<HTMLInputElement>)=> {
     if(e.target.value.trim().length > 0){
@@ -56,11 +56,12 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
 
     if(inputVal.trim()){
       const addrResult = keyWordFindLocation(inputVal);
-      if(addrResult){
-        searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
-      }else{
-        errorActive('띄어쓰기 또는 입력을 확인해주세요. 😂');
-      }
+      console.log(addrResult)
+      // if(addrResult){
+      //   searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
+      // }else{
+      //   errorActive('띄어쓰기 또는 입력을 확인해주세요. 😂');
+      // }
     }else{
       errorActive('입력을 확인해주세요!');
     }

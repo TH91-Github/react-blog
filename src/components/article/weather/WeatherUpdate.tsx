@@ -11,6 +11,8 @@ export const WeatherUpdate = () => {
   const storeWeather = useSelector((state : RootState) => state.storeWeather);
   const dispatch = useDispatch<AppDispatch>(); 
   const isRequestRef = useRef(false);
+  const errorTimeRef =  useRef<ReturnType<typeof setTimeout> | null>(null);
+
   interface WeatherQueryType {
     [date: string]: WeatherTimeDataType;
   }
@@ -24,13 +26,21 @@ export const WeatherUpdate = () => {
         col3:'year',
         doc3:`${dateChange('year')}`, 
       }
-      dispatch(actionWeathcer({ loading: true}));
       return getWeatherdepthCollectionDoc(firebaseGet);
     },
     staleTime: 1000 * 60 * 30, // 30분 동안 캐시된 데이터 사용
     enabled: !!storeWeather?.location,
   });
 
+  // ✅ error 
+  const requestError = useCallback(() => {
+    if (errorTimeRef.current) clearTimeout(errorTimeRef.current);
+    dispatch(actionWeathcer({ error:true }));
+    errorTimeRef.current = setTimeout(() => {
+      dispatch(actionWeathcer({ error:false }));
+    }, 1500);
+  },[dispatch])
+  
   // ✅ 업데이트
   const updateWeatherData = useCallback(async (requestType:RequestNameType, beforeData:WeatherLocationType) => {
     const coords = storeWeather.coords;
@@ -82,8 +92,9 @@ export const WeatherUpdate = () => {
       await updateWeatherData('getVilageFcst', initWeather);
     } else {
       console.log('실패');
+      requestError();
     }
-  },[storeWeather.coords, updateWeatherData]);
+  },[storeWeather.coords, requestError, updateWeatherData]);
 
     // ✅ 받아온 데이터 오늘 기준 체크
   const todayWeatherChk = useCallback(async()=>{
@@ -123,6 +134,7 @@ export const WeatherUpdate = () => {
   // ✅ 초기 저장된 데이터 유무 확인. 
   useEffect(() => {
     if (isLoading || !storeWeather.coords) return; 
+    dispatch(actionWeathcer({ loading: true}));
     if (!firebaseWeather) { // 년도 & 지역 관련 날씨가 없는 경우 새롭게 추가
       getWeatherInit();
       console.log('새로')
@@ -130,8 +142,7 @@ export const WeatherUpdate = () => {
       todayWeatherChk();
       console.log("기존")
     }
-  }, [firebaseWeather, isLoading, storeWeather.coords, getWeatherInit, todayWeatherChk]);
-
+  }, [firebaseWeather, isLoading, storeWeather.coords, dispatch, getWeatherInit, todayWeatherChk]);
   return null
 }
 WeatherUpdate.displayName = "weather-update";

@@ -157,9 +157,14 @@ export function fromToday(day=0) {
 
 export function dateChange(type:string = 'default', callDate?: any) { // 
   // callDate가 Timestamp 객체일 경우 toDate()로 변환
-  // > new Date(callDate) 2024,1,1 or 2424-1-1 or 2424/1/1 문자열
-  const d = callDate ? (callDate.toDate ? callDate.toDate() : new Date(callDate)) : new Date();
-  if (isNaN(d)) {
+  // > new Date(callDate) 2024,1,1 or 2424-1-1 or 2424/1/1 문자열 그 외 20240101일 경우 아래와 같이 변경 됨.
+  const formattedDate = typeof callDate === 'string' && /^\d{8}$/.test(callDate) // YYYYMMDD 일 경우
+    ? `${callDate.slice(0, 4)}-${callDate.slice(4, 6)}-${callDate.slice(6, 8)}` // YYYY-MM-DD로 변환
+    : callDate;
+  const d = formattedDate ? (formattedDate.toDate ? formattedDate.toDate() : new Date(formattedDate)) : new Date();
+
+
+  if (isNaN(d.getTime())){ // 유효한 날짜인지 확인
     throw new Error('Invalid date');
   }
   if (type.includes('Before')) d.setDate(d.getDate() - 1);
@@ -178,6 +183,7 @@ export function dateChange(type:string = 'default', callDate?: any) { //
     y2md: `${year.toString().substring(2)}. ${month}. ${day}`, // EX - 24.1.1
     y2mdw: `${year.toString().substring(2)}. ${month}. ${day}. ${week}`, // EX - 24.1.1.월
     y2mdwhm: `${year.toString().substring(2)}. ${month}. ${day}. ${week}. ${h}:${m}`, // EX - 24.1.1.월,시,분
+    mdw:`${month}. ${day}. ${week}`,
     year: year,
     month: month,
     day: week,

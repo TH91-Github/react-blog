@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { colors } from "assets/style/Variable";
+import { animation, colors, keyFrames } from "assets/style/Variable";
 import { TimeDate } from "components/effect/TimeDate";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,17 +7,15 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import { WeatherCategoryListsType, WeatherTimeListType } from "types/weatherType";
 import { dateChange, weatherClock } from "utils/common";
+import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
 interface WeatherSelectDayType {
   isDay? : number;
 }
 export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
   const queryClient = useQueryClient();
-  // const useLocation = useSelector((state : RootState) => state.storeLocation);
-  // const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(0, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
-  const {data, loading, location} = useSelector((state : RootState) => state.storeWeather);
+  const {data, loading, location, error} = useSelector((state : RootState) => state.storeWeather);
   const [dayCategory, setDayCategory] = useState<WeatherCategoryListsType[] | null>(null); 
-
 
   useEffect(()=>{
     const todayTime = weatherClock(); // 현재 시간
@@ -29,13 +27,15 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
 
   // 시간(H)이 바뀌면 날씨 업데이트 확인
   const weatherUpdateChk = useCallback(() =>{
-      queryClient.invalidateQueries({ queryKey: ['weatherBase'] });
+    queryClient.invalidateQueries({ queryKey: ['weatherBase'] });
   },[queryClient]);
 
+  console.log(dayCategory)
+  
   return(
     <StyleWeatherSelectDay>
       {
-        !loading && dayCategory
+        (!loading && dayCategory)
         ? (
         <>
           <div className="location-date">
@@ -52,7 +52,9 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
               timeUpdate={weatherUpdateChk} />
           </div>
           <div className="temperature-wrap">
-            <span className="weather-icon">날씨아이콘</span>
+            <span className="weather-icon">
+              <WeatherIcon categoryLists={dayCategory}/>
+            </span>
             <p className="temperature">
               <span className="current">
                 {
@@ -91,7 +93,28 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
         </>
         )
       }
-      
+      {
+        error && (
+          <div className="error-wrap">
+            <p className="message">
+              {
+                weatherClock() === '0800' || weatherClock() === '0900'
+                  ?
+                  <>
+                    <span>오전 8시부터 10시 사이에는</span>
+                    <span>날씨 요청이 원활하지 않을 수 있어요... 🙇‍♂️</span>
+                    <span>잠시 후에 다시 이용해 주세요.</span>
+                  </>
+                  : 
+                  <>
+                    <span>현재 날씨정보를 불러올 수 없어요... 🥹</span>
+                    <span>잠시 후에 다시 이용해 주세요.</span>
+                  </>
+              }
+            </p>
+          </div>
+        )
+      }
     </StyleWeatherSelectDay>
   )
 }
@@ -182,5 +205,32 @@ const StyleWeatherSelectDay = styled.div`
       height:19px;
       margin:10px auto 0;
     }
+  }
+  .error-wrap {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:${props => props.theme.type === 'dark'? `rgba(0,0,0,0.7);`:`rgba(255,255,255,.7);` };
+    text-align:center;
+    .message{
+      & > span {
+        overflow:hidden;
+        display:block;
+        line-height:1.5;
+        animation: ${animation.fadeUp};
+        &:nth-child(2){
+          animation-delay:.2s;
+        }
+        &:nth-child(3){
+          animation-delay:.4s;
+        }
+      }
+    }
+    ${keyFrames.fadeUp};
   }
 `;

@@ -1,4 +1,4 @@
-import { animaion, colors, keyFrames } from "assets/style/Variable";
+import { animation, colors, keyFrames } from "assets/style/Variable";
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import { KeyObjectAnyType } from "types/kakaoComon";
@@ -147,14 +147,14 @@ const StyleAddress = styled.div`
     }
     .address-detail {
       display:block;
-      animation: ${animaion.fadeIn};
+      animation: ${animation.fadeIn};
       & > P {
         .badge {
-          animation: ${animaion.fadeIn};
+          animation: ${animation.fadeIn};
           animation-delay:.2s;
         }
         .txt{
-          animation: ${animaion.fadeUp};
+          animation: ${animation.fadeUp};
         }
       } 
     }

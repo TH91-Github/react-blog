@@ -51,6 +51,7 @@ export interface WeatherActionType { // 수정 진행중
   coords: null | MarkerPositionType;
   location: null | KORLocationType;
   loading: boolean;
+  error:boolean;
 }
 
 export interface TestStateType {

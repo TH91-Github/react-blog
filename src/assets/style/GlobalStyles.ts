@@ -104,30 +104,27 @@ export const GlobalStyles = createGlobalStyle`
   :root {
     
   }
-  
   .skeleton-item{
     overflow: hidden;
     position:relative;
     background:#ebebeb;
     &::before{
-      content: '';
       position: absolute;
       top: 0;
       left: 0;
-      width: 30px;
+      width: 100%;
       height: 100%;
-      background: linear-gradient(to right, #ebebeb, #fff, #ebebeb);
-      animation: skeletonLoading 2s infinite linear;
+      background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,0) 20%,rgba(255,255,255,0) 100%);
+      animation: skeletonAni 1.5s infinite linear;
+      content: '';
     }
   }
-  @keyframes skeletonLoading {
+  @keyframes skeletonAni {
     0% {
-      transform: translateX(0);
+      transform: translateX(-100%);
     }
-    50%,
     100% {
-      transform: translateX(460px);
+      transform: translateX(100%);
     }
   }
 `;
-
