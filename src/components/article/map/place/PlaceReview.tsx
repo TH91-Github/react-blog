@@ -31,10 +31,10 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
     collectionName: placeCategory,
     docId: placeDocId,
     updateDocId: reviewData.id,
-    authorId: user!.uid,
+    authorId: user?.uid,
     updateKey: 'like',
     likeList: updateLike,
-  }),[placeCategory, placeDocId, reviewData.id, user]);
+  }),[placeCategory, placeDocId, reviewData.id, user?.uid]);
 
   const handlelikeClick = () => {
     if(user){
@@ -75,7 +75,7 @@ export default function PlaceReview({placeCategory, placeDocId, reviewData, even
         queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] }); 
       } 
     };
-  }, [placeCategory, placeDocId, reviewData, user, queryClient, createPlaceUpdateInfo]);
+  }, [placeCategory, placeDocId, reviewData.like, queryClient, createPlaceUpdateInfo]);
 
   const handleRemoveClick = (e:ReviewDataTypeC) =>{
     eventRemove(e);

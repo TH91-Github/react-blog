@@ -34,7 +34,7 @@ export const PlaceThumbnail = ({placeData}:PlaceThumbnailType) => {
   )
 }
 
-export const StylePlaceThumbnail = styled.div`
+const StylePlaceThumbnail = styled.div`
   display:flex;
   position:relative;
   width:100%;

@@ -52,7 +52,7 @@ const alertCommon :AlertCommonType = {
   autoClose: undefined,
 };
 export const alertCommonSlice = createSlice({
-  name: "user login",
+  name: "alert",
   initialState: alertCommon,
   reducers: {
     actionAlert(state, propsAction: PayloadAction<AlertCommonType>){
@@ -91,7 +91,7 @@ const weatherState:WeatherActionType= {
   error:false,
 };
 export const weatherSlice = createSlice({
-  name: "user login",
+  name: "weather",
   initialState: weatherState,
   reducers: {
     actionWeathcer(state, propsAction:PayloadAction<Partial<WeatherActionType>>){ // Partial 일부 필드만 업데이트할 때 안전하게 병합 가능.
