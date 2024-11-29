@@ -57,11 +57,11 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     if(inputVal.trim()){
       const addrResult = keyWordFindLocation(inputVal);
       console.log(addrResult)
-      // if(addrResult){
-      //   searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
-      // }else{
-      //   errorActive('띄어쓰기 또는 입력을 확인해주세요. 😂');
-      // }
+      if(addrResult){
+        searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
+      }else{
+        errorActive('띄어쓰기 또는 입력을 확인해주세요. 😂');
+      }
     }else{
       errorActive('입력을 확인해주세요!');
     }

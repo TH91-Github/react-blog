@@ -30,8 +30,6 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
     queryClient.invalidateQueries({ queryKey: ['weatherBase'] });
   },[queryClient]);
 
-  console.log(dayCategory)
-  
   return(
     <StyleWeatherSelectDay>
       {
@@ -142,12 +140,17 @@ const StyleWeatherSelectDay = styled.div`
     text-align:center;
   }
   .weather-icon {
+    display:block;
     position:absolute;
-    top:5px;
+    top:-50px;
     left:50%;
+    width:100px;
+    height:100px;
     transform:translateX(-50%);
   }
   .temperature{
+    position:relative;
+    z-index:2;
     .current {
       font-size:56px;
       line-height:1;

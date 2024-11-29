@@ -1,20 +1,42 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { WeatherCategoryListsType } from "types/weatherType";
+import { WeatherCategoryListsType, WeatherIconCodeType } from "types/weatherType";
+import { dateChange } from "utils/common";
+import { SunIcon } from "./SunIcon";
+import { RainSnowIcon } from "./RainSnowIcon";
+import { CloudIcon } from "./CloudIcon";
+import { CloudyIcon } from "./CloudyIcon";
+import { RainIcon } from "./RainIcon";
+import { SnowIcon } from "./SnowIcon";
+import { ShowerIcon } from "./ShowerIcon";
 
 interface WeatherIconType {
   categoryLists:WeatherCategoryListsType[];
+  bgColor?: string;
 }
 
-// interface WeatherIconType {
-//   iconKey: number;
-//   lgt: string | Number | null;
-//   sno: string | Number | null;
-//   wsds: string | Number | null;
-// }
-export const WeatherIcon = ({categoryLists}:WeatherIconType) => { // 카테고리 리스트 전달
-  console.log(categoryLists)
-  const [weatherState, setWeatherState] = useState(null);
+interface WeatherIconKeyType {
+  iconKey: number;
+  lgt: string; // 낙뢰
+  sno: string; // 눈
+  wsd: string; // 바람
+}
+export const WeatherIcon = ({categoryLists, bgColor}:WeatherIconType) => { // 카테고리 리스트 전달
+  const [weatherState, setWeatherState] = useState<WeatherIconKeyType | null>(null);
+  const codeLists = [
+    {desc:'강수 없음', iconNum:0 },
+    {desc:'맑음', iconNum:1},
+    {desc:'구름조금', iconNum:2},
+    {desc:'구름많음', iconNum:3},
+    {desc:'흐림', iconNum:4},
+    {desc:'비', iconNum: 5 },
+    {desc:'비/눈', iconNum: 6 },
+    {desc:'눈', iconNum: 7 },
+    {desc:'소나기', iconNum: 8 },
+    {desc:'빗방울', iconNum: 9 },
+    {desc:'빗방울눈날림', iconNum: 10 },
+    {desc:'눈날림', iconNum: 11 },
+  ];
 
   const weatherChk = useCallback(() => {
     const sky = categoryLists.find(categoryItem => categoryItem.category ==='SKY')?.value;
@@ -23,58 +45,56 @@ export const WeatherIcon = ({categoryLists}:WeatherIconType) => { // 카테고�
     const sno = categoryLists.find(categoryItem => categoryItem.category ==='SNO')?.value;
     const wsd = categoryLists.find(categoryItem => categoryItem.category ==='WSD')?.value;
 
-    console.log(wsd)
-
-    const skyCode = [
-      {desc:'맑음', iconNum:1},
-      {desc:'구름조금', iconNum:2},
-      {desc:'구름많음', iconNum:3},
-      {desc:'흐림', iconNum:4},
-    ];
-    const rainfallCode = [
-      { desc:'강수 없음', iconNum:0 },
-      { desc:'비', iconNum: 5 },
-      { desc:'비/눈', iconNum: 6 },
-      { desc:'눈', iconNum: 7 },
-      { desc:'소나기', iconNum: 8 },
-      { desc:'빗방울', iconNum: 9 },
-      { desc:'빗방울눈날림', iconNum: 10 },
-      { desc:'눈날림', iconNum: 11 },
-    ];
-    
     let iconNumber;
-
-    console.log(sky)
     if(pty === '0'){
-      iconNumber = skyCode[Number(sky) - 1].iconNum;
+      iconNumber = codeLists[Number(sky) - 1].iconNum; // sky : 하늘
     }else{
-      iconNumber = rainfallCode[Number(pty)].iconNum;
+      iconNumber = codeLists[Number(pty)].iconNum; // pty 강수 형태
     }
-    
-    // setWeatherState({
-    //   iconKey:iconNumber ?? 0,
-    //   lgt:lgt,
-    //   sno:sno,
-    //   wsd:wsd,
-    // });
+    setWeatherState({
+      iconKey:iconNumber ?? 0,
+      lgt:`${lgt}`,
+      sno:`${sno}`,
+      wsd:`${wsd}`,
+    });
   },[categoryLists]);
-
 
   useEffect(()=>{
     weatherChk();
   },[weatherChk])
 
+  const weatherIconCode : WeatherIconCodeType = useMemo(() =>{ 
+    const h = dateChange('hours');
+    const isDayTime = h > 6 && h < 18; // 낮 / 밤 구분
+    const desc = (weatherState && codeLists[weatherState!.iconKey].desc ) ?? '-';
+    return {
+      1: <SunIcon desc={desc} isDayTime={isDayTime}/>,
+      2: <CloudIcon desc={desc} />,
+      3: <CloudIcon desc={desc} cloudAmount={2}/>,
+      4: <CloudyIcon isDayTime={false} />,
+      5: <RainIcon desc={desc} />,
+      6: <RainSnowIcon desc={desc} />,
+      7: <SnowIcon desc={desc} />,
+      8: <>8</>,
+      9: <>9</>,
+      10: <>10</>,
+      11: <>11</>,
+    };
+  },
+    [bgColor, weatherState]
+  );
+
   return (
-    <StyleIcon>
-      
-    </StyleIcon>
+    <>
+      {/* { 
+        weatherState 
+          ? weatherIconCode[weatherState.iconKey] 
+          : <div>날씨 정보를 가져오지 못 했습니다.</div>
+      } */}
+      <ShowerIcon />
+    </>
   )
 }
-
-const StyleIcon = styled.span`
- 
-`;
-
 
 /*
   SKY	하늘상태

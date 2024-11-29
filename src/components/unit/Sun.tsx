@@ -13,14 +13,19 @@ import styled, { keyframes } from "styled-components";
 // 나머지 이미지도 동일하게 import
 
 import { NumberOnly, StyleProps } from "types/baseType";
+import { IconAnimation } from 'types/weatherType';
 
-export default function Sun({ iconSize }: NumberOnly) {
+interface SunType extends IconAnimation {
+  iconSize? :number
+}
+export default function Sun({ iconSize, desc, isAnimation = true }: SunType) {
   return (
-    <StyleSun $width={iconSize} className="sun">
+    <StyleSun $width={iconSize} className={`sun ${isAnimation? 'ani':''}`}>
       <span className="sun-circle"></span>
       {new Array(8).fill('').map((_, idx) => (
         <StyleSunItem key={idx} className={`sun-${idx + 1}`} $bg={idx + 1} />
       ))}
+      {desc && <p className="blind">{desc}</p>}
     </StyleSun>
   );
 }
@@ -45,14 +50,15 @@ const StyleSun = styled.span<StyleProps>`
     background-size: cover;
     transform: translate(-50%, -50%);
   }
-
-  [class*="sun-"] {
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
+  &.ani {
+    [class*="sun-"] {
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+    }
   }
 `;
 
-export const SunAni = (x: number, y: number, percentage?: number) => keyframes`
+const SunAni = (x: number, y: number, percentage?: number) => keyframes`
   0%, 100% {
     transform: translate(0, 0);
   }

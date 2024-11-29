@@ -152,3 +152,20 @@ export const keyFrames = {
   fadeIn : `@keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;}}`,
   fadeUp : `@keyframes fadeUp { 0%{opacity:0; transform:translateY(50px);} 100%{opacity:1; transform:translateY(0)} }`
 }
+
+export const dropAniStyle = ( // 이전, 이후 위치, 시간(기본 2s), 딜레이, 퍼센티지(기본 50%) rotate, 
+  name:string | number,
+  bY:number, aY:number, 
+  time:number = 2, delay:number,
+  percentage:number = 50,
+  rotate?:number,
+) => { 
+  return `
+    animation: dropAni-${name} ${time}s ${delay}s infinite both;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+    @keyframes dropAni-${name} {
+      0%{ transform: translateY(${bY}px) ${rotate? `rotate(0deg)`: ''}; }
+      ${percentage}%, 100% {transform: translateY(${aY}px) ${rotate? `rotate(${rotate}deg)`: ''};}
+    }
+  `;
+};

@@ -39,16 +39,17 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
                 <PlaceThumbnail placeData={placeData}/>
               : <p className="desc">😅<br />등록된 이미지가 없어요.<br /> 준비중...</p>
             }
-            
           </div>
-          <div className="place-tit">
-            <p className="tit">{kakaoPlace.place_name}</p>
-            <p className="category-desc">
-              { categoryTxt(kakaoPlace.category_name)} 
-            </p>
-          </div>
-          <div className="place-bookmark">
-            <Bookmark bookmarkItem={kakaoPlace} />
+          <div className="place-info">
+            <div className="place-tit">
+              <p className="tit">{kakaoPlace.place_name}</p>
+              <p className="category-desc">
+                { categoryTxt(kakaoPlace.category_name)} 
+              </p>
+            </div>
+            <div className="place-bookmark">
+              <Bookmark bookmarkItem={kakaoPlace} />
+            </div>
           </div>
         </div>
         <div className="place-cont">
@@ -123,9 +124,6 @@ const StylePlaceDetail = styled.div`
   .place-head {
     overflow:hidden;
     flex-shrink: 0;
-    display:flex;
-    flex-wrap: wrap;
-    gap:20px;
     height:240px;
     padding:10px;
   }
@@ -145,12 +143,14 @@ const StylePlaceDetail = styled.div`
       color:${colors.subTextColor};
     }
   }
-  .place-tit {
-    flex-grow:1;
-    flex-basis:0;
-    flex-shrink: 0;
+  .place-info{
     position:relative;
-    padding-left:20px;
+    margin-top:15px;
+  }
+  .place-tit {
+    position:relative;
+    width:100%;
+    padding:0 20px;
     &::before {
       position:absolute;
       top:12px;
@@ -183,8 +183,13 @@ const StylePlaceDetail = styled.div`
       content:'';
     }
     .tit{
+      width:100%;
+      height:29px;
       font-size:24px;
       font-weight:600;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
     .category-desc{
       margin-top:5px;
@@ -193,8 +198,9 @@ const StylePlaceDetail = styled.div`
     }
   }
   .place-bookmark {
-    flex-shrink: 0;
-    flex-basis: 20px;
+    position:absolute;
+    top:0;
+    right:0;
     width:20px;
     padding:5px 0;
   }
@@ -239,10 +245,16 @@ const StylePlaceDetail = styled.div`
       overflow-y:scroll;
       height:100%;
     }
+    .place-head {
+      height:200px;
+    }
     .thumbnail {
       overflow:hidden;
-      height:250px;
+      height:100px;
       border-radius:5px;
+    }
+    .place-cont{
+      height: calc(100% - 200px);
     }
   }
 `;

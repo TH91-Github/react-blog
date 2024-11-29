@@ -229,8 +229,8 @@ export const weatherMerge = (prevOriginal:WeatherLocationType, nextOriginal:Weat
         return { 
           ...prevItem, 
           ...sameData, 
-          TMN: TMNVal,
-          TMX: TMXVal,
+          TMN: `${TMNVal}`,
+          TMX: `${TMXVal}`,
           getUltraSrtNcst: getUltraSrtNcstValue,
           getUltraSrtFcst: getUltraSrtFcstValue,
           getVilageFcst: getVilageFcstValue,

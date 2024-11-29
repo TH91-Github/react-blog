@@ -46,7 +46,6 @@ export interface WeatherLocationType {
     ny:number,
   }
 }
-
 export interface WeatherApiDataType {
   [key:string]: string | number;
 }
@@ -82,4 +81,16 @@ export interface WeatherFirebaseUpdateDocType {
   col2:string;
   doc1:string;
   doc2:string;
+}
+
+export type WeatherIconCodeType = {
+  [key:number] : JSX.Element;
+}
+
+export type IconAnimation ={
+  desc?:string;
+  isAnimation? : boolean;
+}
+export interface WeatherIconInfoType extends IconAnimation{
+  isDayTime: boolean;
 }
