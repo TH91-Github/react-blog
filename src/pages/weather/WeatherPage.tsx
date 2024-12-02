@@ -25,16 +25,17 @@ export default function WeatherPage() {
   }
   return (
     <StyleWrap className="weather">
-      <WeatherUpdate />
+
+      test: {process.env.REACT_APP_WEATHER_MEASUREMENT_ID}
+      {/* <WeatherUpdate />
       <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">
           <WeatherMain />
-          {/* 한 주 */}
           <LongWeather />
           <WaehterTimeLists />
         </div>
-      </div>
+      </div> */}
     </StyleWrap>
   )
 }
