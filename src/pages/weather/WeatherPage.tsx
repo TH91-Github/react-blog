@@ -26,7 +26,7 @@ export default function WeatherPage() {
   return (
     <StyleWrap className="weather">
 
-      test: {process.env.REACT_APP_WEATHER_MEASUREMENT_ID}
+     <p className="blind"> test: {process.env.REACT_APP_WEATHER_MEASUREMENT_ID}</p>
       {/* <WeatherUpdate />
       <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
