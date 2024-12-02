@@ -1,7 +1,8 @@
 import { breakpoints, colors, media } from 'assets/style/Variable';
 import { LongWeather } from 'components/article/weather/LongWeather';
+import { WaehterTimeLists } from 'components/article/weather/WaehterTimeLists';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
-import { WeatherInfo } from 'components/article/weather/WeatherInfo';
+import { WeatherMain } from 'components/article/weather/WeatherMain';
 import { WeatherUpdate } from 'components/article/weather/WeatherUpdate';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -28,9 +29,10 @@ export default function WeatherPage() {
       <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">
-          <WeatherInfo />
+          <WeatherMain />
           {/* 한 주 */}
           <LongWeather />
+          <WaehterTimeLists />
         </div>
       </div>
     </StyleWrap>
@@ -60,6 +62,7 @@ const StyleWrap = styled.div`
   }
   .weather-content{
     display:flex;
+    flex-wrap:wrap;
     gap:30px;
     margin-top:30px;
     .info {

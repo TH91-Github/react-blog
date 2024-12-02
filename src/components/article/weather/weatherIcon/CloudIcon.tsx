@@ -30,6 +30,7 @@ const StyleCloudIcon = styled.span`
   width:100%;
   height:100%;
   .cloud {
+    display:inline-block;
     position:absolute;
     z-index:1;
     top:50%;

@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
 import { WeatherCategoryListsType, WeatherIconCodeType } from "types/weatherType";
 import { dateChange } from "utils/common";
-import { SunIcon } from "./SunIcon";
-import { RainSnowIcon } from "./RainSnowIcon";
 import { CloudIcon } from "./CloudIcon";
 import { CloudyIcon } from "./CloudyIcon";
+import { RainDropIcon } from "./RainDropIcon";
 import { RainIcon } from "./RainIcon";
-import { SnowIcon } from "./SnowIcon";
+import { RainSnowDropBlowIcon } from "./RainSnowDropBlowIcon";
+import { RainSnowIcon } from "./RainSnowIcon";
 import { ShowerIcon } from "./ShowerIcon";
+import { SnowDropBlowIcon } from "./SnowDropBlowIcon";
+import { SnowIcon } from "./SnowIcon";
+import { SunIcon } from "./SunIcon";
 
 interface WeatherIconType {
   categoryLists:WeatherCategoryListsType[];
+  isAnimation?:boolean;
   bgColor?: string;
 }
 
@@ -21,10 +24,10 @@ interface WeatherIconKeyType {
   sno: string; // 눈
   wsd: string; // 바람
 }
-export const WeatherIcon = ({categoryLists, bgColor}:WeatherIconType) => { // 카테고리 리스트 전달
+export const WeatherIcon = ({categoryLists, isAnimation, bgColor}:WeatherIconType) => { // 카테고리 리스트 전달
   const [weatherState, setWeatherState] = useState<WeatherIconKeyType | null>(null);
   const codeLists = [
-    {desc:'강수 없음', iconNum:0 },
+    {desc:'맑음 - 강수 없음', iconNum:0 },
     {desc:'맑음', iconNum:1},
     {desc:'구름조금', iconNum:2},
     {desc:'구름많음', iconNum:3},
@@ -57,7 +60,8 @@ export const WeatherIcon = ({categoryLists, bgColor}:WeatherIconType) => { // �
       sno:`${sno}`,
       wsd:`${wsd}`,
     });
-  },[categoryLists]);
+
+  },[categoryLists, codeLists]);
 
   useEffect(()=>{
     weatherChk();
@@ -68,17 +72,18 @@ export const WeatherIcon = ({categoryLists, bgColor}:WeatherIconType) => { // �
     const isDayTime = h > 6 && h < 18; // 낮 / 밤 구분
     const desc = (weatherState && codeLists[weatherState!.iconKey].desc ) ?? '-';
     return {
-      1: <SunIcon desc={desc} isDayTime={isDayTime}/>,
-      2: <CloudIcon desc={desc} />,
-      3: <CloudIcon desc={desc} cloudAmount={2}/>,
-      4: <CloudyIcon isDayTime={false} />,
-      5: <RainIcon desc={desc} />,
-      6: <RainSnowIcon desc={desc} />,
-      7: <SnowIcon desc={desc} />,
-      8: <>8</>,
-      9: <>9</>,
-      10: <>10</>,
-      11: <>11</>,
+      0: <SunIcon desc={desc} isDayTime={isDayTime} isAnimation={isAnimation} />,
+      1: <SunIcon desc={desc} isDayTime={isDayTime} isAnimation={isAnimation}/>,
+      2: <CloudIcon desc={desc} isAnimation={isAnimation} />,
+      3: <CloudIcon desc={desc} cloudAmount={2} isAnimation={isAnimation}/>,
+      4: <CloudyIcon isDayTime={false} isAnimation={isAnimation} />,
+      5: <RainIcon desc={desc} isAnimation={isAnimation} />,
+      6: <RainSnowIcon desc={desc} isAnimation={isAnimation} />,
+      7: <SnowIcon desc={desc} isAnimation={isAnimation} />,
+      8: <ShowerIcon desc={desc} isAnimation={isAnimation} />,
+      9: <RainDropIcon desc={desc} isAnimation={isAnimation} />,
+      10: <RainSnowDropBlowIcon desc={desc} isAnimation={isAnimation} />, // 빗방울 날림
+      11: <SnowDropBlowIcon desc={desc} isAnimation={isAnimation} />, // 눈 날림
     };
   },
     [bgColor, weatherState]
@@ -86,12 +91,11 @@ export const WeatherIcon = ({categoryLists, bgColor}:WeatherIconType) => { // �
 
   return (
     <>
-      {/* { 
+      { 
         weatherState 
           ? weatherIconCode[weatherState.iconKey] 
           : <div>날씨 정보를 가져오지 못 했습니다.</div>
-      } */}
-      <ShowerIcon />
+      }
     </>
   )
 }

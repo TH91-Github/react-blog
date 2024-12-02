@@ -169,3 +169,25 @@ export const dropAniStyle = ( // 이전, 이후 위치, 시간(기본 2s), 딜�
     }
   `;
 };
+export const dropBlowAniStyle = ( // 이전, 이후 위치, 시간(기본 2s), 딜레이, 퍼센티지(기본 50%) rotate, 
+  name:string | number,
+  bX:number, bY:number,
+  aX:number, aY:number, 
+  time:number = 2, delay:number,
+  percentage:number = 50,
+  rotate?:number,
+  rotateAfter?:number,
+) => { 
+  return `
+    animation: dropBlowAni-${name} ${time}s ${delay}s infinite both;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+    @keyframes dropBlowAni-${name} {
+      0%{
+       transform: translate(${bX}px, ${bY}px) ${rotate? `rotate(${rotate}deg)`: ''}; 
+      }
+      ${percentage}%, 100% {
+        transform: translate(${aX}px, ${aY}px) ${rotate? `rotate(${rotateAfter ? rotateAfter : rotate}deg)`: ''};
+      }
+    }
+  `;
+};

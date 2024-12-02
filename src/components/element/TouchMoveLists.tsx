@@ -1,38 +1,46 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { transitions } from "../../assets/style/Variable";
 
-export const TouchMoveLists = ({children, selectName}) => {
-  const swiperRef = useRef(null);
+interface TouchMoveListsType {
+  selectName:string;
+  children:React.ReactNode;
+}
+
+export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
+  const swiperRef = useRef<HTMLDivElement | null>(null);
   const [isMoving, setIsMoving] = useState(false);
   const [startPos, setStartPos] = useState(0);
   const [currentPos, setcurrentPos] = useState(0);
   const [prevPos, setprevPos] = useState(0);
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e:React.MouseEvent<HTMLDivElement>) => {
     setIsMoving(true);
     setStartPos(e.clientX);
   }
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e:React.TouchEvent<HTMLDivElement>) => {
     setIsMoving(true);
     setStartPos(e.touches[0].clientX);
   }
 
-  const movingEvent = (pos) => {
+  const movingEvent = (pos:number) => {
     if (!isMoving) return;
     const movePos = pos - startPos;
     setcurrentPos(prevPos + movePos);
   };
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e:React.MouseEvent<HTMLDivElement>) => {
     movingEvent(e.clientX);
   }
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e:React.TouchEvent<HTMLDivElement>) => {
     movingEvent(e.touches[0].clientX);
   }
 
   const handleEnd = () => {
+    if (!swiperRef.current) return;
     const swiperWidth = swiperRef.current.clientWidth;
-    const contW = swiperRef.current.querySelector('.moving').clientWidth;
+    const movingElement = swiperRef.current.querySelector<HTMLElement>(".moving");
+    if (!movingElement) return;
+    const contW = movingElement.clientWidth;
 
     setIsMoving(false);
     setprevPos(currentPos);
@@ -48,11 +56,14 @@ export const TouchMoveLists = ({children, selectName}) => {
   };
 
   const activeMoving = useCallback(() => {
-    const activeItem = swiperRef.current.querySelector(`.${selectName}`);
+    if (!swiperRef.current) return;
+    const activeItem = swiperRef.current.querySelector<HTMLElement>(`.${selectName}`);
     if (activeItem) {
       const activePos = activeItem.offsetLeft;
       const swiperWidth = swiperRef.current.clientWidth;
-      const contW = swiperRef.current.querySelector('.moving').clientWidth;
+      const movingElement = swiperRef.current.querySelector<HTMLElement>('.moving');
+      if (!movingElement) return;
+      const contW = movingElement.clientWidth;
       let newCurrentPos = activePos*-1;
       
       if (newCurrentPos > 0) {

@@ -13,10 +13,11 @@ export const RainIcon= ({desc, isAnimation}:IconAnimation) => {
       <div className="rain-drop">
         {
           Array.from({ length: 6 }, (_, idx) => (
-            <span className="drop"></span>
+            <span className="drop" key={idx}></span>
           ))
         }
       </div>
+      {desc && <p className="blind">{desc}</p>}
     </StyleRainIcon>
   )
 }

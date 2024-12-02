@@ -26,6 +26,9 @@ export interface WeatherTimeListType {
   time: string | number;
   categoryList: WeatherCategoryListsType[];
 }
+export interface DateItmeLists extends WeatherTimeListType {
+  date:string;
+}
 export interface WeatherTimeDataType { // day 날씨 정보
   date: string | number;
   TMN: string | null;
@@ -93,4 +96,12 @@ export type IconAnimation ={
 }
 export interface WeatherIconInfoType extends IconAnimation{
   isDayTime: boolean;
+}
+
+export interface TemperatureTimeType { 
+  id:string;
+  data:{
+    x:string;
+    y:number;
+  }[]
 }

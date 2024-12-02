@@ -4,7 +4,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { WeatherSelectDay } from "./WeatherSelectDay";
 
-export const WeatherInfo = () => {
+export const WeatherMain = () => {
   const [pickDay, setPickDay] = useState([
     { title:'오늘', active:true, },
     { title:'내일', active:false,},
@@ -22,7 +22,7 @@ export const WeatherInfo = () => {
   }
 
   return (
-    <StyleWeatherInfo className="info">
+    <StyleWeatherMain className="info">
       <h3 className="blind">날씨 정보</h3>
       <div className="main">
         <div className="select-day">
@@ -35,23 +35,20 @@ export const WeatherInfo = () => {
         </div>
         <WeatherSelectDay  isDay={pickDay.findIndex((day) => day.active)}/>
       </div>
-      {/* 시간 별 온도 그래프 */}
-      <div>
-
-      </div>
-    </StyleWeatherInfo>
+    </StyleWeatherMain>
   )
 }
-const StyleWeatherInfo = styled.div`
+const StyleWeatherMain = styled.div`
   position:relative;
-  padding:20px;
-  border-radius:5px;
-  ${({theme}) => theme.translucence};
-  background: ${({theme}) => theme.opacityBg};
+  .main{
+    padding:20px;
+    border-radius:5px;
+    ${({theme}) => theme.translucence};
+    background: ${({theme}) => theme.opacityBg};
+  }
   .select-day{
     position: absolute;
     top:20px;
     right:20px;
   }
-  
 `;

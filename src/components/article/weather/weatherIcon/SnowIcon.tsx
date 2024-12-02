@@ -14,7 +14,7 @@ export const SnowIcon = ({desc, isAnimation = true}:IconAnimation) => {
       <div className="snow-drop">
         {
           Array.from({ length: 6 }, (_, idx) => (
-            <span className="drop"></span>
+            <span className="drop" key={idx}></span>
           ))
         }
       </div>
