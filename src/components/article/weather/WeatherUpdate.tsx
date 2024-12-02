@@ -96,7 +96,7 @@ export const WeatherUpdate = () => {
     }
   },[storeWeather.coords, requestError, updateWeatherData]);
 
-    // ✅ 받아온 데이터 오늘 기준 체크
+  // ✅ 받아온 데이터 오늘 기준 체크
   const todayWeatherChk = useCallback(async()=>{
     const {ymd, hm:ultraSrtNcstHM} = weatherTime('getUltraSrtNcst'); // 초단기실황
     const {hm:getVilageFcstHM} = weatherTime('getVilageFcst'); // 단기

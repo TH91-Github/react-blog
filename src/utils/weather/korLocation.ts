@@ -25,7 +25,7 @@ import korLocationData from './kor_location.json';
 const KOR_LOCATION: KORLocationType[] = korLocationData;
 // ✅ 키워드로 일치하는 장소 찾기.
 export function keyWordFindLocation(addressName:string){
-  const refinedAddress = addressName.trim().replace(/(구|동|읍|군)$/, ""); // EX) 논현1동 2동 -> 논현으로 가능하도록
+  const refinedAddress = addressName.trim().replace(/(구|동|읍|군|도)$/, ""); // EX) 논현1동 2동 -> 논현으로 가능하도록
   const keywords = refinedAddress.split(" ");
 
   const result = KOR_LOCATION.find(location => 
