@@ -28,7 +28,6 @@ export const routerList = [
     path: "weather",
     title: '🌤️날씨',
     element: <WeatherPage />,
-    view:['localhost'],
   },
   {
     id: "Map",
