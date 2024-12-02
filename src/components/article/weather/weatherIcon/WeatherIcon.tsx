@@ -15,7 +15,6 @@ import { SunIcon } from "./SunIcon";
 interface WeatherIconType {
   categoryLists:WeatherCategoryListsType[];
   isAnimation?:boolean;
-  bgColor?: string;
 }
 
 interface WeatherIconKeyType {
@@ -24,22 +23,22 @@ interface WeatherIconKeyType {
   sno: string; // 눈
   wsd: string; // 바람
 }
-export const WeatherIcon = ({categoryLists, isAnimation, bgColor}:WeatherIconType) => { // 카테고리 리스트 전달
+export const WeatherIcon = ({categoryLists, isAnimation}:WeatherIconType) => { // 카테고리 리스트 전달
   const [weatherState, setWeatherState] = useState<WeatherIconKeyType | null>(null);
-  const codeLists = [
-    {desc:'맑음 - 강수 없음', iconNum:0 },
-    {desc:'맑음', iconNum:1},
-    {desc:'구름조금', iconNum:2},
-    {desc:'구름많음', iconNum:3},
-    {desc:'흐림', iconNum:4},
-    {desc:'비', iconNum: 5 },
-    {desc:'비/눈', iconNum: 6 },
-    {desc:'눈', iconNum: 7 },
-    {desc:'소나기', iconNum: 8 },
-    {desc:'빗방울', iconNum: 9 },
-    {desc:'빗방울눈날림', iconNum: 10 },
-    {desc:'눈날림', iconNum: 11 },
-  ];
+  const codeLists = useMemo(() => [
+    { desc: '맑음 - 강수 없음', iconNum: 0 },
+    { desc: '맑음', iconNum: 1 },
+    { desc: '구름조금', iconNum: 2 },
+    { desc: '구름많음', iconNum: 3 },
+    { desc: '흐림', iconNum: 4 },
+    { desc: '비', iconNum: 5 },
+    { desc: '비/눈', iconNum: 6 },
+    { desc: '눈', iconNum: 7 },
+    { desc: '소나기', iconNum: 8 },
+    { desc: '빗방울', iconNum: 9 },
+    { desc: '빗방울눈날림', iconNum: 10 },
+    { desc: '눈날림', iconNum: 11 },
+  ], []);
 
   const weatherChk = useCallback(() => {
     const sky = categoryLists.find(categoryItem => categoryItem.category ==='SKY')?.value;
@@ -86,7 +85,7 @@ export const WeatherIcon = ({categoryLists, isAnimation, bgColor}:WeatherIconTyp
       11: <SnowDropBlowIcon desc={desc} isAnimation={isAnimation} />, // 눈 날림
     };
   },
-    [bgColor, weatherState]
+    [weatherState, codeLists, isAnimation]
   );
 
   return (

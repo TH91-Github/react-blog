@@ -26,16 +26,16 @@ export default function WeatherPage() {
   }
   return (
     <StyleWrap className="weather">
-      <WeatherTest />
-      {/* <WeatherUpdate /> */}
-      {/* <div className="weather-inner">
+      {/* <WeatherTest /> */}
+      <WeatherUpdate />
+      <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">
           <WeatherMain />
           <LongWeather />
           <WaehterTimeLists />
         </div>
-      </div> */}
+      </div>
     </StyleWrap>
   )
 }
