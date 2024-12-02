@@ -26,7 +26,6 @@ export default function WeatherPage() {
   }
   return (
     <StyleWrap className="weather">
-      {/* <WeatherTest /> */}
       <WeatherUpdate />
       <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
