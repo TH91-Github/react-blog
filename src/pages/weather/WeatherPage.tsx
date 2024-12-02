@@ -3,7 +3,6 @@ import { LongWeather } from 'components/article/weather/LongWeather';
 import { WaehterTimeLists } from 'components/article/weather/WaehterTimeLists';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
 import { WeatherMain } from 'components/article/weather/WeatherMain';
-import { WeatherTest } from 'components/article/weather/WeatherTest';
 import { WeatherUpdate } from 'components/article/weather/WeatherUpdate';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
