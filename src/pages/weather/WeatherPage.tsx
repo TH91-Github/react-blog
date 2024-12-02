@@ -3,6 +3,7 @@ import { LongWeather } from 'components/article/weather/LongWeather';
 import { WaehterTimeLists } from 'components/article/weather/WaehterTimeLists';
 import { WeatherHeader } from 'components/article/weather/WeatherHeader';
 import { WeatherMain } from 'components/article/weather/WeatherMain';
+import { WeatherTest } from 'components/article/weather/WeatherTest';
 import { WeatherUpdate } from 'components/article/weather/WeatherUpdate';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -25,10 +26,9 @@ export default function WeatherPage() {
   }
   return (
     <StyleWrap className="weather">
-
-     <p className="blind"> test: {process.env.REACT_APP_WEATHER_MEASUREMENT_ID}</p>
-      {/* <WeatherUpdate />
-      <div className="weather-inner">
+      <WeatherTest />
+      {/* <WeatherUpdate /> */}
+      {/* <div className="weather-inner">
         <WeatherHeader addrUpdate={weatherAddrUpdate}/>
         <div className="weather-content">
           <WeatherMain />
