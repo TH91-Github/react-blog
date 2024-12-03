@@ -1,4 +1,4 @@
-import { colors } from "assets/style/Variable";
+import { colors, media } from "assets/style/Variable";
 import { SvgPoint } from "assets/svg/common/CommonSvg";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
@@ -78,5 +78,10 @@ const StyleWeatherHeader = styled.div`
     .txt {
       font-size:14px;
     }
+  }
+  ${media.mo}{
+    flex-direction:column;
+    gap:10px;
+    margin-top:20px;
   }
 `;

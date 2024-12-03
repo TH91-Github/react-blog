@@ -1,4 +1,4 @@
-import { colors, transitions } from "assets/style/Variable";
+import { colors, media, transitions } from "assets/style/Variable";
 import { SvgSearch } from "assets/svg/common/CommonSvg";
 import { SvgThermometer } from "assets/svg/weather/weatherSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
@@ -200,5 +200,13 @@ const StyleSearchWrap = styled.div`
   }
   .none{
     display:none;
+  }
+  ${media.mo}{
+    .search{
+      width:100%;
+      .input-item {
+        flex-grow:1;
+      }
+    }
   }
 `;
