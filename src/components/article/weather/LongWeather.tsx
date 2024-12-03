@@ -54,14 +54,14 @@ export const LongWeather = () => {
                 <div className="etc-info">
                   <div>
                     <span className="desc">습도</span>
-                    <span className="info">
+                    <span className="value">
                       {timeList && findCategory(timeList.categoryList,'REH')} 
                       <span className="unit">%</span>
                     </span>
                   </div>
                   <div>
                     <span className="desc">풍속</span>
-                    <span className="info">
+                    <span className="value">
                       {timeList && findCategory(timeList.categoryList,'WSD')} 
                       <span className="unit">m/s</span>
                     </span>
@@ -193,6 +193,6 @@ const StyleLongWeather = styled.div`
     }
   }
   ${media.mo}{
-    
+ 
   }
 `;
