@@ -11,6 +11,7 @@ import { ShowerIcon } from "./ShowerIcon";
 import { SnowDropBlowIcon } from "./SnowDropBlowIcon";
 import { SnowIcon } from "./SnowIcon";
 import { SunIcon } from "./SunIcon";
+import { StringOnly } from "types/baseType";
 
 interface WeatherIconType {
   categoryLists:WeatherCategoryListsType[];
@@ -40,12 +41,20 @@ export const WeatherIcon = ({categoryLists, isAnimation}:WeatherIconType) => { /
     { desc: '눈날림', iconNum: 11 },
   ], []);
 
+  const findCodeCategory = useCallback((categoryLists:WeatherCategoryListsType[]) => {
+    const result: StringOnly = {};
+    categoryLists.forEach(item => {
+      if (item.category === 'SKY') result.sky = item.value;
+      if (item.category === 'PTY') result.pty = item.value;
+      if (item.category === 'LGT') result.lgt = item.value;
+      if (item.category === 'SNO') result.sno = item.value;
+      if (item.category === 'WSD') result.wsd = item.value;
+    });
+    return result;
+  },[]);
+
   const weatherChk = useCallback(() => {
-    const sky = categoryLists.find(categoryItem => categoryItem.category ==='SKY')?.value;
-    const pty = categoryLists.find(categoryItem => categoryItem.category ==='PTY')?.value;
-    const lgt = categoryLists.find(categoryItem => categoryItem.category ==='LGT')?.value;
-    const sno = categoryLists.find(categoryItem => categoryItem.category ==='SNO')?.value;
-    const wsd = categoryLists.find(categoryItem => categoryItem.category ==='WSD')?.value;
+    const { sky, pty, lgt, sno, wsd } = findCodeCategory(categoryLists);
 
     let iconNumber;
     if(pty === '0'){
@@ -60,7 +69,7 @@ export const WeatherIcon = ({categoryLists, isAnimation}:WeatherIconType) => { /
       wsd:`${wsd}`,
     });
 
-  },[categoryLists, codeLists]);
+  },[categoryLists, codeLists, findCodeCategory]);
 
   useEffect(()=>{
     weatherChk();

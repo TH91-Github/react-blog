@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { WeatherCategoryListsType, WeatherTimeListType } from "types/weatherType";
 import { dateChange, weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
+import { LoadingAnimation } from "components/effect/LoadingAnimation";
 
 interface WeatherSelectDayType {
   isDay? : number;
@@ -87,6 +88,7 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
               <span className="weather-icon skeleton-item"></span>
               <div className="temperature-lh skeleton-item"></div>
             </div>
+            <LoadingAnimation />
           </div>
         </>
         )
@@ -161,26 +163,6 @@ const StyleWeatherSelectDay = styled.div`
       line-height:1;
     }
   }
-  .temperature-lh {
-    .lowest{  
-      color:${colors.blue};
-    }
-    .highest{
-      position:relative;
-      margin-left:2px;
-      padding-left:10px;
-      color:${colors.red};
-      &::before{
-        position:absolute;
-        top:50%;
-        left:0;
-        color:${colors.lineColor};
-        transform: translateY(-50%);
-        content:'/';
-      }
-    }
-  }
-  
   .skeleton-wrap {
     .addr{
       width:150px;

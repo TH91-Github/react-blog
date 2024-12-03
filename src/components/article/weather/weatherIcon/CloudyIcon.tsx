@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
 import cloud from 'assets/images/weather/cloud.png';
-import { WeatherIconInfoType } from "types/weatherType";
 import Sun from "components/unit/Sun";
-import Moon from "components/unit/Moon";
+import { WeatherIconInfoType } from "types/weatherType";
 import { MoonIcon } from "./MoonIcon";
 
 export const CloudyIcon = ({desc, isDayTime, isAnimation}:WeatherIconInfoType) => {
@@ -26,6 +25,7 @@ const StyleCloudyIcon = styled.span`
   position:relative;
   width:100%;
   height:100%;
+  events-pointer:none;
   .cloud {
     display:inline-block;
     position:absolute;

@@ -12,7 +12,6 @@ export const WeatherMain = () => {
   ])
 
   const pickDayActive = (activeN:number) => {
-    console.log(activeN)
     setPickDay(
       prev => prev.map((prevItem, idx) => ({
         ...prevItem,

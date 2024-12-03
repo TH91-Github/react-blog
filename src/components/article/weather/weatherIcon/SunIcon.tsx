@@ -23,6 +23,7 @@ const StyleSun = styled.span`
   display:inline-block;
   width:100%;
   height:100%;
+  events-pointer:none;
   .sun {
     width:100%;
     height:100%;

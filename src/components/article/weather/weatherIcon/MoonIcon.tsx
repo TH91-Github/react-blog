@@ -33,6 +33,7 @@ const StyleMoonIcon = styled.span<StyleProps>`
   position:relative;
   width:100%;
   height:100%;
+  events-pointer:none;
   & span {
     display:block;
     position:absolute;

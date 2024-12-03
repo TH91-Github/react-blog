@@ -2,11 +2,11 @@ import styled from "styled-components"
 import { colors } from "../../assets/style/Variable";
 
 interface LoadingAnimationType {
-  bgColor:string;
+  bgColor?:string;
 }
 export const LoadingAnimation = ({bgColor}:LoadingAnimationType) => {
   return (
-    <StyleLoadingAnimation>
+    <StyleLoadingAnimation className="loading">
       <div className="ani-box">
         {
           Array.from({ length: 4 }, (_, idx) => (
@@ -20,11 +20,17 @@ export const LoadingAnimation = ({bgColor}:LoadingAnimationType) => {
 }
 
 const StyleLoadingAnimation = styled.div`
-  position:relative;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  width:45px;
+  height:45px;
+  pointer-events:none;
   .ani-box{
     position:relative;
-    width:45px;
-    height:45px;
+    width:100%;
+    height:100%;
     animation: loading-center-absolute 1s infinite;
   }
   .cube {

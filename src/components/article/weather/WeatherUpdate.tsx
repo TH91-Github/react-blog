@@ -76,10 +76,8 @@ export const WeatherUpdate = () => {
 
     // n차 업데이트 이후 다음 요청 -> 단기 -> 초단기 -> 실황 순
     if (requestType === 'getVilageFcst') { 
-      console.log('초')
       await updateWeatherData('getUltraSrtFcst', mergeData); // 초단기
     } else if (requestType === 'getUltraSrtFcst') {
-      console.log('실')
       await updateWeatherData('getUltraSrtNcst', mergeData); // 실황
     }
   }, [storeWeather.coords, storeWeather.location, dispatch]);
@@ -91,7 +89,6 @@ export const WeatherUpdate = () => {
     if (initWeather?.res?.length > 0) {
       await updateWeatherData('getVilageFcst', initWeather);
     } else {
-      console.log('실패');
       requestError();
     }
   },[storeWeather.coords, requestError, updateWeatherData]);
@@ -137,10 +134,8 @@ export const WeatherUpdate = () => {
     dispatch(actionWeathcer({ loading: true}));
     if (!firebaseWeather) { // 년도 & 지역 관련 날씨가 없는 경우 새롭게 추가
       getWeatherInit();
-      console.log('새로')
     }else{ // firebase 값 있는 경우.
       todayWeatherChk();
-      console.log("기존")
     }
   }, [firebaseWeather, isLoading, storeWeather.coords, dispatch, getWeatherInit, todayWeatherChk]);
   return null

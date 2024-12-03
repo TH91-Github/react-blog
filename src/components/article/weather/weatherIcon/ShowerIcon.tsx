@@ -23,6 +23,7 @@ const StyleShowerIcon = styled.span`
   position:relative;
   width:100%;
   height:100%;
+  events-pointer:none;
   .drop {
     display:inline-block;
     position:absolute;

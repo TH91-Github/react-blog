@@ -18,9 +18,9 @@ export interface KORLocationType {
 
 export type RequestNameType = 'getUltraSrtNcst' | 'getUltraSrtFcst' | 'getVilageFcst';
 export interface WeatherCategoryListsType {
-  value: string | number;
-  obsrValue?: string | number;
-  category: string | number;
+  value: string ;
+  obsrValue?: string;
+  category: string;
 }
 export interface WeatherTimeListType {
   time: string | number;
@@ -104,4 +104,11 @@ export interface TemperatureTimeType {
     x:string;
     y:number;
   }[]
+}
+
+export interface Coordinates {
+  lat?: number;
+  lng?: number;
+  x?: number;
+  y?: number;
 }

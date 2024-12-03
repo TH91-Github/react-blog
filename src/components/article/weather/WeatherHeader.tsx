@@ -5,6 +5,7 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import { MarkerPositionType } from "types/kakaoComon";
 import { SearchWrap } from "./SearchWrap";
+import { useCallback } from "react";
 
 interface WeatherHeaderType {
   addrUpdate : (searchCoords:MarkerPositionType) => void;
@@ -12,11 +13,17 @@ interface WeatherHeaderType {
 export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(0, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
-
+  const handleClick = useCallback(() => {
+    addrUpdate(useLocation.coords)
+  },[addrUpdate, useLocation.coords]);
   return(
     <StyleWeatherHeader>
       <SearchWrap searchUpdate={addrUpdate}/>
-      <p className="location">
+      <button 
+        type="button"
+        className="location"
+        title="현재 위치 날씨 보기"
+        onClick={handleClick}>
         {
           useLocation.address
           ? <>
@@ -26,7 +33,7 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
           </>
           : <span className="blind">로딩 사용 예정.</span>
         }
-      </p>
+      </button>
       {/* 즐겨찾기 회원전용 */}
       <div className="">
         

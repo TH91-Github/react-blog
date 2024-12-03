@@ -28,6 +28,7 @@ const StyleRainIcon = styled.span`
   position:relative;
   width:100%;
   height:100%;
+  events-pointer:none;
   .cloud {
     display:inline-block;
     position:relative;

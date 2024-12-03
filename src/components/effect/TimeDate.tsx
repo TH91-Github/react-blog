@@ -2,12 +2,12 @@ import { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 
 interface TimeDateType {
-  view:'hms'| 'hm' | 'ms';
+  view:'h' | 'hms'| 'hm' | 'ms';
   updateCheck?: 'h'|'m'; // 업데이트 받을 값 h, m 
   timeUpdate?: (val?:string) => void; // 업데이트 
   delimiterType?:string;
 }
-export const TimeDate = ({updateCheck, timeUpdate, delimiterType}:TimeDateType) => {
+export const TimeDate = ({view, updateCheck, timeUpdate, delimiterType}:TimeDateType) => {
   const isTime = CurrentTime();
 
   const timeDelimiter = () => {
@@ -35,12 +35,24 @@ export const TimeDate = ({updateCheck, timeUpdate, delimiterType}:TimeDateType) 
   }
   return (
     <StyleTimeDate>
+      {/* 시 */}
       <TimeHours h={isTime.getHours()} update={updateTime}/>
-      <span className="delimiter">{Array.isArray(timeDelimiter()) ? timeDelimiter()[0] : timeDelimiter()}</span>
-      <TimeMinutes m={isTime.getMinutes()} update={updateTime}/>
-      <span className="delimiter">{Array.isArray(timeDelimiter()) ? timeDelimiter()[1] : timeDelimiter()}</span>
-      <TimeSeconds s={isTime.getSeconds()} />
-      <span className="delimiter">{delimiterType === 'kor' && (Array.isArray(timeDelimiter()) ? timeDelimiter()[2] : timeDelimiter())}</span>
+      {/* 분 */}
+      {
+        view.includes('m') && <>
+          <span className="delimiter">{Array.isArray(timeDelimiter()) ? timeDelimiter()[0] : timeDelimiter()}</span>
+          <TimeMinutes m={isTime.getMinutes()} update={updateTime}/>
+        </>
+      }
+      {/* 초 */}
+      {
+        view.includes('s') && <>
+          <span className="delimiter">{Array.isArray(timeDelimiter()) ? timeDelimiter()[1] : timeDelimiter()}</span>
+          <TimeSeconds s={isTime.getSeconds()} />
+          <span className="delimiter">{delimiterType === 'kor' && (Array.isArray(timeDelimiter()) ? timeDelimiter()[2] : timeDelimiter())}</span>
+        </>
+      }
+      
     </StyleTimeDate>
   );
 };

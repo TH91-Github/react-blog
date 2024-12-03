@@ -18,7 +18,7 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
   const errorTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isFocus, setIsFocus] = useState(false);
   const [isError, setIsError] = useState({error:false, message:''});
-  const [addrVal, setAddrVal] = useState('');
+  const [addrVal, setAddrVal] = useState(''); // 검색 미리보기 목록 만들기 위함. 진행 X 
 
   const errorActive = useCallback((errorVal:string) => {
     setIsError({error:true, message:errorVal});
@@ -53,7 +53,6 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     if(!inputRef.current || isError.error) return
     if(loading) errorActive('✋ 잠시 후에 시도해주세요!!');
     const inputVal = inputRef.current.getInputElement()!.value;
-
     if(inputVal.trim()){
       const addrResult = keyWordFindLocation(inputVal);
       console.log(addrResult)
@@ -88,6 +87,9 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
         </button>
       </div>
       {/* 지역별 보기 리스트 예정. */}
+      <div className="none">
+        {addrVal}
+      </div>
       {
         isError.error && <div className="error-txt">{isError.message}</div>
       }
@@ -195,5 +197,8 @@ const StyleSearchWrap = styled.div`
     left:50px;
     font-size:14px;
     color:${colors.red};
+  }
+  .none{
+    display:none;
   }
 `;

@@ -12,7 +12,7 @@ import { MarkerPositionType } from 'types/kakaoComon';
 import { coordsFindLocation } from 'utils/weather/korLocation';
 
 export default function WeatherPage() {
-  const dispatch = useDispatch<AppDispatch>(); 
+  const dispatch = useDispatch<AppDispatch>();
 
   // 기상청 기준 해당 좌표 정보
   const getLocation = useCallback((coords:MarkerPositionType) => {
@@ -71,7 +71,25 @@ const StyleWrap = styled.div`
       width:calc(40% - 15px);
     }
   }
-  
+  .temperature-lh {
+    .lowest{  
+      color:${colors.blue};
+    }
+    .highest{
+      position:relative;
+      margin-left:2px;
+      padding-left:10px;
+      color:${colors.red};
+      &::before{
+        position:absolute;
+        top:50%;
+        left:0;
+        color:${colors.lineColor};
+        transform: translateY(-50%);
+        content:'/';
+      }
+    }
+  }
   ${media.tab}{
     .weather-inner{
       padding-top:50px;
@@ -85,6 +103,17 @@ const StyleWrap = styled.div`
       padding:60px 15px 30px;
       &::before{
         top:60px;
+      }
+    }
+    .weather-content{
+      flex-direction:column;
+      gap:20px;
+      margin-top:20px;
+      .info {
+        width:100%;
+      }
+      .long-weather {
+        width:100%;
       }
     }
   }

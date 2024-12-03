@@ -1,11 +1,12 @@
 import { ResponsiveLine } from "@nivo/line";
 import { colors } from "assets/style/Variable";
+import { LoadingAnimation } from "components/effect/LoadingAnimation";
 import { TouchMoveLists } from "components/element/TouchMoveLists";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import styled from "styled-components"
-import { DateItmeLists, TemperatureTimeType, WeatherCategoryListsType, WeatherTimeDataType } from "types/weatherType";
+import styled from "styled-components";
+import { DateItmeLists, TemperatureTimeType, WeatherTimeDataType } from "types/weatherType";
 import { weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
@@ -13,7 +14,7 @@ interface WaehterTimeListsType {
   active?:number;
 }
 export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
-  const {data} = useSelector((state : RootState) => state.storeWeather);
+  const {data, loading} = useSelector((state : RootState) => state.storeWeather);
   const theme = useSelector((state: RootState) => state.storeTheme);
   const [timeWeather, setTimeWeather] = useState<DateItmeLists[] | null>(null);
   const [temperatureData, setTemperatureData] = useState<TemperatureTimeType[] | null>(null);
@@ -59,7 +60,7 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
   return (
     <StyleWaehterTimeLists>
       {
-        timeWeather
+        (!loading && timeWeather)
         ? (
           <div className="temperature">
             <TouchMoveLists selectName={active === 0 ? 'today': `day-${active+1}`}>
@@ -139,7 +140,9 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
           </div>
         )
         : (
-          <div>loading</div>
+          <div className="loading-wrap">
+            <LoadingAnimation />
+          </div>
         )
       }
     </StyleWaehterTimeLists>
@@ -222,5 +225,10 @@ const StyleWaehterTimeLists = styled.div`
         }
       }
     }
+  }
+  .loading-wrap {
+    position:relative;
+    width:100%;
+    height:220px;
   }
 `;

@@ -1,11 +1,8 @@
 
 import { StringOnly } from "types/baseType";
-// 📌 기상청 api  관련
-//기상청 격자 변환 함수
 import { MarkerPositionType } from "types/kakaoComon";
-import { RequestNameType, WeatherTimeListType, WeatherApiDataType, WeatherApiResponseType, WeatherLocationType, WeatherTimeDataType, WeatherCategoryListsType } from "types/weatherType";
+import { RequestNameType, WeatherTimeListType, WeatherApiDataType, WeatherApiResponseType, WeatherLocationType, WeatherTimeDataType, WeatherCategoryListsType, Coordinates } from "types/weatherType";
 import { dateChange, fromToday } from "utils/common";
-
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
 export function weatherTime(requestType:string) {
@@ -54,7 +51,7 @@ export function weatherTime(requestType:string) {
 }
 
 // ✅ 시간 차이
-export const timeDifference = (beforeH:string, nextH:string, diffH = 3) => { // EX) '2300', '0200' , 기준 시간-기본 3시간
+export function timeDifference(beforeH:string, nextH:string, diffH = 3) { // EX) '2300', '0200' , 기준 시간-기본 3시간
   // 시간을 분 단위로 변환
   const bMinutes = parseInt(beforeH.slice(0, 2)) * 60 + parseInt(beforeH.slice(2, 4));
   const nMinutes = parseInt(nextH.slice(0, 2)) * 60 + parseInt(nextH.slice(2, 4));
@@ -94,7 +91,7 @@ async function gethWithRetry<T>(url:string, getRequesNumber:number):Promise<T> {
 }
 
 // ✅ 초기 요청
-export const weatherInit = async (coords:MarkerPositionType) => {
+export async function weatherInit (coords:MarkerPositionType) {
   // 1차 0~2시
   const beforeDay = await getWeather(coords, 'getVilageFcst', { ymd: dateChange('ymdStrBefore'), hm: '2300' }, 36);
 
@@ -168,8 +165,8 @@ function weatherFilter(weatherItems:WeatherApiDataType[], requestType:RequestNam
         dateFind.timeLists.push(timeFind);
       }
       timeFind.categoryList.push({
-        value: (fcstValue ?? newItem.obsrValue),
-        category : category
+        value: `${(fcstValue ?? newItem.obsrValue)}`,
+        category : `${category}`
       });
     }
 
@@ -183,7 +180,7 @@ function weatherFilter(weatherItems:WeatherApiDataType[], requestType:RequestNam
 }
 
 
-export const weatherMerge = (prevOriginal:WeatherLocationType, nextOriginal:WeatherLocationType) => {
+export function weatherMerge (prevOriginal:WeatherLocationType, nextOriginal:WeatherLocationType) {
   // 원본 데이터 지키기 위해
   const prevData = JSON.parse(JSON.stringify(prevOriginal));
   const nextData = JSON.parse(JSON.stringify(nextOriginal));
@@ -251,7 +248,7 @@ export const weatherMerge = (prevOriginal:WeatherLocationType, nextOriginal:Weat
 };
 
 // ✅ 같은 시간대 > 카테고리가 같다면 업데이트 일치하는 카테고리가 없다면 추가.
-const weatherCategoryListUpdate = (categoryPrev:WeatherCategoryListsType[],categoryNext:WeatherCategoryListsType[]) => {
+function weatherCategoryListUpdate (categoryPrev:WeatherCategoryListsType[],categoryNext:WeatherCategoryListsType[]) {
   // ✔️ map key, value
   const cNext = new Map(categoryNext.map(categoryNextItem => [categoryNextItem.category, categoryNextItem.value])); 
   const updateCategory = categoryPrev.map(categoryPrevItem => ({ // if - ? ncNext.value : ncPrev.value 
@@ -268,13 +265,8 @@ const weatherCategoryListUpdate = (categoryPrev:WeatherCategoryListsType[],categ
   return updateCategory;
 }
 
-
-type Coordinates = {
-  lat?: number;
-  lng?: number;
-  x?: number;
-  y?: number;
-}
+// 📌 기상청 api  관련
+//기상청 격자 변환 함수
 // ※ 참고 : https://gist.github.com/fronteer-kr/14d7f779d52a21ac2f16
 export function dfs_xy_conv(code: "toXY" | "toLL", v1: number, v2: number): Coordinates {
   const RE = 6371.00877; // 지구 반경(km)
@@ -351,3 +343,12 @@ export function dfs_xy_conv(code: "toXY" | "toLL", v1: number, v2: number): Coor
   return rs;
 }
 
+// 일치하는 시간대 timeLists 
+export function findTimeLists (arr:WeatherTimeListType[],findTime:string) {
+  return arr.find((item) => item.time === findTime);
+}
+
+// 일치하는 카테고리
+export function findCategory (categoryLists:WeatherCategoryListsType[], keyVal:string) { 
+  return categoryLists.find(categoryItem => categoryItem.category === keyVal)?.value;
+}
