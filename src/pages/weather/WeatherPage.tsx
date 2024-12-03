@@ -45,7 +45,7 @@ const StyleWrap = styled.div`
     position:relative;
     width:100%;
     max-width:${breakpoints.maxPc}px;
-    height:100svh;
+    min-height:100svh;
     margin:0 auto;
     padding:65px 30px 30px;
     &::before {
