@@ -129,6 +129,7 @@ const StyleSearchWrap = styled.div`
     margin-left:-1px;
     width:300px;
     height:100%;
+    border-radius:0;
     .input  {
       height:100%;
       border-top:1px solid ${colors.lineColor};

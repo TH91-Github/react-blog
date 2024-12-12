@@ -1,19 +1,20 @@
 import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
 import { FolderList } from "components/article/room/FolderLists";
+import { RoomLists } from "components/article/room/RoomLists";
 import { SquadRoomNav } from "components/article/room/SquadRoomNav";
 import { ListBtnActive } from "components/effect/ListBtnActive";
 import { useState } from "react";
 import styled from "styled-components";
 
 export const SquadRoomPage = () => {
-  const [roomViewType, setRoomViewType] = useState([
-    { id:'view-1', title:'폴더로 보기', active:true, },
-    { id:'view-2', title: '리스트로 보기', active:false,}
+  const [roomlistsView, setRoomlistsView] = useState([
+    { id:'view-folder', title:'폴더로 보기', active:true, },
+    { id:'view-lists', title: '리스트로 보기', active:false,}
   ])
 
   // ✅ 리스트 보여주는 방식 변경
   const roomViewActive = (activeNumber:number) => {
-    setRoomViewType(prev =>
+    setRoomlistsView(prev =>
       prev.map((prevItem, idx) => ({
         ...prevItem,
         active: idx === activeNumber,
@@ -24,31 +25,7 @@ export const SquadRoomPage = () => {
     <StyledSquadRoomPage className="squad-room">
       <div className="squad-room-inner">
         {/* left - 사이드 바 */}
-        <div className="squad-room-nav">
-          <h2 className="squad-room-title">팀 룸</h2>
-          <SquadRoomNav />
-          <span>
-            {/* 홈에 있을 경우 전체 팀룸 보여주기. */}
-            <button 
-              type="button">
-              <span>홈</span> 
-            </button>
-          </span>
-          <ul>
-            <li>
-              알림
-            </li>
-            <li>
-              캘린더
-            </li>
-            <li>
-              여행
-            </li>
-            <li>
-              가계부
-            </li>
-          </ul>
-        </div>
+        <SquadRoomNav />
         {/* center - content */}
         <div className="squad-room-content">
           <div className="room-wrap">
@@ -62,7 +39,7 @@ export const SquadRoomPage = () => {
               </div>
               <div className="room-btns">
                 <ListBtnActive 
-                  btnData={roomViewType}
+                  btnData={roomlistsView}
                   clickEvent={roomViewActive}/>
                 <button 
                   type="button"
@@ -72,21 +49,8 @@ export const SquadRoomPage = () => {
               </div>
             </div>
             <div 
-              className={`room-category ${roomViewType.find(roomType => roomType.active)?.id === 'view-1' ? '':'lists'}`}>
-              <div className="room-lists">
-                {/* 여행 */}
-                <div className="room-lists-item">
-                  <FolderList />
-                </div>
-                {/* 금전 */}
-                <div className="room-lists-item">
-                  <FolderList />
-                </div>
-                {/* 캘린더 */}
-                <div className="room-lists-item">
-                  <FolderList />
-                </div>
-              </div>
+              className="room-category">
+              <RoomLists roomlistsView={roomlistsView} />
             </div>
           </div>
         </div>
@@ -112,17 +76,6 @@ const StyledSquadRoomPage = styled.div`
     max-width:${breakpoints.pc}px;
     padding:0 30px;
     margin:0 auto;
-  }
-  .squad-room-nav {
-    display:flex;
-    justify-content:center;
-    flex-direction: column;
-    align-items:center;
-    position:fixed;
-    top:0;
-    left:0;
-    padding:0 0 0 30px;
-    height:100%;
   }
   .squad-room-content {
     padding: 60px 0 30px 120px;
@@ -176,14 +129,6 @@ const StyledSquadRoomPage = styled.div`
   }
   .room-category{
     margin-top:10px;
-  }
-  .room-lists {
-    display:flex;
-    gap:30px;
-    width:max-content;
-    &-item{ 
-      width:200px;
-    }
   }
   ${(props)=> props.theme.type === 'dark' && `
     .btn-lists, .create-room {

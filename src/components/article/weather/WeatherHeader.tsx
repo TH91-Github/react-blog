@@ -5,17 +5,28 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import { MarkerPositionType } from "types/kakaoComon";
 import { SearchWrap } from "./SearchWrap";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { findTimeLists } from "utils/weather/weather";
+import { weatherClock } from "utils/common";
+import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
 interface WeatherHeaderType {
   addrUpdate : (searchCoords:MarkerPositionType) => void;
 }
 export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
+  const {data, loading} = useSelector((state : RootState) => state.storeWeather);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(0, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
+
   const handleClick = useCallback(() => {
     addrUpdate(useLocation.coords)
   },[addrUpdate, useLocation.coords]);
+  
+
+  const locationWeatherIcon = useMemo(() => {
+    return findTimeLists(data?.res[0].timeLists ?? [], weatherClock());
+  },[data]);
+
   return(
     <StyleWeatherHeader>
       <SearchWrap searchUpdate={addrUpdate}/>
@@ -29,7 +40,11 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
           ? <>
             <span className="icon"><SvgPoint $fillColor={colors.mSlateBlue}/></span>
             <span className="txt">{addressText}</span>
-            <span>날씨 Icon</span>
+            <span className="icon">
+              {
+                locationWeatherIcon && <WeatherIcon isAnimation={false} categoryLists={locationWeatherIcon.categoryList} />
+              }
+            </span>
           </>
           : <span className="blind">로딩 사용 예정.</span>
         }
@@ -58,21 +73,23 @@ const StyleWeatherHeader = styled.div`
       position:relative;
       width:18px;
       height:18px;
-      &::before{
-        position:absolute;
-        bottom:-20%;
-        left:50%;
-        width:100%;
-        height:40%;
-        border-radius:50%;
-        border: 1px solid ${colors.mSlateBlue};
-        transform: translateX(-50%) scale(0);
-        animation:pointAni 2s linear infinite;
-        content:'';
-      }
-      @keyframes pointAni {
-        0%{ transform: translateX(-50%) scale(0); opacity:1; }
-        100%{ transform: translateX(-50%) scale(1.5); opacity:0;}
+      &.location {
+        &::before{
+          position:absolute;
+          bottom:-20%;
+          left:50%;
+          width:100%;
+          height:40%;
+          border-radius:50%;
+          border: 1px solid ${colors.mSlateBlue};
+          transform: translateX(-50%) scale(0);
+          animation:pointAni 2s linear infinite;
+          content:'';
+        }
+        @keyframes pointAni {
+          0%{ transform: translateX(-50%) scale(0); opacity:1; }
+          100%{ transform: translateX(-50%) scale(1.5); opacity:0;}
+        }
       }
     }
     .txt {

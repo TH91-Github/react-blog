@@ -1,45 +1,24 @@
 import { colors, transitions } from "assets/style/Variable";
 import { SvgFolder } from "assets/svg/room/RoomSvg";
 import styled from "styled-components"
+import { StringOnly } from "types/baseType";
 
 interface FolderListType {
-  folderListData?:[],
+  subject:StringOnly, // 폴더 주제 EX) 여행, 캘린더 등
   maxWidth?:number,
 }
-export const FolderList = ({folderListData, maxWidth}:FolderListType) => {
+export const FolderList = ({subject, maxWidth}:FolderListType) => {
 
-  const handlePrevNextClick = (n:number) => {
+  // 제목, 서브 설명, 참여인원, 
 
-  }
   return( 
     <StyleFolderList $width={maxWidth}>
       <span className="frame"><SvgFolder /></span>
       <ul>
-        {
-          folderListData ? (
-            folderListData.map(item => (
-              <FolderItem folderData={folderListData}/>
-            ))
-          )
-          : <FolderItem />
-        }
+        {/* 주제에 포함된 방이 몇개가 저장되어 있는지  */}
+        <FolderItem />
       </ul>
-      {
-        folderListData && (
-          <div className="btn-arrow">
-            <button
-              type="button" 
-              onClick={() => handlePrevNextClick(-1)}>
-              <span>이전</span>
-            </button>
-            <button 
-              type="button"
-              onClick={() => handlePrevNextClick(1)}>
-              <span>다음</span>
-            </button>
-          </div>
-        )
-      }
+     
     </StyleFolderList>
   )
 }
@@ -71,16 +50,16 @@ export const FolderItem = ({folderData}:FolderItemType) => {
             </div>
           )
           : (
-            <div className="folder-box default">
-              <span className="title"></span>
-              <span className="user-title"></span>
+            <div className="folder-box skeleton-wrap">
+              <span className="title skeleton-item"></span>
+              <span className="user-title skeleton-item"></span>
               <div className="user-list">
-                <span className="user-item"></span>
-                <span className="user-item"></span>
+                <span className="user-item skeleton-item"></span>
+                <span className="user-item skeleton-item"></span>
               </div>
-              <div className="tag-list">
+              <div className="tag-list skeleton-item">
               </div>
-              <div className="date-info">
+              <div className="date-info skeleton-item">
               </div>
             </div>
           ) 
@@ -218,7 +197,7 @@ const StyleFolderItem = styled.li`
       // 텍스트 입력 후 opacity: 1~0.7 깜빡이는 느낌
     }
   }
-  .default{ 
+  .skeleton-wrap{ 
     .title {
       width:60%;
       height:10px;

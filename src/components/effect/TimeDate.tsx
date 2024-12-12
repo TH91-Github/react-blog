@@ -34,7 +34,7 @@ export const TimeDate = ({view, updateCheck, timeUpdate, delimiterType}:TimeDate
     }
   }
   return (
-    <StyleTimeDate>
+    <StyleTimeDate className="time">
       {/* 시 */}
       <TimeHours h={isTime.getHours()} update={updateTime}/>
       {/* 분 */}
@@ -78,7 +78,7 @@ const TimeHours = memo(({ h, update }: { h: number, update: (type:string, val:st
     update('h',`${h}`);
     prevMinutesRef.current = h; 
   }
-  return <span className="time h">{h}</span>;
+  return <span className="time-item h">{h}</span>;
 });
 // 분
 const TimeMinutes = memo(({ m, update}: { m: number, update: (type:string, val:string) => void }) => {
@@ -88,14 +88,13 @@ const TimeMinutes = memo(({ m, update}: { m: number, update: (type:string, val:s
     update('m',`${m}`);
     prevMinutesRef.current = m; 
   }
-  return <span className="time m">{m.toString().padStart(2, '0')}</span>;
+  return <span className="time-item m">{m.toString().padStart(2, '0')}</span>;
 });
 // 초
 const TimeSeconds = memo(({ s }: { s: number }) => {
-  return <span className="time s">{s.toString().padStart(2, '0')}</span>;
+  return <span className="time-item s">{s.toString().padStart(2, '0')}</span>;
 });
 
 const StyleTimeDate = styled.div`
-
 `;
 

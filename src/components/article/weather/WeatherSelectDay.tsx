@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { animation, colors, keyFrames } from "assets/style/Variable";
+import { animation, colors, keyFrames, media } from "assets/style/Variable";
 import { TimeDate } from "components/effect/TimeDate";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { WeatherCategoryListsType, WeatherTimeListType } from "types/weatherType
 import { dateChange, weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
+import { findTimeLists } from "utils/weather/weather";
 
 interface WeatherSelectDayType {
   isDay? : number;
@@ -21,8 +22,8 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
   useEffect(()=>{
     const todayTime = weatherClock(); // 현재 시간
     if(data?.res?.length > 0){
-      const isTime = data?.res[isDay].timeLists.find((timeItem:WeatherTimeListType) => timeItem.time === todayTime)
-      setDayCategory(isTime.categoryList)
+      const isTime = findTimeLists(data?.res[isDay].timeLists ?? [], todayTime);
+      if(isTime) setDayCategory(isTime.categoryList)
     }
   },[data, isDay]);
 
@@ -218,4 +219,40 @@ const StyleWeatherSelectDay = styled.div`
     }
     ${keyFrames.fadeUp};
   }
+  ${media.mo}{
+    padding-top:40px;
+    .location-date{0
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .addr {
+      display:inline-block;
+      width:50%;
+      font-size:14px;
+    }
+    .date{
+      display:inline-block;
+      width:50%;
+      margin-top:0;
+      text-align:right;
+    }
+    .time {
+      width:100%;
+      font-size:18px;
+    }
+    .temperature-wrap{
+      padding-top:100px;
+      .weather-icon {
+        top:-10px;
+      }
+    }
+    .skeleton-wrap {
+      .temperature-wrap {
+        padding-top:0;
+      }
+    } 
+  }
+
+  
 `;

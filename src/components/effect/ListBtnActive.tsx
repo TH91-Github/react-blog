@@ -107,7 +107,6 @@ const StyleListBtnActive = styled.div<StyleListBtnActiveType>`
   display:flex;
   gap:10px;
   position:relative;
-  padding:5px;
   border-radius:5px;
   background:${props => props.$bgColor};
   &:before {
