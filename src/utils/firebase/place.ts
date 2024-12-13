@@ -109,8 +109,9 @@ export const reviewAddDoc = async(reviewData:ReviewAddDocTypeC) => {
         const newGalleryArr = galleryImg.length > 0 ? [...getPlaceData.galleryImgs, ...galleryImg]: [...getPlaceData.galleryImgs]
 
         // ✔️ 별점
-        const newRatingResult = (getPlaceData.ratingResult || 0) + rating;
-        const newRating = parseFloat((newRatingResult / newReviewArr.length).toFixed(1)); 
+        const newRatingResult = (parseFloat(getPlaceData.ratingResult) || 0) + rating;
+        const newRating = parseFloat((newRatingResult / (newReviewArr.length ?? 1)).toFixed(1)); 
+
         // place 문서 업데이트
         transaction.update(placeDocRef, {
           reviewArr: newReviewArr,
@@ -176,20 +177,38 @@ export const reviewRemove = async(removeData:ReviewRemoveTypeC) => {
       // firbase store 삭제
       if (removePlaceDocSnapshot.exists()) {
         const getRemovePlaceData = removePlaceDocSnapshot.data();
-        const removeReviewArr = getRemovePlaceData.reviewArr.filter((removeReviewArrItem:StringOnly) => removeReviewArrItem.docId !== removeId)
-        const removeGallery = getRemovePlaceData.galleryImgs.filter( (galleryItem:any) => !removeImg.includes(galleryItem.imgPath));
-        const removeRatingResult = parseFloat(((getRemovePlaceData.ratingResult || 0) - rating).toFixed(1));
+
+         // 리뷰 제거
+         const removeReviewArr = getRemovePlaceData.reviewArr.filter(
+          (removeReviewArrItem: StringOnly) =>
+            removeReviewArrItem.docId !== removeId
+        );
+        // 갤러리 관련 정보 제거
+        const removeGallery = getRemovePlaceData.galleryImgs.filter(
+          (galleryItem: any) => !removeImg.includes(galleryItem.imgPath)
+        );
+        // 평점 계산
+        const removeRatingResult = parseFloat(
+          ((getRemovePlaceData.ratingResult || 0) - rating).toFixed(1)
+        );
         const removeRating = removeReviewArr.length > 0 
           ? parseFloat((removeRatingResult / removeReviewArr.length).toFixed(1)) 
           : 0;
+
         // place 문서 업데이트
-        transaction.update(removeDocRef, {
-          reviewArr: removeReviewArr,
-          ratingResult: removeRatingResult,
-          rating: removeRating,
-          galleryImgs: removeGallery,
-          updateTime : new Date(),
-        });
+        if (removeReviewArr.length === 0 && removeRatingResult === 0) {
+          // 리뷰가 없다면 해당 업체 doc 삭제
+          transaction.delete(removeDocRef);
+        } else {
+          // 그렇지 않다면 문서 업데이트
+          transaction.update(removeDocRef, {
+            reviewArr: removeReviewArr,
+            ratingResult: removeRatingResult,
+            rating: removeRating,
+            galleryImgs: removeGallery,
+            updateTime: new Date(),
+          });
+        }
         // 리뷰 삭제
         transaction.delete(reviewRemoveDoc);
       }else{

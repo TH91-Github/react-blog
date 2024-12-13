@@ -211,6 +211,7 @@ const StylePlaceDetail = styled.div`
   }
   .close-box {
     display:block;
+    overflow:hidden;
     position:absolute;
     top:10px;
     right:10px;

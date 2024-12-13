@@ -200,6 +200,7 @@ const StylePickMarker = styled.div`
   }
   .close-box {
     display:flex;
+    overflow:hidden;
     justify-content:center;
     align-items:center;
     position:absolute;
