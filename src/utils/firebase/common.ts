@@ -1,21 +1,22 @@
-import { StringOnly, UserBookmarkType, UserDataType } from "types/baseType";
-import { fireDB, firebaseStorage} from "../../firebase";
-import { getEmailId } from "utils/common";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { collection, deleteDoc, doc, where, getDoc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
+import { UserBookmarkType, UserDataType } from "types/baseType";
+import { getEmailId } from "utils/common";
+import { fireDB, firebaseStorage } from "../../firebase";
 
 // 기본
 const baseDB = process.env.REACT_APP_DB ?? '';
 // ✅ thData 기본
+
 // 추가
 export const pushDataDoc = async(
-  docName:string, collectionName:string, data:UserDataType, defaultBase:string = baseDB
+  docName:string, collectionName:string, data:any, defaultBase:string = baseDB
 ) => {
   const userCollection = collection(fireDB, defaultBase, docName, collectionName);
-  const newUserDoc = doc(userCollection);
-  const newUserId = newUserDoc.id;
-  data.id = newUserId; // doc 랜덤 id 추가
-  await setDoc(newUserDoc, data);
+  const newDoc = doc(userCollection);
+  const newId = newDoc.id;
+  data.id = newId; // doc 랜덤 id 추가
+  await setDoc(newDoc, data);
 } 
 
 // document name, 하위 collection name, 비교 key - id, email 등, 비교할 value

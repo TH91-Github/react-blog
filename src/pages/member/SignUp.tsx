@@ -9,7 +9,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomIdChk, randomNum } from "utils/common";
-import { pushDataDoc } from "utils/firebase/common";
+import { userPushDataDoc } from "utils/firebase/member";
 import { auth } from "../../firebase";
 
 interface InputStateType {
@@ -86,18 +86,19 @@ export default function SignUp() {
   }
   // user 데이터 생성
   const handleSignup = async () => {
-    const date = currentTime();
     const resultData : UserDataType = {
       id:'',
       email: refList.current[0].value,
       loginId:refList.current[1].value || '',
       nickName:refList.current[2].value,
       password:refList.current[3].value,
-      signupTime:`${date.year}.${date.month}.${date.date}/${date.hours}:${date.minutes}:${date.seconds}`,
+      signupTime:new Date().getTime().toString(),
       lastLogInTime: "",
       theme:"light",
       uid: '',
       kakaoMapData:[],
+      rank:'0',
+      permission:false,
     }
     try {
       // 계정 관리 Authentication 등록
@@ -105,8 +106,10 @@ export default function SignUp() {
       resultData.uid = userCredential.user.uid ? userCredential.user.uid : '';
       resultData.password = randomNum(9999, 'secret-login');
       // 📍 firebase에 user 정보 저장
-      pushDataDoc('userData','users',resultData)
+      const pushId = await userPushDataDoc('userData','users',resultData);
+      if(pushId){ // db 저장 후 id 값
 
+      }
       // 완료 레이어 팝업 -> member 이동
       navigate('/member');
     } catch (error) {

@@ -38,6 +38,8 @@ export interface UserDataType { // 유저 정보
   theme : string;
   uid : string;
   kakaoMapData?: UserBookmarkType[];
+  rank: string;
+  permission?:boolean; // 가입 승인
 }
 
 // 🚩 styled component

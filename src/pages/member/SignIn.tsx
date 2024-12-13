@@ -1,5 +1,7 @@
 import { colors, transitions } from "assets/style/Variable";
 import InputElement, { InputElementRef } from "components/element/InputElement";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useRef, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -7,10 +9,9 @@ import { AppDispatch, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { currentTime, randomNum } from 'utils/common';
-import { duplicateGetDoc, pushDataDoc } from "utils/firebase/common";
-import { fireDB, auth, provider } from "../../firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { duplicateGetDoc } from "utils/firebase/common";
+import { userPushDataDoc } from "utils/firebase/member";
+import { auth, fireDB, provider } from "../../firebase";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,22 +87,23 @@ export default function SignIn() {
       if(!querySnapshot.empty){ // 이미 계정에 대한 정보가 있을 경우 
         isUserData = querySnapshot.docs[0].data() as UserDataType // 타입 명시적 변환
       }else{ // 신규 구글 계정 등록
-        const date = currentTime();
         const resultData = {
           id:'',
           email: googleData.user.email || '',
           loginId: '',
           nickName: googleData.user.displayName || '',
           password: randomNum(9999, 'google-login'),
-          signupTime: `${date.year}.${date.month}.${date.date}/${date.hours}:${date.minutes}:${date.seconds}`,
+          signupTime: new Date().getTime().toString(),
           lastLogInTime: "",
           theme: "light",
           uid: googleData.user.uid || '',
           kakaoMapData:[],
+          rank:'0',
+          permission:false,
         }
         isUserData = resultData
         // 📍 firebase에 user 정보 저장
-        pushDataDoc('userData','users', isUserData)
+        userPushDataDoc('userData','users', isUserData);
       }
       const googleLoginData = {
         loginState: true,
