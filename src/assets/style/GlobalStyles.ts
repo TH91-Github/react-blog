@@ -59,6 +59,17 @@ export const GlobalStyles = createGlobalStyle`
       }
     }
   }
+  .notice{
+    display:inline-block;
+    position:relative;
+    padding-left:1em;
+    &::before {
+      position:absolute;
+      top:0;
+      left:0;
+      content:'※';
+    }
+  }
   .close-btn {
     position:absolute;
     top:10px;

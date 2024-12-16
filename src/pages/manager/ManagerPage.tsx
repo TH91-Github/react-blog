@@ -4,6 +4,7 @@ import { NavContLayout } from "components/layout/NavContLayout";
 import { NavFixedLayout } from "components/layout/NavFixedLayout";
 import styled from "styled-components";
 import { managerNavData } from "./managerData";
+import { Outlet } from "react-router-dom";
 
 export const ManagerPage = () => {
   return(
@@ -11,7 +12,7 @@ export const ManagerPage = () => {
       <div className="manager-inner">
         <NavContLayout
           navChildren={<NavFixedLayout data={managerNavData}/>}
-          contChildren={<ManagerCont />}
+          contChildren={<ManagerCont><Outlet /></ManagerCont>}
         />
       </div>
     </StyleManagerPage>
@@ -27,6 +28,5 @@ const StyleManagerPage = styled.div`
     max-width:${breakpoints.pc}px;
     margin:0 auto;
     padding:30px;
-    border:1px solid red;
   }
 `;

@@ -14,7 +14,9 @@ interface UtilNavType {
 export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const theme = useSelector((state : RootState) => state.storeTheme);
+  const hostname = window.location.hostname;
 
+  console.log(hostname)
   // mo : more-menu
   function menuClick(){
     gnbMoreClick();

@@ -8,7 +8,7 @@ interface NavContLayoutType {
 }
 
 // NavContLayout : 왼쪽 nav와 오른쪽 컨텐츠를 다루는 layout 컴포넌트.
-export const NavContLayout = ({navChildren,contChildren, navWidth = 250}:NavContLayoutType) =>{
+export const NavContLayout = ({navChildren, contChildren, navWidth = 250}:NavContLayoutType) =>{
   return( 
     <StyleNavContLayout $navW={navWidth}>
       <div className="nav">

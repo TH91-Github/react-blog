@@ -1,15 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { GlobalStyles } from 'assets/style/GlobalStyles';
-import CurrentLocation from "components/article/map/CurrentLocation";
 import AppLayout from "components/layout/AppLayout";
 import Header from 'components/layout/Header';
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { actionMobileChk } from "store/store";
-import './App.css';
 import { isMobileSizeChk } from "utils/common";
+import './App.css';
 
 function App() : JSX.Element {
   const location = useLocation();
@@ -41,7 +40,6 @@ function App() : JSX.Element {
     <QueryClientProvider client={queryClient}>
       <AppLayout>
         <GlobalStyles />
-        <CurrentLocation />
         <div className="container">
           <Header location={location} />
           <Outlet />

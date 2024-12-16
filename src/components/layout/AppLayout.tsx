@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import FixedPopup from "components/element/FixedPopup";
 import LoginStatusCheck from "components/article/member/LoginStatusCheck";
+import CurrentLocation from "components/article/map/CurrentLocation";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -14,7 +15,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   // 이용자에 따라 다크/라이트 모드 체크 확인 후 변경
   return (
     <ThemeProvider theme={theme.color}>
-      <StyleWrap className="App">
+      <CurrentLocation />
+      <StyleWrap className="App-layout">
         {children}
         {/* alert popup*/}
         <FixedPopup />

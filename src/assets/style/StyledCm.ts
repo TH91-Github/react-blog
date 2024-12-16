@@ -3,18 +3,6 @@ import { StyleProps } from 'types/baseType';
 import { breakpoints, colors, media } from './Variable';
 
 // css
-export const notice = css`
-  display:inline-block;
-  position:relative;
-  padding-left:1em;
-  &::before {
-    position:absolute;
-    top:0;
-    left:0;
-    content:'※';
-  }
-`;
-
 export const ListBar = styled.ul` 
   & > li {
     position:relative;
