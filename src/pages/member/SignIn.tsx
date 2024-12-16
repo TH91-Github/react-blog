@@ -8,7 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
-import { currentTime, randomNum } from 'utils/common';
+import { randomNum } from 'utils/common';
 import { duplicateGetDoc } from "utils/firebase/common";
 import { userPushDataDoc } from "utils/firebase/member";
 import { auth, fireDB, provider } from "../../firebase";

@@ -14,8 +14,8 @@ export const SquadRoomNav = () => {
           </button>
         </li>
         {
-          roomCategory.map((categoryItem,dix) =>(
-            <li>
+          roomCategory.map((categoryItem,idx) =>(
+            <li key={idx}>
               <button 
                 type="button"
                 title={`${categoryItem.title} 보기`}>

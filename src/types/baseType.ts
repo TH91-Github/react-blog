@@ -52,3 +52,21 @@ export type StyleProps = { // default
   $bg?: string | number,
   $unit?:string,
 }
+
+
+export type NavIconType = {
+  [key:string] : JSX.Element;
+}
+export interface NavFixedLayoutPropsType {
+  title:string;
+  color:string;
+  lists:{
+    subTitle:string;
+    subLists:{
+      tit:string;
+      link:string;
+      icon?:string
+    }[]
+  }[]
+}
+ 

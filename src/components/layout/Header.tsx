@@ -73,7 +73,7 @@ export default function Header({location}:HeaderType){
       let onRouter = null;
       if(routerItem.path && pathNameArr.includes(routerItem.path)){
         if(!routerItem.title && routerItem.children){
-          const childrenList = routerItem.children?.map(item => item.path ? item.path  : 'index');
+          const childrenList = routerItem.children?.map(item => item.path ? item?.path  : 'index');
           if(childrenList?.includes(pathName)){
             onRouter = routerItem.children[childrenList?.indexOf(pathName)]
           }else{
@@ -88,7 +88,7 @@ export default function Header({location}:HeaderType){
     .filter(Boolean)[0]; // null 제거하기
 
     routerPath
-      ? document.title = `${indexTitle}_${routerPath.title}`
+      ? document.title = `${indexTitle}_${(routerPath.title ?? 'TEST')}`
       : document.title = `${indexTitle} - 😁`;
   },[location])
 

@@ -22,7 +22,10 @@ export default function ThemeBtn(){
     dispatch(actionTheme(newTheme));
   }
   return(
-    <button type="button" onClick={()=> darkLightMode()}>
+    <button 
+      type="button" 
+      onClick={()=> darkLightMode()}
+      title={`${theme.mode === 'light' ? '다크': '라이트'} 모드 하기`}>
       {
         <DarkLight mode={theme.mode === 'light'? true : false}/>
       }

@@ -71,7 +71,6 @@ export const updateWeatherDoc = async(firebaseFind:WeatherFirebaseUpdateDocType,
         coords:coords,
       });
     }
-
     await runTransaction(fbWeatherDB, async (transaction) => {
       // 트랜잭션 내부에서는 연도별 데이터만 처리
       const yearDocSnapshot = await transaction.get(yearDocRef);
@@ -83,7 +82,6 @@ export const updateWeatherDoc = async(firebaseFind:WeatherFirebaseUpdateDocType,
         transaction.set(yearDocRef, resultData);
       }
     });
-
   } catch (error) {
     console.log(error)
   }

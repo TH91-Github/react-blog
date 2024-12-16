@@ -39,7 +39,7 @@ const StyleRainSnowDropBlowIcon = styled.span`
   position:relative;
   width:100%;
   height:100%;
-  events-pointer:none;
+  pointer-events:none;
   .raindropblow {
     display:block;
     position:absolute;

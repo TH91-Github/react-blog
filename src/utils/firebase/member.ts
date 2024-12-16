@@ -31,8 +31,10 @@ export const userPermissionUpdate = async(
   const userItemData = {
     id: data.id,
     email:data.email,
+    nickName:data.nickName,
     time:data.signupTime,
-    uid:data.uid
+    uid:data.uid,
+    rank:data.rank,
   }
   try {
     // 유저 목록과 비승인 계정 확인을 위해

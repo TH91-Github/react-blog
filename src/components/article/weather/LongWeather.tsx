@@ -118,6 +118,7 @@ const StyleLongWeather = styled.div`
     width:30%;
     .icon {
       display:inline-block;
+      flex-shrink:0;
       width:30px;
       height:30px;
     }

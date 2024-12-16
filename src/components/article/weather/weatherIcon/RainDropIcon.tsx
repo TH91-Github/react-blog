@@ -28,7 +28,7 @@ const StyleRainDropIcon = styled.span`
   position:relative;
   width:100%;
   height:100%;
-  events-pointer:none;
+  pointer-events:none;
   .raindrop {
     display:block;
     position:absolute;

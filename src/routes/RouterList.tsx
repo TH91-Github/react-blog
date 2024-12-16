@@ -8,6 +8,9 @@ import SignIn from "pages/member/SignIn";
 import SignUp from "pages/member/SignUp";
 import StudyPage from "pages/study/StudyPage";
 import { SquadRoomPage } from 'pages/room/SquadRoomPage';
+import { ManagerPage } from 'pages/manager/ManagerPage';
+import { UserRankBoardPage } from 'pages/manager/UserRankBoardPage';
+import { UserValidityBoardPage } from 'pages/manager/UserValidityBoardPage';
 
 
 export const routerList = [
@@ -53,6 +56,27 @@ export const routerList = [
         path:"detail/:id",
         title:"📚스터디",
         element: <StudyPage />
+      }
+    ]
+  },
+  {
+    id: "Manager",
+    path: "manager",
+    view: false,
+    element: <ManagerPage />,
+    children: [
+      {
+        index: true,
+        path:'rank',
+        id: "userRankBoard",
+        title: "사용자 등급관리",
+        element: <UserRankBoardPage />
+      },
+      {
+        id: "UserValidityBoard",
+        path: "validity",
+        title: "사용자 승인 관리",
+        element: <UserValidityBoardPage />,
       }
     ]
   },

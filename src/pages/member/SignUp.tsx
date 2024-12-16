@@ -8,7 +8,7 @@ import { useCallback, useRef, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
-import { currentTime, randomIdChk, randomNum } from "utils/common";
+import { randomIdChk, randomNum } from "utils/common";
 import { userPushDataDoc } from "utils/firebase/member";
 import { auth } from "../../firebase";
 

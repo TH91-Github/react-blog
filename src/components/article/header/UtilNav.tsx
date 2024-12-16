@@ -3,6 +3,9 @@ import { RootState } from "store/store";
 import styled from "styled-components";
 import ThemeBtn from "./ThemeBtn";
 import UserLogin from "./UserLogin";
+import { NavLink } from "react-router-dom";
+import { SvgSetting } from "assets/svg/common/CommonSvg";
+import { colors } from "assets/style/Variable";
 
 interface UtilNavType {
   menuOn: boolean
@@ -10,7 +13,8 @@ interface UtilNavType {
 }
 export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
-  
+  const theme = useSelector((state : RootState) => state.storeTheme);
+
   // mo : more-menu
   function menuClick(){
     gnbMoreClick();
@@ -18,6 +22,13 @@ export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   return (
     <StyleUtilNav className="util">
       <div className="util-inner">
+        <div className="util-item">
+          <NavLink to="/manager" title={'관리자 페이지 이동'} className="link-icon">
+            <span className="icon">
+              <SvgSetting $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite} />
+            </span>
+          </NavLink>
+        </div>
         <div className="util-item">
           <UserLogin />
         </div>

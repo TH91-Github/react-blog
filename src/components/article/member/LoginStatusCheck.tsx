@@ -49,7 +49,6 @@ export default function LoginStatusCheck() {
     clearAllTimeouts();
     extensionTimeRef.current = setTimeout(() => {
       setExtensionPop(true);
-     
     }, remainingTime - autoCloseSecond + 500); // 자동 닫기(로그아웃) 팝업 시간 뺀 시간
   },[clearAllTimeouts]);
 
@@ -64,9 +63,15 @@ export default function LoginStatusCheck() {
     localStorage.removeItem(`${loginChkKey}expirationTime`);
     // 쿠키 초기화 - 만료
     document.cookie = `${loginChkKey}accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-    clearAllTimeouts();
     setExtensionPop(false);
-  },[dispatch, clearAllTimeouts])
+  },[dispatch])
+
+  // ✅ 로그아웃
+  const handleLogOut = useCallback(async()=>{
+    await signOut(auth);
+    userLoginInit(); // 상태 초기화
+    clearAllTimeouts();
+  },[userLoginInit, clearAllTimeouts])
 
   // fireDB 체크 및 store 업데이트
   const loginUpdate = useCallback(async(userId: string) => {
@@ -115,12 +120,12 @@ export default function LoginStatusCheck() {
             loginExtensionChk(parseFloat(expirationTime) - currentAccessTime); 
             console.log('재접속')
           }else{
-            await signOut(auth);
             console.log('재접속 후 로그아웃')
+            handleLogOut();
           }
         }else{ // 시간이 오버된 경우 로그아웃 
           console.log('만료')
-          await signOut(auth);
+          handleLogOut();
         }
       }else{ // 값이 없다면 추가 - 로그인 시도
         console.log('로그인 시도')
@@ -129,11 +134,12 @@ export default function LoginStatusCheck() {
       }
     }else { // 로그아웃
       console.log('로그아웃')
-      await signOut(auth);
-      userLoginInit(); // 상태 초기화
+      handleLogOut();
     }
-  },[userLoginInit, loginExtensionChk, loginSave, loginUpdate]);
+  },[loginExtensionChk, loginSave, handleLogOut, loginUpdate]);
   
+  
+
   // ✅ 로그인 연장 
   const handleConfirmation = useCallback(async () => {
     clearAllTimeouts();
