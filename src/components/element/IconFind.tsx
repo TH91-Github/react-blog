@@ -1,5 +1,5 @@
 import { colors } from "assets/style/Variable";
-import { SvgSetting } from "assets/svg/common/CommonSvg";
+import { SvgUsers, SvgSetting } from "assets/svg/common/CommonSvg";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
@@ -14,9 +14,10 @@ export const IconFind = ({iconData}:IconFindType) =>{
 
   const svgIcon:NavIconType= useMemo(() =>{ 
     return {
+      'users': <SvgUsers $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}/>,
       'setting': <SvgSetting $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}/>,
     }
-  },[])
+  },[theme.mode])
   return(
     <StyleIconFind className="icon">
       {

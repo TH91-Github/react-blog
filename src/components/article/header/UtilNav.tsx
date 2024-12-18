@@ -11,12 +11,13 @@ interface UtilNavType {
   menuOn: boolean
   gnbMoreClick: () => void;
 }
+const managerView = JSON.parse(process.env.REACT_APP_MANAGER_VIEW || "[]");
+
 export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const theme = useSelector((state : RootState) => state.storeTheme);
   const hostname = window.location.hostname;
 
-  console.log(hostname)
   // mo : more-menu
   function menuClick(){
     gnbMoreClick();
@@ -24,13 +25,17 @@ export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   return (
     <StyleUtilNav className="util">
       <div className="util-inner">
-        <div className="util-item">
-          <NavLink to="/manager" title={'관리자 페이지 이동'} className="link-icon">
-            <span className="icon">
-              <SvgSetting $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite} />
-            </span>
-          </NavLink>
-        </div>
+        {
+          managerView.includes(hostname) && (
+            <div className="util-item">
+              <NavLink to="/manager" title={'관리자 페이지 이동'} className="link-icon">
+                <span className="icon">
+                  <SvgSetting $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite} />
+                </span>
+              </NavLink>
+            </div>
+          )
+        }
         <div className="util-item">
           <UserLogin />
         </div>

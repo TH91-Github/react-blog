@@ -8,6 +8,8 @@ import { fireDB, firebaseStorage } from "../../firebase";
 const baseDB = process.env.REACT_APP_DB ?? '';
 // ✅ thData 기본
 
+// 유저 정보관련 코드 포함. -> 개선 필요
+
 // 추가
 export const pushDataDoc = async(
   docName:string, collectionName:string, data:any, defaultBase:string = baseDB
@@ -54,7 +56,7 @@ export const duplicateGetDoc = async(
   }
 }
 
-// 필드 데이터 변경
+// 필드 데이터 변경 - 유저 북마크 관련
 export const collectionDocUpdate = async(
   docName:string, collectionName:string, docId:string, upDatakey:string, updateData: string | UserBookmarkType[],
   defaultBase:string = baseDB

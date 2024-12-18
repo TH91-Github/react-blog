@@ -9,7 +9,6 @@ interface DotListsType {
   dotColor?:string
 }
 export default function DotLists({listData, type, dotColor}:DotListsType){
-  // console.log(listData)
   return (
     <StyleLists className={`dot-lists ${type ? type : ''}`} $dotColor={dotColor || '#000'}>
       {
@@ -21,7 +20,6 @@ export default function DotLists({listData, type, dotColor}:DotListsType){
           : <li key={idx}>
               <span className="txt">{item}</span>
             </li>
-          
         ))
       }
     </StyleLists>

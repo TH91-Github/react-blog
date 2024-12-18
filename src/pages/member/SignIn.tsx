@@ -100,6 +100,7 @@ export default function SignIn() {
           kakaoMapData:[],
           rank:'0',
           permission:false,
+          profile:'-',
         }
         isUserData = resultData
         // 📍 firebase에 user 정보 저장

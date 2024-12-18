@@ -99,6 +99,7 @@ export default function SignUp() {
       kakaoMapData:[],
       rank:'0',
       permission:false,
+      profile:'-',
     }
     try {
       // 계정 관리 Authentication 등록

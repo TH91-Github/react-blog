@@ -158,16 +158,24 @@ export function fromToday(day=0) {
 export function dateChange(type:string = 'default', callDate?: any) { // 
   // callDate가 Timestamp 객체일 경우 toDate()로 변환
   // > new Date(callDate) 2024,1,1 or 2424-1-1 or 2424/1/1 문자열 그 외 20240101일 경우 아래와 같이 변경 됨.
-  const formattedDate = typeof callDate === 'string' && /^\d{8}$/.test(callDate) // YYYYMMDD 일 경우
-    ? `${callDate.slice(0, 4)}-${callDate.slice(4, 6)}-${callDate.slice(6, 8)}` // YYYY-MM-DD로 변환
-    : callDate;
-  const d = formattedDate ? (formattedDate.toDate ? formattedDate.toDate() : new Date(formattedDate)) : new Date();
-
-
+  const formattedDate =
+    typeof callDate === 'string' && /^\d{13}$/.test(callDate) // 13자리 유닉스 타임스탬프인지 확인
+      ? new Date(parseInt(callDate, 10)) // 문자열을 숫자로 변환 후 Date 객체로 변환
+      : typeof callDate === 'string' && /^\d{8}$/.test(callDate) // YYYYMMDD 문자열인지 확인
+      ? `${callDate.slice(0, 4)}-${callDate.slice(4, 6)}-${callDate.slice(6, 8)}` // YYYY-MM-DD 형식으로 변환
+      : callDate;
+  
+  const d = formattedDate
+    ? formattedDate.toDate
+      ? formattedDate.toDate()
+      : new Date(formattedDate)
+    : new Date();
+    
   if (isNaN(d.getTime())){ // 유효한 날짜인지 확인
     throw new Error('Invalid date');
   }
   if (type.includes('Before')) d.setDate(d.getDate() - 1);
+
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const week = weekChange(d.getDay());
@@ -198,7 +206,6 @@ export function dateChange(type:string = 'default', callDate?: any) { //
   return handlers[type];
 }
 
-
 const weekChange = (e:number, lang?:string) => {
   const weekDays: { [key: number]: string } = {
     0: lang === 'en' ? 'Sun' : '일',
@@ -211,3 +218,24 @@ const weekChange = (e:number, lang?:string) => {
   };
   return weekDays[e];
 }
+
+// value 일부 비공개 
+export const partialUndisclosed = (
+  eVal:string, // 전체 val 
+  cutNum:number=3, // 비공개 시작점
+  cutType:string='@', // 비공개 기준 앞쪽
+  closedText:string="*" // 비공개 text 타입
+) =>{
+  const [localPart, domain] = eVal.split(cutType);
+  let resultVal:string;
+
+  if(localPart.length < 1) return eVal
+  // 숨기려는 value가 시작점 보다 작을 때
+  else if (localPart.length <= cutNum) {
+    // 로컬 파트가 3자 이하인 경우 그대로 반환
+    resultVal = `${localPart.slice(0, (cutNum-1))}${closedText.repeat(localPart.length - (cutNum-1))}`;
+  }else{
+    resultVal = `${localPart.slice(0, 3)}${closedText.repeat(localPart.length - 3)}`;
+  }
+  return domain === undefined ? resultVal : `${resultVal}${cutType}${domain}`;
+} 

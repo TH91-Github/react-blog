@@ -40,6 +40,7 @@ export interface UserDataType { // 유저 정보
   kakaoMapData?: UserBookmarkType[];
   rank: string;
   permission?:boolean; // 가입 승인
+  profile?:string;
 }
 
 // 🚩 styled component
@@ -53,7 +54,6 @@ export type StyleProps = { // default
   $unit?:string,
 }
 
-
 export type NavIconType = {
   [key:string] : JSX.Element;
 }
@@ -62,6 +62,7 @@ export interface NavFixedLayoutPropsType {
   color:string;
   lists:{
     subTitle:string;
+    isIcon: boolean;
     subLists:{
       tit:string;
       link:string;

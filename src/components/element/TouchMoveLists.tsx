@@ -115,6 +115,5 @@ const StyleTouchMoveLists= styled.div`
   }
   .moving {
     position:relative;
-    transition:${transitions.base};
   }
 `;

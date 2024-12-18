@@ -136,7 +136,8 @@ const StyledHeader = styled.header`
   top:0;
   left:0;
   width:100%;
-  background:${props => props.theme.opacityBg};
+  background: linear-gradient(to bottom,  rgba(14,14,14,.25), rgba(0,0,0,0) 75%); 
+
   transition: all .01s;
   .header-wrap{
     transition: ${transitions.base};
@@ -174,6 +175,7 @@ const StyledHeader = styled.header`
     left:0;
     width:100%;
     transition: unset;
+    background:transparent;
     .header-wrap{
       background:${props => props.theme.opacityBg};
       ${props => props.theme.shadowLine};

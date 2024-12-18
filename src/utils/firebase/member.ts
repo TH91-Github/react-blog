@@ -1,9 +1,22 @@
-import { fireDB, firebaseStorage } from "../../firebase";
-import { arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { UserBookmarkType, UserDataType } from "types/baseType";
+import { fireDB } from "../../firebase";
 
 // ✅ thData - user data
 const baseDB = process.env.REACT_APP_DB ?? '';
+
+// 유저 정보 가져오기 - 필드
+export const userGetDataDoc = async ( 
+  docName:string,
+) => {
+  const docRef = doc(fireDB, baseDB, docName);
+  const userDoc = await getDoc(docRef);
+  if (userDoc.exists()) {
+      return userDoc.data();
+  } else {
+      return null
+  }
+}
 
 // user 추가
 export const userPushDataDoc = async(
@@ -27,14 +40,16 @@ export const userPermissionUpdate = async(
   docName:string, data:UserDataType
 ) => {
   const docRef = doc(fireDB, baseDB, docName);
-  // 추가할 데이터 
+  // 추가 데이터 
   const userItemData = {
     id: data.id,
     email:data.email,
     nickName:data.nickName,
-    time:data.signupTime,
+    signupTime:data.signupTime,
     uid:data.uid,
     rank:data.rank,
+    permission:false,
+    profile:'-',
   }
   try {
     // 유저 목록과 비승인 계정 확인을 위해

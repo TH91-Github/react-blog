@@ -10,7 +10,6 @@ interface NavFixedLayoutType {
 }
 
 export const NavFixedLayout = ({data}:NavFixedLayoutType) => {
-  console.log(data)
   return (
     <StyleNavFixedLayout>
       <StyleNavTitle $barColor={data.color}>
@@ -21,7 +20,7 @@ export const NavFixedLayout = ({data}:NavFixedLayoutType) => {
           data.lists.map((navItem,idx)=>(
             <div key={idx} className="depth">
               <p className="sub-tit">{navItem.subTitle}</p>
-              <ul>
+              <ul className={`${navItem.isIcon?'icon-lists':''}`}>
                 {
                   navItem.subLists.map((subNavItem,subIdx) => (
                     <li key={subIdx}>
@@ -70,14 +69,18 @@ const StyleNavFixedLayout = styled.div`
   }
   .link {
     position:relative;
-    padding-left:20px;
-    .icon{
-      position:absolute;
-      top:50%;
-      left:0;
-      width:18px;
-      height:18px;
-      transform:translateY(-50%);
+  }
+  .icon-lists {
+    .link {
+      padding-left:25px;
+      .icon{
+        position:absolute;
+        top:50%;
+        left:0;
+        width:18px;
+        height:18px;
+        transform:translateY(-50%);
+      }
     }
   }
 `;
