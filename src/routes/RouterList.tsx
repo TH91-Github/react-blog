@@ -65,7 +65,7 @@ export const routerList = [
     children: [
       {
         index: true,
-        // path:'rank',
+        // path:'user',
         id: "usersBoard",
         title: "사용자 관리",
         element: <UsersBoardPage />

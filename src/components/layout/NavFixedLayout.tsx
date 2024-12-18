@@ -1,15 +1,17 @@
 import { colors } from "assets/style/Variable";
 import { IconFind } from "components/element/IconFind";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styled from "styled-components"
 import { NavFixedLayoutPropsType } from "types/baseType";
 
-
 interface NavFixedLayoutType {
   data: NavFixedLayoutPropsType;
+  activeColor?:string;
 }
 
-export const NavFixedLayout = ({data}:NavFixedLayoutType) => {
+export const NavFixedLayout = ({data, activeColor}:NavFixedLayoutType) => {
+  const location = useLocation();
+
   return (
     <StyleNavFixedLayout>
       <StyleNavTitle $barColor={data.color}>
@@ -24,10 +26,12 @@ export const NavFixedLayout = ({data}:NavFixedLayoutType) => {
                 {
                   navItem.subLists.map((subNavItem,subIdx) => (
                     <li key={subIdx}>
-                      <NavLink to={subNavItem.link} className="link">
+                      <NavLink to={subNavItem.link} className={`link ${location.pathname === subNavItem.link?'on':''}`}>
                         {
                           subNavItem.icon && (
-                            <IconFind iconData={subNavItem.icon}/>
+                            <IconFind
+                              iconData={subNavItem.icon}
+                              activeColor={location.pathname === subNavItem.link ? activeColor : null} />
                           )
                         }
                         <span className="tit">{subNavItem.tit}</span>

@@ -1,5 +1,5 @@
 import { colors } from "assets/style/Variable";
-import { SvgUsers, SvgSetting } from "assets/svg/common/CommonSvg";
+import { SvgUsers, SvgSetting, SvgUserNot } from "assets/svg/common/CommonSvg";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
@@ -8,16 +8,22 @@ import { NavIconType } from "types/baseType";
 
 interface IconFindType {
   iconData:string;
+  activeColor?:string | null;
 }
-export const IconFind = ({iconData}:IconFindType) =>{
+export const IconFind = ({iconData, activeColor}:IconFindType) =>{
   const theme = useSelector((state : RootState) => state.storeTheme);
 
+  console.log(activeColor)
+
   const svgIcon:NavIconType= useMemo(() =>{ 
+    const themeColor = `${theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}`;
+    const color = activeColor ? activeColor : themeColor;
     return {
-      'users': <SvgUsers $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}/>,
-      'setting': <SvgSetting $fillColor={theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}/>,
+      'users': <SvgUsers $fillColor={color} />,
+      'userNot': <SvgUserNot $fillColor={color} />,
+      'setting': <SvgSetting $fillColor={color}/>,
     }
-  },[theme.mode])
+  },[theme, activeColor])
   return(
     <StyleIconFind className="icon">
       {

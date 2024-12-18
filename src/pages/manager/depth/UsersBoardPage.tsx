@@ -1,3 +1,4 @@
+import { colors } from "assets/style/Variable";
 import { SvgUsers } from "assets/svg/common/CommonSvg";
 import { UsersBoardLists } from "components/article/manager/UsersBoardLists";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
@@ -29,7 +30,7 @@ export const UsersBoardPage = () =>{
           ? (
             <div className="board">
               <div className="head">
-                <h3 className="title"><i className="icon"><SvgUsers /></i>사용자 목록</h3>
+                <h3 className="title"><i className="icon"><SvgUsers $fillColor={colors.mSlateBlue}/></i>사용자 목록</h3>
                 <p className="text">
                   <span className="desc">사용자 계정 관리를 위한 목록</span>
                   <span className="s-desc">(등급, 삭제, 제한, 활동 정보)</span>

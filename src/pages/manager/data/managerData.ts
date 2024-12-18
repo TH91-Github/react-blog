@@ -16,7 +16,7 @@ export const managerNavData = {
         {
           tit:'비승인',
           link:'/manager/validity',
-          icon:'setting',
+          icon:'userNot',
         }
       ]
     }

@@ -15,7 +15,7 @@ export const ManagerPage = () => {
   useEffect(()=>{
     if(!managerView.includes(hostname)) navigate('/');
   },[])
-  
+
   return(
     <StyleManagerPage>
       <div className="manager-inner">
@@ -26,7 +26,7 @@ export const ManagerPage = () => {
           managerView.includes(hostname)
             ? (
               <NavContLayout
-                navChildren={<NavFixedLayout data={managerNavData}/>}
+                navChildren={<NavFixedLayout data={managerNavData} activeColor={colors.mSlateBlue}/>}
                 contChildren={<Outlet />}
               />
             )
@@ -78,8 +78,8 @@ const StyleManagerPage = styled.div`
     .icon {
       display:inline-block;  
       position:relative;
-      width:15px;
-      height:15px;
+      width:20px;
+      height:20px;
     }
     .text{ 
       margin-top:10px;

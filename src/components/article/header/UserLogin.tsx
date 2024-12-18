@@ -13,7 +13,6 @@ import { deleteUser, signOut } from "firebase/auth";
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  // const userData = useSelector((state : RootState) => state.storeUserLists);
   const {loginState, user} = useSelector((state : RootState) => state.storeUserLogin);
   const theme = useSelector((state : RootState) => state.storeTheme);
   const [myPagelayer, setMyPagelayer] = useState(false);
