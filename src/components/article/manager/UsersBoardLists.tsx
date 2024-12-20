@@ -1,12 +1,13 @@
 import { colors, transitions } from "assets/style/Variable"
 import { SvgEdit, SvgRemove, SvgUser } from "assets/svg/common/CommonSvg"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { actionAlert, AppDispatch, RootState } from "store/store"
 import styled from "styled-components"
 import { UserDataType } from "types/baseType"
 import { dateChange, partialUndisclosed } from "utils/common"
 import { ManagerRank } from "./ManagerRank"
+import LayerPopup from "components/element/LayerPopup"
 
 interface UsersBoardListsType {
   data:UserDataType[]
@@ -14,6 +15,7 @@ interface UsersBoardListsType {
 export const UsersBoardLists = ({data}:UsersBoardListsType) => {
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const dispatch = useDispatch<AppDispatch>();
+  const [alert, setAlert] = useState({ visibility : false, requestType:'', title:'',desc:'', selectId:''});
 
   const disabled = useCallback((message:1 | 2) =>{
     const loginMessage = '로그인(관리자 등급 이상) 후 이용 가능해요. 😁';
@@ -25,11 +27,13 @@ export const UsersBoardLists = ({data}:UsersBoardListsType) => {
   const handleEdit = () =>{
     if(!user) disabled(1)
     if(user && Number(user.rank) < 3) disabled(2);
+    console.log('수정')
   }
   // user 삭제
   const handleRemove = () =>{
     if(!user) disabled(1)
     if(user && Number(user.rank) < 3) disabled(2);
+    console.log('계정 삭제')
   }
 
   return(
@@ -64,7 +68,7 @@ export const UsersBoardLists = ({data}:UsersBoardListsType) => {
                 <span className="nickName">{partialUndisclosed(listsItem.nickName)}</span>
                 <span className="rank">{<ManagerRank rank={listsItem.rank} />}</span>
                 <span className="state">
-                  <span className={`icon ${listsItem.permission?'':'not'}`}>{listsItem.permission ? 'ㅇㅇ': '비승인'}</span>
+                  <span className={`icon ${listsItem.permission?'':'not'}`}>{listsItem.permission ? '승인': '비승인'}</span>
                 </span>
                 <span className="time">{dateChange('y2mdwhm',listsItem.signupTime)}</span>
               </div>
@@ -88,6 +92,17 @@ export const UsersBoardLists = ({data}:UsersBoardListsType) => {
           ))
         }
       </ul>
+      
+     
+      {/* <LayerPopup 
+        ref={refPopup}
+        titMessage={alert.titMessage}
+        txtMessage={alert.txtMessage}
+        layerPopupClose={layerPopupClose}
+        confirmBtn={alert.checkBtn}
+        confirmEvent={confirmEvent}
+        autoCloseSecond={alert.autoClose && alert.autoClose}
+      /> */}
     </StyleUsersBoardLists>
   )
 }

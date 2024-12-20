@@ -3,9 +3,9 @@ import { colors } from "assets/style/Variable";
 import styled, { ThemeProvider } from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
-import FixedPopup from "components/element/FixedPopup";
 import LoginStatusCheck from "components/article/member/LoginStatusCheck";
 import CurrentLocation from "components/article/map/CurrentLocation";
+import AlertFixedPopup from "components/element/AlertFixedPopup";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <StyleWrap className="App-layout">
         {children}
         {/* alert popup*/}
-        <FixedPopup />
+        <AlertFixedPopup />
         <LoginStatusCheck />
       </StyleWrap>
     </ThemeProvider>

@@ -43,6 +43,17 @@ export interface UserDataType { // 유저 정보
   profile?:string;
 }
 
+export interface UserListDataType { // 유저 리스트 정보
+  id: string;
+  email : string;
+  nickName : string;
+  signupTime : string;
+  uid : string;
+  rank: string;
+  permission?:boolean; // 가입 승인
+  profile?:string;
+}
+
 // 🚩 styled component
 export type StyleProps = { // default
   $gap?: number,

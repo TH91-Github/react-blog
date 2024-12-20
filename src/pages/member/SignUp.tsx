@@ -107,10 +107,7 @@ export default function SignUp() {
       resultData.uid = userCredential.user.uid ? userCredential.user.uid : '';
       resultData.password = randomNum(9999, 'secret-login');
       // 📍 firebase에 user 정보 저장
-      const pushId = await userPushDataDoc('userData','users',resultData);
-      if(pushId){ // db 저장 후 id 값
-
-      }
+      await userPushDataDoc(resultData);
       // 완료 레이어 팝업 -> member 이동
       navigate('/member');
     } catch (error) {

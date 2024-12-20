@@ -104,7 +104,7 @@ export default function SignIn() {
         }
         isUserData = resultData
         // 📍 firebase에 user 정보 저장
-        userPushDataDoc('userData','users', isUserData);
+        userPushDataDoc(isUserData);
       }
       const googleLoginData = {
         loginState: true,

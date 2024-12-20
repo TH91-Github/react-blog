@@ -2,16 +2,22 @@ import { colors } from "assets/style/Variable";
 import { SvgUserNot } from "assets/svg/common/CommonSvg";
 import { UserValidityBoardLists } from "components/article/manager/UserValidityBoardLists";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
+import { useUserData } from "pages/member/js/userHook";
 import styled from "styled-components";
-import { userGetDataDoc } from "utils/firebase/member";
-import { useDataQuery } from "utils/hook/query";
 
 export const UserValidityBoardPage = () =>{
-  const { data, isLoading } = useDataQuery(
-    ['managerUserLists'], 
-    () => userGetDataDoc('userData'), // () => 사용.
-  );
-  console.log(data)
+  const { data, isLoading, updateUserData, removeUserData } = useUserData();
+
+  // 승인
+  const handlePass = (idVal:string) => {
+    updateUserData(idVal);
+  }
+
+  // 계정 삭제
+  const handleRemove = (idVal:string) =>{
+    removeUserData(idVal);
+  }
+  
   return(
     <StyleUserValidityBoardPage>
       {
@@ -29,7 +35,10 @@ export const UserValidityBoardPage = () =>{
                 {
                   data?.checkUser
                   ? (
-                    <UserValidityBoardLists data={data.checkUser}/>
+                    <UserValidityBoardLists 
+                      data={data.checkUser}
+                      passFn={handlePass}
+                      removeFn={handleRemove}/>
                   )
                   : (
                     <div className="error">

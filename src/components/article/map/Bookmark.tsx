@@ -6,6 +6,7 @@ import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/stor
 import { UserBookmarkType } from "types/baseType";
 import { ListType } from "types/kakaoComon";
 import { collectionDocUpdate } from "utils/firebase/common";
+import { userDocUpdate } from "utils/firebase/member";
 
 interface BookmarkType {
   bookmarkItem: ListType;
@@ -36,7 +37,8 @@ export default function Bookmark({ bookmarkItem }:BookmarkType) {
       }
 
       dispatch(actionUserLogin({loginState, user: newData}));
-      collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
+      // collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
+      userDocUpdate(newData.id, 'kakaoMapData', newData.kakaoMapData);
     }else{ // 로그인 해주세요
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}))
     }

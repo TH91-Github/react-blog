@@ -1,35 +1,58 @@
 import { colors, transitions } from "assets/style/Variable"
 import { SvgCheckPass, SvgRemove } from "assets/svg/common/CommonSvg"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { actionAlert, AppDispatch, RootState } from "store/store"
 import styled from "styled-components"
 import { UserDataType } from "types/baseType"
 import { dateChange, partialUndisclosed } from "utils/common"
 import { ManagerRank } from "./ManagerRank"
+import LayerPopup from "components/element/LayerPopup"
 
 interface UserValidityBoardListsType {
-  data:UserDataType[]
+  data:UserDataType[];
+  passFn: (e:string) => void;
+  removeFn: (e:string) => void;
 }
-export const UserValidityBoardLists = ({data}:UserValidityBoardListsType) => {
+export const UserValidityBoardLists = ({data, passFn, removeFn}:UserValidityBoardListsType) => {
   const { user } = useSelector((state: RootState) => state.storeUserLogin);
   const dispatch = useDispatch<AppDispatch>();
+  const [alert, setAlert] = useState({ visibility : false, requestType:'', title:'',desc:'', selectId:''});
 
   const disabled = useCallback((message:1 | 2) =>{
     const loginMessage = '로그인(관리자 등급 이상) 후 이용 가능해요. 😁';
     const rankMessage = '관리자 등급 이상 가능해요..! 🙏';
-
     dispatch(actionAlert({titMessage:message ===1 ? loginMessage:rankMessage, isPopup:true, autoClose:2000}))
   },[dispatch]);
-  // user 정보 수정
-  const handlePass = () =>{
-    if(!user) disabled(1)
-    if(user && Number(user.rank) < 3) disabled(2);
+
+  const popupOpen = (handleType:string, eId:string) => {
+    setAlert({
+      visibility : true,
+      requestType:handleType,
+      title:`비승인 계정 ${handleType ==='edit'?'허가':'거부'}`,
+      desc:`${handleType ==='edit'?'승인 할까요?':'거부 시 삭제돼요'} `,
+      selectId:eId,
+    })
   }
-  // user 삭제
-  const handleRemove = () =>{
-    if(!user) disabled(1)
-    if(user && Number(user.rank) < 3) disabled(2);
+
+  // 계정 승인
+  const confirmFn = () => {
+    // if(!user) disabled(1)
+    // if(user && Number(user.rank) < 3) disabled(2);
+    alert.requestType === 'edit'
+    ? passFn(alert.selectId)
+    : removeFn(alert.selectId)
+    closeFn(); // 정보 초기화
+  }
+  // 팝업 닫기
+  const closeFn = () => {
+    setAlert({
+      visibility : false,
+      requestType:'',
+      title:'',
+      desc:'',
+      selectId:'',
+    })
   }
 
   return(
@@ -64,7 +87,7 @@ export const UserValidityBoardLists = ({data}:UserValidityBoardListsType) => {
                   type="button"
                   className="btn pass"
                   title="회원 승인하기"
-                  onClick={handlePass}>
+                  onClick={() => popupOpen('edit', listsItem.id)}>
                     <span className="icon"><SvgCheckPass $fillColor={colors.navy }/></span>
                     <span className="blind">승인</span>
                 </button>
@@ -72,7 +95,7 @@ export const UserValidityBoardLists = ({data}:UserValidityBoardListsType) => {
                   type="button"
                   className="btn remove"
                   title="회원 삭제하기"
-                  onClick={handleRemove}>
+                  onClick={() => popupOpen('remove', listsItem.id)}>
                     <span className="icon"><SvgRemove $fillColor={colors.navy } /></span>
                     <span className="blind">삭제</span>
                 </button>
@@ -81,6 +104,25 @@ export const UserValidityBoardLists = ({data}:UserValidityBoardListsType) => {
           ))
         }
       </ul>
+      {
+        alert.visibility && (
+          <LayerPopup 
+            popupTitle={alert.title}
+            popupDesc={alert.desc}
+            confirmFn={confirmFn}
+            closeFn={closeFn}
+          />
+        )
+      }
+      {/* <LayerPopup 
+        ref={refPopup}
+        titMessage={alert.titMessage}
+        txtMessage={alert.txtMessage}
+        layerPopupClose={layerPopupClose}
+        confirmBtn={alert.checkBtn}
+        confirmEvent={confirmEvent}
+        autoCloseSecond={alert.autoClose && alert.autoClose}
+      /> */}
     </StyleUserValidityBoardLists>
   )
 }
@@ -107,12 +149,6 @@ const StyleUserValidityBoardLists = styled.div`
     flex-shrink: 0;
     width:65px;
   }
-  .list-item {
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    padding:5px 15px;
-  }
   .info{
     flex-grow:1;
     display:flex;
@@ -135,6 +171,10 @@ const StyleUserValidityBoardLists = styled.div`
     }
   }
   .list-item{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding:5px 15px;
     .state {
       .icon{
         display:block;
@@ -154,34 +194,34 @@ const StyleUserValidityBoardLists = styled.div`
     .time {
       font-size:12px;
     }
-  }
-  .btn-article{
-    .btn {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      position:relative;
-      width:30px;
-      height:30px;
-      .icon {
+    .btn-article{
+      .btn {
+        display:flex;
+        justify-content:center;
+        align-items:center;
         position:relative;
-        width:20px;
-        height:20px;
-      }
-      path{
-        transition: ${transitions.base};
-      }
-      &.pass{
-        &:hover {
-          path {
-            fill: ${colors.green};
+        width:30px;
+        height:30px;
+        .icon {
+          position:relative;
+          width:20px;
+          height:20px;
+        }
+        path{
+          transition: ${transitions.base};
+        }
+        &.pass{
+          &:hover {
+            path {
+              fill: ${colors.green};
+            }
           }
         }
-      }
-      &.remove{
-        &:hover {
-          path { 
-            fill: ${colors.red};
+        &.remove{
+          &:hover {
+            path { 
+              fill: ${colors.red};
+            }
           }
         }
       }

@@ -1,14 +1,14 @@
 
 import { colors, shadow } from "assets/style/Variable";
+import { SvgLogin, SvgLogOut } from "assets/svg/common/CommonSvg";
+import { deleteUser, signOut } from "firebase/auth";
+import { useUserData } from "pages/member/js/userHook";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState, actionUserLogin } from "store/store";
+import { actionUserLogin, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
-import { removeDoc } from "utils/firebase/common";
 import { auth } from "../../../firebase";
-import { SvgLogin, SvgLogOut } from "assets/svg/common/CommonSvg";
-import { deleteUser, signOut } from "firebase/auth";
 
 export default function UserLogin(){
   const dispatch = useDispatch<AppDispatch>();
@@ -16,6 +16,7 @@ export default function UserLogin(){
   const {loginState, user} = useSelector((state : RootState) => state.storeUserLogin);
   const theme = useSelector((state : RootState) => state.storeTheme);
   const [myPagelayer, setMyPagelayer] = useState(false);
+  const { removeUserData } = useUserData();
 
   const handleMyPageOn = () => { //로그인 시 내정보 간단 레이어 팝업
     setMyPagelayer(prev => !prev);
@@ -61,11 +62,11 @@ export default function UserLogin(){
   const handleUserRemove = async() => {
     console.log('계정 삭제');
     const currentUser = auth.currentUser; // 로그인 정보
-    console.log(currentUser)
 
-    if (currentUser) {
+    if (currentUser && user) {
       try {
-        currentUser.email && await removeDoc('userData', 'users', currentUser.email);
+        // Firestore DB 삭제 - deleteUser 보다 위에 있어야 firebase 권한 삭제 전 데이터를 삭제할 수 있기에
+        removeUserData(user.id)
         // Firebase Authentication에서 사용자 계정 삭제
         await deleteUser(currentUser).then(() => {
           userLoginInit(false);

@@ -2,54 +2,51 @@ import { colors, transitions } from "assets/style/Variable";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components"
 interface LayerPopupType {
-  titMessage: string,
-  txtMessage?: string,
-  autoCloseSecond?: number, // 1000 : 1초 - 초 입력 시 자동 닫기 적용
-  dimmedView?: boolean,
-  titleAlign?: string,
-  descAlign?: string,
-  confirmBtn?: boolean,
-  confirmEvent?: () => void,
-  layerPopupClose: () => void,
+  popupTitle:string;
+  popupDesc?:string;
+  maxWidth?:number;
+  align?:{head:string,body:string}; // 타이틀 본문 정렬
+  isDimmed?:boolean;
+  children?:React.ReactNode;
+  confirmFn?: () => void;
+  closeFn: () => void;
 }
-
-export interface LayerRefType {
+export interface LayerPopupRefType {
   getLeyerElement: () => HTMLDivElement | null;
 }
 
-export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
+// children 가능한 layer 팝업, 자동 닫기 없는 버전.
+export default(forwardRef<LayerPopupRefType, LayerPopupType>( function LayerPopup(
   {
-    titMessage, txtMessage, autoCloseSecond, dimmedView, titleAlign, descAlign, confirmBtn, confirmEvent, layerPopupClose
-  }: LayerPopupType, ref ) {
-    const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    popupTitle, popupDesc, maxWidth, 
+    align = {head:'center',body:'center'},
+    isDimmed = true,
+    children,
+    confirmFn, closeFn
+  }: LayerPopupType, ref) {
+    // const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const popupRef = useRef<HTMLDivElement | null>(null);
+    const aniTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isHidden, setIsHidden] = useState(false);
-    const autoCloseS = autoCloseSecond ? (autoCloseSecond < 2000 ? 2000 : autoCloseSecond) : 0;
-    const popAniSecond = 500;
+    const popAniSecond = 300;
 
-  // animation 끝난 후 닫기 
-  const handleTransitionEnd = useCallback((confirmState: boolean | unknown) => {
+  // animation 끝난 후 닫기
+  const handlePopupEnd = useCallback((isConfirm?:boolean) => {
+    setIsHidden(true);
     if(aniTimeRef.current) {
       clearTimeout(aniTimeRef.current);
     }
     aniTimeRef.current = setTimeout(() =>{
-      if(confirmState && confirmEvent){
-        confirmEvent();
-      }else{
-        layerPopupClose && layerPopupClose();
+      if(isConfirm && confirmFn){ // 완료
+        console.log('완료')
+        confirmFn()
+      }else{ // 취소, 닫기기
+        console.log('닫기')
+        closeFn();
       }
+      // setIsHidden(true);
     }, popAniSecond + 50)
-  }, [layerPopupClose, confirmEvent]);
-
-  // 닫기 
-  const handleClose = useCallback((confirm?:boolean | unknown) => {
-    setIsHidden(true);
-    handleTransitionEnd(confirm);
-    if(autoCloseSecond && autoCloseTimeRef.current){
-      clearTimeout(autoCloseTimeRef.current);
-    }
-  },[handleTransitionEnd, autoCloseSecond]);
+  }, [confirmFn, closeFn]);
 
   useEffect(()=>{
     // 초기 첫 pop open 시 포커스 이동
@@ -59,16 +56,6 @@ export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
     }
   },[]);
   // 몇 초 후 자동 닫기
-  useEffect(()=>{
-    if(autoCloseSecond){
-      if(autoCloseTimeRef.current) {
-        clearTimeout(autoCloseTimeRef.current);
-      }
-      autoCloseTimeRef.current = setTimeout(() =>{
-        handleClose(); // 닫기 기능
-      }, autoCloseS ) // 최소 기본 2초
-    }
-  },[autoCloseSecond, autoCloseS, handleClose])
 
   // 포커스 이탈 방지
   useEffect(() => {
@@ -102,60 +89,68 @@ export default(forwardRef<LayerRefType, LayerPopupType>( function LayerPopup(
   }));
 
   return (
-    <StyleLayerPopup 
-      ref={popupRef}
+    <StyleAlertLayerPopup
+      ref={popupRef} 
+      $hAlign={align.head}
+      $bAlign={align.body}
+      $maxWidth={maxWidth ?? 300}
       $aniSecond={(popAniSecond / 1000)}
-      $autoClose={autoCloseSecond && autoCloseS}
-      className={`${isHidden ? 'hidden' : ''}`}>
-      {
-        (dimmedView ?? true) && <div className="dimmed" onClick={handleClose}></div>
-      }
-      <div
-        className="layer-popup" 
-        tabIndex={0}>
-        <div className="layer-popup-inner">
-          <p className="title">{titMessage}</p>
-          { 
-            txtMessage && <p className="desc">{txtMessage}</p>
-          }
+      className={`${isHidden ? 'hidden' : ''}`} 
+      >
+      {isDimmed && <div className="dimmed" onClick={() => handlePopupEnd()}></div>}
+      <div className="layer-popup"  tabIndex={0}>
+        <div className="layer-inner">
+          <div className="layer-head">
+            <h3 className="title">{popupTitle}</h3>
+            {popupDesc && <p className="desc">{popupDesc}</p> }
+          </div>
           {
-            confirmBtn && 
-            <div className="btn-article">
-              <button
-                type="button"
-                className="btn"
-                onClick={handleClose}>
-                <span>취소</span>
-              </button>
-              <button 
-                type="button"
-                className="btn"
-                onClick={() => handleClose(true)}>
-                <span>확인</span>  
-              </button>
-            </div>
+            children && (
+              <div className="layer-body">
+                {children}
+              </div>
+            )
           }
-          {
+          <div className="btn-article">
+            {
+              // 확인 콜백 있는 경우
+              confirmFn && (
+                <button
+                  className="btn confirm"
+                  onClick={() => handlePopupEnd(true)}
+                  title="확인">
+                  <span>확인</span>
+                </button>
+              )
+            }
+            {/* 닫기, 취소 콜백 있는 경우 / 확인 있는 경우 텍스트 변경경 */}
             <button
-              className="close-btn"
-              onClick={handleClose}>
-              <span className="blind">닫기</span>
+              className={`btn ${confirmFn?'cancel':''}`}
+              onClick={() => handlePopupEnd()}
+              title={confirmFn ?'취소':'확인'}>
+              <span>{confirmFn ?'취소':'확인'}</span>
             </button>
-          }
+          </div>
+          {/* x 버튼 */}
+          <button
+            className="close-btn"
+            onClick={() => handlePopupEnd()}>
+            <span className="blind">닫기</span>
+          </button>
         </div>
       </div>
-    </StyleLayerPopup>
+    </StyleAlertLayerPopup>
   )
 }));
 
-type StyleLayerPopupType = { 
-  $aniSecond?: number,
-  $titAlign?: string,
-  $descAlign?: string,
-  $autoClose?: number
+type StyleAlertLayerPopupType = { 
+  $hAlign:string;
+  $bAlign:string;
+  $maxWidth:number;
+  $aniSecond: number,
 }
 
-const StyleLayerPopup = styled.div<StyleLayerPopupType>`
+const StyleAlertLayerPopup = styled.div<StyleAlertLayerPopupType>`
   position:fixed;
   top:0;
   left:0;
@@ -164,129 +159,76 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
   height:100%;
   .dimmed {
     position:absolute;
-    z-index:992;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,.5);
-    animation: popupShowAni ${props => props.$aniSecond || 0.5}s ease-out both;
+    background:rgba(0,0,0,.3);
+    animation: popupShowAni ${({$aniSecond}) => $aniSecond}s ease-out both;
   }
-  .layer-popup {
+  .layer-popup{
     position:absolute;
-    z-index:993;
     top:50%;
     left:50%;
-    transform: translate(-50%, -50%);
-    animation: popupShowAni ${props => props.$aniSecond || 0.5}s ease-out both;
-  }
-  .layer-popup-inner {
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items: center;
-    position:relative;
-    min-width:180px;
+    width:100%;
+    max-width:${({ $maxWidth}) => $maxWidth}px;
     min-height:100px;
-    padding:30px 20px;
     border-radius:10px;
-    background: ${colors.originWhite};
-    ${props => props.$autoClose && `
-      &::before {
-        display:block;
-        position:absolute;
-        bottom:0;
-        right:0;
-        width:100%;
-        height:2px;
-        background:${colors.yellow};
-        transform-origin:100% center;
-        animation: popupAutoClose 2s linear both;
-        content:'';
-      }
-    `}
+    background:#fff;
+    transform:translate(-50%, -50%);
+    animation: popupShowAni ${({$aniSecond}) => $aniSecond}s .1s ease-out both;
   }
-  .title {
-    font-size:18px;
-    text-align:${props => props.$titAlign || 'center'};
+  .layer-head {
+    padding:30px 15px 0;
+    text-align:${({$hAlign}) => $hAlign};
+    .title {
+      font-size:20px;
+    }
+    .desc{
+      margin-top:10px;
+      color:${colors.subTextColor};
+    }
   }
-  .desc {
-    position:relative;
-    margin-top:20px;
-    font-weight:300;
-    color:${colors.subTextColor};
-    text-align:${props => props.$descAlign || 'center'};
+  .layer-body {
+    padding:0 15px;
+    text-align:${({$bAlign}) => $bAlign};
   }
-  .btn-article {
+  .btn-article{
     display:flex;
-    justify-content:center;
-    position:relative;
     gap:10px;
-    width:100%;
-    margin-top:20px;
-    padding-top:20px;
-    border-top:1px solid #dbdbdb;
-    &::before {
-      position:absolute;
-      top:-3px;
-      left:50%;
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:${colors.mSlateBlue};
-      transform: translateX(-50%);
-      content:'';
-    }
-  }
-  .btn {
-    width:100%;
-    max-width:120px;
-    padding:8px 10px;
-    border-radius:5px;
-    border:1px solid ${colors.navy};
-    font-size:14px;
-    font-weight:600;
-    transition: ${transitions.base};
-    &:hover, &:focus {
+    justify-content:center;
+    padding:30px 0 20px;
+    .btn {
+      display:inline-block;
+      padding:10px 15px;
+      border-radius:5px;
+      border:1px solid ${colors.navy};
       background:${colors.navy};
-      color: ${colors.originWhite};
+      color:#fff;
+      transition:${transitions.base};
+      &:hover, &:focus{
+        background:${colors.originWhite};
+        color:${colors.baseBlack};
+      }
+      &.cancel {
+        border-color:${colors.lineColor};
+        background:${colors.bgGray};
+        color:${colors.baseBlack};
+        &:hover, &:focus{
+          background:${colors.lineColor};
+        }
+      }
     }
   }
-  .close-btn {
-    position:absolute;
-    top:5px;
-    right:5px;
-    width:16px;
-    height:16px;
-    transition: ${transitions.base};
-    &::before, &::after {
-      position:absolute;
-      top: 50%;
-      left:50%;
-      width: 3px;
-      height: 100%;
-      border-radius: 3px;
-      background:${colors.baseBlack};
-      transform: translate(-50%, -50%) rotate(-45deg);
-      content:"";
-    }
-    &::after{ 
-      transform: translate(-50%, -50%) rotate(-135deg);
-    }
-    &:hover, &:focus {
-      transform: rotate(180deg);
-    }
+  .close-btn{
+    width:20px;
+    height:20px;
+  }
+  &.hidden {
+    pointer-events:none;
+    animation: popupHideAni ${({$aniSecond}) => $aniSecond}s ease-out both;
   }
 
-  &.hidden {
-    .dimmed {
-      animation: popupHideAni ${props => props.$aniSecond || 0.5}s ease-out both;
-    }
-    .layer-popup {
-      animation: popupHideAni ${props => props.$aniSecond || 0.5}s ease-out both;
-    }
-  }
   @keyframes popupShowAni {
     0%{
       opacity:0;
@@ -302,9 +244,5 @@ const StyleLayerPopup = styled.div<StyleLayerPopupType>`
     100% {
       opacity:0;
     }
-  }
-  @keyframes popupAutoClose {
-    0%{transform: scaleX(1);}
-    100%{ transform: scaleX(0);}
   }
 `;

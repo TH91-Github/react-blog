@@ -2,27 +2,21 @@ import { colors } from "assets/style/Variable";
 import { SvgUsers } from "assets/svg/common/CommonSvg";
 import { UsersBoardLists } from "components/article/manager/UsersBoardLists";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
+import { useUserData } from "pages/member/js/userHook";
 import styled from "styled-components";
-import { userGetDataDoc } from "utils/firebase/member";
-import { useDataQuery } from "utils/hook/query";
+
 
 export const UsersBoardPage = () =>{
-
-  const { data, isLoading } = useDataQuery(
-    ['managerUserLists'], 
-    () => userGetDataDoc('userData'), // () => 사용.
-  );
+  const { data, isLoading, removeUserData } = useUserData();
 
   // user 정보 수정
   const handleEdit = () =>{
 
   }
   // user 삭제
-  const handleRemove = () =>{
-    
+  const handleRemove = (idVal:string) =>{
+    removeUserData(idVal);
   }
-  console.log(data)
-  
   return(
     <StyleUsersBoardPage>
       {

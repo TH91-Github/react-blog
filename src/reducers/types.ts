@@ -1,4 +1,3 @@
-import { LayerRefType } from "components/element/LayerPopup";
 import { StringOnly, UserDataType } from "types/baseType";
 import { MarkerPositionType } from "types/kakaoComon";
 import { KORLocationType } from "types/weatherType";

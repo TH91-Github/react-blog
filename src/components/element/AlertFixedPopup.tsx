@@ -2,13 +2,13 @@ import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AlertCommonType } from "reducers/types";
 import { actionAlert, AppDispatch, RootState } from "store/store";
-import LayerPopup, { LayerRefType } from "./LayerPopup";
+import AlertLayerPopup, { AlertLayerPopupRefType } from "./AlertLayerPopup";
 
 
 // ✅ 전체 화면 영역 fixed - 바깥 위치하기 위해 컴포넌트화
-export default function FixedPopup () {
+export default function AlertFixedPopup () {
   const dispatch = useDispatch<AppDispatch>(); 
-  const refPopup = useRef<LayerRefType>(null);
+  const refPopup = useRef<AlertLayerPopupRefType>(null);
   const alert = useSelector((state : RootState) => state.storeAlert);
   const initAlert:AlertCommonType = {
     isPopup:false, 
@@ -29,7 +29,7 @@ export default function FixedPopup () {
     <>
       {
         alert.isPopup && 
-          <LayerPopup 
+          <AlertLayerPopup 
             ref={refPopup}
             titMessage={alert.titMessage}
             txtMessage={alert.txtMessage}

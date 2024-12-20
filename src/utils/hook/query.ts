@@ -22,7 +22,7 @@ export const useInvaliQuery = () => {
   const queryClient = useQueryClient(); 
   const navigate = useNavigate();
 
-  const queryKeyInvali = (keyArray:string[], afterLink:string) => { // 여러개 재요청할 경우. EX : [[key],[key]], 끝나고 이동할 주소 
+  const queryKeyInvali = (keyArray:string[], afterLink?:string) => { // 여러개 재요청할 경우. EX : [[key],[key]], 끝나고 이동할 주소 
     keyArray.forEach((key) => {
       queryClient.invalidateQueries({ queryKey: [key] });
     });
