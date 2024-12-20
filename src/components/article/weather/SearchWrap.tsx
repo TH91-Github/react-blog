@@ -136,6 +136,7 @@ const StyleSearchWrap = styled.div`
       border-bottom:1px solid ${colors.lineColor};
       border-right:none;
       border-left: none;
+      border-radius:0;
       &:focus{
         border-right:none;
         border-left: none;
