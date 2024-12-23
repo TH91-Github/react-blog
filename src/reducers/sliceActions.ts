@@ -74,12 +74,20 @@ export const userLoginSlice = createSlice({
       return { ...state, ...propsAction.payload };
     },
   },
-  //  👇 참고용
-  // extraReducers: (builder) => { 
-  //   builder.addCase(toggleUserBookmark.fulfilled, (state, action) => {
-  //     state.user = action.payload.user;
-  //   });
-  // },
+})
+
+// 📍특정 경로에서만 보이도록 활성 
+const managerViewState = {
+  view: false,
+};
+export const managerViewSlice = createSlice({
+  name: "관리자 화면",
+  initialState: managerViewState,
+  reducers: {
+    actionMangerView(state, propsAction){
+      return { ...state, ...propsAction.payload };
+    },
+  },
 })
 
 // 📍weather 날씨 

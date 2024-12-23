@@ -12,7 +12,7 @@ interface RatingStarType {
   bgColor?:string;
 }
 
-type RatingInputRefType = Omit<InputElementRef, "inputIsFocus">; // inputIsFocus 타입 제거
+type RatingInputRefType = Omit<InputElementRef, "inputIsFocus" | "initValue">; // inputIsFocus 타입 제거
 
 const RatingStar = forwardRef<RatingInputRefType, RatingStarType>(({ initNum, onlyView, max, starWidth, bgColor }: RatingStarType, ref) => {
   const inputRef = useRef<HTMLInputElement | null>(null);

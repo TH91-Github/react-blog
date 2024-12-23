@@ -22,6 +22,7 @@ interface InputType {
 export interface InputElementRef {
   getInputElement: () => HTMLInputElement | null;
   inputIsFocus: () => void;
+  initValue: (e:string) => void;
   resetValue: () => void;
 }
 
@@ -72,6 +73,10 @@ export default(forwardRef<InputElementRef, InputType>( function InputElement(
     // input 반환
     getInputElement: () => inputRef.current,
     inputIsFocus: () => inputRef.current?.focus(),
+    // 초기 데이터
+    initValue: (value) => {
+      setVal(value);
+    },
     // 초기화
     resetValue: () => {
       setVal('');

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { alertCommonSlice, mobileChkSlice, resumeSlice, storeKakaoDataSlice, testSlice, themeSlice, userLocationSlice, userLoginSlice, weatherSlice } from 'reducers/sliceActions';
+import { alertCommonSlice, managerViewSlice, mobileChkSlice, resumeSlice, storeKakaoDataSlice, testSlice, themeSlice, userLocationSlice, userLoginSlice, weatherSlice } from 'reducers/sliceActions';
 import { thunk } from 'redux-thunk';
 
 export const store = configureStore({
@@ -13,6 +13,7 @@ export const store = configureStore({
     storeKakaoData: storeKakaoDataSlice.reducer,
     storeLocation: userLocationSlice.reducer, // 현재위치
     storeWeather: weatherSlice.reducer, // 날씨정보
+    storeManagerView: managerViewSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
   devTools:true,
@@ -29,5 +30,6 @@ export const { actionUserLogin } = userLoginSlice.actions;
 export const { actionUserLocationUpdate } = userLocationSlice.actions;
 export const { actionKakaoDataUpdate } = storeKakaoDataSlice.actions;
 export const { actionWeathcer } = weatherSlice.actions;
+export const { actionMangerView } = managerViewSlice.actions;
 
 

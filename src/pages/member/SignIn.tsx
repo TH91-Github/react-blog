@@ -3,9 +3,9 @@ import InputElement, { InputElementRef } from "components/element/InputElement";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useRef, useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, actionUserLogin } from "store/store";
+import { AppDispatch, RootState, actionUserLogin } from "store/store";
 import styled from "styled-components";
 import { UserDataType } from "types/baseType";
 import { randomNum } from 'utils/common';
@@ -14,11 +14,13 @@ import { userPushDataDoc } from "utils/firebase/member";
 import { auth, fireDB, provider } from "../../firebase";
 
 export default function SignIn() {
+  const managerView = useSelector((state : RootState) => state.storeManagerView);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const refInputID = useRef<InputElementRef>(null);
   const refInputPW = useRef<InputElementRef>(null);
   const [validationError, setValidationError] = useState({ id: false, pw: false });
+  const testInfo ={testId:'test', testPw:'test1234'};
 
   const handleFocusID = useCallback(()=>{ // id 에러 초기화
     setValidationError(prev => ({ ...prev, id: false }));
@@ -47,7 +49,11 @@ export default function SignIn() {
       }
     }
   };
-
+  const handleTest = () =>{
+    if(!refInputID.current || !refInputPW.current) return 
+    refInputID.current.initValue(testInfo.testId);
+    refInputPW.current.initValue(testInfo.testPw);
+  }
   const validationID = useCallback(async (idVal : string) => {
     const key = idVal.includes('@') ? 'email' : 'loginId';
     const loginValue = await duplicateGetDoc('userData','users', key , idVal);
@@ -55,7 +61,6 @@ export default function SignIn() {
     // id일경우 id 조회 후 email 가져오기
     return  (loginValue && idVal.length > 0) ? ( key === 'email' ? idVal : loginValue.email) : false
   },[])
-
 
   // firebase 로그인 시도
   const handleLogin = useCallback(async (loginID: string, loginPW: string) => {
@@ -151,9 +156,6 @@ export default function SignIn() {
               }
             </div>
             <div className="form-item">
-              {/* <div className="remember">
-
-              </div> */}
               <button type="submit" 
                 className="login-btn btnG" 
                 title="로그인 확인"
@@ -161,6 +163,22 @@ export default function SignIn() {
                 <span>확인</span>
               </button>
             </div>
+            {
+              managerView.view && (
+                <div className="form-item">
+                  <p className="s-tit">테스트 계정</p>
+                  <div className="test-item">
+                    <button 
+                      type="button"
+                      className="test-btn"
+                      onClick={handleTest}
+                      >
+                      <span>ID: {testInfo.testId} / PW: {testInfo.testPw}</span>
+                    </button>
+                  </div>
+                </div>
+              )
+            }
             <div className="login-sns">
               <h2 className="tit">OR</h2>
               <ul className="login-sns-lsits">
@@ -192,17 +210,23 @@ export default function SignIn() {
 }
 
 const StyleWrap = styled.div`
+  .test-item{
+    .test-btn{
+      margin-top:10px;
+      font-size:14px;
+    }
+  }
   .login {
     &-sns {
       position:relative;
-      margin-top:20px;
       padding:20px;
       border-radius:10px;
       background:${colors.baseWhite};
       background:${(props)=> props.theme.bgColor};
       text-align:center;
       .tit {
-        font-size:18px;
+        font-size:16px;
+        font-weight:550;
       }
       &-lsits{
         display:flex;
@@ -247,7 +271,6 @@ const StyleWrap = styled.div`
     &-btn {
       display:block;
       width:100%;
-      margin-top:10px;
       padding:10px;
       border-radius:10px;
       & > span{

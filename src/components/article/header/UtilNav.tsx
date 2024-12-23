@@ -1,35 +1,40 @@
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { actionMangerView, RootState } from "store/store";
 import styled from "styled-components";
 import ThemeBtn from "./ThemeBtn";
 import UserLogin from "./UserLogin";
 import { NavLink } from "react-router-dom";
 import { SvgSetting } from "assets/svg/common/CommonSvg";
 import { colors } from "assets/style/Variable";
+import { useEffect } from "react";
 
 interface UtilNavType {
   menuOn: boolean
   gnbMoreClick: () => void;
 }
-const managerView = JSON.parse(process.env.REACT_APP_MANAGER_VIEW || "[]");
+const managerViewSecret = JSON.parse(process.env.REACT_APP_MANAGER_VIEW || "[]");
 
 export default function UtilNav ({ menuOn, gnbMoreClick }:UtilNavType) {
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const theme = useSelector((state : RootState) => state.storeTheme);
+  const managerView = useSelector((state : RootState) => state.storeManagerView);
+  const dispatch = useDispatch();
   const hostname = window.location.hostname;
-  
-  console.log(managerView)
-  console.log(hostname)
+
+  useEffect(()=>{
+    const domaincheck =  managerViewSecret.includes(hostname);
+    dispatch(actionMangerView({view:domaincheck}));
+  },[managerViewSecret])
   // mo : more-menu
   function menuClick(){
     gnbMoreClick();
   }
-
+  
   return (
     <StyleUtilNav className="util">
       <div className="util-inner">
         {
-          managerView.includes(hostname) && (
+          managerView.view && (
             <div className="util-item">
               <NavLink to="/manager" title={'관리자 페이지 이동'} className="link-icon">
                 <span className="icon">

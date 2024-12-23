@@ -25,17 +25,9 @@ export const userPushDataDoc = async(data:UserDataType) => {
   const newUserId = newUserDoc.id;
   data.id = newUserId; // doc 랜덤 id 추가
   try {
-    // 유저 리스트 및 승인 관련 데이터
-    const userItemData = {
-      id: data.id,
-      email: data.email,
-      nickName: data.nickName,
-      signupTime: data.signupTime,
-      uid: data.uid,
-      rank: data.rank,
-      permission: false,
-      profile: '-',
-    };
+    // 유저 리스트 및 승인 관련 데이터 - 불필요한 데이터 분리를 위해
+    const { theme, lastLogInTime, password, ...userItemData } = data;
+
     // Firestore에 새 유저 데이터 추가
     await setDoc(newUserDoc, data);
 

@@ -5,15 +5,15 @@ import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { managerNavData } from "./data/managerData";
 import { useEffect } from "react";
-
-const managerView = JSON.parse(process.env.REACT_APP_MANAGER_VIEW || "[]");
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 export const ManagerPage = () => {
   const navigate = useNavigate();
-  const hostname = window.location.hostname;
+  const managerView = useSelector((state : RootState) => state.storeManagerView);
 
   useEffect(()=>{
-    if(!managerView.includes(hostname)) navigate('/');
+    if(!managerView.view) navigate('/');
   },[])
 
   return(
@@ -23,7 +23,7 @@ export const ManagerPage = () => {
           <p className="notice">설정 화면은 https://main-th-blog.vercel.app/, localhost에서만 접근 가능해요.</p>
         </div>
         {
-          managerView.includes(hostname)
+          managerView.view
             ? (
               <NavContLayout
                 navChildren={<NavFixedLayout data={managerNavData} activeColor={colors.mSlateBlue}/>}
