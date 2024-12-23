@@ -71,6 +71,7 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
   .close-btn {
+    overflow:hidden;
     position:absolute;
     top:10px;
     right:10px;

@@ -23,9 +23,14 @@ export const UserValidityBoardLists = ({data, passFn, removeFn}:UserValidityBoar
     const loginMessage = '로그인(관리자 등급 이상) 후 이용 가능해요. 😁';
     const rankMessage = '관리자 등급 이상 가능해요..! 🙏';
     dispatch(actionAlert({titMessage:message ===1 ? loginMessage:rankMessage, isPopup:true, autoClose:2000}))
+    return;
   },[dispatch]);
 
   const popupOpen = (handleType:string, eId:string) => {
+    if (!user || Number(user.rank) < 3) {
+      disabled(!user ? 1 : 2);
+      return;
+    }
     setAlert({
       visibility : true,
       requestType:handleType,
@@ -35,10 +40,9 @@ export const UserValidityBoardLists = ({data, passFn, removeFn}:UserValidityBoar
     })
   }
 
-  // 계정 승인
+  // 계정 승인, 거부
   const confirmFn = () => {
-    // if(!user) disabled(1)
-    // if(user && Number(user.rank) < 3) disabled(2);
+    console.log('가능?')
     alert.requestType === 'edit'
     ? passFn(alert.selectId)
     : removeFn(alert.selectId)

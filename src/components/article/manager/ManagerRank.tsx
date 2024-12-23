@@ -6,9 +6,7 @@ import styled from "styled-components";
 interface ManagerRankType {
   rank: string;
 }
-interface RankElementType {
-  [key:string] : JSX.Element;
-}
+
 export const ManagerRank = ({rank}:ManagerRankType) =>{
   
   const managerRank = [

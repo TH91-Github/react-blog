@@ -13,8 +13,6 @@ interface IconFindType {
 export const IconFind = ({iconData, activeColor}:IconFindType) =>{
   const theme = useSelector((state : RootState) => state.storeTheme);
 
-  console.log(activeColor)
-
   const svgIcon:NavIconType= useMemo(() =>{ 
     const themeColor = `${theme.mode === 'light' ? colors.baseBlack : colors.baseWhite}`;
     const color = activeColor ? activeColor : themeColor;

@@ -2,7 +2,7 @@ import { colors, transitions } from "assets/style/Variable";
 import { ImgInpuElementRef, ImgUpload } from "components/element/ImgUpload";
 import InputElement, { InputElementRef } from "components/element/InputElement";
 import RatingStar from "components/element/RatingStar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionAlert, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
@@ -21,14 +21,18 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
   const imgInputRef = useRef<ImgInpuElementRef | null>(null)
   const ratingStarRef = useRef<InputElementRef>(null);
   const [isReview, setIsReview] = useState(false);
-  
+
   const handleReview = () => { // 리뷰 쓰기
     if(user){
-      const input = inputRef.current?.getInputElement();
-      setIsReview(true);
-      setTimeout(()=>{
-        input?.focus();
-      },100)
+      if(user.permission){
+        const input = inputRef.current?.getInputElement();
+        setIsReview(true);
+        setTimeout(()=>{
+          input?.focus();
+        },100)
+      }else{
+        dispatch(actionAlert({titMessage:'비승인 계정은 승인 후에 이용이 가능해요..😢',isPopup:true}))
+      }
     }else{
       dispatch(actionAlert({titMessage:'로그인이 필요해요.. 😥',isPopup:true}))
     }

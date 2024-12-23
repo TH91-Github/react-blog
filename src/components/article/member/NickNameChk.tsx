@@ -46,7 +46,7 @@ export default function NickNameChk({lineColor, refPush, validationUpdate}:RefIn
         blurEvent={handleBlur}
       />
       {
-        valError && <p className="s-text"><span className="error">1~10자의 특수기호, 띄어쓰기 제외 문자를 입력해주세요.</span></p>
+        valError && <p className="s-text"><span className="error">특수기호, 띄어쓰기 제외 문자를 입력해주세요.</span></p>
       }
     </div>
   )

@@ -1,16 +1,23 @@
-import { breakpoints, colors } from "assets/style/Variable";
+import { breakpoints, colors, media } from "assets/style/Variable";
 import { NavContLayout } from "components/layout/NavContLayout";
 import { NavFixedLayout } from "components/layout/NavFixedLayout";
 import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { managerNavData } from "./data/managerData";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 
 export const ManagerPage = () => {
   const navigate = useNavigate();
   const managerView = useSelector((state : RootState) => state.storeManagerView);
+  const isMobile = useSelector((state : RootState) => state.mobileChk);
+  const [isMoNav, setIsMoNav] = useState(false);
+
+  // mo에서 nav 펼치기 on/off
+  const isMoNavOpen = (e:boolean) => {
+    setIsMoNav(e)
+  }
 
   useEffect(()=>{
     if(!managerView.view) navigate('/');
@@ -26,8 +33,15 @@ export const ManagerPage = () => {
           managerView.view
             ? (
               <NavContLayout
-                navChildren={<NavFixedLayout data={managerNavData} activeColor={colors.mSlateBlue}/>}
-                contChildren={<Outlet />}
+                navChildren={
+                  <NavFixedLayout 
+                    data={managerNavData} 
+                    activeColor={colors.mSlateBlue} 
+                    isMoNav={isMoNav}/>
+                }
+                contChildren={<Outlet context={isMoNav} />}
+                isMoNav={isMoNav}
+                isMoNavUpdate={isMoNavOpen}
               />
             )
             :(
@@ -57,7 +71,7 @@ const StyleManagerPage = styled.div`
     font-weight:400;
     color:${colors.subTextColor};
   }
-  .nav-Layout {
+  .nav-cont {
     margin-top:10px;
   }
   
@@ -70,7 +84,7 @@ const StyleManagerPage = styled.div`
   .head{
     .title{
       display:flex;
-      align-itesm:center;
+      align-items:center;
       gap:10px;  
       font-weight:600;
       font-size:20px;
@@ -99,8 +113,15 @@ const StyleManagerPage = styled.div`
     padding-top:20px;
     border-top:1px solid ${colors.lineColor};
   }
-
-  .error{
-
+  ${media.mo}{
+    .manager-inner {
+      padding:0;
+    }
+    .notice-wrap{ 
+      padding:0 15px;
+    }
+    .notice{
+      font-size:12px;
+    }
   }
 `;

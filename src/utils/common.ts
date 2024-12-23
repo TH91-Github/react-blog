@@ -2,13 +2,8 @@ import { breakpoints, fonts } from "assets/style/Variable"
 import { MarkerPositionType } from "types/kakaoComon";
 
 export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
-  const wininnW = window.innerWidth;
-  const scrollbarW = Number(wininnW - document.body.clientWidth);
-  const winW = Number(wininnW - scrollbarW);
-  let moChk = false;
-  breakpoints.mo <= winW ? moChk = false
-  : moChk = true;
-  return moChk;
+  const mediaQuery = `(max-width: ${breakpoints.mo - 1}px)`; 
+  return window.matchMedia(mediaQuery).matches;
 }
 
 export const isPcMo = () => {
