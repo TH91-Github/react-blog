@@ -8,7 +8,6 @@ import SignIn from "pages/member/SignIn";
 import SignUp from "pages/member/SignUp";
 import ResumePage from "pages/resume/ResumePage";
 import { SquadRoomPage } from 'pages/room/SquadRoomPage';
-import StudyPage from "pages/study/StudyPage";
 import WeatherPage from "pages/weather/WeatherPage";
 
 export const routerList = [
@@ -42,20 +41,6 @@ export const routerList = [
     title: '🗂️ 팀 방',
     view:['localhost'],
     element: <SquadRoomPage />,
-  },
-  {
-    id: "Study",
-    path: "study",
-    element: <StudyPage />,
-    view:['localhost'],
-    children:[
-      {
-        id:"Study Detail",
-        path:"detail/:id",
-        title:"📚스터디",
-        element: <StudyPage />
-      }
-    ]
   },
   {
     id: "Manager",
