@@ -1,4 +1,4 @@
-import { colors, transitions } from "assets/style/Variable"
+import { colors, media, transitions } from "assets/style/Variable"
 import { SvgEdit, SvgRemove, SvgUser } from "assets/svg/common/CommonSvg"
 import { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -92,17 +92,6 @@ export const UsersBoardLists = ({data}:UsersBoardListsType) => {
           ))
         }
       </ul>
-      
-     
-      {/* <LayerPopup 
-        ref={refPopup}
-        titMessage={alert.titMessage}
-        txtMessage={alert.txtMessage}
-        layerPopupClose={layerPopupClose}
-        confirmBtn={alert.checkBtn}
-        confirmEvent={confirmEvent}
-        autoCloseSecond={alert.autoClose && alert.autoClose}
-      /> */}
     </StyleUsersBoardLists>
   )
 }
@@ -129,12 +118,7 @@ const StyleUsersBoardLists = styled.div`
     flex-shrink: 0;
     width:65px;
   }
-  .list-item {
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    padding:5px 15px;
-  }
+
   .info{
     flex-grow:1;
     display:flex;
@@ -149,7 +133,14 @@ const StyleUsersBoardLists = styled.div`
         width:30px;
       }
       &.email{
+        overflow:hidden;
         width:220px;
+        white-space: nowrap;
+        text-overflow:ellipsis;
+      }
+      &.nickName{
+        white-space: nowrap;
+        text-overflow:ellipsis;
       }
       &.state{
         width:70px;
@@ -160,6 +151,10 @@ const StyleUsersBoardLists = styled.div`
     }
   }
   .list-item{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding:5px 15px;
     .profile {
       position:relative;
       width:30px;
@@ -185,8 +180,8 @@ const StyleUsersBoardLists = styled.div`
     }
     .state {
       .icon{
-        display:block;
-        width:50%;
+        display:inline-block;
+        padding:0 3px;
         height:20px;
         border-radius:3px;
         background:${colors.blue};
@@ -232,6 +227,38 @@ const StyleUsersBoardLists = styled.div`
             fill: ${colors.red};
           }
         }
+      }
+    }
+  }
+  ${media.tabMo}{
+    .board-head {
+      display:none;
+    }
+    .info{
+      flex-wrap:wrap;
+    }
+    .list-item{
+      padding:5px 15px;
+      .profile {
+        width:20px;
+        height:20px;
+        & > i {
+          & > svg { 
+            width:16px;
+            height:16px;
+          }
+        }
+      }
+      .email{
+        width:calc(100% - 30px);
+        max-width:180px;
+      }
+      .nickName, .rank, .state{
+        min-width:50px;
+        width:auto;
+      }
+      .time{
+        width:100%;
       }
     }
   }

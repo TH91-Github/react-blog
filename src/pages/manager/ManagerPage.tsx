@@ -123,5 +123,11 @@ const StyleManagerPage = styled.div`
     .notice{
       font-size:12px;
     }
+    // 공통 스타일
+    .content {
+      & > div {
+        padding:10px 10px 20px;
+      }
+    }
   }
 `;

@@ -25,6 +25,7 @@ export const media : StringOnly = {
   onlyPc : `@media screen and (min-width:${breakpoints.tab + 'px'})`,
   pc: `@media screen and (min-width:${breakpoints.mo + 'px'})`,
   tab: `@media screen and (min-width:${breakpoints.mo + 'px'}) and (max-width: ${breakpoints.tab-1 + 'px'})`,
+  tabMo: `@media screen and (max-width:${breakpoints.tab-1 + 'px'})`,
   mo: `@media screen and (max-width:${breakpoints.mo-1 + 'px'})`,
   onlyMo: `@media screen and (max-width:${breakpoints.onlyMo-1 + 'px'})`,
 } 

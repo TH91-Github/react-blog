@@ -1,4 +1,4 @@
-import { colors, transitions } from "assets/style/Variable"
+import { colors, media, transitions } from "assets/style/Variable"
 import { SvgCheckPass, SvgRemove } from "assets/svg/common/CommonSvg"
 import { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -118,15 +118,6 @@ export const UserValidityBoardLists = ({data, passFn, removeFn}:UserValidityBoar
           />
         )
       }
-      {/* <LayerPopup 
-        ref={refPopup}
-        titMessage={alert.titMessage}
-        txtMessage={alert.txtMessage}
-        layerPopupClose={layerPopupClose}
-        confirmBtn={alert.checkBtn}
-        confirmEvent={confirmEvent}
-        autoCloseSecond={alert.autoClose && alert.autoClose}
-      /> */}
     </StyleUserValidityBoardLists>
   )
 }
@@ -167,7 +158,14 @@ const StyleUserValidityBoardLists = styled.div`
         width:70px;
       }
       &.email{
+        overflow:hidden;
         width:220px;
+        white-space: nowrap;
+        text-overflow:ellipsis;
+      }
+      &.nickName{
+        white-space: nowrap;
+        text-overflow:ellipsis;
       }
       &.time{
         width:110px;
@@ -181,8 +179,8 @@ const StyleUserValidityBoardLists = styled.div`
     padding:5px 15px;
     .state {
       .icon{
-        display:block;
-        width:50%;
+        display:inline-block;
+        padding:0 3px;
         height:20px;
         border-radius:3px;
         background:${colors.blue};
@@ -230,5 +228,28 @@ const StyleUserValidityBoardLists = styled.div`
         }
       }
     }
+  }
+  ${media.tabMo}{
+    .board-head {
+      display:none;
+    }
+    .info{
+      flex-wrap:wrap;
+    }
+    .list-item {
+      padding:5px 15px;
+      .state, .nickName, .rank{
+        min-width:50px;
+        width:auto;
+      }
+      .email{
+        width:calc(100% - 60px);
+        max-width:180px;
+      }
+      .time{
+        width:100%;
+      }
+    }
+
   }
 `;

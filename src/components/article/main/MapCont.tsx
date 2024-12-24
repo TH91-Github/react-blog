@@ -65,14 +65,13 @@ const StyleMapCont = styled.div`
       .desc{
         margin-top:10px;
         font-size:18px;
-        color:${colors.subTextColor};
       }
     }
     .btn-article {
       margin-top:20px;
     }
   }
-  ${media.mo}{  
+  ${media.mo}{
     .map-inner {
       display:block;
       position:relative;
@@ -85,7 +84,7 @@ const StyleMapCont = styled.div`
         left:50%;
         width:380px;
         max-width:80%;
-        padding:60px 15px 20px;
+        padding:80px 15px 30px;
         border-top: 2px solid rgba(148,148,148, .3);
         border-radius:5px;
         background-color:${props => props.theme.opacityBg};
@@ -94,7 +93,7 @@ const StyleMapCont = styled.div`
         transform:translate(-50%, -50%);
         text-align:center;
         .title{
-          font-size:18px;
+          font-size:20px;
           &::before{
             top:-40px;
             left:50%;
@@ -104,6 +103,7 @@ const StyleMapCont = styled.div`
           }
         }
         .desc{
+          margin-top:15px;
           font-size:14px;
         }
       }

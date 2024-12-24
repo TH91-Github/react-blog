@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { rem } from "utils/common";
 import MainVisualIcon from 'components/article/main/MainVisualIcon';
 import { MapCont } from 'components/article/main/MapCont';
+import { WeatherCont } from 'components/article/main/WeatherCont';
 
 export default function MainPage() : JSX.Element{ 
   console.log('main')
@@ -19,6 +20,7 @@ export default function MainPage() : JSX.Element{
           </div>
         </div>
         <div className="content">
+          <WeatherCont />
           <MapCont />  
         </div>
       </StyleWrap>
