@@ -72,6 +72,19 @@ const StyleWrap = styled.div`
       }
     }
   }
+  .info-wrap {
+    .title{
+      font-size:36px;
+    }
+    .desc {
+      margin-top:10px;
+      font-size:18px;
+    }
+    .btn-article {
+      margin-top:20px;
+    }
+  }
+  
   ${media.mo}{
     .visual {
       padding:0 15px;
@@ -92,6 +105,14 @@ const StyleWrap = styled.div`
           color:#fff;
           text-shadow: ${shadow.textBase};
         }
+      }
+    }
+    .info-wrap {
+      .title{
+        font-size:28px;
+      }
+      .desc {
+        font-size:16px;
       }
     }
   }

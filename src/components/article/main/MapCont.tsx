@@ -42,32 +42,24 @@ const StyleMapCont = styled.div`
     .map-img {
       width:60%;
     }
-    .info-wrap{ 
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      width:40%;
-      padding:30px;
-      .title{ 
-        position:relative;
-        font-size:36px;
-        &::before{
-          position:absolute;
-          top:-50px;
-          width:100px;
-          height:44px;
-          background:url(${mapReviewImg}) no-repeat 0 0;
-          background-size: cover;
-          content:'';
-        }
+  }
+  .info-wrap{ 
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    width:40%;
+    padding:30px;
+    .title{ 
+      position:relative;
+      &::before{
+        position:absolute;
+        top:-50px;
+        width:100px;
+        height:44px;
+        background:url(${mapReviewImg}) no-repeat 0 0;
+        background-size: cover;
+        content:'';
       }
-      .desc{
-        margin-top:10px;
-        font-size:18px;
-      }
-    }
-    .btn-article {
-      margin-top:20px;
     }
   }
   ${media.mo}{
@@ -77,36 +69,39 @@ const StyleMapCont = styled.div`
       .map-img {
         width:100%;
       }
-      .info-wrap{
+    }
+    .info-wrap{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:380px;
+      max-width:80%;
+      padding:80px 15px 30px;
+      transform:translate(-50%, -50%);
+      text-align:center;
+      &::before{
         position:absolute;
-        top:50%;
-        left:50%;
-        width:380px;
-        max-width:80%;
-        padding:80px 15px 30px;
+        z-index:-1;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
         border-top: 2px solid rgba(148,148,148, .3);
         border-radius:5px;
         background-color:${props => props.theme.opacityBg};
         backdrop-filter: blur(3px);
-        box-shadow: ${shadow.whiteLine}; 
-        transform:translate(-50%, -50%);
-        text-align:center;
-        .title{
-          font-size:20px;
-          &::before{
-            top:-40px;
-            left:50%;
-            width:80px;
-            height:35px;
-            transform:translateX(-50%);
-          }
-        }
-        .desc{
-          margin-top:15px;
-          font-size:14px;
+        box-shadow: ${shadow.whiteLine};
+        content:'';
+      }
+      .title{
+        &::before{
+          top:-40px;
+          left:50%;
+          width:80px;
+          height:35px;
+          transform:translateX(-50%);
         }
       }
     }
-    
   }
 `;

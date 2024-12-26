@@ -1,4 +1,4 @@
-import { breakpoints, colors } from "assets/style/Variable";
+import { breakpoints, colors, media } from "assets/style/Variable";
 import { ArrowBtnLink } from "components/effect/ArrowBtnLink";
 import styled from "styled-components";
 import sunImg from "assets/images/main/weather/main-sun-img.png";
@@ -80,16 +80,6 @@ const StyleWeatherCont = styled.div`
       width:50px;
       margin:20px 0;
     }
-    .title{
-      font-size:36px;
-    }
-    .desc{
-      margin-top:10px;
-      font-size:18px;
-    }
-    .btn-article{
-      margin-top:20px;
-    }
   }
   .circles-wrap{
     margin-top:30px;
@@ -126,5 +116,8 @@ const StyleWeatherCont = styled.div`
            rgba(0, 0, 0, 0.25) 15px 10px 25px -20px inset, rgba(255, 255, 255, 0.2) -20px -15px 25px -20px inset, rgba(255, 255, 255, .3) -5px -10px 15px, rgba(255, 255, 255, .3) -10px -5px 15px, rgba(0, 0, 0, .05) 8px 10px 15px, rgba(0, 0, 0, .07) 7px 10px 23px;
         `};
     }
+  }
+  ${media.mo}{
+    
   }
 `;
