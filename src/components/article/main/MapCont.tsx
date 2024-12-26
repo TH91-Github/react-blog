@@ -1,9 +1,8 @@
 import mapReviewImg from "assets/images/main/map/map_review.png";
 import { breakpoints, colors, media, shadow } from "assets/style/Variable";
-import { NavLink } from "react-router-dom";
+import { ArrowBtnLink } from "components/effect/ArrowBtnLink";
 import styled from "styled-components";
 import { MapImg } from "./MapImg";
-import { ArrowBtnLink } from "components/effect/ArrowBtnLink";
 
 export const MapCont = () => {
   return (
@@ -12,12 +11,12 @@ export const MapCont = () => {
         <div className="map-img">
           <MapImg />
         </div>
-        <div className="map-info">
+        <div className="info-wrap">
           <h2 className="title">새로운 곳, 기억에 남는 곳</h2>
           <p className="desc">자유롭게 기록하고 <br className="m-br" />나만의 플레이스를 만들어요! 😁</p>
           <div className="btn-article">
             <ArrowBtnLink 
-              link={'/Map'} 
+              link={'/map'} 
               title={'플레이스 만들기'}
               onColor={colors.mSlateBlue} />
           </div>
@@ -33,7 +32,7 @@ const StyleMapCont = styled.div`
   display:flex;
   align-items:center;
   min-height:100svh;
-  padding:80px 0 0;
+  padding:40px 0 0;
   .map-inner {
     display:flex;
     width:100%;
@@ -43,7 +42,7 @@ const StyleMapCont = styled.div`
     .map-img {
       width:60%;
     }
-    .map-info{ 
+    .info-wrap{ 
       display:flex;
       flex-direction:column;
       justify-content:center;
@@ -78,7 +77,7 @@ const StyleMapCont = styled.div`
       .map-img {
         width:100%;
       }
-      .map-info{
+      .info-wrap{
         position:absolute;
         top:50%;
         left:50%;
