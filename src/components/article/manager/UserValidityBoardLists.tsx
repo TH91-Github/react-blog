@@ -230,6 +230,7 @@ const StyleUserValidityBoardLists = styled.div`
     }
   }
   ${media.tabMo}{
+    padding:10px 15px;
     .board-head {
       display:none;
     }
@@ -237,7 +238,14 @@ const StyleUserValidityBoardLists = styled.div`
       flex-wrap:wrap;
     }
     .list-item {
-      padding:5px 15px;
+      margin-top:10px;
+      padding:10px 0 0;
+      border-top:1px solid ${colors.lineColor};
+      &:first-child{
+        margin-top:0;
+        padding-top:0;
+        border:none;
+      }
       .state, .nickName, .rank{
         min-width:50px;
         width:auto;

@@ -231,6 +231,7 @@ const StyleUsersBoardLists = styled.div`
     }
   }
   ${media.tabMo}{
+    padding:10px 15px;
     .board-head {
       display:none;
     }
@@ -238,7 +239,14 @@ const StyleUsersBoardLists = styled.div`
       flex-wrap:wrap;
     }
     .list-item{
-      padding:5px 15px;
+      margin-top:15px;
+      padding:15px 0 0;
+      border-top:1px solid ${colors.lineColor};
+      &:first-child{
+        margin-top:0;
+        padding-top:0;
+        border:none;
+      }
       .profile {
         width:20px;
         height:20px;
