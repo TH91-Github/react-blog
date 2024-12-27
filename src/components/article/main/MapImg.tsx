@@ -59,6 +59,7 @@ const StyleMapImg = styled.div`
   .bg {
     display:block;
     width:100%;
+    opacity:0;
   }
 `;
 
@@ -68,15 +69,49 @@ type StyleMapImgType = {
 const StyleImgMap = styled.div<StyleMapImgType>`
   display:block;
   position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
   background-size: cover;
   background-position: center;
   opacity:0.3;
   background-image: ${({ $idx }) => `url(${mapImages[$idx]})`};
   animation: mainMapAni 24s ${({$idx}) => $idx*4}s linear infinite both;
+  &.map1{
+    top: 6.06060606061%;
+    left: 15.75299306868%;
+    width: 30.87586641462%;
+    height: 25.95769010863%;
+  }
+  &.map2{
+    top: 0.22870211549%;
+    left: 33.96345305608%;
+    width: 39.00441083806%;
+    height: 29.21669525443%;
+  }
+  &.map3{
+    top: 25.32875929102%;
+    left:16.63516068053%;
+    width: 43.98235664776%;
+    height: 23.61349342481%;
+  }
+  &.map4{
+    top: 19.89708404803%;
+    left:auto;
+    right:0;
+    width: 57.90800252048%;
+    height: 54.25957690109%;
+  }
+  &.map5{
+    top: 45.56889651229%;
+    left: 0.37807183365%;
+    width: 47.51102709515%;
+    height: 39.9085191538%;
+  }
+  &.map6{
+    top:auto;
+    bottom:0;
+    left: 17.26528040328%;
+    width: 14.49275362319%;
+    height: 6.46083476272%;
+  }
   @keyframes mainMapAni {
     0%, 16.66666666668%, 100%{
       opacity:0.3;

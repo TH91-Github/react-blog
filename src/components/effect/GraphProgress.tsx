@@ -71,8 +71,8 @@ export const GraphProgress = ({
         />
         <defs>
           <linearGradient id="gradient1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="50%" stop-color={'#fff'} />
-            <stop offset="50%" stop-color={'#fdfbfb'} /> 
+            <stop offset="50%" stopColor={'#fff'} />
+            <stop offset="50%" stopColor={'#fdfbfb'} /> 
           </linearGradient>
         </defs>
         {/* 목표치 그래프 */}
@@ -89,8 +89,8 @@ export const GraphProgress = ({
         />
         <defs>
           <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color={colors.mSlateBlue} />
-            <stop offset="70%" stop-color={"#e0c3fc"} />
+            <stop offset="0%" stopColor={colors.mSlateBlue} />
+            <stop offset="70%" stopColor={"#e0c3fc"} />
           </linearGradient>
         </defs>
       </svg>
