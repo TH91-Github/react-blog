@@ -6,17 +6,41 @@ import MainVisualIcon from 'components/article/main/MainVisualIcon';
 import { MapCont } from 'components/article/main/MapCont';
 import { WeatherCont } from 'components/article/main/WeatherCont';
 import { Finish } from 'components/article/main/Finish';
+import { ArrowBtnLink } from 'components/effect/ArrowBtnLink';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+import { NavLink } from 'react-router-dom';
+import { SvgArrow } from 'assets/svg/common/CommonSvg';
 
 export default function MainPage() : JSX.Element{ 
-  console.log('main')
+  const {user} = useSelector((state : RootState) => state.storeUserLogin);
+  
   return (
       <StyleWrap className="main">
         <div className="visual">
           <MainVisualIcon />
           <div className="visual-bord">
             <div className="visual-text">
-              <h1 className="title">Title</h1>
-              <p className="desc">sub text</p>
+              <h1 className="title">Our Story Blog</h1>
+              <p className="desc"><span className="text-bg">날씨, 지도, 여행 계획, 기록을</span></p>
+              <p className="desc"><span className="text-bg">공유해보세요! 😁</span></p>
+              {
+                !user && ( 
+                  <div className="btn-article">
+                    <NavLink 
+                      to="/member" 
+                      className="text-bg" 
+                      title="로그인 하기">
+                      <span>로그인 하기</span>
+                      {
+                        Array.from({ length:2}, (_, idx) => (
+                          <span className="arrow" key={idx}><SvgArrow $fillColor={colors.baseBlack}/></span>
+                        ))
+                      }
+                    </NavLink>
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
@@ -52,8 +76,8 @@ const StyleWrap = styled.div`
       width:clamp(${rem(800)}, 90% , ${breakpoints.pc}px);
       height:clamp(${rem(500)}, 90%, ${rem(600)});
       border-top: 2px solid rgba(148,148,148, .3);
-      border-radius:2px;
-      background-color: rgba(227,227,227,0.3);
+      border-radius:5px;
+      background-color: rgba(205,205,205, .3);
       backdrop-filter: blur(3px);
       box-shadow: ${shadow.whiteLine}; 
     }
@@ -64,13 +88,45 @@ const StyleWrap = styled.div`
       text-align:right;
       .title {
         font-size:${rem(48)};
-        color:#fff;
-        text-shadow: ${shadow.textBase};
+        color: ${colors.baseWhite};
+        text-shadow: ${({theme}) => theme.type === 'dark' ? shadow.textBaseW : shadow.textBase};
       }
       .desc {
-        font-size:${rem(18)};
-        color:#fff;
-        text-shadow: ${shadow.textBase};
+        margin-top:14px;
+       
+        & + .desc {
+          margin-top:5px;
+        }
+      }
+      .text-bg{
+        display:inline-block;
+        padding:2px 5px;
+        border-radius:5px;
+        background:${({theme}) => theme.type === 'dark' ? 'transparent' : colors.baseWhite  };
+        color: ${({theme}) => theme.type === 'dark' ? colors.baseWhite : colors.baseBlack };
+        text-shadow: rgba(124, 124, 124, 0.6) 1px 1px 0px;
+      }
+      .btn-article{
+        margin-top:10px;
+        & > a { 
+          position:relative;
+          padding-right:25px;
+        }
+        .arrow {
+          position:absolute;
+          top:50%;
+          width:12px;
+          height:12px;
+          transform: translateY(-50%);
+          &:nth-child(2){
+            right:10px;
+            animation: arrow1Ani 1s linear infinite both;
+          }
+          &:nth-child(3){
+            right:5px;
+            animation: arrow1Ani 1s .2s linear infinite both;
+          }
+        }
       }
     }
   }
@@ -95,18 +151,22 @@ const StyleWrap = styled.div`
         height:clamp(${rem(400)}, 80%, ${rem(600)});
       }
       .visual-text {
-        right:25px;
-        bottom:25px;
+        width:100%;
+        right:auto;
+        bottom:100px;
+        text-align:center;
         .title {
           font-size:${rem(36)};
-          color:#fff;
-          text-shadow: ${shadow.textBase};
         }
         .desc {
-          font-size:${rem(18)};
-          color:#fff;
-          text-shadow: ${shadow.textBase};
+          font-size:14px;
         }
+        .btn-article{
+          margin-top:5px;
+          & > a { 
+            font-size:14px;
+          }
+        }   
       }
     }
     .info-wrap {

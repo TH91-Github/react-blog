@@ -3,21 +3,26 @@ import styled from "styled-components"
 
 interface TextAnimationType {
   value:string;
+  upperCase?:boolean;
   stopTime?:number;
 }
-export const TextAnimation = ({value, stopTime=4}:TextAnimationType) =>{
+export const TextAnimation = ({value, upperCase=false, stopTime=4}:TextAnimationType) =>{
+
+  // stopTime 존재로 아래와 같이 퍼센트 계산해서 움직이는 %를 시간을 지정해준다
+  const textValue = useMemo(() => {
+    return upperCase ? value.toUpperCase() : value;
+  },[value, upperCase]);
 
   // stopTime 존재로 아래와 같이 퍼센트 계산해서 움직이는 %를 시간을 지정해준다
   const animationTime = useMemo(() => {
     const aniTime = Number((0.4/value.length * 100).toFixed(1));
-    console.log(aniTime)
     return aniTime;
   },[value]);
 
   return(
     <StyleTextAnimation className="text-ani">
       {
-        value.split('').map((text,idx)=>(
+        textValue.split('').map((textItem,idx)=>(
           <StyleText 
             key={idx}
             $startPercent={animationTime} 
@@ -25,7 +30,7 @@ export const TextAnimation = ({value, stopTime=4}:TextAnimationType) =>{
             $duration={value.length}
             $delay={idx}
             $stopTime={stopTime}>
-            {text}
+            {textItem}
           </StyleText>
         ))
       }

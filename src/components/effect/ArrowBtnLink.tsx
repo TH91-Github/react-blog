@@ -4,13 +4,14 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components"
 
 interface ArrowBtnLinkType {
-  link:string,
-  title:string,
-  onColor: string,
+  link:string;
+  title:string;
+  onColor?: string;
+  transparent?:boolean;
 }
-export const ArrowBtnLink = ({link, title, onColor}:ArrowBtnLinkType) => {
+export const ArrowBtnLink = ({link, title, onColor=colors.mSlateBlue, transparent=false}:ArrowBtnLinkType) => {
   return(
-    <StyleArrowBtnLink $bgColor={onColor}>
+    <StyleArrowBtnLink $bgColor={onColor} className={transparent?'none':''}>
       <NavLink to={link} title={title} className="btn-link-arrow">
         <span className="txt">{title}</span>
         {
@@ -27,7 +28,6 @@ type StyleArrowBtnLinkType = {
   $bgColor: string,
 }
 const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
-  
   .btn-link-arrow{
     display:inline-block;
     overflow:hidden;
@@ -103,5 +103,15 @@ const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
       }
     }
   }
-
+  &.none{
+    .btn-link-arrow{
+    background:transparent;
+      &::before{
+        display:none;
+      }
+      .txt {
+        color:${({$bgColor})=>$bgColor};
+      }
+    }
+  }
 `;
