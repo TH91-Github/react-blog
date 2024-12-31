@@ -54,7 +54,8 @@ export default function ResumePage() {
             <span className="resume-icon">
               <SvgCode $fillColor={theme.color.color} />
             </span>
-            <ResumeMain moView={sideView} />
+            <ResumeMain 
+              moView={sideView}  />
           </div>
         </StyleStudyInner>
       </div>

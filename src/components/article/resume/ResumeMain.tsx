@@ -1,22 +1,19 @@
 import { media } from "assets/style/Variable";
-import React from "react";
 import styled from "styled-components";
 import Career from "./Career";
-import UserProfile from "./UserProfile";
+import Profile from "./Profile";
 
 interface ResumeMainType {
-  moView: boolean
+  moView: boolean;
 }
 export default function ResumeMain({moView}:ResumeMainType){
   return(
     <StyleResumeMain className={moView ? '':'on'}>
-      <MemoUserProfile />
-      <MemoCareer />
+      <Profile />
+      <Career />
     </StyleResumeMain>
   )
 }
-const MemoUserProfile = React.memo(UserProfile);
-const MemoCareer = React.memo(Career);
 
 const StyleResumeMain = styled.div`
   padding:30px 30px 70px;
