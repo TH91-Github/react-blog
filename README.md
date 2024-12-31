@@ -11,8 +11,8 @@
 ### Tech Stacks
 - HTML/CSS
 - 
-- <span><img src="https://img.shields.io/badge/SASS-CC6699?logo=sass"/></span>
-- <span><img src="https://img.shields.io/badge/styled components-DB7093?logo=styled-components"/>
+- <span><img src="https://img.shields.io/badge/SASS-CC6699?logo=sass&logoColor=white"/></span>
+- <span><img src="https://img.shields.io/badge/styled components-DB7093?logo=styled-components&logoColor=white"/>
 - <span><img src="https://img.shields.io/badge/React-black?logo=react" alt="React"></span>
 - <span><img src="https://img.shields.io/badge/JavaScript-black?logo=javascript" alt="JavaScript"></span>
 - <span><img src="https://img.shields.io/badge/TypeScript-black?logo=typescript" alt="TypeScript"></span>
