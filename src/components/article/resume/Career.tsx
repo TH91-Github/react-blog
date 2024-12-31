@@ -6,10 +6,9 @@ import CompanyList from "./CompanyList";
 import ProjectList from "./ProjectList";
 import { useDataQuery } from 'utils/hook/query';
 import { resumeGetDataDoc } from 'utils/firebase/resume';
+import { LoadingAnimation } from 'components/effect/LoadingAnimation';
 
 export default function Career(){
-  let DateOfEntry = '2016.08';
-  
   const { data, isLoading } = useDataQuery(
     ['resumeData'],
     () => resumeGetDataDoc(),
@@ -28,8 +27,7 @@ export default function Career(){
             </div>
             <div className="career-cont">
               <div className="career-item">
-                <h2 className="title">EXPERIENCE</h2>
-                {/* 경력 - 회사명 입사 마지막(재직중) (캐러셀 버튼 클릭 시 하단 포트폴리오 변경) */}
+                <h2 className="title">경력</h2>
                 <CompanyList />
               </div>
               <div className="career-item">
@@ -41,7 +39,7 @@ export default function Career(){
         )
         : (
           <>
-
+            <LoadingAnimation />
           </>
         )
       }
@@ -50,6 +48,7 @@ export default function Career(){
 }
 
 const StyleCareer = styled.div`
+  position:relative;
   width:100%;
   .career {
     &-date {
@@ -77,7 +76,7 @@ const StyleCareer = styled.div`
     display:inline-block;
     position:relative;
     padding:20px 0;
-    font-size:32px;
+    font-size:28px;
     &::before{
       position:absolute;
       top:0;

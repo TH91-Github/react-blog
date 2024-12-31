@@ -4,21 +4,22 @@ import styled from "styled-components";
 
 
 interface DotListsType {
-  listData: ResumeSkillsType[] | string[]
-  type?:string
-  dotColor?:string
+  listData: ResumeSkillsType[] | string[];
+  type?:string;
+  dotColor?:string;
+  htmlTag?:boolean;
 }
-export default function DotLists({listData, type, dotColor}:DotListsType){
+export default function DotLists({listData, type, dotColor, htmlTag=false}:DotListsType){
   return (
     <StyleLists className={`dot-lists ${type ? type : ''}`} $dotColor={dotColor || '#000'}>
       {
         listData.map((item,idx) => (
           typeof item === 'object'
           ? <li key={idx}>
-              <span className="txt">{item.title}</span> 
+              { htmlTag ? <span className="txt" dangerouslySetInnerHTML={{ __html: `${item.title}` }} /> : <span className="txt">{item.title}</span> }
             </li>
           : <li key={idx}>
-              <span className="txt">{item}</span>
+              { htmlTag ? <span className="txt" dangerouslySetInnerHTML={{ __html: `${item}` }} />: <span className="txt">{item}</span>  }
             </li>
         ))
       }

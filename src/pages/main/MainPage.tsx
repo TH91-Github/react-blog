@@ -101,7 +101,7 @@ const StyleWrap = styled.div`
         display:inline-block;
         padding:2px 5px;
         border-radius:5px;
-        background:${({theme}) => theme.type === 'dark' ? 'transparent' : colors.baseWhite  };
+        background:${({theme}) => theme.type === 'dark' ? 'transparent' : 'rgba(255,255,255,.3)'  };
         color: ${({theme}) => theme.type === 'dark' ? colors.baseWhite : colors.baseBlack };
         text-shadow: rgba(124, 124, 124, 0.6) 1px 1px 0px;
       }
@@ -112,11 +112,13 @@ const StyleWrap = styled.div`
           padding-right:25px;
         }
         .arrow {
+          display:block;
           position:absolute;
           top:50%;
           width:12px;
           height:12px;
           transform: translateY(-50%);
+          line-height:0;
           &:nth-child(2){
             right:10px;
             animation: arrow1Ani 1s linear infinite both;

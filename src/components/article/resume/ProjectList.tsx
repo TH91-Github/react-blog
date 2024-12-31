@@ -3,34 +3,54 @@ import { colors, media } from "assets/style/Variable";
 import DotLists from "components/element/DotLists";
 import PeriodDate from "components/element/PeriodDate";
 import styled from "styled-components";
+import { useDataQuery } from 'utils/hook/query';
+import { resumeGetDataDoc } from 'utils/firebase/resume';
 
 export default function ProjectList(){
-  let test = new Array(3).fill(0);
+  const { data, isLoading } = useDataQuery(
+      ['resumeData'],
+      () => resumeGetDataDoc(),
+    );
+
   return (
-    <StyleWrap className="project">
+    <StyleProjectList className="project">
       {
-        test.map((item, idx)=>(
-          <div className="project-item" key={idx}>
-            <div className="project-head">
-              <span className="project-head-title">
-                <h3 className="tit">TItle</h3>
-                <p className="company">dddd회사</p>
-              </span>
-              <PeriodDate startDate={'2014.05'} endDate={'current'} direction={'column'} />
-            </div>
-            {/*  포트 폴리오 선택된 회사 포트폴리오 */}
-            <div className="project-cont">
-              <p className="sub-tit">xxxdf</p>
-              <DotLists listData={test} dotColor={colors.blue} />
-            </div>
-          </div>
-        ))
+        (!isLoading && data) 
+          ? (
+            <>
+              {
+                data?.project.map((projectItem:any, idx:number) => (
+                  <div className="project-item" key={idx}>
+                    <div className="project-head">
+                      <span className="project-head-title">
+                        <h3 className="tit">{projectItem.title}</h3>
+                        <p className="company">{projectItem.company}</p>
+                      </span>
+                      <PeriodDate 
+                        direction={'column'} 
+                        startDate={projectItem.startDate} 
+                        endDate={projectItem.endData || 'current'} />
+                    </div>
+                    <div className="project-cont">
+                      <DotLists listData={projectItem.desc} dotColor={colors.blue} />
+                    </div>
+                  </div>
+                ))
+              }
+            </>
+          )
+          : (
+            <>
+
+            </>
+          )
       }
       
-    </StyleWrap>
+    </StyleProjectList>
   )
 }
-const StyleWrap = styled.div`
+const StyleProjectList = styled.div`
+  position:relative;
   .project{
     &-item{
       margin-top:20px;
@@ -55,6 +75,8 @@ const StyleWrap = styled.div`
         font-weight:700;
       }
       .company{
+        margin-top:5px;
+        font-size:14px;
         color:${colors.blue};
       }
       .period-date, .total-badge {
@@ -66,15 +88,6 @@ const StyleWrap = styled.div`
     }
     &-cont {
       margin-top:20px;
-      .sub-tit{
-        font-weight:700;
-        &::before{
-          content:'[';
-        }
-        &::after{
-          content:']';
-        }
-      }
       & > ul {
         margin-top:15px;
         li {
