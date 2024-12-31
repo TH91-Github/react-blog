@@ -15,13 +15,10 @@ export default function Navigation({menuOn}:NavigationType){
           {routerList
             .filter((routerItem, idx) => {
                 const hostname = window.location.hostname;
-
-                console.log(hostname)
-                console.log((!Array.isArray(routerItem.view) || routerItem.view.includes(hostname)) )
                 return (
                   idx > 0 &&
                   routerItem.view !== false &&  
-                  (!Array.isArray(routerItem.view) || routerItem.view.includes(hostname)) && console.log(routerItem)
+                  (!Array.isArray(routerItem.view) || routerItem.view.includes(hostname)) 
                   // view가 배열이면서 조건에 맞는 도메인일 경우 노출
                 );
               }

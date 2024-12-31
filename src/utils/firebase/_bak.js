@@ -2,10 +2,9 @@ import { collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit,
 import { storeWeatherDB, studyDB } from "../../firebase";
 import { locationCategory } from "../kakaomap";
 
-
 const defaultCollection = 'react';
 // document name, 하위 collection name, 비교 key - id, email 등, 비교할 value
-export const duplicateDoc = async(docName, collectionName, key, val) => {
+ const duplicateDoc = async(docName, collectionName, key, val) => {
   // 문서 필드 내 key(id, email 등)값 조회
   const queryDuplicate = collection(studyDB, defaultCollection, docName, collectionName);
   const duplicatResult = query(queryDuplicate, where(key, '==', val));
@@ -13,7 +12,7 @@ export const duplicateDoc = async(docName, collectionName, key, val) => {
   return querySnapshot.empty
 }
 // 추가 
-export const pushDataDoc = async(docName, collectionName, data) => {
+ const pushDataDoc = async(docName, collectionName, data) => {
   const userCollection = collection(studyDB, defaultCollection, docName, collectionName);
   const newUserDoc = doc(userCollection);
   const newUserId = newUserDoc.id;
@@ -23,7 +22,7 @@ export const pushDataDoc = async(docName, collectionName, data) => {
 }
 
 // key, val 비교 및 조회 후 가져오기
-export const duplicateGetDoc = async(docName, collectionName, key, val)=> {
+ const duplicateGetDoc = async(docName, collectionName, key, val)=> {
   // 문서 필드 내 key(id, email 등)값 조회
   const queryGetDocRef = collection(studyDB, defaultCollection, docName, collectionName);
   const getDocResult = query(queryGetDocRef, where(key, '==', val));
@@ -44,7 +43,7 @@ export const duplicateGetDoc = async(docName, collectionName, key, val)=> {
 }
 
 // 필드 id 찾은 후 삭제 - login
-export const removeIDDoc = async(docName, collectionName, emailId) => {
+ const removeIDDoc = async(docName, collectionName, emailId) => {
   const queryRemoveRef = collection(studyDB, defaultCollection, docName, collectionName);
   const removeDocResult = query(queryRemoveRef, where('email', '==', emailId));
   const querySnapshot = await getDocs(removeDocResult);
@@ -58,7 +57,7 @@ export const removeIDDoc = async(docName, collectionName, emailId) => {
   }
 }
 
-export const collectionDocList = async(docName, collectionName) => {
+ const collectionDocList = async(docName, collectionName) => {
   const collectionRef = collection(studyDB, defaultCollection, docName, collectionName);
   const collectionSnapshot = await getDocs(collectionRef);
   const docList = [];
@@ -74,7 +73,7 @@ export const collectionDocList = async(docName, collectionName) => {
 }
 
 // 여러 필드가 있는 경우 날짜별로 가져오기 및 startAfter, limit 활용 끊어서 가져오기
-export const listDateQueryDoc = async (docName, collectionName, lastDoc, loadSize) => {
+ const listDateQueryDoc = async (docName, collectionName, lastDoc, loadSize) => {
   const collectionRef = collection(studyDB, defaultCollection, docName, collectionName);
   const getPageNum= loadSize ?? 5;
   const querySort = lastDoc
@@ -106,7 +105,7 @@ export const listDateQueryDoc = async (docName, collectionName, lastDoc, loadSiz
 };
 
 // blog detail 정보 가져오기
-export const blogDetailDoc = async (docName, collectionName, detailDocId) => {
+ const blogDetailDoc = async (docName, collectionName, detailDocId) => {
   const blogDetailRef = collection(studyDB, defaultCollection, docName, collectionName);
   const blogDetailDoc = doc(blogDetailRef, detailDocId); // 문서 id 접근
   const blogDocSnap = await getDoc(blogDetailDoc);
@@ -119,7 +118,7 @@ export const blogDetailDoc = async (docName, collectionName, detailDocId) => {
 }
 
 // blog 컬렉션 글 DOC 삭제
-export const removeBlogDoc = async(docName, collectionName, findDocID, chkUid) => {
+ const removeBlogDoc = async(docName, collectionName, findDocID, chkUid) => {
   const blogRef = collection(studyDB, defaultCollection, docName, collectionName);
   const blogDoc = doc(blogRef,findDocID); // blog 컬렉션 > 문서
   const blogSnapshot = await getDoc(blogDoc); 
@@ -136,7 +135,7 @@ export const removeBlogDoc = async(docName, collectionName, findDocID, chkUid) =
     // throw new Error("blog 글이 없습니다.");
   }
 }
-export const removeBlogPreviewAllDoc = async(docName, collectionName, findDocID, chkUid) => {
+ const removeBlogPreviewAllDoc = async(docName, collectionName, findDocID, chkUid) => {
   const queryRemoveRef = collection(studyDB, defaultCollection, docName, collectionName);
   const removeDocResult = query(queryRemoveRef, where('blogDocId', '==', findDocID));
   const querySnapshot = await getDocs(removeDocResult);
@@ -159,7 +158,7 @@ export const removeBlogPreviewAllDoc = async(docName, collectionName, findDocID,
 }
 
 // blog 컬렉션 글 DOC 업데이트
-export const updateBlogDoc = async(docName, collectionName, findDocID, chkUid, newData) => {
+ const updateBlogDoc = async(docName, collectionName, findDocID, chkUid, newData) => {
   const {title,text,update} = newData
   const blogRef = collection(studyDB, defaultCollection, docName, collectionName);
   const blogDoc = doc(blogRef,findDocID);
@@ -177,7 +176,7 @@ export const updateBlogDoc = async(docName, collectionName, findDocID, chkUid, n
   }
 }
 
-export const updateBlogPreviewDoc = async(docName, collectionName, findDocID, chkUid, newData) => {
+ const updateBlogPreviewDoc = async(docName, collectionName, findDocID, chkUid, newData) => {
   const {title,text,update} = newData
   const blogPreviewRef = collection(studyDB, defaultCollection, docName, collectionName);
   const blogPreviewDocResult = query(blogPreviewRef, where('blogDocId', '==', findDocID));
@@ -205,7 +204,7 @@ export const updateBlogPreviewDoc = async(docName, collectionName, findDocID, ch
 
 
 // 컬렉션, 문서 1~3에 따라 data 가져오기
-export const getdepthCollectionDoc = async (firebaseFind) => {
+ const getdepthCollectionDoc = async (firebaseFind) => {
   const {DB, col1, doc1, col2, doc2, col3, doc3} = firebaseFind;
   let docRef;
   if(doc3){
@@ -229,7 +228,7 @@ export const getdepthCollectionDoc = async (firebaseFind) => {
 };
 
 // ✅ 날씨 옵션 공통
-export const firebaseWeatherOpt = (location) => ({
+ const firebaseWeatherOpt = (location) => ({
   DB: storeWeatherDB,
   col1: 'weather',
   doc1: locationCategory(location.addr1),
@@ -238,7 +237,7 @@ export const firebaseWeatherOpt = (location) => ({
 });
 
 // ✅ firebase 필요 데이터 생성 및 전달
-export const firebaseWeatherUpdate = async(location, data) => {
+ const firebaseWeatherUpdate = async(location, data) => {
   if (!data?.res) return;
   const locationTitle = (location.addr2 || "") + " " + (location.addr3 || "") || location.addr1;
   const firebaseFind = {
@@ -250,7 +249,7 @@ export const firebaseWeatherUpdate = async(location, data) => {
 };
 
 // ✅ 최종 - 날씨 추가
-export const updateWeatherDoc = async(firebaseFind, weatherData)=>{
+ const updateWeatherDoc = async(firebaseFind, weatherData)=>{
   const {DB, col1, doc1, col2, doc2, title,coords} = firebaseFind;
   const doc3Year = weatherData.date.slice(0, 4); // ex - 2024
 
