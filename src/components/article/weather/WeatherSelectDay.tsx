@@ -221,7 +221,8 @@ const StyleWeatherSelectDay = styled.div`
   }
   ${media.mo}{
     padding-top:40px;
-    .location-date{0
+    .location-date{
+      position:relative;
       justify-content: space-between;
       align-items:center;
       flex-wrap:wrap;
@@ -233,6 +234,9 @@ const StyleWeatherSelectDay = styled.div`
     }
     .date{
       display:inline-block;
+      position:absolute;
+      top:0;
+      right:0;
       width:50%;
       margin-top:0;
       text-align:right;
