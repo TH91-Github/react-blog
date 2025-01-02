@@ -126,7 +126,6 @@ export const StyleArrowLeft = styled.button.attrs({
       transform: translate(-50%, -50%);
     }
   }
-
   .txt{
     position:absolute;
     top:-999px;

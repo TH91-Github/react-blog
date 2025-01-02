@@ -3,10 +3,10 @@ import styled from "styled-components"
 
 interface TextAnimationType {
   value:string;
-  upperCase?:boolean;
-  stopTime?:number;
+  upperCase?:boolean; // 대문자
+  stopTime?:number; // 애니메이션 끝나고 기다리는 시간
 }
-export const TextAnimation = ({value, upperCase=false, stopTime=4}:TextAnimationType) =>{
+export const TextAnimation = ({value, upperCase=false, stopTime=1}:TextAnimationType) =>{
 
   // stopTime 존재로 아래와 같이 퍼센트 계산해서 움직이는 %를 시간을 지정해준다
   const textValue = useMemo(() => {

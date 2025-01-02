@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { colors, transitions } from './Variable';
+import { colors, media, transitions } from './Variable';
 
 export const GlobalStyles = createGlobalStyle`
   body {
@@ -39,6 +39,9 @@ export const GlobalStyles = createGlobalStyle`
     left:-9999px;
     font-size:1px;
     opacity:0;
+  }
+  .m-br{
+    display:none;
   }
   .btnG {
     background:${colors.blueG};
@@ -139,4 +142,14 @@ export const GlobalStyles = createGlobalStyle`
       transform: translateX(100%);
     }
   }
+  
+  ${media.mo}{
+    .pc-br{
+      display:none;
+    }
+    .m-br{
+      display:block;
+    }
+  }
 `;
+

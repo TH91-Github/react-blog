@@ -21,7 +21,6 @@ export default function PeriodDate({ period, startDate, endDate, direction, bg }
       const [startYear, startMonth] = startDate.split('.').map(Number);
       let endYear, endMonth;
       const date = new Date();
-
       if (endDate === 'current') { // 오늘날 date를 받기 위해 - 컴포넌트별 date 보다 현 컴포넌트에서 사용.
         endYear = date.getFullYear();
         endMonth = date.getMonth() + 1;
@@ -103,18 +102,16 @@ const StyleBadge = styled.div<StyledBadgeType>`
   }
   .total-badge{
     display: inline-block;
-    padding: 4px 8px;
-    border-radius: 10px;
-    background: ${props => props.$bg};
-    color: ${colors.baseWhite};
+    padding: 2px 5px;
+    border-radius: 5px;
+    border:1px solid ${colors.lineColor};
     .month {
       margin-left:3px;
     }
   }
   ${media.mo}{
     .total-badge{
-      padding: 2px 6px;
-      border-radius: 8px;
+      padding: 2px 4px;
       font-size:14px;
     }
   }

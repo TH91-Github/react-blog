@@ -12,7 +12,7 @@ export const MapCont = () => {
           <MapImg />
         </div>
         <div className="info-wrap">
-          <h2 className="title">새로운 곳, 기억에 남는 곳</h2>
+          <h2 className="title">새로운 곳, <br className="m-br" />기억에 남는 곳</h2>
           <p className="desc">자유롭게 기록하고 <br className="m-br" />나만의 플레이스를 만들어요! 😁</p>
           <div className="btn-article">
             <ArrowBtnLink 

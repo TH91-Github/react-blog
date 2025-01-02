@@ -31,7 +31,7 @@ export default function Career(){
                 <CompanyList />
               </div>
               <div className="career-item">
-                <h2 className="title">PROJECT</h2>
+                <h2 className="title">프로젝트</h2>
                 <ProjectList />
               </div>
             </div>

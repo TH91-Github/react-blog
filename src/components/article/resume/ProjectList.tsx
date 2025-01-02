@@ -5,6 +5,8 @@ import PeriodDate from "components/element/PeriodDate";
 import styled from "styled-components";
 import { useDataQuery } from 'utils/hook/query';
 import { resumeGetDataDoc } from 'utils/firebase/resume';
+import { LoadingAnimation } from 'components/effect/LoadingAnimation';
+import { SubDescription } from 'types/resume';
 
 export default function ProjectList(){
   const { data, isLoading } = useDataQuery(
@@ -32,7 +34,33 @@ export default function ProjectList(){
                         endDate={projectItem.endData || 'current'} />
                     </div>
                     <div className="project-cont">
-                      <DotLists listData={projectItem.desc} dotColor={colors.blue} />
+                      <div className="cont-item">
+                      {
+                        projectItem.descInfo?.map((descItem:SubDescription, idx:number)=>(
+                          <div className="info-item" key={idx}>
+                            <p className="s-tit">{descItem.sTitle}</p>
+                            <DotLists listData={descItem.descList} dotColor={colors.blue} />
+                          </div>
+                        )) 
+                      }
+                        
+                      </div>
+                      <div className="cont-item skills">
+                        <p className="s-tit">기술 스택</p>
+                        <ul>
+                          {
+                            projectItem.skills?.map((item:string, idx:number) =>(
+                              <li key={idx}>
+                                {item}
+                                {
+                                  (projectItem.skills.length > 1 && projectItem.skills.length-1 > idx) &&
+                                  <span>, </span>
+                                }
+                              </li>
+                            ))
+                          }
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -41,7 +69,7 @@ export default function ProjectList(){
           )
           : (
             <>
-
+              <LoadingAnimation />
             </>
           )
       }
@@ -87,17 +115,32 @@ const StyleProjectList = styled.div`
       }
     }
     &-cont {
-      margin-top:20px;
-      & > ul {
-        margin-top:15px;
-        li {
-          padding-left:12px;
+      .cont-item{
+        margin-top:20px;
+      }
+      .s-tit{
+        font-size:18px;
+        font-weight:600;
+      }
+      .info-item{
+        margin-top:20px;
+        &:first-child{
+          margin-top:0;
+        }
+      }
+      .dot-lists{
+        margin-top:10px;
+        .txt{
           font-weight:400;
-          color:${props => props.theme.subTextColor};
-          &::before{
-            top:7px;
-            width:5px;
-            height:5px;
+        }
+      }
+      .skills {
+        & > ul {
+          display:flex;
+          gap:5px;
+          margin-top:10px;
+          & > li {
+            font-size:14px;
           }
         }
       }

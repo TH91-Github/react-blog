@@ -34,10 +34,6 @@ export default function OtherInfo({useData, moView, moSideInfoMore }:OtherInfoTy
         }
         <div className="other-info">
           <div className="other-info-item">
-            {/* 간단한 추가 설명 */}
-            <p>abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz</p>
-          </div>
-          <div className="other-info-item">
             {/* 전화번호 이메일 sns */}
             <ul className="icon-list">
               <li>

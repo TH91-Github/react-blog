@@ -5,9 +5,13 @@ export interface ResumeIntroduceType{
   desc:string;
 }
 
+export interface SubDescription {
+  sTitle: string;
+  descList:string[];
+}
 export interface ResumeProjectType{
   title:string;
-  date:string;
+  descInfo:SubDescription[];
   skills:string[];
   desc:string[];
   startDate:string;
