@@ -8,15 +8,19 @@ export function isMobileSizeChk():boolean{ // 모바일 사이즈 체크
 
 export const isPcMo = () => {
   const userAgent = navigator.userAgent;
-  let chkUserAgent = {devices:'',browser:''};
+  const maxTouchPoints = navigator.maxTouchPoints || 0;
+
+  let chkUserAgent = { devices: '', browser: '' };
 
   // 모바일 기기의 User-Agent 체크
-  if (/android/i.test(userAgent)) {
+  if (/android/i.test(userAgent) && maxTouchPoints > 0) {
     chkUserAgent.devices = 'android';
-  }else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+  } else if (/iPhone|iPad|iPod/i.test(userAgent) && maxTouchPoints > 0) {
     chkUserAgent.devices = 'iPhone|iPad|iPod';
-  }else{
+  } else if (maxTouchPoints === 0) {
     chkUserAgent.devices = 'pc';
+  } else {
+    chkUserAgent.devices = 'unknown';
   }
 
   // 브라우저 체크
@@ -24,11 +28,13 @@ export const isPcMo = () => {
     chkUserAgent.browser = 'chrome';
   } else if (/safari/i.test(userAgent) && !/chrome/i.test(userAgent)) {
     chkUserAgent.browser = 'safari';
-  } else{
+  } else {
     chkUserAgent.browser = 'etc';
   }
   return chkUserAgent;
 };
+
+
 
 export function rem(figure:number, remFix?:number):string { // rem 변환
   remFix = remFix ?? fonts.size

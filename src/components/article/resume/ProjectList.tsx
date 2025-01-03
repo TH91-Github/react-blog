@@ -31,7 +31,7 @@ export default function ProjectList(){
                       <PeriodDate 
                         direction={'column'} 
                         startDate={projectItem.startDate} 
-                        endDate={projectItem.endData || 'current'} />
+                        endDate={projectItem.endDate || 'current'} />
                     </div>
                     <div className="project-cont">
                       <div className="cont-item">
@@ -43,10 +43,9 @@ export default function ProjectList(){
                           </div>
                         )) 
                       }
-                        
                       </div>
                       <div className="cont-item skills">
-                        <p className="s-tit">기술 스택</p>
+                        <p className="s-tit">사용 경험</p>
                         <ul>
                           {
                             projectItem.skills?.map((item:string, idx:number) =>(

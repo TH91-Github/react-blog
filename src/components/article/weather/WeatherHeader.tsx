@@ -7,7 +7,7 @@ import { MarkerPositionType } from "types/kakaoComon";
 import { SearchWrap } from "./SearchWrap";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { findTimeLists } from "utils/weather/weather";
-import { weatherClock } from "utils/common";
+import { isPcMo, weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
 interface WeatherHeaderType {
@@ -17,6 +17,7 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
   const {data, loading} = useSelector((state : RootState) => state.storeWeather);
   const useLocation = useSelector((state : RootState) => state.storeLocation);
   const addressText = useLocation.address ? useLocation.address.address_name.split(' ').slice(0, 3).join(' ') : '현재 위치를 불러올 수 없습니다.';
+  const userDevices = isPcMo();
 
   const handleClick = useCallback(() => {
     addrUpdate(useLocation.coords)
@@ -49,10 +50,15 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
           : <span className="blind">로딩 사용 예정.</span>
         }
       </button>
+      {/* */}
+      {
+        (userDevices.devices === 'pc') && <span className="ref-text">🚩 PC의 경우 접속 위치가 정확하지 않아요.. 😅</span>
+      }
+      <span></span>
       {/* 즐겨찾기 회원전용 */}
-      <div className="">
+      {/* <div className="">
         
-      </div>
+      </div> */}
     </StyleWeatherHeader>
   )
 }
@@ -60,6 +66,7 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
 const StyleWeatherHeader = styled.div`
   display:flex;
   gap:20px;
+  align-items:center;
   margin-top:30px;
   padding:10px 20px;
   border-radius:5px;
@@ -95,6 +102,9 @@ const StyleWeatherHeader = styled.div`
     .txt {
       font-size:14px;
     }
+  }
+  .ref-text {
+    font-size:12px;
   }
   ${media.mo}{
     flex-direction:column;
