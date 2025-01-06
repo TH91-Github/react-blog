@@ -17,7 +17,7 @@ export default function Profile(){
       {
         (!isLoading && data) 
           ? (
-            <div>
+            <div className="info-box">
               <h2 className="tit">INTRODUCE</h2>
               <h3 className="name">{data.introduce.name}</h3>
               <p className="job">{data.introduce.job}</p>
@@ -39,6 +39,10 @@ const StyleProfile = styled.div`
   min-height:250px;
   padding-left:150px;
   text-align:right;
+  .info-box {
+    padding-bottom:20px;
+    border-bottom:1px solid ${colors.lineColor};
+  }
   .tit {
     font-size:18px;
     color:${colors.mSlateBlue};
@@ -47,25 +51,35 @@ const StyleProfile = styled.div`
     margin-top:20px;
     font-size:24px;
   }
+  .job {
+    margin-top:5px;
+  }
   .desc{
     margin-top:20px;
-    padding-bottom:20px;
-    border-bottom:1px solid ${colors.lineColor};
+    padding-left:80px;
+    font-size:16px;
+    font-weight:400;
     line-height:21px;
-    color:${colors.subTextColor};
+    word-break: keep-all;
   }
   ${media.mo}{
     min-height:auto;
-    padding-left:20px;
+    padding:0 20px;
+    text-align:center;
+    .info-box {
+      padding-bottom:15px;
+    }
     .name{
       margin-top:15px;
       font-size:18px;
     }
     .desc{
       margin-top:15px;
-      padding-bottom:15px;
+      padding-left:0;
       font-size:14px;
       line-height:18px;
     }
   }
 `; 
+
+
