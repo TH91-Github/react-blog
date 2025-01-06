@@ -23,7 +23,9 @@ export default function MainPage() : JSX.Element{
             <div className="visual-text">
               <h1 className="title">Our Story Blog</h1>
               <p className="desc"><span className="text-bg">날씨 정보와 지도를 활용해 <br className="m-br" />여행 계획을 세우고 기록을 남겨보세요.</span></p>
-              <p className="desc"><span className="text-bg">여행의 특별한 순간을 정리하고 <br className="m-br" />공유할 수 있어요! 😁</span></p>
+
+              {/* 공유 룸 작업 완료 후 
+              <p className="desc"><span className="text-bg">여행의  순간을 정리하고 <br className="m-br" />공유할 수 있어요! 😁</span></p> */}
               {
                 !user && ( 
                   <div className="btn-article">
