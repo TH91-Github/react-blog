@@ -98,6 +98,7 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
 }
 const StyleSearchWrap = styled.div`
   position:relative;
+  width:100%;
   .search{
     overflow:hidden;
     display:flex;

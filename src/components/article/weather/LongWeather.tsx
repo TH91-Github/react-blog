@@ -16,7 +16,7 @@ export const LongWeather = () => {
     <StyleLongWeather className="long-weather">
       {/* 한 주 예정 - 현재 3일 데이터만 사용 */}
       {
-        (!loading && data?.res)
+        (loading && data?.res)
         ? (
           <ul>
             {data.res?.map((dayItem:WeatherTimeDataType, idx:number) => {
@@ -194,6 +194,10 @@ const StyleLongWeather = styled.div`
     }
   }
   ${media.mo}{
- 
+    .loading-wrap{
+      position:relative;
+      height:130px;
+      padding:0;
+    }
   }
 `;
