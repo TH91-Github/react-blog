@@ -1,12 +1,8 @@
+import Carousel from "components/element/Carousel";
 import { roomCategory } from "pages/room/roomData";
 import styled from "styled-components";
 import { FolderList } from "./FolderLists";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import Carousel from "components/element/Carousel";
-
-
-
+import { transitions } from "assets/style/Variable";
 
 export const RoomLists = () =>{
 
@@ -17,8 +13,6 @@ export const RoomLists = () =>{
           slidesPerView: 'auto',
           spaceBetween: 20,
           navigation:true,
-          pagination: { clickable: true },
-          virtual:true,
         }}
       >
         {roomCategory.map((categoryItem,idx) => (
@@ -33,8 +27,45 @@ export const RoomLists = () =>{
 }
 
 const StyleRoomLists = styled.div`
+  position:relative;
+  &:hover{
+    .carousel-btns{ 
+      .btn-prev, .btn-next{ 
+        transform:translate(0, -50%);
+        opacity:1;
+      }
+    }
+  }
   .carousel-item {
     width:200px;
+  }
+  .carousel-btns{
+    & > button {
+      display:block;
+      position:absolute;
+      z-index:1;
+      top:50%;
+      width:30px;
+      height:30px;
+      opacity:0;
+      transition:${transitions.base};
+    }
+    .btn-prev{
+      left:0;
+      transform:translate(-105%, -50%);
+      &:focus{
+        transform:translate(0, -50%);
+        opacity:1;
+      }
+    }
+    .btn-next{
+      right:0;
+      transform:translate(105%, -50%);
+      &:focus{
+        transform:translate(0, -50%);
+        opacity:1;
+      }
+    }
   }
   .room-item{
     position:relative;

@@ -7,7 +7,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/virtual';
 import styled from "styled-components"
-import { colors } from "assets/style/Variable";
+import { colors, transitions } from "assets/style/Variable";
+import { SvgArrow } from "assets/svg/common/CommonSvg";
 
 interface CarouselType {
   carouselOpt: {
@@ -159,13 +160,15 @@ export default forwardRef<CarouselRefType, CarouselType>(({
               ref={prevBtnRef}
               type="button"
               className="btn-prev">
-              <span>이전</span>
+              <span className="icon"><SvgArrow $fillColor={colors.mSlateBlue}/></span>
+              <span className="blind">이전</span>
             </button>
             <button 
               ref={nextBtnRef}
               type="button"
               className="btn-next">
-              <span>다음</span>
+              <span className="icon"><SvgArrow $fillColor={colors.mSlateBlue}/></span>
+              <span className="blind">다음</span>
             </button>
           </div>
         )
@@ -188,7 +191,6 @@ export default forwardRef<CarouselRefType, CarouselType>(({
     */
   )
 });
-
 interface StyleCarouselType {
   $activeColor : string;
 }
@@ -207,6 +209,24 @@ const StyleCarousel = styled.div<StyleCarouselType>`
     .swiper-pagination-bullet-active {
       background:${({$activeColor}) => $activeColor};
       opacity:1;
+    }
+  }
+  .carousel-btns{
+    .btn-prev {
+      svg path{
+        transition:${transitions.base};
+      }
+      .icon{
+        transform:scaleX(-1);
+      }
+    }
+    .swiper-button-disabled{
+      svg path{
+        fill: ${colors.subTextColor};
+      }
+    }
+    .icon{
+      display:block;
     }
   }
 `;

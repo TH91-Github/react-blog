@@ -21,7 +21,7 @@ export default function Header({location}:HeaderType){
   const isMobile = useSelector((state : RootState) => state.mobileChk);
   const [isMoGnb, setIsMoGnb] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
-  const [sticky, setSticky] = useState(false);
+  const [sticky, setSticky] = useState(true);
   const headerRef = useRef<HTMLDivElement>(null);
   const headerTop = useRef(0);
   const memoriesY = useRef(0);
@@ -137,7 +137,6 @@ const StyledHeader = styled.header`
   left:0;
   width:100%;
   background: linear-gradient(to bottom,  rgba(14,14,14,.25), rgba(0,0,0,0) 75%); 
-
   transition: all .01s;
   .header-wrap{
     transition: ${transitions.base};

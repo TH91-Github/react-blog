@@ -8,6 +8,7 @@ export interface ThemeState {
 }
 // 로그인 user 상태
 export interface UserLoginType {
+  isLoading:boolean,
   loginState: boolean,
   user: UserDataType | null,
 }

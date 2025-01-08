@@ -6,13 +6,14 @@ import styled from "styled-components"
 interface ArrowBtnLinkType {
   link:string;
   title:string;
+  altTitle?:string;
   onColor?: string;
   transparent?:boolean;
 }
-export const ArrowBtnLink = ({link, title, onColor=colors.mSlateBlue, transparent=false}:ArrowBtnLinkType) => {
+export const ArrowBtnLink = ({link, title, altTitle, onColor=colors.mSlateBlue, transparent=false}:ArrowBtnLinkType) => {
   return(
-    <StyleArrowBtnLink $bgColor={onColor} className={transparent?'none':''}>
-      <NavLink to={link} title={title} className="btn-link-arrow">
+    <StyleArrowBtnLink $bgColor={onColor} className={`${transparent?'none':''}`}>
+      <NavLink to={link} title={altTitle ?? title} className="btn-link-arrow">
         <span className="txt">{title}</span>
         {
           Array.from({ length:3}, (_, idx) => (
@@ -27,9 +28,10 @@ export const ArrowBtnLink = ({link, title, onColor=colors.mSlateBlue, transparen
 type StyleArrowBtnLinkType = {
   $bgColor: string,
 }
-const StyleArrowBtnLink = styled.div<StyleArrowBtnLinkType>`
+const StyleArrowBtnLink = styled.span<StyleArrowBtnLinkType>`
+  display:inline-block;
   .btn-link-arrow{
-    display:inline-block;
+    display:block;
     overflow:hidden;
     position:relative;
     padding:8px 15px;

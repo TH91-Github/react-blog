@@ -68,6 +68,7 @@ export default function SignIn() {
       const userCredential = await signInWithEmailAndPassword(auth, loginID, loginPW);
       const userData = await duplicateGetDoc('userData','users', 'email' , loginID);
       const userLoginData = {
+        isLoading: false,
         loginState: userCredential.operationType === 'signIn'? true : false,
         user: userData
       }
@@ -112,6 +113,7 @@ export default function SignIn() {
         userPushDataDoc(isUserData);
       }
       const googleLoginData = {
+        isLoading:false,
         loginState: true,
         user: isUserData // 최종 데이터
       };

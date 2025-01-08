@@ -36,7 +36,7 @@ export default function Bookmark({ bookmarkItem }:BookmarkType) {
         newData.kakaoMapData = [myBookmark]
       }
 
-      dispatch(actionUserLogin({loginState, user: newData}));
+      dispatch(actionUserLogin({isLoading:false, loginState, user: newData}));
       // collectionDocUpdate('userData','users',newData.id, 'kakaoMapData', newData.kakaoMapData);
       userDocUpdate(newData.id, 'kakaoMapData', newData.kakaoMapData);
     }else{ // 로그인 해주세요

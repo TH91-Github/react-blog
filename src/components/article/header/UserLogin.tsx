@@ -40,6 +40,7 @@ export default function UserLogin(){
   // 로그인 한 유저 정보 초기화
   const userLoginInit = (loginState: boolean) => {
     const userLoginData = {
+      isLoading:false,
       loginState,
       user: null
     };

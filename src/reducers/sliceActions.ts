@@ -63,9 +63,11 @@ export const alertCommonSlice = createSlice({
 
 // 📍logIn 상태 
 const userLoginState: UserLoginType = {
+  isLoading:true,
   loginState: false,
-  user: null
+  user: null,
 };
+
 export const userLoginSlice = createSlice({
   name: "user login",
   initialState: userLoginState,

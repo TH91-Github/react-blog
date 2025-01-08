@@ -55,6 +55,7 @@ export default function LoginStatusCheck() {
   // ✅ 로그인 초기화 dispatch
   const userLoginInit = useCallback(() => { 
     const userLoginData = {
+      isLoading:false,
       loginState:false,
       user: null
     };
@@ -77,7 +78,7 @@ export default function LoginStatusCheck() {
   const loginUpdate = useCallback(async(userId: string) => {
     try { 
       const userData = await duplicateGetDoc('userData','users', 'email' ,userId);
-      dispatch(actionUserLogin({ loginState: true, user: userData }));
+      dispatch(actionUserLogin({ loginState: true, user: userData, isLoading:false }));
     }catch(error){
       // firebase store에 등록된 정보가 없다면 초기화
       console.log('해당 로그인 정보가 없습니다.');
@@ -107,6 +108,7 @@ export default function LoginStatusCheck() {
   },[loginExtensionChk]);
 
   const loginStatus = useCallback(async(user: User | null) => {
+    dispatch(actionUserLogin({isLoading:true, loginState:false, user: null, }));
     if (user) {
       const accessToken = localStorage.getItem(`${loginChkKey}accessToken`);
       const expirationTime = localStorage.getItem(`${loginChkKey}expirationTime`);
