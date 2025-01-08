@@ -1,26 +1,10 @@
 import { breakpoints, colors, media, shadow, transitions } from "assets/style/Variable";
-import { FolderList } from "components/article/room/FolderLists";
 import { RoomLists } from "components/article/room/RoomLists";
 import { SquadRoomNav } from "components/article/room/SquadRoomNav";
-import { ListBtnActive } from "components/effect/ListBtnActive";
-import { useState } from "react";
 import styled from "styled-components";
 
 export const SquadRoomPage = () => {
-  const [roomlistsView, setRoomlistsView] = useState([
-    { id:'view-folder', title:'폴더로 보기', active:true, },
-    { id:'view-lists', title: '리스트로 보기', active:false,}
-  ])
 
-  // ✅ 리스트 보여주는 방식 변경
-  const roomViewActive = (activeNumber:number) => {
-    setRoomlistsView(prev =>
-      prev.map((prevItem, idx) => ({
-        ...prevItem,
-        active: idx === activeNumber,
-      }))
-    );
-  }
   return (
     <StyledSquadRoomPage className="squad-room">
       <div className="squad-room-inner">
@@ -38,19 +22,15 @@ export const SquadRoomPage = () => {
                 <p className="desc">함께 공간을 만들어서 공유하세요! 😉</p>
               </div>
               <div className="room-btns">
-                <ListBtnActive 
-                  btnData={roomlistsView}
-                  clickEvent={roomViewActive}/>
                 <button 
                   type="button"
                   className="create-room">
-                    <span>+ 팀룸 만들기</span>
+                    <span>+ 방 만들기</span>
                 </button>
               </div>
             </div>
-            <div 
-              className="room-category">
-              <RoomLists roomlistsView={roomlistsView} />
+            <div className="room-category">
+              <RoomLists />
             </div>
           </div>
         </div>
@@ -62,12 +42,14 @@ const StyledSquadRoomPage = styled.div`
   overflow-x:hidden;
   position:relative;
   padding-top:65px;
-  background:${(props)=> props.theme.bgColor};
+  background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : `linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)`}; 
   &::before{
     position:absolute;
     width:100%;
     height:250px;
-    background:${(props)=> props.theme.type ==='dark' ? colors.baseWhite : colors.baseBlack};
+    background-color: ${props => props.theme.type === 'dark' ? 'rgba(205,205,205, .3)': colors.baseWhite}; 
+    backdrop-filter: blur(3px);
+    box-shadow: ${shadow.whiteLine}; 
     content:'';
   }
   .squad-room-inner {
@@ -82,9 +64,6 @@ const StyledSquadRoomPage = styled.div`
     height:200svh;
     border:1px solid blue;
   }
-  .room-wrap{
-    
-  }
   .room-head {
     display:flex;
     justify-content: space-between;
@@ -92,12 +71,11 @@ const StyledSquadRoomPage = styled.div`
   .title-info {
     .title{
       font-size:24px;
-      color:${(props)=> props.theme.colorChange};
     } 
     .desc{
       margin-top:10px;
       font-size:14px;
-      color:${colors.lineColor};
+      color:${(props)=> props.theme.type === 'dark' ? colors.lineColor : colors.baseBlack};
     }
   }
   .room-size {
@@ -117,18 +95,18 @@ const StyledSquadRoomPage = styled.div`
   .create-room {
     padding:5px;
     border-radius:5px;
-    border:1px solid ${colors.blue};
-    background:${colors.blue};
+    border:1px solid ${colors.mSlateBlue};
+    background:${colors.mSlateBlue};
     font-size:14px;
     color:${colors.originWhite};
     transition: ${transitions.base};
     &:hover, &:focus {
       background:${colors.originWhite};
-      color:${colors.blue};
+      color:${colors.mSlateBlue};
     }
   }
   .room-category{
-    margin-top:10px;
+    margin-top:20px;
   }
   ${(props)=> props.theme.type === 'dark' && `
     .btn-lists, .create-room {

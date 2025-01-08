@@ -78,7 +78,6 @@ interface StyleFolderListType {
 const StyleFolderList = styled.div<StyleFolderListType>`
   position:relative;
   width:${props => props.$width ? `${props.$width}px`:'100%'};
-  padding:20px 0 0;
   .frame {
     display:block;
     opacity:0;

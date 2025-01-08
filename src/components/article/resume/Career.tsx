@@ -14,7 +14,6 @@ export default function Career(){
     () => resumeGetDataDoc(),
   );
   
-  console.log('Career')
   return (
     <StyleCareer className="career">
       {

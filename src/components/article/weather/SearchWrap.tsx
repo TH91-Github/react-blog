@@ -55,7 +55,6 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     const inputVal = inputRef.current.getInputElement()!.value;
     if(inputVal.trim()){
       const addrResult = keyWordFindLocation(inputVal);
-      console.log(addrResult)
       if(addrResult){
         searchUpdate({lat: Number(addrResult.latS100), lng:Number(addrResult.longS100)})
       }else{

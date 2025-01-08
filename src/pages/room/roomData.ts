@@ -2,8 +2,8 @@ import { StringOnly } from "types/baseType";
 
 export const roomCategory:StringOnly[] = [
   {
-    id:'Travel',
-    title:'여행',
+    id:'etc',
+    title:'기타',
     state:'예정',
   },
   {
@@ -20,5 +20,10 @@ export const roomCategory:StringOnly[] = [
     id:'Memo',
     title:'메모장',
     state:'예정',
-  }
+  },
+  {
+    id:'Travel',
+    title:'여행',
+    state:'예정',
+  },
 ]
