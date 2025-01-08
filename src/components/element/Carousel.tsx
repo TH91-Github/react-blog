@@ -14,7 +14,7 @@ interface CarouselType {
     slidesPerView?: number | 'auto'; // 보여지는 수
     spaceBetween?: number; // 간격
     navigation?: boolean; // 좌우 버튼
-    pagination?: boolean | {
+    pagination?: false | { // 비활성 또는 옵션 받기
       clickable: boolean;
     }
     loop?: boolean; // 반복
@@ -33,7 +33,6 @@ interface CarouselType {
   onSwiperFunc?: () => void;
   onChangeFunc?: () => void;
 }
-
 interface CarouselRefType {
   getCarouselElement: () => SwiperRef | null;
   carouselSlideTo: (e:number) => void;
@@ -46,6 +45,7 @@ export default forwardRef<CarouselRefType, CarouselType>(({
   onSwiperFunc, onChangeFunc
 }: CarouselType, ref) => {
   const swiperRef = useRef<SwiperRef | null>(null);
+  const paginationRef = useRef<HTMLDivElement>(null);
   const prevBtnRef = useRef<HTMLButtonElement>(null);
   const nextBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -53,7 +53,7 @@ export default forwardRef<CarouselRefType, CarouselType>(({
   const { 
     slidesPerView = 1, 
     spaceBetween = 0,
-    pagination = { clickable: true },
+    pagination, // 기본값 설정
     navigation,
     loop,
     speed = 300,
@@ -92,8 +92,14 @@ export default forwardRef<CarouselRefType, CarouselType>(({
 
   // 초기화되기 전에 호출 : Swiper의 params을 수정하여 초기화 전에 변경 가능
   const handleInit = (swiper:SwiperCore) => {
+
+    // pagination
+    if (swiper.params.pagination && typeof swiper.params.pagination === 'object') {
+      swiper.params.pagination.el = paginationRef.current;
+      swiper.params.pagination.clickable = (pagination && pagination.clickable) ?? true
+    }
     // NavigationOptions 타입인 경우에만 
-    if (typeof swiper.params.navigation === "object" && swiper.params.navigation) {
+    if (swiper.params.navigation && typeof swiper.params.navigation === "object") {
       swiper.params.navigation.prevEl = prevBtnRef.current || undefined;
       swiper.params.navigation.nextEl = nextBtnRef.current || undefined;
     }
@@ -121,7 +127,8 @@ export default forwardRef<CarouselRefType, CarouselType>(({
         slidesPerView={slidesPerView}
         virtual={virtualOpt} 
         spaceBetween={spaceBetween}
-        pagination={pagination ? pagination : undefined}
+        // pagination={{clickable:false }}
+        pagination={ pagination ? {el: paginationRef.current, clickable:true } : undefined }
         navigation={navigation ? { prevEl: prevBtnRef.current, nextEl: nextBtnRef.current } : undefined}
         loop={loop}
         speed={autoplay ? speed : undefined}
@@ -137,7 +144,15 @@ export default forwardRef<CarouselRefType, CarouselType>(({
             {childEl}
           </SwiperSlide>
         ))}
-        {
+      </Swiper>
+      {
+        pagination !== false && (
+          <div 
+            ref={paginationRef} className="carousel-pagination">
+          </div>
+        )
+      }
+      {
         navigation && (
           <div className="carousel-btns">
             <button 
@@ -155,8 +170,6 @@ export default forwardRef<CarouselRefType, CarouselType>(({
           </div>
         )
       }
-      </Swiper>
-      
     </StyleCarousel>
 
     /*
@@ -181,7 +194,7 @@ interface StyleCarouselType {
 }
 const StyleCarousel = styled.div<StyleCarouselType>`
   position:relative;
-  .swiper-pagination {
+  .carousel-pagination {
     display:flex;
     justify-content:center;
     width:100%;
