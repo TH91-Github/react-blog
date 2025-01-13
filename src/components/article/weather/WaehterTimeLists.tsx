@@ -63,6 +63,7 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
         (!loading && timeWeather)
         ? (
           <div className="temperature">
+            <p className="temperature-notice">단기 예보와 실시간 예보와 차이가 발생할 수 있어요. 😅</p>
             <TouchMoveLists selectName={active === 0 ? 'today': `day-${active+1}`}>
               <div
                 className="lists">
@@ -159,6 +160,13 @@ const StyleWaehterTimeLists = styled.div`
   .temperature {
     overflow:hidden;
     position:relative;
+    &-notice{
+      font-size:12px;
+      color:${colors.subTextColor};
+      & + .swipe-move {
+        margin-top:5px;
+      }
+    }
   }
   .lists {
     display:flex;
