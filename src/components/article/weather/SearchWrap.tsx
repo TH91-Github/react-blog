@@ -1,4 +1,4 @@
-import { colors, media, transitions } from "assets/style/Variable";
+import { colors, media, shadow, transitions } from "assets/style/Variable";
 import { SvgSearch } from "assets/svg/common/CommonSvg";
 import { SvgThermometer } from "assets/svg/weather/weatherSvg";
 import InputElement, { InputElementRef } from "components/element/InputElement";
@@ -90,7 +90,7 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
         {addrVal}
       </div>
       {
-        isError.error && <div className="error-txt">{isError.message}</div>
+        isError.error && <div className="error-txt">ㅋㅋㅋㅋ{isError.message}</div>
       }
     </StyleSearchWrap>
   )
@@ -195,6 +195,7 @@ const StyleSearchWrap = styled.div`
   }
   .error-txt{
     position:absolute;
+    z-index:2;
     top:calc(100% + 10px);
     left:50px;
     font-size:14px;
@@ -210,6 +211,14 @@ const StyleSearchWrap = styled.div`
       .input-item {
         flex-grow:1;
       }
+    }
+    .error-txt{
+      width:100%;
+      left:0;
+      padding:5px;
+      border-radius:5px;
+      background:${colors.opacityBg};
+      box-shadow:${shadow.bgBase};
     }
   }
 `;
