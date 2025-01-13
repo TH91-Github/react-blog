@@ -50,41 +50,33 @@ export const WeatherIcon = ({categoryLists, isAnimation}:WeatherIconType) => { /
       if (item.category === 'SNO') result.sno = item.value;
       if (item.category === 'WSD') result.wsd = item.value;
     });
-    console.log(result)
     return result;
+  },[]);
+
+  const ptyCodeCheck = useCallback((pty: string) => {
+    /*
+      강수형태(PTY) 코드 : 
+      (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
+      (단기) 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4) 
+    */
+    switch (pty) {
+      case '1': return codeLists[5].iconNum; // 비
+      case '2': return codeLists[6].iconNum; // 비/눈
+      case '3': return codeLists[7].iconNum; // 눈
+      case '5': return codeLists[9].iconNum; // 빗방울
+      case '6': return codeLists[10].iconNum; // 빗방울/눈날림
+      case '7': return codeLists[11].iconNum; // 눈날림
+      default: return 0; // 기본값
+    }
   },[]);
 
   const weatherChk = useCallback(() => {
     const { sky, pty, lgt, sno, wsd } = findCodeCategory(categoryLists);
 
-    let iconNumber;
-    if(pty === '0'){
-      iconNumber = codeLists[Number(sky) - 1].iconNum; // sky : 하늘
-    }else{
-      //pty 정보 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
-      switch (pty) {
-        case '1': // 비
-          iconNumber = codeLists[5].iconNum;
-          break;
-        case '2': // 비/눈
-          iconNumber = codeLists[6].iconNum; 
-          break;
-        case '3': // 눈
-          iconNumber = codeLists[7].iconNum; 
-          break;
-        case '5': // 빗방울
-          iconNumber = codeLists[9].iconNum;
-          break;
-        case '6': // 빗방울/눈날림
-          iconNumber = codeLists[10].iconNum; 
-          break;
-        case '7': // 눈날림
-          iconNumber = codeLists[11].iconNum; 
-          break;
-        default:
-          iconNumber = 0; // 기본값
-      }
-    }
+    const iconNumber = pty === '0'
+    ? codeLists[Number(sky) - 1].iconNum // SKY 값 처리
+    : ptyCodeCheck(pty); // PTY 값 처리
+
     setWeatherState({
       iconKey:iconNumber ?? 0,
       lgt:`${lgt}`,
