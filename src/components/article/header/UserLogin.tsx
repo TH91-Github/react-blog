@@ -6,7 +6,7 @@ import { useUserData } from "pages/member/js/userHook";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { actionUserLogin, AppDispatch, RootState } from "store/store";
+import { actionAlert, actionUserLogin, AppDispatch, RootState } from "store/store";
 import styled from "styled-components";
 import { auth } from "../../../firebase";
 
@@ -61,9 +61,12 @@ export default function UserLogin(){
   }
   
   const handleUserRemove = async() => {
-    console.log('계정 삭제');
     const currentUser = auth.currentUser; // 로그인 정보
-
+    if(currentUser?.email === 'test@naver.com'){ // 임시
+      dispatch(actionAlert({titMessage:'❌ 해당 계정은 삭제를 진행할 수 없어요! ', isPopup:true, autoClose:2000}))
+      return;
+    }
+    console.log('계정 삭제');
     if (currentUser && user) {
       try {
         // Firestore DB 삭제 - deleteUser 보다 위에 있어야 firebase 권한 삭제 전 데이터를 삭제할 수 있기에

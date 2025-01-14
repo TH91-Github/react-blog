@@ -42,7 +42,6 @@ export const UserValidityBoardLists = ({data, passFn, removeFn}:UserValidityBoar
 
   // 계정 승인, 거부
   const confirmFn = () => {
-    console.log('가능?')
     alert.requestType === 'edit'
     ? passFn(alert.selectId)
     : removeFn(alert.selectId)

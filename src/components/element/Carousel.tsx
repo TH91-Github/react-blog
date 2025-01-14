@@ -220,6 +220,9 @@ const StyleCarousel = styled.div<StyleCarouselType>`
         transform:scaleX(-1);
       }
     }
+    .swiper-button-lock {
+      display:none;
+    }
     .swiper-button-disabled{
       svg path{
         fill: ${colors.subTextColor};

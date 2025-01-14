@@ -14,6 +14,7 @@ export const useUserData = () => {
   // 갱신
   const initQuery = () =>{
     queryKeyInvali(['managerUserData']);
+    console.log('다시 불러오기')
   }
 
   // ✅ 새롭게 목록 업데이트
