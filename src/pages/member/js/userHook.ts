@@ -18,7 +18,7 @@ export const useUserData = () => {
   }
 
   // ✅ 새롭게 목록 업데이트
-  const updateUserData = (idVal: string) =>{
+  const updateUserData = async (idVal: string) =>{
     if (!data) return;
     const checkUserPass = data.checkUser.filter((userItem:UserListDataType) => userItem.id !== idVal);
     const userListPass = data.userList.map((userItem:UserListDataType) => (
@@ -29,9 +29,9 @@ export const useUserData = () => {
       userList: userListPass,
     }
     // userData 비승인 목록 제거 및 유저 목록 permission: true
-    userDataDocUpdate(updateData)
+    await userDataDocUpdate(updateData)
     // 유저 정보 승인으로 업데이트
-    userDocUpdate(idVal, 'permission', true);
+    await userDocUpdate(idVal, 'permission', true);
     // // 사용자, 비승인 목록 query 재요청 ✅ 테스트 계정 만들고 테스트 + userList 에서 상태 업데이트 해야함
     initQuery();
   }

@@ -47,6 +47,7 @@ export const colors = {
   mSlateBlue: "#6a67e5",
   red: "#e8392c",
   navy: "#333A73",
+  darkNavy:"#03053a",
   purple: "#c332c9",
   // point gradient
   yellowG:"linear-gradient(90deg, rgba(255, 176, 0,1) 20.469152475672583%,rgba(255, 204, 0,1) 80.47022574413279%)",
