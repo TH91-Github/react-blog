@@ -10,7 +10,7 @@
 
 ### 🧾 Portfolio & Resume 
 - [이력서](https://main-th-blog.vercel.app/resume)
-- [오픈 URL](https://th-react-blog.vercel.app/)
+- [일반 URL](https://th-react-blog.vercel.app/)
 
 ### Tech Stacks
 - <span><img src="https://img.shields.io/badge/HTML-E86028?style=flat-square&logo=html&logoColor=white" alt="HTML"/></span>/<span><img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&amp;logo=css3&amp;logoColor=white" alt="css"/></span>
