@@ -7,6 +7,21 @@ import { Blockquote } from "components/element/Blockquote";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
+import { roomCategory } from "./roomData";
+
+import iconEtc from "assets/images/room/icon_etc.png"
+import iconCashLedger from "assets/images/room/icon_cash_ledger.png"
+import iconTravel from "assets/images/room/icon_travel.png"
+import iconMemo from "assets/images/room/icon_memo.png"
+import iconCalendar from "assets/images/room/icon_calendar.png"
+
+const iconMap: Record<string, string> = {
+  icon_etc: iconEtc,
+  icon_cash_ledger: iconCashLedger,
+  icon_travel: iconTravel,
+  icon_memo: iconMemo,
+  icon_calendar: iconCalendar,
+};
 
 export const SquadRoomPage = () => {
   const { isLoading:useLoading, user } = useSelector((state : RootState) => state.storeUserLogin);
@@ -17,6 +32,16 @@ export const SquadRoomPage = () => {
         <div className="squad-room-info">
           <div className="icon-lists">
             {/* 카테고리 아이콘 여러개 */}
+            {
+              roomCategory.map(categoryItem => 
+                ( 
+                  <StyleIcon 
+                    key={categoryItem.id} 
+                    $bgSrc={iconMap[categoryItem.icon]} 
+                  />
+                )
+              )
+            }
           </div>
           <h2>기록, 정보를 함께하는 공간</h2>
           <p>원하는 주제로 방을 만들어서 공유하세요! 😉</p>
@@ -89,6 +114,12 @@ export const SquadRoomPage = () => {
     </StyledSquadRoomPage>
   )
 }
+
+
+interface StyleIconProps {
+  $bgSrc: string;
+}
+
 const StyledSquadRoomPage = styled.div`
   overflow-x:hidden;
   position:relative;
@@ -112,6 +143,11 @@ const StyledSquadRoomPage = styled.div`
     p {
       margin-top:10px;
     }
+  }
+  .icon-lists{
+    display:flex;
+    justify-content:center;
+    gap:10px;
   }
   .squad-room-inner {
     position:relative;
@@ -197,4 +233,16 @@ const StyledSquadRoomPage = styled.div`
       padding-left:0;
     }
   }
+`;
+
+
+const StyleIcon = styled.span<StyleIconProps>`
+  display:inline-block;
+  width:45px;
+  height:45px;
+  background-image: ${({ $bgSrc }) => `url(${$bgSrc})`};
+  aspect-ratio: 1 / 1;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
