@@ -1,14 +1,16 @@
-## 안녕하세요.😁 웹 퍼블리셔 & 프론트엔드 김태훈입니다.
+## 안녕하세요.😁 
 > 웹표준, 접근성, 페이지를 구성하는 기능, 애니메이션 등 퍼블리셔로 쌓은 경험을 바탕으로<br />
 > 더 성장하여 프론트엔드 기술을 습득하고 목표로 하고 있습니다.<br /><br />
 > 🖥️ React를 이용해서 일상에서 사용할 수 있는 화면과 기능을 만들고<br />
 > 공유해서 같이 이용하고자 하는 목표로 진행하고 있습니다.<br /><br />
 > 책임감을 가지고 일을 맡고 해결하며!<br />
 > 해결하지 못한 부분은 다양하게 접근하고 해결하기 위해 노력합니다!
+> 개인 프로젝트 React로 날씨, 지도를 API를 활용하여 만들었고 
+> 메모, 가계부, 달력, 여행을 기록하고 공유할 수 있는 공간을 개발하고 있습니다.
 
 ### 🧾 Portfolio & Resume 
 - [이력서](https://main-th-blog.vercel.app/resume)
-- [오픈 URL](https://th-react-blog.vercel.app/)
+- [일반 URL](https://th-react-blog.vercel.app/)
 
 ### Tech Stacks
 - <span><img src="https://img.shields.io/badge/HTML-E86028?style=flat-square&logo=html&logoColor=white" alt="HTML"/></span>/<span><img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&amp;logo=css3&amp;logoColor=white" alt="css"/></span>
@@ -50,7 +52,13 @@
 - Authentication
 - Storage
 
-### ✅ 시작
+### 계획
+- 네이밍, 폴더 구조 가이드 라인 설계 
+- 전체 리펙토링 : 불필요한 코드 삭제 및 복잡한 구조의 코드
+- 날씨, 지도, 공유하는 방 카테고리의 기본적인 큰 틀을 개발 후 디테일 기능 추가
+- 가이드(색상, 네이밍, 컴포넌트) 카테고리 추가 
+ 
+### ✅
 npm start
 ### node version
 18.17.1
