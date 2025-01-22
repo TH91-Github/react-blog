@@ -21,7 +21,7 @@ export default function MainPage() : JSX.Element{
           <MainVisualIcon />
           <div className="visual-bord">
             <div className="visual-text">
-              <h1 className="title">Our Story Blog</h1>
+              <h1 className="title">Story Blog</h1>
               <p className="desc"><span className="text-bg">날씨 정보와 지도를 활용해 <br className="m-br" />여행 계획을 세우고 기록을 남겨보세요.</span></p>
 
               {/* 공유 룸 작업 완료 후 
