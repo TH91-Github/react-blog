@@ -2,12 +2,13 @@ import { colors, transitions } from "assets/style/Variable";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components"
 interface LayerPopupType {
-  popupTitle:string;
+  popupTitle?:string;
   popupDesc?:string;
   maxWidth?:number;
   align?:{head:string,body:string}; // 타이틀 본문 정렬
   isDimmed?:boolean;
   children?:React.ReactNode;
+  onlyCloseBtn?: boolean,
   confirmFn?: () => void;
   closeFn: () => void;
 }
@@ -22,6 +23,7 @@ export default(forwardRef<LayerPopupRefType, LayerPopupType>( function LayerPopu
     align = {head:'center',body:'center'},
     isDimmed = true,
     children,
+    onlyCloseBtn = false, // x 버튼만 사용하기
     confirmFn, closeFn
   }: LayerPopupType, ref) {
     // const autoCloseTimeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -100,10 +102,14 @@ export default(forwardRef<LayerPopupRefType, LayerPopupType>( function LayerPopu
       {isDimmed && <div className="dimmed" onClick={() => handlePopupEnd()}></div>}
       <div className="layer-popup"  tabIndex={0}>
         <div className="layer-inner">
-          <div className="layer-head">
-            <h3 className="title">{popupTitle}</h3>
-            {popupDesc && <p className="desc">{popupDesc}</p> }
-          </div>
+          {
+            popupTitle && (
+              <div className="layer-head">
+                <h3 className="title">{popupTitle}</h3>
+                {popupDesc && <p className="desc">{popupDesc}</p> }
+              </div>
+            )
+          }
           {
             children && (
               <div className="layer-body">
@@ -111,26 +117,30 @@ export default(forwardRef<LayerPopupRefType, LayerPopupType>( function LayerPopu
               </div>
             )
           }
-          <div className="btn-article">
-            {
-              // 확인 콜백 있는 경우
-              confirmFn && (
+          {
+            !onlyCloseBtn && (
+              <div className="btn-article">
+                {
+                  // 확인 콜백 있는 경우
+                  confirmFn && (
+                    <button
+                      className="btn confirm"
+                      onClick={() => handlePopupEnd(true)}
+                      title="확인">
+                      <span>확인</span>
+                    </button>
+                  )
+                }
+                {/* 닫기, 취소 콜백 있는 경우 / 확인 있는 경우 텍스트 변경경 */}
                 <button
-                  className="btn confirm"
-                  onClick={() => handlePopupEnd(true)}
-                  title="확인">
-                  <span>확인</span>
+                  className={`btn ${confirmFn?'cancel':''}`}
+                  onClick={() => handlePopupEnd()}
+                  title={confirmFn ?'취소':'확인'}>
+                  <span>{confirmFn ?'취소':'확인'}</span>
                 </button>
-              )
-            }
-            {/* 닫기, 취소 콜백 있는 경우 / 확인 있는 경우 텍스트 변경경 */}
-            <button
-              className={`btn ${confirmFn?'cancel':''}`}
-              onClick={() => handlePopupEnd()}
-              title={confirmFn ?'취소':'확인'}>
-              <span>{confirmFn ?'취소':'확인'}</span>
-            </button>
-          </div>
+              </div>
+            ) 
+          }
           {/* x 버튼 */}
           <button
             className="close-btn"
@@ -190,7 +200,7 @@ const StyleAlertLayerPopup = styled.div<StyleAlertLayerPopupType>`
     }
   }
   .layer-body {
-    padding:0 15px;
+    padding:0;
     text-align:${({$bAlign}) => $bAlign};
   }
   .btn-article{

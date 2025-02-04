@@ -1,16 +1,14 @@
-import React from 'react';
 import { breakpoints, colors, media, shadow } from "assets/style/Variable";
-import styled from "styled-components";
-import { rem } from "utils/common";
+import { SvgArrow } from 'assets/svg/common/CommonSvg';
+import { Finish } from 'components/article/main/Finish';
 import MainVisualIcon from 'components/article/main/MainVisualIcon';
 import { MapCont } from 'components/article/main/MapCont';
 import { WeatherCont } from 'components/article/main/WeatherCont';
-import { Finish } from 'components/article/main/Finish';
-import { ArrowBtnLink } from 'components/effect/ArrowBtnLink';
 import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
 import { NavLink } from 'react-router-dom';
-import { SvgArrow } from 'assets/svg/common/CommonSvg';
+import { RootState } from 'store/store';
+import styled from "styled-components";
+import { rem } from "utils/common";
 
 export default function MainPage() : JSX.Element{ 
   const {user} = useSelector((state : RootState) => state.storeUserLogin);

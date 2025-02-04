@@ -7,7 +7,6 @@ import styled from "styled-components"
 import { UserDataType } from "types/baseType"
 import { dateChange, partialUndisclosed } from "utils/common"
 import { ManagerRank } from "./ManagerRank"
-import LayerPopup from "components/element/LayerPopup"
 
 interface UsersBoardListsType {
   data:UserDataType[]

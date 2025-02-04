@@ -14,6 +14,9 @@ import iconCashLedger from "assets/images/room/icon_cash_ledger.png"
 import iconTravel from "assets/images/room/icon_travel.png"
 import iconMemo from "assets/images/room/icon_memo.png"
 import iconCalendar from "assets/images/room/icon_calendar.png"
+import { useState } from "react";
+import LayerPopup from "components/element/LayerPopup";
+import { CreatePopup } from "components/article/room/CreatePopup";
 
 const iconMap: Record<string, string> = {
   icon_etc: iconEtc,
@@ -25,6 +28,11 @@ const iconMap: Record<string, string> = {
 
 export const SquadRoomPage = () => {
   const { isLoading:useLoading, user } = useSelector((state : RootState) => state.storeUserLogin);
+  const [isCreatePop, setIsCreatePop] = useState(false);
+
+  const handlecCreateClick = () => {
+    setIsCreatePop(true);
+  }
 
   return (
     <StyledSquadRoomPage className="squad-room">
@@ -56,7 +64,7 @@ export const SquadRoomPage = () => {
             <div className="room-head">
               <div className="title-info">
                 <h3 className="title">
-                  함께 하고 있는 공간
+                  방을 만들고 공개, 비공개로 정보를 공유해보세요!
                   <span className="room-total">{ false && 0}</span>
                 </h3>
                 <Blockquote>
@@ -70,20 +78,9 @@ export const SquadRoomPage = () => {
                   로그인 후 나만의 공간을 만들어 기록을 시작해보세요! 😁
                 </p>
               </div>
-              <div className="room-btns">
-                {
-                  user && (
-                    <button 
-                      type="button"
-                      className="create-room">
-                        <span>+ 방 만들기</span>
-                    </button>
-                  )
-                }
-              </div>
             </div>
-            <div className="room-category">
-            {
+            <div className="room-content">
+              {
                 useLoading ? (
                   <div className="room-login">
                     <LoadingAnimation />
@@ -104,7 +101,30 @@ export const SquadRoomPage = () => {
                   </div>
                 )
                 : (
-                  <RoomLists />
+                  <div className="room-user">
+                    <div className="room-btns">
+                      <button 
+                        type="button"
+                        className="create-room"
+                        onClick={handlecCreateClick}>
+                          <span>+ 방 만들기</span>
+                      </button>
+                      {
+                        isCreatePop && (
+                          <LayerPopup 
+                            onlyCloseBtn={true}
+                            closeFn={() => setIsCreatePop(false)}
+                          >
+                            <CreatePopup />
+                          </LayerPopup>
+                        )
+                      }
+                      {/*  */}
+                    </div>
+                    <div className="room-category">
+                      <RoomLists />
+                    </div>
+                  </div>
                 )
               }
             </div>
@@ -138,6 +158,7 @@ const StyledSquadRoomPage = styled.div`
     color:#fff;
     text-align:center;
     h2{ 
+      margin-top:15px;
       font-size:28px;
     }
     p {
@@ -173,40 +194,19 @@ const StyledSquadRoomPage = styled.div`
         color:${(props)=> props.theme.type === 'dark' ? colors.lineColor : colors.baseBlack};
         & > span {
           font-weight:600;
+          line-height:1.5;
           color:${colors.mSlateBlue};
         }
       }
       .s-desc{
         margin-top:10px;
         font-size:14px;
+        line-height:1.5;
       }
     }
     .room-total {
       font-size:14px;
       margin-left:5px;
-    }
-    .room-btns{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      .btn-lists{
-        button {
-          font-size:14px;
-        }
-      }
-    }
-    .create-room {
-      padding:5px;
-      border-radius:5px;
-      border:1px solid ${colors.mSlateBlue};
-      background:${colors.mSlateBlue};
-      font-size:14px;
-      color:${colors.originWhite};
-      transition: ${transitions.base};
-      &:hover, &:focus {
-        background:${colors.originWhite};
-        color:${colors.mSlateBlue};
-      }
     }
   }
   .room-login{
@@ -224,6 +224,24 @@ const StyledSquadRoomPage = styled.div`
       margin-top:10px;
     }
   }
+  .room-content{
+    margin-top:20px;
+  }
+  .room-user{
+    .create-room {
+      padding:5px;
+      border-radius:5px;
+      border:1px solid ${colors.mSlateBlue};
+      background:${colors.mSlateBlue};
+      font-size:14px;
+      color:${colors.originWhite};
+      transition: ${transitions.base};
+      &:hover, &:focus {
+        background:${colors.originWhite};
+        color:${colors.mSlateBlue};
+      }
+    }
+  }
   .room-category{
     margin-top:20px;
   }
@@ -238,8 +256,8 @@ const StyledSquadRoomPage = styled.div`
 
 const StyleIcon = styled.span<StyleIconProps>`
   display:inline-block;
-  width:45px;
-  height:45px;
+  width:40px;
+  height:40px;
   background-image: ${({ $bgSrc }) => `url(${$bgSrc})`};
   aspect-ratio: 1 / 1;
   background-size: contain;
