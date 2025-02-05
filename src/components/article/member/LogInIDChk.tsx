@@ -57,11 +57,12 @@ export default function LogInIDChk({lineColor, refPush, validationUpdate}:RefInp
 
   return(
     <div className="form-item">
-      <p className="s-tit">
+      <label htmlFor="loginId" className="s-tit">
         <span>간편 아이디</span>
-      </p>
+      </label>
       <InputElement
         ref={refInput}
+        id="loginId"
         name={'loginId'}
         className={'signup-id'}
         placeholder={'아이디를 입력하세요.'}

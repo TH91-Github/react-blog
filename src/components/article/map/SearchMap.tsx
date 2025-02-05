@@ -49,8 +49,10 @@ export default function SearchMap({searchResult, inputRef, isMoList, moListClick
   return (
     <StyleSearch className={isMoList ? 'active':''}>
       <span className={`map-search ${onVal ? 'on':''}`}>
+        <label htmlFor="map-search" className="blind">장소를 검색</label>
         <InputElement 
           ref={refInput}
+          id={'map-search'}
           name={'map-search'}
           placeholder={'📍 장소를 검색해보세요! 😁'} 
           blurEvent={blurEvent}

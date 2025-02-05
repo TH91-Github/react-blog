@@ -131,11 +131,12 @@ export default function SignIn() {
         <div className="member-cont">
           <form className="form" onSubmit={(e) => e.preventDefault()}>
             <div className="form-item">
-              <p className="s-tit">아이디 or 이메일</p>
+              <label htmlFor="login-id" className="s-tit">아이디 or 이메일</label>
               <InputElement
                 ref={refInputID}
-                name={'id'}
-                className={'id'}
+                id={'login-id'}
+                name={'login-id'}
+                className={'login-id'}
                 focusEvent={handleFocusID}
                 placeholder={'아이디를 입력하세요.'}
               />
@@ -144,10 +145,11 @@ export default function SignIn() {
               }
             </div>
             <div className="form-item">
-              <p className="s-tit">비밀번호</p>
+              <label htmlFor="login-pw" className="s-tit">비밀번호</label>
               <InputElement
                 ref={refInputPW}
-                name={'password'}
+                id={'login-pw'}
+                name={'login-pw'}
                 type={'password'}
                 className={'login-pw'}
                 focusEvent={handleFocusPW}

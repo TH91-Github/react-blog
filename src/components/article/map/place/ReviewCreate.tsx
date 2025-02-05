@@ -97,8 +97,10 @@ export default function ReviewCreate({placeCategory, placeId, reviewAdd}:ReviewC
             bgColor={colors.navy} />
         </div>
         <form className="form" onSubmit={(e) => e.preventDefault()}>
+          <label htmlFor="review" className="blind">리뷰</label>
           <InputElement
             ref={inputRef}
+            id={'review'}
             name={'review'}
             className={'review-input'}
             placeholder={'리뷰를 남겨주세요. 🖊️'}

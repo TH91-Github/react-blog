@@ -33,12 +33,13 @@ export default function NickNameChk({lineColor, refPush, validationUpdate}:RefIn
 
   return(
     <div className="form-item">
-      <p className="s-tit">
+      <label htmlFor="nickName" className="s-tit">
         <span>닉네임</span>
         <sup className="sup">*</sup>
-      </p>
+      </label>
       <InputElement
         ref={refInput}
+        id={'nickName'}
         name={'nickName'}
         className={'signup-name'}
         placeholder={'닉네임을 입력하세요.'}

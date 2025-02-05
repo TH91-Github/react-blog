@@ -15,20 +15,24 @@ export const CreatePopup = () => {
     <StyleCreatePopup>
       <div className="inne">
         <h3>방 만들기</h3>
-        <div className="form">
+        <div className="form-wrap">
           <div className="item">
+            <label htmlFor="name-room">방 제목목</label>
             <InputElement
               ref={refInput}
-              name={'nickName'}
-              className={'signup-name'}
+              id={'name-room'}
+              name={'name-room'}
+              className={'name-room'}
               placeholder={'방 제목을 입력'}
               focusColor={colors.mSlateBlue}
               blurEvent={handleBlur}
             />
           </div>
           <div className="item">
+            <label htmlFor="name-room2">방 설명</label>
             <InputElement
               ref={refInput}
+              id={'name-room2'}
               name={'nickName'}
               className={'signup-name'}
               placeholder={'방 설명을 입력'}

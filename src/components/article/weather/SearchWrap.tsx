@@ -69,8 +69,10 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     <StyleSearchWrap className={isFocus ? 'isFocus':''}>
       <div className="search">
         <span className="search-icon"><SvgSearch $fillColor={isFocus ? colors.mSlateBlue:colors.lineColor} /></span>
+        <label htmlFor="weahter-search" className="blind">지역 검색하기</label>
         <InputElement 
           ref={inputRef}
+          id={'weahter-search'}
           name={'weahter-search'}
           keyEnter={handleClick}
           focusEvent={handleFocus}

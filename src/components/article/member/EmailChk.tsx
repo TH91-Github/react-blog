@@ -78,12 +78,13 @@ export default function EmailChk({lineColor, refPush, validationUpdate}:RefInput
 
   return(
     <div className={`form-item ${valError ? 'error':''}`}>
-      <p className="s-tit">
+      <label htmlFor="email" className="s-tit">
         <span>이메일</span>
         <sup className="sup">*</sup>
-      </p>
+      </label>
       <InputElement
         ref={refInput}
+        id={'email'}
         name={'email'}
         className={'signup-email'}
         placeholder={'이메일을 입력하세요.'}

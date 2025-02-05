@@ -59,13 +59,14 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
   return(
     <>
       <div className="form-item">
-        <p className="s-tit">
+        <label htmlFor="pw" className="s-tit">
           <span>비밀번호</span>
           <sup className="sup">*</sup>
-        </p>
+        </label>
         <InputElement
           ref={refInput1}
-          name={'password'}
+          id={'pw'}
+          name={'pw'}
           type={'password'}
           className={'signup-pw1'}
           placeholder={'비밀번호를 입력하세요.'}
@@ -77,13 +78,14 @@ export default function PasswordChk({lineColor, refPush, validationUpdate}:RefIn
         }
       </div>
       <div className="form-item">
-        <p className="s-tit">
+        <label htmlFor="pw-check" className="s-tit">
           <span>비밀번호 확인</span>
           <sup className="sup">*</sup>
-        </p>
+        </label>
         <InputElement
           ref={refInput2}
-          name={'passwordCheck'}
+          id={'pw-check'}
+          name={'pw-check'}
           type={'password'}
           className={'signup-pw2'}
           placeholder={'비밀번호를 다시 입력해주세요.'}

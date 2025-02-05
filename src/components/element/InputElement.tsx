@@ -5,7 +5,7 @@ import styled from "styled-components";
 interface InputType {
   name?: string,
   type?: string,
-  id?: string;
+  id: string;
   className?: string,
   placeholder?: string,
   prevVal?: string,
