@@ -50,18 +50,15 @@ export default forwardRef<CarouselRefType, CarouselType>(({
   const prevBtnRef = useRef<HTMLButtonElement>(null);
   const nextBtnRef = useRef<HTMLButtonElement>(null);
 
-  // 구조분해 및 기본 옵션 설정
   const { 
     slidesPerView = 1, 
     spaceBetween = 0,
     pagination, // 기본값 설정
     navigation,
-    loop,
     speed = 300,
     autoplay = false,
     virtual= false,
-    grabCursor,
-    breakpoints,
+    ...restOptions
   } = carouselOpt; 
   
   // autoplay true 일 경우 기본 설정 또는 설정 값 있는 경우 변경
@@ -73,18 +70,6 @@ export default forwardRef<CarouselRefType, CarouselType>(({
     }
     return undefined; // autoplay가 false일 경우 undefined
   }, [autoplay]);
-
-  // virtual 옵션 사용하기 위해 children 변수로
-  const carouselItem = useMemo(() => React.Children.toArray(children), [children]);
-
-  // Virtual 슬라이드 크기나 수를 확인하기 위해 지정 되어야 하는데 auto일 경우 어렵기 때문에 에러.
-  const virtualOpt = useMemo(() => {
-    if(slidesPerView){
-      return undefined
-    }else{
-      return virtual ? { slides: carouselItem } : undefined
-    }
-  },[virtual, slidesPerView])
 
   // 변경
   const handleChange = (e:SwiperCore) => {
@@ -126,21 +111,18 @@ export default forwardRef<CarouselRefType, CarouselType>(({
         ref={swiperRef}
         modules={[Navigation, Pagination, A11y, Autoplay, Virtual]}
         slidesPerView={slidesPerView}
-        virtual={virtualOpt} 
         spaceBetween={spaceBetween}
-        // pagination={{clickable:false }}
-        pagination={ pagination ? {el: paginationRef.current, clickable:true } : undefined }
+        pagination={ pagination ? {el: paginationRef.current, ...pagination } : undefined }
         navigation={navigation ? { prevEl: prevBtnRef.current, nextEl: nextBtnRef.current } : undefined}
-        loop={loop}
         speed={autoplay ? speed : undefined}
         autoplay={autoplayOpt}
-        grabCursor={grabCursor}
-        breakpoints={breakpoints ? breakpoints : undefined }
         onSlideChange={handleChange}
         onBeforeInit={handleInit}
         onSwiper={handleOnSwiper}
+        {...restOptions}
+        virtual={virtual ? { slides: React.Children.toArray(children) } : undefined}
         className={`carousel ${className ? className : ''}`}>
-        {carouselItem.map((childEl, index) => (
+        {React.Children.toArray(children).map((childEl, index) => (
           <SwiperSlide key={index} className="carousel-item">
             {childEl}
           </SwiperSlide>
