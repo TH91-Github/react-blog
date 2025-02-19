@@ -92,7 +92,7 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
         {addrVal}
       </div>
       {
-        isError.error && <div className="error-txt">ㅋㅋㅋㅋ{isError.message}</div>
+        isError.error && <div className="error-txt">{isError.message}</div>
       }
     </StyleSearchWrap>
   )
