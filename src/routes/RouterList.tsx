@@ -1,3 +1,4 @@
+import { GuidePage } from "pages/guide/GuidePage";
 import MainPage from "pages/main/MainPage";
 import { UsersBoardPage } from "pages/manager/depth/UsersBoardPage";
 import { UserValidityBoardPage } from "pages/manager/depth/UserValidityBoardPage";
@@ -9,12 +10,23 @@ import SignUp from "pages/member/SignUp";
 import ResumePage from "pages/resume/ResumePage";
 import { SquadRoomPage } from 'pages/room/SquadRoomPage';
 import WeatherPage from "pages/weather/WeatherPage";
+import { guideList } from "./pages/guide/GuideRouter";
 
 export const routerList = [
   { // Main
     index: true,
     id: "Main",
     element: <MainPage />
+  },
+  {
+    id:'ComponentGuide',
+    path: "guide",
+    title:'📔 가이드',
+    view: false,
+    element: <GuidePage />,
+    children: [
+      ...guideList
+    ],
   },
   {
     id: "Resume",
