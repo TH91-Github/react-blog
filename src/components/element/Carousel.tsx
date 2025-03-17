@@ -10,26 +10,30 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/virtual';
 
-interface CarouselType {
-  carouselOpt?: {
-    slidesPerView?: number | 'auto'; // 보여지는 수
-    spaceBetween?: number; // 간격
-    navigation?: boolean; // 좌우 버튼
-    pagination?: false | { // 비활성 또는 옵션 받기
-      clickable: boolean;
-    }
-    loop?: boolean; // 반복
-    speed?: number;
-    autoplay?: boolean | {
-      delay: number;
-      disableOnInteraction: boolean; // 슬라이드 동작 시 자동실행 멈추기
-    };
-    virtual?:boolean; // 많은 슬라이드, 동적으로 처리하는 경우에 효과적 - 현재 화면 보이는 것만 랜더링, 성능 최적화
-    grabCursor?:boolean;
-    breakpoints?: { [key: number]: { slidesPerView: number; spaceBetween: number } };
+export interface CarouselOptPropsType {
+  slidesPerView?: number | 'auto';
+  slidesPerGroup?: number;
+  centeredSlides?: boolean;
+  spaceBetween?: number;
+  navigation?: boolean;
+  pagination?: false | {
+    clickable: boolean;
+    type: 'bullets' | 'fraction' | 'progressbar' | 'custom' | undefined;
+  }
+  loop?: boolean;
+  speed?: number;
+  autoplay?: boolean | {
+    delay: number;
+    disableOnInteraction: boolean;
   };
-  activeColor?:string;
+  virtual?:boolean;
+  grabCursor?:boolean;
+  breakpoints?: { [key: number]: { slidesPerView: number; spaceBetween: number } };
+}
+interface CarouselPropsType {
+  carouselOpt?: CarouselOptPropsType,
   className?:string;
+  activeColor?:string;
   children: React.ReactNode;
   onSwiperFunc?: () => void;
   onChangeFunc?: () => void;
@@ -41,10 +45,10 @@ interface CarouselRefType {
 }
 
 // https://swiperjs.com/
-export default forwardRef<CarouselRefType, CarouselType>(({
+export default forwardRef<CarouselRefType, CarouselPropsType>(({
   carouselOpt, className, activeColor, children,
   onSwiperFunc, onChangeFunc
-}: CarouselType, ref) => {
+}: CarouselPropsType, ref) => {
   const swiperRef = useRef<SwiperRef | null>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
   const prevBtnRef = useRef<HTMLButtonElement>(null);
