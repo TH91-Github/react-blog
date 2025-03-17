@@ -1,17 +1,17 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from "react";
-import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
-import { Navigation, Pagination, A11y, Autoplay, Virtual } from 'swiper/modules';
+import { colors, transitions } from "assets/style/Variable";
+import { SvgArrow } from "assets/svg/common/CommonSvg";
+import React, { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
+import styled from "styled-components";
 import SwiperCore from 'swiper';
+import { A11y, Autoplay, Navigation, Pagination, Virtual } from 'swiper/modules';
+import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/virtual';
-import styled from "styled-components"
-import { colors, transitions } from "assets/style/Variable";
-import { SvgArrow } from "assets/svg/common/CommonSvg";
 
 interface CarouselType {
-  carouselOpt: {
+  carouselOpt?: {
     slidesPerView?: number | 'auto'; // 보여지는 수
     spaceBetween?: number; // 간격
     navigation?: boolean; // 좌우 버튼
@@ -59,7 +59,7 @@ export default forwardRef<CarouselRefType, CarouselType>(({
     autoplay = false,
     virtual= false,
     ...restOptions
-  } = carouselOpt; 
+  } = carouselOpt || {}; 
   
   // autoplay true 일 경우 기본 설정 또는 설정 값 있는 경우 변경
   const autoplayOpt = useMemo(() => {
