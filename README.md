@@ -7,8 +7,8 @@
 <br /><br />
 
 ### 🧾 Portfolio & Resume 
-- [Resume](https://main-th-blog.vercel.app/resume)
-- [일반 URL](https://th-react-blog.vercel.app/)
+- <a href="https://main-th-blog.vercel.app/resume" target="_blank" rel="noopener noreferrer">Resume</a>
+- <a href="https://th-react-blog.vercel.app" target="_blank" rel="noopener noreferrer">일반 URL</a>
 
 ### Tech Stacks
 - <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" alt="React"></span>
