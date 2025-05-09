@@ -48,7 +48,7 @@
 - <span><img src="https://img.shields.io/badge/공공 데이터-008FC7.svg?style=for-the-badge&logoColor=000000" alt="공공 데이터" /></span>
 - <span><img src="https://img.shields.io/badge/kakao Map-ffcd00.svg?style=for-the-badge&logoColor=000000" alt="Kakao Map" /></span>
 
-### package 
+### 🧑‍💻 
 
 | 분류               | 라이브러리/패키지 이름                                  | 설명 |
 |--------------------|---------------------------------------------------------|------|
