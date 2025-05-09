@@ -57,7 +57,7 @@
 | **스타일링**   | `styled-components`                                     | CSS-in-JS 방식 스타일링 |
 | **캐러셀**        | `swiper`                                                | 슬라이더, 캐러셀 UI 구현 사용 |
 | **성능 최적화**     | `react-lazyload`                                        | 컴포넌트/이미지 Lazy Load |
-| **DB**           | `firebase`                                              | 백엔드 기능 (인증, DB, 호스팅 등) 사용 |
+| **DB**           | `firebase`                                              | DB 데이터 (회원 인증, DB, 호스팅 등) 사용 |
 
 감사합니다. 😀 
 
