@@ -48,9 +48,10 @@
 
 | 분류               | 라이브러리/패키지 이름                                  | 설명 |
 |--------------------|---------------------------------------------------------|------|
-| **기본** | `react`, `react-dom`, `react-scripts`                  | React 18 CRA (Create React App) |
+| **기본** | `react`                | React 18 CRA (Create React App) |
 | **타입**     | `typescript`                                            | TypeScript 사용 |
-| **상태 관리**       | `@reduxjs/toolkit`, `redux-thunk`, `react-redux`       | Redux 및 Thunk 미들웨어 기반 전역 상태 관리 |
+| **라우팅**     | `react-router-dom`                                            | SPA 구조의 라우팅 처리 및 페이지 이동 관리 |
+| **상태 관리**       | `react-redux`, `@reduxjs/toolkit`         | Redux 및 Thunk 미들웨어 기반 전역 상태 관리 |
 |                    | `@tanstack/react-query`, `@tanstack/react-query-devtools` | 서버 상태 및 캐싱 관리 (비동기 API 데이터 처리 최적화) |
 | **차트**            | `@nivo/bar`, `@nivo/line`                               | Nivo 기반 데이터 시각화 라이브러리 (Bar/Line 차트) |
 | **지도 관련**       | `react-kakao-maps-sdk`                                  | Kakao Map 사용 |
