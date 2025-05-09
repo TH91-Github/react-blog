@@ -43,3 +43,28 @@
 - Firestore Database
 - Authentication
 - Storage
+
+
+
+| 분류               | 라이브러리/패키지 이름                                  | 설명 |
+|--------------------|---------------------------------------------------------|------|
+| **기본 프레임워크** | `react`, `react-dom`, `react-scripts`                  | React 18 기반 CRA (Create React App) 프로젝트 |
+| **상태 관리**       | `@reduxjs/toolkit`, `redux-thunk`, `react-redux`       | Redux 및 Thunk 미들웨어 기반 전역 상태 관리 |
+|                    | `@tanstack/react-query`, `@tanstack/react-query-devtools` | 서버 상태 및 캐싱 관리 (비동기 API 데이터 처리 최적화) |
+| **차트**            | `@nivo/bar`, `@nivo/line`                               | Nivo 기반 데이터 시각화 라이브러리 (Bar/Line 차트) |
+| **지도 관련**       | `react-kakao-maps-sdk`                                  | Kakao 지도 SDK를 React에서 사용하기 위한 래퍼 |
+| **UI / 스타일링**   | `styled-components`                                     | CSS-in-JS 방식의 컴포넌트 스타일링 도구 |
+| **슬라이더**        | `swiper`                                                | 모바일 및 웹 슬라이더, 캐러셀 구현 |
+| **성능 최적화**     | `react-lazyload`                                        | 컴포넌트/이미지 Lazy Load 처리 |
+| **유형 시스템**     | `typescript`, `@types/*`                                | TypeScript 및 관련 타입 선언 패키지 |
+| **테스트**          | `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event` | React Testing Library 기반 유닛 테스트 환경 구성 |
+| **기타 도구**       | `web-vitals`                                            | 성능 측정 (LCP, FID, CLS 등 웹 바이탈 수치 측정) |
+|                    | `firebase`                                              | 백엔드 기능 (인증, DB, 호스팅 등) 사용 |
+
+감사합니다. 😀 
+
+
+
+
+
+
