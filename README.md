@@ -10,15 +10,6 @@
 - <a href="https://main-th-blog.vercel.app/resume" target="_blank" rel="noopener noreferrer">Resume</a>
 - <a href="https://th-react-blog.vercel.app" target="_blank" rel="noopener noreferrer">일반 URL</a>
 
-### Tech Stacks
-- <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" alt="React"></span>
-- <span><img src="https://img.shields.io/badge/styled components-DB7093?logo=styled-components&logoColor=white" alt="styled components"/></span>
-- <span><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white" alt="TypeScript"></span>
-- <span><img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&amp;logo=firebase&amp;logoColor=black" alt="Firebase"></span>
-- <span><img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=Vercel&logoColor=white" alt="Vercel" /></span>
-- <span><img src="https://img.shields.io/badge/공공 데이터-008FC7.svg?style=for-the-badge&logoColor=000000" alt="공공 데이터" /></span>
-- <span><img src="https://img.shields.io/badge/kakao Map-ffcd00.svg?style=for-the-badge&logoColor=000000" alt="Kakao Map" /></span>
-
 ### 날씨 - 기상청 오픈 API
 - [공공데이터 포털](https://www.data.go.kr/index.do)
 - 주단기예보조회, 초단기예보조회, 초단기실황조회 순차적으로 요청 및 업데이트를 진행.
@@ -44,22 +35,29 @@
 - Authentication
 - Storage
 
+### Tech Stacks
+- <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" alt="React"></span>
+- <span><img src="https://img.shields.io/badge/styled components-DB7093?logo=styled-components&logoColor=white" alt="styled components"/></span>
+- <span><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white" alt="TypeScript"></span>
+- <span><img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&amp;logo=firebase&amp;logoColor=black" alt="Firebase"></span>
+- <span><img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=Vercel&logoColor=white" alt="Vercel" /></span>
+- <span><img src="https://img.shields.io/badge/공공 데이터-008FC7.svg?style=for-the-badge&logoColor=000000" alt="공공 데이터" /></span>
+- <span><img src="https://img.shields.io/badge/kakao Map-ffcd00.svg?style=for-the-badge&logoColor=000000" alt="Kakao Map" /></span>
 
+### package 
 
 | 분류               | 라이브러리/패키지 이름                                  | 설명 |
 |--------------------|---------------------------------------------------------|------|
-| **기본 프레임워크** | `react`, `react-dom`, `react-scripts`                  | React 18 기반 CRA (Create React App) 프로젝트 |
+| **기본** | `react`, `react-dom`, `react-scripts`                  | React 18 CRA (Create React App) |
+| **타입**     | `typescript`                                            | TypeScript 사용 |
 | **상태 관리**       | `@reduxjs/toolkit`, `redux-thunk`, `react-redux`       | Redux 및 Thunk 미들웨어 기반 전역 상태 관리 |
 |                    | `@tanstack/react-query`, `@tanstack/react-query-devtools` | 서버 상태 및 캐싱 관리 (비동기 API 데이터 처리 최적화) |
 | **차트**            | `@nivo/bar`, `@nivo/line`                               | Nivo 기반 데이터 시각화 라이브러리 (Bar/Line 차트) |
-| **지도 관련**       | `react-kakao-maps-sdk`                                  | Kakao 지도 SDK를 React에서 사용하기 위한 래퍼 |
-| **UI / 스타일링**   | `styled-components`                                     | CSS-in-JS 방식의 컴포넌트 스타일링 도구 |
-| **슬라이더**        | `swiper`                                                | 모바일 및 웹 슬라이더, 캐러셀 구현 |
-| **성능 최적화**     | `react-lazyload`                                        | 컴포넌트/이미지 Lazy Load 처리 |
-| **유형 시스템**     | `typescript`, `@types/*`                                | TypeScript 및 관련 타입 선언 패키지 |
-| **테스트**          | `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event` | React Testing Library 기반 유닛 테스트 환경 구성 |
-| **기타 도구**       | `web-vitals`                                            | 성능 측정 (LCP, FID, CLS 등 웹 바이탈 수치 측정) |
-|                    | `firebase`                                              | 백엔드 기능 (인증, DB, 호스팅 등) 사용 |
+| **지도 관련**       | `react-kakao-maps-sdk`                                  | Kakao Map 사용 |
+| **스타일링**   | `styled-components`                                     | CSS-in-JS 방식 스타일링 |
+| **캐러셀**        | `swiper`                                                | 슬라이더, 캐러셀 UI 구현 사용 |
+| **성능 최적화**     | `react-lazyload`                                        | 컴포넌트/이미지 Lazy Load |
+| ** 기타**           | `firebase`                                              | 백엔드 기능 (인증, DB, 호스팅 등) 사용 |
 
 감사합니다. 😀 
 
