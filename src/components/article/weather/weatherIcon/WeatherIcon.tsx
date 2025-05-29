@@ -92,7 +92,7 @@ export const WeatherIcon = ({categoryLists, isAnimation}:WeatherIconType) => { /
 
   const weatherIconCode : WeatherIconCodeType = useMemo(() =>{ 
     const h = dateChange('hours');
-    const isDayTime = h > 6 && h < 18; // 낮 / 밤 구분
+    const isDayTime = h > 6 && h < 19; // 낮 / 밤 구분
     const desc = (weatherState && codeLists[weatherState!.iconKey].desc ) ?? '-';
     return {
       0: <SunIcon desc={desc} isDayTime={isDayTime} isAnimation={isAnimation} />,
