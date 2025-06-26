@@ -74,7 +74,7 @@ export default function SignIn() {
       }
       dispatch(actionUserLogin(userLoginData));
       navigate('/');
-      console.log('google login');
+      // console.log('google login');
     } catch (error) {
       console.log(error)
       setValidationError({ id:true, pw: true });
