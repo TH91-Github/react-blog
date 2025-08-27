@@ -140,8 +140,6 @@ export default function LoginStatusCheck() {
     }
   },[loginExtensionChk, loginSave, handleLogOut, loginUpdate]);
   
-  
-
   // ✅ 로그인 연장 
   const handleConfirmation = useCallback(async () => {
     clearAllTimeouts();
