@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { colors } from "../../assets/style/Variable";
+import { colors, shadow } from "../../assets/style/Variable";
 
 interface LoadingAnimationType {
   bgColor?:string;
@@ -92,6 +92,7 @@ const StyleLoadingAnimation = styled.div`
     left:50%;
     transform:translate(-50%,-50%);
     font-size:12px;
-    color:${props => props.theme.color};
+    text-shadow:${shadow.textBaseW};
+    color:${colors.textColor};
   }
 `; 

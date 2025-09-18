@@ -317,6 +317,7 @@ const StyleNoticeText = styled.div`
   text-align:center;
   pointer-events:none;
   transform: translateX(-50%);
+  color:${colors.textColor};
   animation: noticeAni 3s ease both;
   @keyframes noticeAni {
     0%, 100% {

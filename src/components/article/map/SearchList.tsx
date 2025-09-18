@@ -113,7 +113,7 @@ const StyleSearchList = styled.div`
     .desc{
       font-size:12px;
       font-weight:300;
-      color:${colors.subTextColor};
+      color: ${props => props.theme.type === 'dark' ? colors.lineColor : colors.subTextColor};
     }
   }
   .search-list {
