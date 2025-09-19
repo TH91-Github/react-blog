@@ -25,15 +25,15 @@ export const WeatherCont = () => {
           </div>
         </div>
         <div className="circles-wrap">
-            <p className="temperature-info">
-              <span className="desc">최저 : <span className="min">-3 °</span></span>
-              <span className="desc">최고 : <span className="max">8 °</span></span>
-            </p>
+          <p className="temperature-info">
+            <span className="desc">최저 : <span className="min">15 °</span></span>
+            <span className="desc">최고 : <span className="max">25 °</span></span>
+          </p>
           <div className="circles-box">
             <GraphProgress 
-              start={-3}
-              end={8}
-              goal={5}
+              start={15}
+              end={25}
+              goal={21}
               unit={{text:'°C',align:'top'}} />
           </div>
         </div>
