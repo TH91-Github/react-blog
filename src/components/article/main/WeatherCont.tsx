@@ -24,10 +24,13 @@ export const WeatherCont = () => {
               onColor={colors.mSlateBlue} />
           </div>
         </div>
-        <div className="circles-wrap">
+        {/* <div className="circles-wrap">
           <p className="temperature-info">
-            <span className="desc">최저 : <span className="min">15 °</span></span>
-            <span className="desc">최고 : <span className="max">25 °</span></span>
+            <span className="desc">최저 : <span className="min">-1 °</span></span>
+            <span className="desc">최고 : <span className="max">99 °</span></span>
+          </p>
+          <p className="">
+
           </p>
           <div className="circles-box">
             <GraphProgress 
@@ -36,7 +39,7 @@ export const WeatherCont = () => {
               goal={21}
               unit={{text:'°C',align:'top'}} />
           </div>
-        </div>
+        </div> */}
       </div>
     </StyleWeatherCont>
   )
