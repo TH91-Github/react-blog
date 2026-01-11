@@ -32,7 +32,7 @@ export const routerList = [
     id: "Resume",
     path: "resume",
     title: "🧾이력서",
-    view:['main-th-blog.vercel.app','localhost'],
+    view:['localhost'],
     element: <ResumePage />,
   },
   {
