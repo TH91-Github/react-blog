@@ -1,11 +1,19 @@
-
-import { KORLocationType, WeatherFirebaseUpdateDocType, WeatherLocationType, WeatherTimeDataType } from "types/weatherType";
+import {
+  KORLocationType,
+  WeatherCacheMetaType,
+  WeatherFirebaseUpdateDocType,
+  WeatherFirebaseYearDocType,
+  WeatherLocationType,
+  WeatherTimeDataType,
+} from "types/weatherType";
 import { fbWeatherDB } from "../../firebase";
 import { locationCategory } from "utils/kakaomap/common";
 import { doc, getDoc, runTransaction, setDoc } from "firebase/firestore";
 import { StringOnly } from "types/baseType";
 
-export const getWeatherdepthCollectionDoc = async (firebaseFind:StringOnly) => {
+export const getWeatherdepthCollectionDoc = async (
+  firebaseFind:StringOnly
+): Promise<WeatherFirebaseYearDocType | null> => {
   const {col1, doc1, col2, doc2, col3, doc3} = firebaseFind;
   let docRef;
   if(doc3){
@@ -54,13 +62,23 @@ export const updateWeatherDoc = async(firebaseFind:WeatherFirebaseUpdateDocType,
   const doc3Year = weatherData.date.slice(0, 4); // ex - 2024
 
   // 날짜별 데이터 분리 {...}
-  const resultData = weatherData.res?.reduce((acc:{[key: number]: WeatherTimeDataType}, item:WeatherTimeDataType) => {
+  const resultData = weatherData.res?.reduce((acc:{[key: string]: WeatherTimeDataType}, item:WeatherTimeDataType) => {
     const { date, ...rest } = item; 
-    acc[Number(date)] = { date, ...rest}; // 최종 업데이트 시간 추가
+    acc[String(date)] = { date, ...rest}; // 최종 업데이트 시간 추가
     return acc;
   }, {});
   const docRef = doc(fbWeatherDB, col1, doc1, col2, doc2); // 행정구역 컬렉션 문서
   const yearDocRef = doc(docRef, "year", doc3Year); // 년도 컬렉션 문서
+  const cacheMeta: WeatherCacheMetaType = {
+    cachedAt: Date.now(),
+    source: "public-data",
+    latestDate: weatherData.date,
+    requestCycles: {
+      getUltraSrtNcst: weatherData.res[0]?.getUltraSrtNcst ?? -1,
+      getUltraSrtFcst: weatherData.res[0]?.getUltraSrtFcst ?? -1,
+      getVilageFcst: weatherData.res[0]?.getVilageFcst ?? -1,
+    },
+  };
 
   try {
     const mainDocSnapshot = await getDoc(docRef);
@@ -69,17 +87,24 @@ export const updateWeatherDoc = async(firebaseFind:WeatherFirebaseUpdateDocType,
         id: doc2,
         title: title,
         coords:coords,
+        updatedAt: cacheMeta.cachedAt,
       });
+    } else {
+      await setDoc(docRef, {
+        title,
+        coords,
+        updatedAt: cacheMeta.cachedAt,
+      }, { merge: true });
     }
     await runTransaction(fbWeatherDB, async (transaction) => {
       // 트랜잭션 내부에서는 연도별 데이터만 처리
       const yearDocSnapshot = await transaction.get(yearDocRef);
       if (yearDocSnapshot.exists()) {
         const existingData = yearDocSnapshot.data();
-        const updatedData = { ...existingData, ...resultData };
+        const updatedData = { ...existingData, ...resultData, _meta: cacheMeta };
         transaction.set(yearDocRef, updatedData, { merge: true });
       } else {
-        transaction.set(yearDocRef, resultData);
+        transaction.set(yearDocRef, { ...resultData, _meta: cacheMeta });
       }
     });
   } catch (error) {

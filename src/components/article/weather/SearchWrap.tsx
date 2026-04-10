@@ -13,7 +13,7 @@ interface SearchWrapType {
   searchUpdate: (searchCoords:MarkerPositionType) => void;
 }
 export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
-  const {loading} = useSelector((state : RootState) => state.storeWeather);
+  const {requesting} = useSelector((state : RootState) => state.storeWeather);
   const inputRef = useRef<InputElementRef>(null);
   const errorTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isFocus, setIsFocus] = useState(false);
@@ -51,7 +51,10 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
 
   const handleClick = useCallback(() => {
     if(!inputRef.current || isError.error) return
-    if(loading) errorActive('✋ 잠시 후에 시도해주세요!!');
+    if(requesting){
+      errorActive('✋ 잠시 후에 시도해주세요!!');
+      return;
+    }
     const inputVal = inputRef.current.getInputElement()!.value;
     if(inputVal.trim()){
       const addrResult = keyWordFindLocation(inputVal);
@@ -63,7 +66,7 @@ export const SearchWrap = ({searchUpdate}:SearchWrapType) => {
     }else{
       errorActive('입력을 확인해주세요!');
     }
-  },[ isError.error, loading, errorActive, searchUpdate]);
+  },[ isError.error, requesting, errorActive, searchUpdate]);
 
   return( 
     <StyleSearchWrap className={isFocus ? 'isFocus':''}>

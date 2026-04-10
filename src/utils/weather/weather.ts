@@ -1,7 +1,17 @@
-
 import { StringOnly } from "types/baseType";
 import { MarkerPositionType } from "types/kakaoComon";
-import { RequestNameType, WeatherTimeListType, WeatherApiDataType, WeatherApiResponseType, WeatherLocationType, WeatherTimeDataType, WeatherCategoryListsType, Coordinates } from "types/weatherType";
+import {
+  KORLocationType,
+  RequestNameType,
+  WeatherTimeListType,
+  WeatherApiDataType,
+  WeatherApiResponseType,
+  WeatherFirebaseYearDocType,
+  WeatherLocationType,
+  WeatherTimeDataType,
+  WeatherCategoryListsType,
+  Coordinates,
+} from "types/weatherType";
 import { dateChange, fromToday } from "utils/common";
 
 // ✅ 요청 타입에 맞는 시간 날짜 전달
@@ -76,6 +86,82 @@ const requestNumber = (requestType: keyof typeof requestNumbers) => { // 요청 
 export function weatherClock(){ // 0000 ~ 2400 시간 체크
   const nowTime = Number(dateChange('hours'));
   return nowTime < 10 ? `0${nowTime}00`: `${nowTime}00`
+}
+
+export function getWeatherCycleTimes() {
+  const { ymd, hm: getUltraSrtNcst } = weatherTime('getUltraSrtNcst');
+  const { hm: getUltraSrtFcst } = weatherTime('getUltraSrtFcst');
+  const { hm: getVilageFcst } = weatherTime('getVilageFcst');
+
+  return {
+    ymd,
+    threeDays: [ymd, fromToday(1), fromToday(2)],
+    requestCycles: {
+      getUltraSrtNcst,
+      getUltraSrtFcst,
+      getVilageFcst,
+    },
+  };
+}
+
+export function isWeatherTimeData(value: unknown): value is WeatherTimeDataType {
+  if (!value || typeof value !== "object") return false;
+
+  const weatherValue = value as WeatherTimeDataType;
+  return Array.isArray(weatherValue.timeLists) && "date" in weatherValue;
+}
+
+export function pickWeatherDaysFromCache(
+  cacheDoc: WeatherFirebaseYearDocType | null | undefined,
+  dayKeys: string[]
+) {
+  if (!cacheDoc) return [];
+
+  return dayKeys.reduce<WeatherTimeDataType[]>((acc, dayKey) => {
+    const dayData = cacheDoc[dayKey];
+
+    if (isWeatherTimeData(dayData)) {
+      acc.push(dayData);
+    }
+    return acc;
+  }, []);
+}
+
+export function createWeatherStateFromDays(
+  weatherDays: WeatherTimeDataType[],
+  location: KORLocationType
+): WeatherLocationType {
+  const { requestCycles, ymd } = getWeatherCycleTimes();
+  const todayData = weatherDays.find((dayItem) => `${dayItem.date}` === ymd);
+
+  return {
+    date: ymd,
+    baseUpdate: todayData?.getUltraSrtNcst ?? requestCycles.getUltraSrtNcst,
+    res: [...weatherDays],
+    xy: {
+      nx: Number(location.x),
+      ny: Number(location.y),
+    },
+  };
+}
+
+export function getWeatherRefreshType(weatherDays: WeatherTimeDataType[]): RequestNameType | null {
+  const { requestCycles, ymd } = getWeatherCycleTimes();
+  const todayData = weatherDays.find((dayItem) => `${dayItem.date}` === ymd);
+
+  if (!todayData) return 'getVilageFcst';
+
+  if (`${todayData.getVilageFcst}` !== `${requestCycles.getVilageFcst}`) {
+    return 'getVilageFcst';
+  }
+  if (`${todayData.getUltraSrtFcst}` !== `${requestCycles.getUltraSrtFcst}`) {
+    return 'getUltraSrtFcst';
+  }
+  if (`${todayData.getUltraSrtNcst}` !== `${requestCycles.getUltraSrtNcst}`) {
+    return 'getUltraSrtNcst';
+  }
+
+  return null;
 }
 
 // 날씨 요청 3번 시도
@@ -351,4 +437,270 @@ export function findTimeLists (arr:WeatherTimeListType[],findTime:string) {
 // 일치하는 카테고리
 export function findCategory (categoryLists:WeatherCategoryListsType[], keyVal:string) { 
   return categoryLists.find(categoryItem => categoryItem.category === keyVal)?.value;
+}
+
+function timeToMinutes(time:string | number) {
+  const timeText = String(time).padStart(4, '0');
+  return parseInt(timeText.slice(0, 2), 10) * 60 + parseInt(timeText.slice(2, 4), 10);
+}
+
+export function findClosestAvailableTimeLists(
+  arr: WeatherTimeListType[],
+  findTime: string,
+  direction: "prev" | "next" | "nearest" = "nearest"
+) {
+  if (!arr.length) return undefined;
+
+  const targetMinutes = timeToMinutes(findTime);
+  const mapped = arr.map((item) => ({
+    item,
+    diff: timeToMinutes(item.time) - targetMinutes,
+  }));
+
+  if (direction === "prev") {
+    const prevItems = mapped
+      .filter(({ diff }) => diff <= 0)
+      .sort((a, b) => Math.abs(a.diff) - Math.abs(b.diff));
+
+    return prevItems[0]?.item;
+  }
+
+  if (direction === "next") {
+    const nextItems = mapped
+      .filter(({ diff }) => diff >= 0)
+      .sort((a, b) => Math.abs(a.diff) - Math.abs(b.diff));
+
+    return nextItems[0]?.item;
+  }
+
+  return mapped.sort((a, b) => Math.abs(a.diff) - Math.abs(b.diff))[0]?.item;
+}
+
+const CURRENT_WEATHER_REQUIRED_CATEGORIES = [
+  "SKY",
+  "PTY",
+  "T1H",
+  "TMP",
+  "REH",
+  "WSD",
+  "VEC",
+  "POP",
+  "PCP",
+  "SNO",
+  "LGT",
+] as const;
+
+export function getStableCurrentWeatherTimeLists(
+  timeLists: WeatherTimeListType[],
+  currentTime = weatherClock()
+) {
+  const currentTimeList =
+    findTimeLists(timeLists, currentTime) ||
+    findClosestAvailableTimeLists(timeLists, currentTime, "prev") ||
+    findClosestAvailableTimeLists(timeLists, currentTime, "nearest");
+
+  if (!currentTimeList) return undefined;
+
+  const mergedCategories = [...currentTimeList.categoryList];
+
+  CURRENT_WEATHER_REQUIRED_CATEGORIES.forEach((categoryKey) => {
+    const hasCategory = mergedCategories.some((item) => item.category === categoryKey);
+
+    if (hasCategory) return;
+
+    const fallbackCategory = [...timeLists]
+      .sort((a, b) => Math.abs(timeToMinutes(a.time) - timeToMinutes(currentTime)) - Math.abs(timeToMinutes(b.time) - timeToMinutes(currentTime)))
+      .flatMap((item) => item.categoryList)
+      .find((categoryItem) => categoryItem.category === categoryKey);
+
+    if (fallbackCategory) {
+      mergedCategories.push(fallbackCategory);
+    }
+  });
+
+  return {
+    ...currentTimeList,
+    categoryList: mergedCategories,
+  };
+}
+
+export function getSkyText(sky?: string) {
+  switch (`${sky ?? ""}`) {
+    case "1":
+      return "맑음";
+    case "3":
+      return "구름많음";
+    case "4":
+      return "흐림";
+    default:
+      return "-";
+  }
+}
+
+export function getPtyText(pty?: string) {
+  switch (`${pty ?? ""}`) {
+    case "0":
+      return "강수 없음";
+    case "1":
+      return "비";
+    case "2":
+      return "비/눈";
+    case "3":
+      return "눈";
+    case "4":
+      return "소나기";
+    case "5":
+      return "빗방울";
+    case "6":
+      return "빗방울/눈날림";
+    case "7":
+      return "눈날림";
+    default:
+      return "-";
+  }
+}
+
+export function getWeatherStatusText(categoryLists: WeatherCategoryListsType[]) {
+  const pty = findCategory(categoryLists, "PTY");
+
+  if (pty && pty !== "0") {
+    return getPtyText(pty);
+  }
+
+  return getSkyText(findCategory(categoryLists, "SKY"));
+}
+
+export function getWindDirectionText(vec?: string) {
+  const degree = Number(vec);
+
+  if (Number.isNaN(degree)) return "-";
+
+  const directions = [
+    "북",
+    "북동",
+    "동",
+    "남동",
+    "남",
+    "남서",
+    "서",
+    "북서",
+  ];
+  const index = Math.round(degree / 45) % 8;
+  return directions[index];
+}
+
+export function formatWeatherMetric(
+  categoryLists: WeatherCategoryListsType[],
+  key: string,
+  unit = "",
+  emptyText = "-"
+) {
+  const value = findCategory(categoryLists, key);
+
+  if (value === undefined || value === null || value === "") {
+    return emptyText;
+  }
+
+  if (value === "강수없음" || value === "적설없음") {
+    return value;
+  }
+
+  return unit ? `${value}${unit}` : value;
+}
+
+export function parseWeatherNumber(value?: string) {
+  if (!value) return null;
+
+  const parsed = parseFloat(`${value}`.replace(/[^0-9.-]/g, ""));
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+export function findClosestTimeLists(arr: WeatherTimeListType[], targetTime = "1200") {
+  if (!arr.length) return undefined;
+
+  const targetMinutes = parseInt(targetTime.slice(0, 2), 10) * 60 + parseInt(targetTime.slice(2, 4), 10);
+
+  return [...arr].sort((a, b) => {
+    const aMinutes = parseInt(String(a.time).slice(0, 2), 10) * 60 + parseInt(String(a.time).slice(2, 4), 10);
+    const bMinutes = parseInt(String(b.time).slice(0, 2), 10) * 60 + parseInt(String(b.time).slice(2, 4), 10);
+
+    return Math.abs(aMinutes - targetMinutes) - Math.abs(bMinutes - targetMinutes);
+  })[0];
+}
+
+export function getAverageCategoryValue(timeLists: WeatherTimeListType[], key: string) {
+  const values = timeLists
+    .map((timeItem) => parseWeatherNumber(findCategory(timeItem.categoryList, key)))
+    .filter((value): value is number => value !== null);
+
+  if (!values.length) return null;
+
+  return values.reduce((acc, cur) => acc + cur, 0) / values.length;
+}
+
+export function getRepresentativeWeatherTime(
+  dayItem: WeatherTimeDataType,
+  isToday = false
+) {
+  if (isToday) {
+    return findTimeLists(dayItem.timeLists ?? [], weatherClock()) || findClosestTimeLists(dayItem.timeLists ?? [], weatherClock());
+  }
+
+  return findClosestTimeLists(dayItem.timeLists ?? [], "1200");
+}
+
+export function formatAverageMetric(value: number | null, unit = "", digits = 0) {
+  if (value === null) return "-";
+  return `${value.toFixed(digits)}${unit}`;
+}
+
+type WeatherLocalCachePayload = {
+  locationCode: string;
+  savedAt: number;
+  data: WeatherLocationType;
+};
+
+const WEATHER_LOCAL_CACHE_PREFIX = "weather-local-cache";
+
+function getWeatherLocalCacheKey(locationCode: string | number) {
+  return `${WEATHER_LOCAL_CACHE_PREFIX}:${locationCode}`;
+}
+
+export function getWeatherLocalCache(locationCode?: string | number) {
+  if (typeof window === "undefined" || !locationCode) return null;
+
+  try {
+    const cacheItem = window.localStorage.getItem(getWeatherLocalCacheKey(locationCode));
+    if (!cacheItem) return null;
+
+    const parsed = JSON.parse(cacheItem) as WeatherLocalCachePayload;
+    const today = getWeatherCycleTimes().ymd;
+
+    if (!parsed?.data?.res?.length) return null;
+    if (parsed.data.date !== today) return null;
+
+    return parsed.data;
+  } catch (error) {
+    console.log("로컬 날씨 캐시 읽기 실패", error);
+    return null;
+  }
+}
+
+export function setWeatherLocalCache(locationCode: string | number, data: WeatherLocationType) {
+  if (typeof window === "undefined" || !locationCode || !data?.res?.length) return;
+
+  const payload: WeatherLocalCachePayload = {
+    locationCode: `${locationCode}`,
+    savedAt: Date.now(),
+    data,
+  };
+
+  try {
+    window.localStorage.setItem(
+      getWeatherLocalCacheKey(locationCode),
+      JSON.stringify(payload)
+    );
+  } catch (error) {
+    console.log("로컬 날씨 캐시 저장 실패", error);
+  }
 }

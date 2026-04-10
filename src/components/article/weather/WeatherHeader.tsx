@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { MarkerPositionType } from "types/kakaoComon";
 import { SearchWrap } from "./SearchWrap";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { findTimeLists } from "utils/weather/weather";
+import { getStableCurrentWeatherTimeLists } from "utils/weather/weather";
 import { isPcMo, weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
@@ -25,7 +25,7 @@ export const WeatherHeader = ({addrUpdate}:WeatherHeaderType) => {
   
 
   const locationWeatherIcon = useMemo(() => {
-    return findTimeLists(data?.res[0].timeLists ?? [], weatherClock());
+    return getStableCurrentWeatherTimeLists(data?.res[0].timeLists ?? [], weatherClock());
   },[data]);
 
   return(

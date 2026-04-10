@@ -5,11 +5,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { WeatherCategoryListsType, WeatherTimeListType } from "types/weatherType";
+import { WeatherCategoryListsType } from "types/weatherType";
 import { dateChange, weatherClock } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
-import { findTimeLists } from "utils/weather/weather";
+import { WindDirectionIcon } from "./WindDirectionIcon";
+import { findCategory, formatWeatherMetric, getStableCurrentWeatherTimeLists, getWeatherStatusText, getWindDirectionText } from "utils/weather/weather";
 
 interface WeatherSelectDayType {
   isDay? : number;
@@ -22,7 +23,7 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
   useEffect(()=>{
     const todayTime = weatherClock(); // 현재 시간
     if(data?.res?.length > 0){
-      const isTime = findTimeLists(data?.res[isDay].timeLists ?? [], todayTime);
+      const isTime = getStableCurrentWeatherTimeLists(data?.res[isDay].timeLists ?? [], todayTime);
       if(isTime) setDayCategory(isTime.categoryList)
     }
   },[data, isDay]);
@@ -31,6 +32,37 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
   const weatherUpdateChk = useCallback(() =>{
     queryClient.invalidateQueries({ queryKey: ['weatherBase'] });
   },[queryClient]);
+
+  const temperatureValue =
+    dayCategory?.find((categoryItem:WeatherCategoryListsType) => categoryItem.category === 'T1H')?.value ||
+    dayCategory?.find((categoryItem:WeatherCategoryListsType) => categoryItem.category === 'TMP')?.value ||
+    '-';
+
+  const statusText = dayCategory ? getWeatherStatusText(dayCategory) : '-';
+  const detailMetrics = dayCategory
+    ? [
+        { title: '대기', value: statusText },
+        { title: '습도', value: formatWeatherMetric(dayCategory, 'REH', '%') },
+        { title: '풍속', value: formatWeatherMetric(dayCategory, 'WSD', 'm/s') },
+        {
+          title: '풍향',
+          value: (() => {
+            const vec = findCategory(dayCategory, 'VEC');
+            const direction = getWindDirectionText(vec);
+            return {
+              text: vec && direction !== '-' ? `${direction} ${vec}°` : direction,
+              degree: vec,
+            };
+          })(),
+        },
+        { title: '강수확률', value: formatWeatherMetric(dayCategory, 'POP', '%') },
+        { title: '강수량', value: formatWeatherMetric(dayCategory, 'PCP') },
+      ]
+        .filter((metric) => {
+          if (typeof metric.value === "string") return metric.value !== "-";
+          return metric.value.text !== "-";
+        })
+    : [];
 
   return(
     <StyleWeatherSelectDay>
@@ -52,29 +84,46 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
               timeUpdate={weatherUpdateChk} />
           </div>
           <div className="temperature-wrap">
-            <span className="weather-icon">
-              <WeatherIcon categoryLists={dayCategory}/>
-            </span>
-            <p className="temperature">
-              <span className="current">
-                {
-                  dayCategory.find((categoryItem:WeatherCategoryListsType) => categoryItem.category === 'T1H')?.value ||
-                  dayCategory.find((categoryItem:WeatherCategoryListsType) => categoryItem.category === 'TMP')?.value
-                }
+            <div className="temperature-main">
+              <span className="weather-icon">
+                <WeatherIcon categoryLists={dayCategory}/>
               </span>
-              <span className="celsius">°</span>
-            </p>
-            <div className="temperature-lh">
-              <span className="lowest">
-                <span className="blind">최저 기온</span>
-                {data?.res[isDay]?.TMN ? parseFloat(data?.res[isDay].TMN) : '-'}
-                <span className="celsius">°</span>
-              </span>
-              <span className="highest">
-                <span className="blind">최고 기온</span>
-                {data?.res[isDay]?.TMX ? parseFloat(data?.res[isDay].TMX) : '-'}
-                <span className="celsius">°</span>
-              </span>
+              <div className="temperature-copy">
+                <p className="summary">{statusText}</p>
+                <p className="temperature">
+                  <span className="current">{temperatureValue}</span>
+                  <span className="celsius">°</span>
+                </p>
+                <div className="temperature-lh">
+                  <span className="lowest">
+                    <span className="blind">최저 기온</span>
+                    {data?.res[isDay]?.TMN ? parseFloat(data?.res[isDay].TMN) : '-'}
+                    <span className="celsius">°</span>
+                  </span>
+                  <span className="highest">
+                    <span className="blind">최고 기온</span>
+                    {data?.res[isDay]?.TMX ? parseFloat(data?.res[isDay].TMX) : '-'}
+                    <span className="celsius">°</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="detail-grid">
+              {detailMetrics.map((metric) => (
+                <div className="detail-item" key={metric.title}>
+                  <span className="label">{metric.title}</span>
+                  <span className="value">
+                    {
+                      typeof metric.value === "string"
+                        ? metric.value
+                        : <>
+                            <WindDirectionIcon degree={metric.value.degree} />
+                            <span>{metric.value.text}</span>
+                          </>
+                    }
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </>
@@ -120,6 +169,10 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
   )
 }
 const StyleWeatherSelectDay = styled.div`
+  .location-date {
+    display:flex;
+    flex-direction:column;
+  }
   .addr {
     display:flex;
     gap:3px;
@@ -137,31 +190,76 @@ const StyleWeatherSelectDay = styled.div`
   .temperature-wrap {
     display:flex;
     flex-direction:column;
-    gap:10px;
-    position:relative;
-    padding-top:50px;
+    gap:16px;
+    margin-top:18px;
+  }
+  .temperature-main {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+  }
+  .temperature-copy {
     text-align:center;
+  }
+  .summary {
+    font-size:14px;
+    color:${colors.subTextColor};
   }
   .weather-icon {
     display:block;
-    position:absolute;
-    top:-50px;
-    left:50%;
-    width:100px;
-    height:100px;
-    transform:translateX(-50%);
+    flex-shrink:0;
+    width:96px;
+    height:96px;
   }
   .temperature{
-    position:relative;
-    z-index:2;
+    margin-top:8px;
     .current {
-      font-size:56px;
+      font-size:52px;
       line-height:1;
     }
     .celsius{
-      font-size:28px;
+      font-size:24px;
       vertical-align:top;
       line-height:1;
+    }
+  }
+  .temperature-lh {
+    margin-top:6px;
+    font-size:14px;
+    text-align:center;
+  }
+  .detail-grid {
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap:8px;
+  }
+  .detail-item {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    min-height:40px;
+    padding:8px 10px;
+    border-radius:8px;
+    background:${props => props.theme.type === 'dark' ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.2)'};
+    .label {
+      font-size:11px;
+      color:${colors.subTextColor};
+      &::after {
+        content:':';
+        margin-left:2px;
+      }
+    }
+    .value {
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:4px;
+      font-size:13px;
+      font-weight:500;
+      line-height:1.3;
+      word-break:keep-all;
     }
   }
   .skeleton-wrap {
@@ -178,7 +276,7 @@ const StyleWeatherSelectDay = styled.div`
       height:25px;
     }
     .temperature-wrap {
-      padding-top:0;
+      margin-top:24px;
     }
     .weather-icon{
       position:relative;
@@ -223,6 +321,7 @@ const StyleWeatherSelectDay = styled.div`
     padding-top:40px;
     .location-date{
       position:relative;
+      display:flex;
       justify-content: space-between;
       align-items:center;
       flex-wrap:wrap;
@@ -246,9 +345,29 @@ const StyleWeatherSelectDay = styled.div`
       font-size:18px;
     }
     .temperature-wrap{
-      padding-top:100px;
+      margin-top:18px;
+      .temperature-main {
+        flex-direction:column;
+        gap:6px;
+        text-align:center;
+      }
+      .temperature-copy {
+        text-align:center;
+      }
       .weather-icon {
-        top:-10px;
+        width:84px;
+        height:84px;
+      }
+    }
+    .detail-grid {
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+    }
+    .detail-item {
+      min-height:48px;
+      padding:8px 10px;
+      .value {
+        font-size:12px;
       }
     }
     .skeleton-wrap {

@@ -98,6 +98,7 @@ const weatherState:WeatherActionType= {
   coords: null,
   location: null,
   loading:false,
+  requesting:false,
   error:false,
 };
 export const weatherSlice = createSlice({

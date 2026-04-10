@@ -39,6 +39,30 @@ export interface WeatherTimeDataType { // day 날씨 정보
   getVilageFcst: number | string;
 }
 
+export interface WeatherCacheMetaType {
+  cachedAt: number;
+  source: "public-data";
+  latestDate: string;
+  requestCycles: {
+    getUltraSrtNcst: number | string;
+    getUltraSrtFcst: number | string;
+    getVilageFcst: number | string;
+  };
+}
+
+export interface WeatherFirebaseYearDocType {
+  _meta?: WeatherCacheMetaType;
+  [date: string]: WeatherTimeDataType | WeatherCacheMetaType | undefined;
+}
+
+export interface MidForecastDayType {
+  date: string;
+  weatherText: string;
+  rainProbability: string;
+  TMN: string | null;
+  TMX: string | null;
+}
+
 // 해당 지역 날씨 데이터 타입
 export interface WeatherLocationType { 
   baseUpdate: number | string,

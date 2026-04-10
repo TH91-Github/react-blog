@@ -1,42 +1,101 @@
+import { useQuery } from "@tanstack/react-query";
 import { LoadingAnimation } from "components/effect/LoadingAnimation";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import styled from "styled-components";
-import { WeatherCategoryListsType, WeatherTimeDataType } from "types/weatherType";
-import { dateChange, weatherClock } from "utils/common";
+import { MidForecastDayType, WeatherCategoryListsType, WeatherTimeDataType } from "types/weatherType";
+import { dateChange } from "utils/common";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
-import { findCategory, findTimeLists } from "utils/weather/weather";
+import {
+  findCategory,
+  formatAverageMetric,
+  getAverageCategoryValue,
+  getRepresentativeWeatherTime,
+} from "utils/weather/weather";
 import { colors, media } from "assets/style/Variable";
+import { createMidWeatherCategoryList, getMidWeeklyForecast } from "utils/weather/midWeather";
 
 export const LongWeather = () => {
-  const {data, loading} = useSelector((state : RootState) => state.storeWeather);
-  const todayTime = weatherClock();
+  const {data, loading, location} = useSelector((state : RootState) => state.storeWeather);
+  const { data: midWeeklyForecast = [] } = useQuery({
+    queryKey: ["weather-mid", location?.districtCode],
+    queryFn: () => {
+      if (!location) return Promise.resolve([]);
+      return getMidWeeklyForecast(location);
+    },
+    staleTime: 1000 * 60 * 60,
+    enabled: !!location,
+  });
+
+  const shortForecastDays = (data?.res ?? []).slice(1).map((dayItem:WeatherTimeDataType) => {
+    const timeList = getRepresentativeWeatherTime(dayItem, false);
+    const humidity = formatAverageMetric(getAverageCategoryValue(dayItem.timeLists ?? [], 'REH'), '%');
+    const windSpeed = formatAverageMetric(getAverageCategoryValue(dayItem.timeLists ?? [], 'WSD'), 'm/s', 1);
+
+    return {
+      id: `${dayItem.date}`,
+      date: `${dayItem.date}`,
+      iconCategoryList: timeList?.categoryList ?? [],
+      currentTemperature: timeList?.categoryList.find((categoryItem: WeatherCategoryListsType) => categoryItem.category === 'TMP')?.value || '-',
+      TMN: dayItem.TMN,
+      TMX: dayItem.TMX,
+      rainProbability: findCategory(timeList?.categoryList ?? [], 'POP') ? `${findCategory(timeList?.categoryList ?? [], 'POP')}%` : '-',
+      humidity,
+      windSpeed,
+    };
+  });
+
+  const midForecastDays = midWeeklyForecast.map((dayItem: MidForecastDayType) => ({
+    id: dayItem.date,
+    date: dayItem.date,
+    iconCategoryList: createMidWeatherCategoryList(dayItem.weatherText),
+    currentTemperature:
+      dayItem.TMN && dayItem.TMX
+        ? `${Math.round((Number(dayItem.TMN) + Number(dayItem.TMX)) / 2)}`
+        : '-',
+    TMN: dayItem.TMN,
+    TMX: dayItem.TMX,
+    rainProbability: dayItem.rainProbability,
+    humidity: '-',
+    windSpeed: '-',
+  }));
+
+  const forecastDays = [...shortForecastDays, ...midForecastDays];
+
+  const formatDateLabel = (dateValue: string) => {
+    const monthDay = dateChange('mdw', dateValue).split('. ');
+    const month = monthDay[0];
+    const day = monthDay[1];
+    const week = monthDay[2];
+    return { month, day, week };
+  };
 
   return (
     <StyleLongWeather className="long-weather">
-      {/* 한 주 예정 - 현재 3일 데이터만 사용 */}
       {
-        (!loading && data?.res)
+        (!loading && forecastDays.length > 0)
         ? (
           <ul>
-            {data.res?.map((dayItem:WeatherTimeDataType, idx:number) => {
-              if (idx <= 0) return null;
-              const timeList = findTimeLists(dayItem.timeLists ?? [], todayTime);
+            {forecastDays.map((dayItem) => {
+              const { month, day, week } = formatDateLabel(dayItem.date);
               return <li 
                 className="item" 
-                key={idx}>
+                key={dayItem.id}>
                 <div className="date-weather">
                   <span className="icon">
-                    {timeList && <WeatherIcon isAnimation={false} categoryLists={timeList.categoryList} />}
+                    {dayItem.iconCategoryList.length > 0 && <WeatherIcon isAnimation={false} categoryLists={dayItem.iconCategoryList} />}
                   </span>
-                  <span className="date">{dateChange('mdw',dayItem.date)}</span>
+                  <span className="date">
+                    <span className="main">{`${month}.${day}`}</span>
+                    <span className="week">{`(${week})`}</span>
+                  </span>
                 </div>
                 <div className="temperature-wrap">
                   <p className="temperature">
                     <span className="current">
-                      {timeList?.categoryList.find((categoryItem: WeatherCategoryListsType) => categoryItem.category === 'TMP')?.value || '-'}
+                      {dayItem.currentTemperature}
                     </span>
-                    <span className="celsius">°</span>
+                    {dayItem.currentTemperature !== '-' && <span className="celsius">°</span>}
                   </p>
                   <div className="temperature-lh">
                     <span className="lowest">
@@ -52,20 +111,24 @@ export const LongWeather = () => {
                   </div>
                 </div>
                 <div className="etc-info">
-                  <div>
-                    <span className="desc">습도</span>
-                    <span className="value">
-                      {timeList && findCategory(timeList.categoryList,'REH')} 
-                      <span className="unit">%</span>
-                    </span>
-                  </div>
-                  <div>
-                    <span className="desc">풍속</span>
-                    <span className="value">
-                      {timeList && findCategory(timeList.categoryList,'WSD')} 
-                      <span className="unit">m/s</span>
-                    </span>
-                  </div>
+                  {dayItem.rainProbability !== '-' && (
+                    <div>
+                      <span className="desc">강수</span>
+                      <span className="value">{dayItem.rainProbability}</span>
+                    </div>
+                  )}
+                  {dayItem.humidity !== '-' && (
+                    <div>
+                      <span className="desc">습도</span>
+                      <span className="value">{dayItem.humidity}</span>
+                    </div>
+                  )}
+                  {dayItem.windSpeed !== '-' && (
+                    <div>
+                      <span className="desc">풍속</span>
+                      <span className="value">{dayItem.windSpeed}</span>
+                    </div>
+                  )}
                 </div>
               </li>
             })}
@@ -94,10 +157,19 @@ export const LongWeather = () => {
   )
 }
 const StyleLongWeather = styled.div`
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  height:100%;
   padding:20px;
   border-radius:5px;
   ${({theme}) => theme.translucence};
   background: ${({theme}) => theme.opacityBg};
+  ul {
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+  }
   .item{
     display:flex;
     align-items:center;
@@ -122,11 +194,22 @@ const StyleLongWeather = styled.div`
       width:30px;
       height:30px;
     }
+    .date {
+      .main {
+        font-size:14px;
+      }
+      .week {
+        margin-left:4px;
+        font-size:11px;
+        color:${colors.subTextColor};
+      }
+    }
   }
   .temperature-wrap {
     width:40%;
     text-align:center;
     .temperature {
+      margin-top:2px;
       .current {
         font-size:28px;
         line-height:1;
@@ -159,6 +242,16 @@ const StyleLongWeather = styled.div`
     .unit {
       font-size:14px;
     }
+  }
+  ul::-webkit-scrollbar {
+    width:6px;
+  }
+  ul::-webkit-scrollbar-thumb {
+    border-radius:999px;
+    background:${colors.lineColor};
+  }
+  ul::-webkit-scrollbar-track {
+    background:transparent;
   }
   .loading-wrap{
     position:absolute;
@@ -194,6 +287,10 @@ const StyleLongWeather = styled.div`
     }
   }
   ${media.mo}{
+    min-height:auto;
+    ul {
+      overflow-y:visible;
+    }
     .loading-wrap{
       position:relative;
       height:130px;

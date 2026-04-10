@@ -1,5 +1,10 @@
 // 🚩 firebase.js
 import { initializeApp } from "firebase/app";
+import {
+    AppCheck,
+    ReCaptchaV3Provider,
+    initializeAppCheck,
+} from "firebase/app-check";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage} from 'firebase/storage';
@@ -37,6 +42,27 @@ const firebaseConfigWeather = {
     measurementId: process.env.REACT_APP_WEATHER_MEASUREMENT_ID,
 };
 
+const weatherAppCheckSiteKey = process.env.REACT_APP_WEATHER_APPCHECK_SITE_KEY;
+const weatherAppCheckDebugToken = process.env.REACT_APP_WEATHER_APPCHECK_DEBUG_TOKEN;
+
+function initWeatherAppCheck(app: ReturnType<typeof initializeApp>): AppCheck | undefined {
+    if (typeof window === "undefined" || !weatherAppCheckSiteKey) return undefined;
+
+    const hostname = window.location.hostname;
+    const isLocalhost = hostname === "localhost" || hostname === "127.0.0.1";
+
+    if (isLocalhost) {
+        // Firebase App Check debug token is required for localhost usage.
+        (window as Window & { FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean | string }).FIREBASE_APPCHECK_DEBUG_TOKEN =
+            weatherAppCheckDebugToken || true;
+    }
+
+    return initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(weatherAppCheckSiteKey),
+        isTokenAutoRefreshEnabled: true,
+    });
+}
+
 // th 기본 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -52,13 +78,12 @@ const fbMapStorage = getStorage(fbMapApp);
 
 // weather
 const fbWeatherApp = initializeApp(firebaseConfigWeather, "th-weather");
+const fbWeatherAppCheck = initWeatherAppCheck(fbWeatherApp);
 const fbWeatherDB = getFirestore(fbWeatherApp);
 // const sotreWeatherFile = getFirestore(appWeather);
 
 export { 
     auth, fireDB, provider, firebaseStorage, 
     fbMapAuth, fbMapDB, fbMapStorage,
-    fbWeatherApp,fbWeatherDB,
+    fbWeatherApp, fbWeatherAppCheck, fbWeatherDB,
 };
-
-

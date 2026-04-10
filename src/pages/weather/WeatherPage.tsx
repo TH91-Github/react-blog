@@ -61,10 +61,11 @@ const StyleWrap = styled.div`
   }
   .weather-content{
     display:flex;
+    align-items:stretch;
     flex-wrap:wrap;
     gap:30px;
     margin-top:30px;
-    .info {
+    .weather-now {
       width:calc(60% - 15px);
     }
     .long-weather {
@@ -109,7 +110,7 @@ const StyleWrap = styled.div`
       flex-direction:column;
       gap:20px;
       margin-top:20px;
-      .info {
+      .weather-now {
         width:100%;
       }
       .long-weather {

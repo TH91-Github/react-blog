@@ -10,33 +10,49 @@ export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const [isMoving, setIsMoving] = useState(false);
   const [startPos, setStartPos] = useState(0);
-  const [currentPos, setCurrentPos] = useState(0);
-  const [prevPos, setPrevPos] = useState(0);
+  const [startScrollLeft, setStartScrollLeft] = useState(0);
   const [moveThreshold, setMoveThreshold] = useState(false);
   const movingCutline = 30;
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!swiperRef.current) return;
     setIsMoving(true);
     setMoveThreshold(false);
     setStartPos(e.clientX);
+    setStartScrollLeft(swiperRef.current.scrollLeft);
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!swiperRef.current) return;
     setIsMoving(true);
     setMoveThreshold(false);
     setStartPos(e.touches[0].clientX);
+    setStartScrollLeft(swiperRef.current.scrollLeft);
   };
 
   const movingEvent = (pos: number) => {
-    if (!isMoving) return;
+    if (!isMoving || !swiperRef.current) return;
 
     const movePos = pos - startPos;
     // EX) 30 이상 움직일 경우에 동작 가능하도록
     if (!moveThreshold && Math.abs(movePos) > movingCutline) {
       setMoveThreshold(true);
     }
-    if (moveThreshold) {
-      setCurrentPos(prevPos + movePos);
+    if (!moveThreshold) return;
+
+    const maxScrollLeft = swiperRef.current.scrollWidth - swiperRef.current.clientWidth;
+    const nextScrollLeft = Math.min(
+      Math.max(startScrollLeft - movePos, 0),
+      Math.max(maxScrollLeft, 0)
+    );
+
+    swiperRef.current.scrollLeft = nextScrollLeft;
+    if ("requestAnimationFrame" in window) {
+      window.requestAnimationFrame(() => {
+        if (swiperRef.current) {
+          swiperRef.current.scrollLeft = nextScrollLeft;
+        }
+      });
     }
   };
 
@@ -49,26 +65,7 @@ export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
   };
 
   const handleEnd = () => {
-    if (!swiperRef.current) return;
-
-    const swiperWidth = swiperRef.current.clientWidth;
-    const movingElement = swiperRef.current.querySelector<HTMLElement>(".moving");
-    if (!movingElement) return;
-    const contW = movingElement.clientWidth;
-
     setIsMoving(false);
-    setPrevPos(currentPos);
-
-    if (currentPos > 0) {
-      // 왼쪽 끝 고정
-      setCurrentPos(0);
-      setPrevPos(0);
-    } else if (swiperWidth - currentPos >= contW) {
-      // 오른쪽 끝 고정
-      const maxTranslate = swiperWidth - contW;
-      setCurrentPos(maxTranslate);
-      setPrevPos(maxTranslate);
-    }
   };
 
   const activeMoving = useCallback(() => {
@@ -76,20 +73,17 @@ export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
 
     const activeItem = swiperRef.current.querySelector<HTMLElement>(`.${selectName}`);
     if (activeItem) {
-      const activePos = activeItem.offsetLeft;
-      const swiperWidth = swiperRef.current.clientWidth;
-      const movingElement = swiperRef.current.querySelector<HTMLElement>(".moving");
-      if (!movingElement) return;
-      const contW = movingElement.clientWidth;
-      let newCurrentPos = activePos * -1;
+      const targetLeft = activeItem.offsetLeft - swiperRef.current.clientWidth / 2 + activeItem.clientWidth / 2;
+      const maxScrollLeft = swiperRef.current.scrollWidth - swiperRef.current.clientWidth;
+      const nextScrollLeft = Math.min(
+        Math.max(targetLeft, 0),
+        Math.max(maxScrollLeft, 0)
+      );
 
-      if (newCurrentPos > 0) {
-        newCurrentPos = 0;
-      } else if (swiperWidth - newCurrentPos >= contW) {
-        newCurrentPos = swiperWidth - contW;
-      }
-      setCurrentPos(newCurrentPos);
-      setPrevPos(newCurrentPos);
+      swiperRef.current.scrollTo({
+        left: nextScrollLeft,
+        behavior: "smooth",
+      });
     }
   }, [selectName]);
 
@@ -112,9 +106,7 @@ export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
       onTouchEnd={handleEnd}
       className={`swipe-move ${isMoving ? 'grabbing' : ''}`} >
       {/* ul li 포함 children */}
-      <div 
-        className="moving"
-        style={{transform: `translateX(${currentPos}px)`}}>
+      <div className="moving">
         {children}
       </div>
     </StyleTouchMoveLists>
@@ -122,12 +114,20 @@ export const TouchMoveLists = ({selectName, children}:TouchMoveListsType) => {
 }
 
 const StyleTouchMoveLists= styled.div`
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   white-space: nowrap;
   display: flex;
   cursor: grab;
   user-select: none;
-  cursor:grab;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display:none;
+  }
   &.grabbing {
     cursor: grabbing;
   }

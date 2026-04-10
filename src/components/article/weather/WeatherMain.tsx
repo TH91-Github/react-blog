@@ -21,10 +21,10 @@ export const WeatherMain = () => {
   }
 
   return (
-    <StyleWeatherMain className="info">
+    <StyleWeatherMain className="weather-now">
       <h3 className="blind">날씨 정보</h3>
-      <div className="main">
-        <div className="select-day">
+      <div className="current-weather-card">
+        <div className="day-tabs">
           <ListBtnActive 
             btnData={pickDay}
             bgColor={''}
@@ -39,13 +39,16 @@ export const WeatherMain = () => {
 }
 const StyleWeatherMain = styled.div`
   position:relative;
-  .main{
+  display:flex;
+  .current-weather-card{
+    width:100%;
+    height:100%;
     padding:20px;
     border-radius:5px;
     ${({theme}) => theme.translucence};
     background: ${({theme}) => theme.opacityBg};
   }
-  .select-day{
+  .day-tabs{
     position: absolute;
     top:20px;
     right:20px;

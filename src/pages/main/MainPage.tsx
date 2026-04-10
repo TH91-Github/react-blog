@@ -4,6 +4,7 @@ import { Finish } from 'components/article/main/Finish';
 import MainVisualIcon from 'components/article/main/MainVisualIcon';
 import { MapCont } from 'components/article/main/MapCont';
 import { WeatherCont } from 'components/article/main/WeatherCont';
+import RevealSection from 'components/effect/RevealSection';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { RootState } from 'store/store';
@@ -45,9 +46,15 @@ export default function MainPage() : JSX.Element{
           </div>
         </div>
         <div className="content">
-          <WeatherCont />
-          <MapCont /> 
-          <Finish />
+          <RevealSection className="reveal-section" delay={0.05}>
+            <WeatherCont />
+          </RevealSection>
+          <RevealSection className="reveal-section" delay={0.12}>
+            <MapCont />
+          </RevealSection>
+          <RevealSection className="reveal-section" delay={0.18}>
+            <Finish />
+          </RevealSection>
         </div>
       </StyleWrap>
   )
@@ -129,6 +136,11 @@ const StyleWrap = styled.div`
           }
         }
       }
+    }
+  }
+  .content {
+    .reveal-section + .reveal-section {
+      margin-top: -1px;
     }
   }
   .info-wrap {
