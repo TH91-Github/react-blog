@@ -14,9 +14,9 @@ interface placePopChangeType {
 
 export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopChangeType) {
   const {id} = kakaoPlace;
-  const placeCategory = locationCategory(kakaoPlace.address.address.region_1depth_name) ?? 'ETC';
+  const placeCategory = locationCategory(kakaoPlace.address?.address?.region_1depth_name) ?? 'ETC';
   // ✅ place 정보 가져오기. 
-  const { data: placeData, error, isLoading }: UseQueryResult<PlaceDataTypeC> = useQuery({
+  const { data: placeData, error, isLoading }: UseQueryResult<PlaceDataTypeC | null> = useQuery({
     queryKey: ['placeDataQuery', id], // queryKey에 id를 포함시켜 place가 변경 될 때 다시
     queryFn: () => getDocPlace(placeCategory, id),
   });
@@ -53,7 +53,9 @@ export default function PlaceDetailPage ({kakaoPlace, placePopChange}:placePopCh
           </div>
         </div>
         <div className="place-cont">
-          <PlaceDetailTab kakaoPlace={kakaoPlace} placeData={placeData} />
+          {error
+            ? <p className="error-message">장소 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p>
+            : <PlaceDetailTab kakaoPlace={kakaoPlace} placeData={placeData} />}
         </div>
         <span className={`close-box ${(placeData && placeData.galleryImgs.length > 0)? 'bg-on':''}`}>
           <button 
@@ -208,6 +210,17 @@ const StylePlaceDetail = styled.div`
     height:calc(100% - 240px);
     position:relative;
     border-top:5px solid ${colors.lineColor};
+  }
+  .error-message {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100%;
+    padding:20px;
+    font-size:14px;
+    line-height:1.5;
+    text-align:center;
+    color:${colors.subTextColor};
   }
   .close-box {
     display:block;

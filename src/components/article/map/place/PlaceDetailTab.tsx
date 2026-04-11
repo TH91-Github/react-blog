@@ -7,7 +7,7 @@ import PlaceReviewList from "./PlaceReviewList";
 
 export interface PlaceDetailTabType {
   kakaoPlace : MarkerType,
-  placeData: PlaceDataTypeC | undefined
+  placeData: PlaceDataTypeC | null | undefined
 }
 export default function PlaceDetailTab ({kakaoPlace, placeData}:PlaceDetailTabType) {
   const [activeTab, setActiveTab] = useState(0);

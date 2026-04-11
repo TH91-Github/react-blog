@@ -161,6 +161,7 @@ const StyleLongWeather = styled.div`
   flex-direction:column;
   min-height:0;
   height:100%;
+  max-height:100%;
   padding:20px;
   border-radius:5px;
   ${({theme}) => theme.translucence};
@@ -287,7 +288,7 @@ const StyleLongWeather = styled.div`
     }
   }
   ${media.mo}{
-    min-height:auto;
+    min-height:360px;
     ul {
       overflow-y:visible;
     }

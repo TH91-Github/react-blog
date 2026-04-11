@@ -13,10 +13,11 @@ import { findCategory, parseWeatherNumber } from "utils/weather/weather";
 import { WeatherIcon } from "./weatherIcon/WeatherIcon";
 
 interface WaehterTimeListsType {
-  active?:number;
+  active?: number;
 }
-export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
-  const {data, loading} = useSelector((state : RootState) => state.storeWeather);
+
+export const WaehterTimeLists = ({ active = 0 }: WaehterTimeListsType) => {
+  const { data, loading } = useSelector((state: RootState) => state.storeWeather);
   const theme = useSelector((state: RootState) => state.storeTheme);
   const [timeWeather, setTimeWeather] = useState<DateItmeLists[] | null>(null);
   const [chartData, setChartData] = useState<TemperatureTimeType[] | null>(null);
@@ -29,9 +30,9 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
   const todayTime = weatherClock();
 
   const timeArr = useCallback(() => {
-    if(data?.res){
+    if (data?.res) {
       const timeListArr = data.res.reduce((timeAcc: DateItmeLists[], item: WeatherTimeDataType) => {
-        const timeItems= item.timeLists.map((timeItem) => ({
+        const timeItems = item.timeLists.map((timeItem) => ({
           date: `${item.date}`,
           ...timeItem,
         }));
@@ -39,35 +40,31 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
       }, []);
       setTimeWeather(timeListArr);
     }
-  },[data]);
+  }, [data]);
 
-  const createChartData = useCallback((tabKey:string, source:DateItmeLists[]) => {
+  const createChartData = useCallback((tabKey: string, source: DateItmeLists[]) => {
     const chartConfig = {
       temperature: {
-        id: 'Temperature',
-        label: '°',
-        getValue: (timeItem:DateItmeLists) => {
-          const value = timeItem.categoryList.find(cat => cat.category === 'TMP' || cat.category === 'T1H')?.value;
+        id: "Temperature",
+        getValue: (timeItem: DateItmeLists) => {
+          const value = timeItem.categoryList.find((cat) => cat.category === "TMP" || cat.category === "T1H")?.value;
           return parseWeatherNumber(value);
         }
       },
       wind: {
-        id: 'Wind',
-        label: 'm/s',
-        getValue: (timeItem:DateItmeLists) => parseWeatherNumber(findCategory(timeItem.categoryList, 'WSD'))
+        id: "Wind",
+        getValue: (timeItem: DateItmeLists) => parseWeatherNumber(findCategory(timeItem.categoryList, "WSD"))
       },
       humidity: {
-        id: 'Humidity',
-        label: '%',
-        getValue: (timeItem:DateItmeLists) => parseWeatherNumber(findCategory(timeItem.categoryList, 'REH'))
+        id: "Humidity",
+        getValue: (timeItem: DateItmeLists) => parseWeatherNumber(findCategory(timeItem.categoryList, "REH"))
       },
       rain: {
-        id: 'Rain',
-        label: '%',
-        getValue: (timeItem:DateItmeLists) => {
-          const pcp = parseWeatherNumber(findCategory(timeItem.categoryList, 'PCP'));
+        id: "Rain",
+        getValue: (timeItem: DateItmeLists) => {
+          const pcp = parseWeatherNumber(findCategory(timeItem.categoryList, "PCP"));
           if (pcp !== null) return pcp;
-          return parseWeatherNumber(findCategory(timeItem.categoryList, 'POP'));
+          return parseWeatherNumber(findCategory(timeItem.categoryList, "POP"));
         }
       },
     } as const;
@@ -77,139 +74,122 @@ export const WaehterTimeLists = ({active = 0}:WaehterTimeListsType) =>{
     return [{
       id: currentChart.id,
       data: source
-        .map((timeItem:DateItmeLists) => ({
+        .map((timeItem: DateItmeLists) => ({
           x: `${timeItem.date} ${timeItem.time}`,
           y: currentChart.getValue(timeItem)
         }))
-        .filter((item): item is {x:string; y:number} => item.y !== null)
+        .filter((item): item is { x: string; y: number } => item.y !== null)
     }];
   }, []);
 
-  const handleTabChange = useCallback((activeNumber:number) => {
-    setChartTabs(prev => prev.map((tab, idx) => ({
+  const handleTabChange = useCallback((activeNumber: number) => {
+    setChartTabs((prev) => prev.map((tab, idx) => ({
       ...tab,
       active: idx === activeNumber
     })));
   }, []);
 
-  // 날씨 데이터 있는 경우
-  useEffect(()=>{
-    if(data){
+  useEffect(() => {
+    if (data) {
       timeArr();
     }
-  },[data, timeArr])
+  }, [data, timeArr]);
 
   useEffect(() => {
     if (!timeWeather?.length) return;
-    const activeTab = chartTabs.find((tab) => tab.active)?.key ?? 'temperature';
+    const activeTab = chartTabs.find((tab) => tab.active)?.key ?? "temperature";
     setChartData(createChartData(activeTab, timeWeather));
-  }, [chartTabs, timeWeather, createChartData]);
+  }, [chartTabs, createChartData, timeWeather]);
 
   return (
     <StyleWaehterTimeLists>
       {
         (!loading && timeWeather)
-        ? (
-          <div className="temperature">
-            <p className="temperature-notice">단기 예보와 실시간 예보 간에는 차이가 발생할 수 있어요. 😅</p>
-            <div className="chart-tabs">
-              <ListBtnActive
-                btnData={chartTabs}
-                bgColor={'transparent'}
-                activeColor={colors.mSlateBlue}
-                activeTextColor={colors.originWhite}
-                clickEvent={handleTabChange}/>
-            </div>
-            <TouchMoveLists selectName={active === 0 ? 'today': `day-${active+1}`}>
-              <div
-                className="lists">
-                {
-                  timeWeather.map((liItem,idx) => {
-                    const today = idx < 24 && todayTime === liItem.time;
-                    const dayChk = idx === 24 ? 2 : idx === 48 ? 3 : 0;
-                    const dayTxt = today ? '오늘'
-                    : dayChk === 2 ? '내일'
-                    : dayChk === 3 ? '모레' : null;
-                    return (
-                      <div 
-                        className={`lists-item${today ?' today':''}${dayChk !== 0 ?' day-'+dayChk:''}`}
-                        key={idx}>
-                        {
-                          dayTxt && <span className="day">{dayTxt}</span>
-                        }
-                        
-                        <span className="time">
-                          {`${parseInt(String(liItem.time).slice(0, 2))}시`}
-                        </span>
-                        <span className="weather-icon">
-                          <WeatherIcon 
-                            categoryLists={liItem.categoryList} 
-                            isAnimation={false} />
-                        </span>
-                      </div>
-                    )
-                  })
-                }
-                <div className="graph">
-                  {
-                    chartData && (
-                      <div>
-                        <ResponsiveLine
-                          data={chartData}
-                          margin={{ top: 50, right: 20, bottom: 50, left: 20 }}
-                          xScale={{ type: 'point' }}  // x축 간격 조정
-                          yScale={{
-                            type: 'linear',
-                            min: 'auto',
-                            max: 'auto',
-                          }}
-                          axisBottom={{
-                            tickValues: [], // x축 안보이게하기 빈 값
-                          }}
-                          axisLeft={{
-                            tickValues:[], // y축 안보이게하기 빈 값
-                          }}
-                          curve="monotoneX" // 라인 스타일
-                          lineWidth={1} // 라인 두께
-                          colors={[colors.mSlateBlue]} // 라인 색상
-                          enablePointLabel={true} // 포인터에 표시 여부
-                          pointLabel={({ data }) => {
-                            const activeTab = chartTabs.find((tab) => tab.active)?.key ?? 'temperature';
-                            const unit = activeTab === 'temperature' ? '°' : activeTab === 'wind' ? 'm/s' : '%';
-                            return `${data.y}${unit}`;
-                          }}  // 포인터  상단에 표시될 값
-                          pointLabelYOffset={-12} // label 값 위치
-                          pointSize={3} // 포인터 크기
-                          pointColor={{ theme: 'background' }} // 배경색 따라서 {theme: 'background'} : 비어있는
-                          pointBorderWidth={1} // 포인트 Circle 크기
-                          pointBorderColor={{ from: 'serieColor' }} // border 색상
-                          isInteractive={false}
-                          enableGridX={false} // 가이드 라인X
-                          enableGridY={false} // 가이드 라인Y
-                          theme={{
-                            text:{
-                              fill:`${theme.color.color}` // pointer 컬러
-                            }
-                          }}
-                        />
-                      </div>
-                    )
-                  }
-                </div>
+          ? (
+            <div className="temperature">
+              <p className="temperature-notice">단기 예보와 실시간 값은 시점에 따라 차이가 있을 수 있어요.</p>
+              <div className="chart-tabs">
+                <ListBtnActive
+                  btnData={chartTabs}
+                  bgColor={"transparent"}
+                  activeColor={colors.mSlateBlue}
+                  activeTextColor={colors.originWhite}
+                  clickEvent={handleTabChange}
+                />
               </div>
-            </TouchMoveLists>
-            <p className="source">출처: 공공데이터</p>
-          </div>
-        )
-        : (
-          <div className="loading-wrap">
-            <LoadingAnimation />
-          </div>
-        )
+              <TouchMoveLists selectName={active === 0 ? "today" : `day-${active + 1}`}>
+                {/* 시간대별 카드를 가로 드래그로 이동 */}
+                <div className="lists">
+                  {
+                    timeWeather.map((liItem, idx) => {
+                      const today = idx < 24 && todayTime === liItem.time;
+                      const dayChk = idx === 24 ? 2 : idx === 48 ? 3 : 0;
+                      const dayTxt = today ? "오늘" : dayChk === 2 ? "내일" : dayChk === 3 ? "모레" : null;
+                      return (
+                        <div
+                          className={`lists-item${today ? " today" : ""}${dayChk !== 0 ? " day-" + dayChk : ""}`}
+                          key={idx}>
+                          {dayTxt && <span className="day">{dayTxt}</span>}
+                          <span className="time">{`${parseInt(String(liItem.time).slice(0, 2), 10)}시`}</span>
+                          <span className="weather-icon">
+                            <WeatherIcon categoryLists={liItem.categoryList} isAnimation={false} />
+                          </span>
+                        </div>
+                      );
+                    })
+                  }
+                  <div className="graph">
+                    {
+                      chartData && (
+                        <div>
+                          <ResponsiveLine
+                            data={chartData}
+                            margin={{ top: 50, right: 20, bottom: 50, left: 20 }}
+                            xScale={{ type: "point" }}
+                            yScale={{ type: "linear", min: "auto", max: "auto" }}
+                            axisBottom={{ tickValues: [] }}
+                            axisLeft={{ tickValues: [] }}
+                            curve="monotoneX"
+                            lineWidth={1}
+                            colors={[colors.mSlateBlue]}
+                            enablePointLabel={true}
+                            pointLabel={({ data: pointData }) => {
+                              const activeTab = chartTabs.find((tab) => tab.active)?.key ?? "temperature";
+                              const unit = activeTab === "temperature" ? "°" : activeTab === "wind" ? "m/s" : "%";
+                              return `${pointData.y}${unit}`;
+                            }}
+                            pointLabelYOffset={-12}
+                            pointSize={3}
+                            pointColor={{ theme: "background" }}
+                            pointBorderWidth={1}
+                            pointBorderColor={{ from: "serieColor" }}
+                            isInteractive={false}
+                            enableGridX={false}
+                            enableGridY={false}
+                            theme={{
+                              text: {
+                                fill: `${theme.color.color}`
+                              }
+                            }}
+                          />
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              </TouchMoveLists>
+              <p className="source">출처: 공공데이터</p>
+            </div>
+          )
+          : (
+            <div className="loading-wrap">
+              <LoadingAnimation />
+            </div>
+          )
       }
     </StyleWaehterTimeLists>
-  )
-}
+  );
+};
 
 const StyleWaehterTimeLists = styled.div`
   position:relative;
@@ -233,10 +213,7 @@ const StyleWaehterTimeLists = styled.div`
     display:inline-flex;
     padding:3px;
     border-radius:999px;
-    background:${({theme}) => theme.type === 'dark' ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.35)'};
-    & + .swipe-move {
-      margin-top:10px;
-    }
+    background:${({theme}) => theme.type === "dark" ? "rgba(255,255,255,.05)" : "rgba(255,255,255,.35)"};
     .btn-lists {
       &:before {
         border-radius:999px;
@@ -248,6 +225,10 @@ const StyleWaehterTimeLists = styled.div`
       }
     }
   }
+  .swipe-move {
+    margin-top:10px;
+    padding-bottom:6px;
+  }
   .lists {
     display:flex;
     position:relative;
@@ -255,15 +236,17 @@ const StyleWaehterTimeLists = styled.div`
     gap:6px;
     padding-right:10px;
     .lists-item {
+      flex-shrink:0;
+      scroll-snap-align:center;
       display:flex;
-      flex-direction: column;
+      flex-direction:column;
       align-items:center;
       justify-content:space-between;
       position:relative;
-      width:40px;
+      width:44px;
       height:220px;
       padding-top:30px;
-      border-radius:5px;
+      border-radius:8px;
       text-align:center;
       &.today {
         border:1px solid ${colors.mSlateBlue};
@@ -302,18 +285,13 @@ const StyleWaehterTimeLists = styled.div`
     left:0;
     width:100%;
     pointer-events:none;
-    transition:opacity .25s ease;
     & > div {
       width:100%;
       height:150px;
     }
-    svg {
-      g {
-        text{
-          color:#fff;
-          fill:#fff;
-        }
-      }
+    svg g text{
+      color:#fff;
+      fill:#fff;
     }
   }
   .loading-wrap {

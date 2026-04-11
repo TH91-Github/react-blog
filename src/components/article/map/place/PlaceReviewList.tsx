@@ -18,7 +18,7 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
   const {id, place_name, address} = kakaoPlace;
-  const placeCategory = locationCategory(address.address.region_1depth_name) ?? 'ETC';
+  const placeCategory = locationCategory(address?.address?.region_1depth_name) ?? 'ETC';
   
   const updateQueryData = useCallback(() => { // // 등록, 삭제 이후 갱신
     queryClient.invalidateQueries({ queryKey: ['reviewListQuery'] });
@@ -117,6 +117,10 @@ export default function PlaceReviewList({kakaoPlace, placeData}:PlaceDetailTabTy
           isLoading
           ? (
             <p>로딩중...</p>
+          )
+          : error
+          ? (
+            <p className="no-review">리뷰를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p>
           )
           : (
             reviewData?.length ?? false

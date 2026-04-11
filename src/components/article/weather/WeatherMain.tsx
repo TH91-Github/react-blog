@@ -9,38 +9,43 @@ export const WeatherMain = () => {
     { title:'오늘', active:true, },
     { title:'내일', active:false,},
     { title:'모레', active:false,}
-  ])
+  ]);
 
-  const pickDayActive = (activeN:number) => {
+  const pickDayActive = (activeN: number) => {
     setPickDay(
-      prev => prev.map((prevItem, idx) => ({
+      (prev) => prev.map((prevItem, idx) => ({
         ...prevItem,
         active: idx === activeN
       }))
-    )
-  }
+    );
+  };
 
   return (
     <StyleWeatherMain className="weather-now">
-      <h3 className="blind">날씨 정보</h3>
+      <h3 className="blind">현재 날씨</h3>
       <div className="current-weather-card">
         <div className="day-tabs">
-          <ListBtnActive 
+          <ListBtnActive
             btnData={pickDay}
-            bgColor={''}
+            bgColor={""}
             activeColor={colors.mSlateBlue}
             activeTextColor={colors.originWhite}
-            clickEvent={pickDayActive}/>
+            clickEvent={pickDayActive}
+          />
         </div>
-        <WeatherSelectDay  isDay={pickDay.findIndex((day) => day.active)}/>
+        <WeatherSelectDay isDay={pickDay.findIndex((day) => day.active)} />
       </div>
     </StyleWeatherMain>
-  )
-}
+  );
+};
+
 const StyleWeatherMain = styled.div`
   position:relative;
   display:flex;
+  min-height:330px;
   .current-weather-card{
+    display:flex;
+    flex-direction:column;
     width:100%;
     height:100%;
     padding:20px;
@@ -49,7 +54,7 @@ const StyleWeatherMain = styled.div`
     background: ${({theme}) => theme.opacityBg};
   }
   .day-tabs{
-    position: absolute;
+    position:absolute;
     top:20px;
     right:20px;
   }

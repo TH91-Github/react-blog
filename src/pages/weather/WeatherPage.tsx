@@ -41,7 +41,7 @@ export default function WeatherPage() {
 const StyleWrap = styled.div`
   background: ${props => props.theme.type === 'dark' ? colors.bgSubBlack : `linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)`}; 
   .weather-inner{
-    overflow:hidden;
+    overflow:visible;
     position:relative;
     width:100%;
     max-width:${breakpoints.maxPc}px;
@@ -60,16 +60,23 @@ const StyleWrap = styled.div`
     }
   }
   .weather-content{
+    position:relative;
+    z-index:1;
+    --weather-main-height: 330px;
     display:flex;
-    align-items:stretch;
+    align-items:flex-start;
     flex-wrap:wrap;
     gap:30px;
     margin-top:30px;
     .weather-now {
       width:calc(60% - 15px);
+      display:flex;
+      height:var(--weather-main-height);
     }
     .long-weather {
       width:calc(40% - 15px);
+      display:flex;
+      height:var(--weather-main-height);
     }
   }
   .temperature-lh {
@@ -112,9 +119,11 @@ const StyleWrap = styled.div`
       margin-top:20px;
       .weather-now {
         width:100%;
+        height:auto;
       }
       .long-weather {
         width:100%;
+        height:auto;
       }
     }
   }

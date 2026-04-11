@@ -22,10 +22,14 @@ export const WeatherSelectDay = ({isDay = 0}:WeatherSelectDayType) =>{
 
   useEffect(()=>{
     const todayTime = weatherClock(); // 현재 시간
-    if(data?.res?.length > 0){
-      const isTime = getStableCurrentWeatherTimeLists(data?.res[isDay].timeLists ?? [], todayTime);
-      if(isTime) setDayCategory(isTime.categoryList)
+    const selectedDay = data?.res?.[isDay];
+    if (!selectedDay?.timeLists?.length) {
+      setDayCategory(null);
+      return;
     }
+
+    const isTime = getStableCurrentWeatherTimeLists(selectedDay.timeLists, todayTime);
+    setDayCategory(isTime?.categoryList ?? null);
   },[data, isDay]);
 
   // 시간(H)이 바뀌면 날씨 업데이트 확인
