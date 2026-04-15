@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { actionMobileChk } from "store/store";
 import { isMobileSizeChk } from "utils/common";
-import './App.css';
+import 'App.css';
 
 function App() : JSX.Element {
   const location = useLocation();

@@ -74,12 +74,13 @@ export function timeDifference(beforeH:string, nextH:string, diffH = 3) { // EX)
   return diffMinutes >= cutM
 }
 
+const requestNumbers = {
+  getUltraSrtNcst: 8,
+  getUltraSrtFcst: 60,
+  getVilageFcst: 835,
+};
+
 const requestNumber = (requestType: keyof typeof requestNumbers) => { // 요청 수
-  const requestNumbers = {
-    getUltraSrtNcst: 8,
-    getUltraSrtFcst: 60,
-    getVilageFcst: 835,
-  };
   return requestNumbers[requestType] || 0;
 };
 
